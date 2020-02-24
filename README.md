@@ -6,5 +6,5 @@ For Developer:
 2. Install CMAKE
 3. Please, Ask for the requirements file.
 
-
-
+details :
+* kuncenvm.bat use for make sure vm is still on by using genymotion.
