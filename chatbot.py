@@ -11,7 +11,7 @@ import cv2
 import numpy as np
 import gspread
 import os
-import dawet
+from lib import dawet
 import random
 from time import sleep
 from googletrans import Translator
