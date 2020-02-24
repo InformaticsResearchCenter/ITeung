@@ -1,0 +1,8 @@
+opencv-python
+gspread
+selenium
+oauth2client
+numpy
+face_recognition
+random2
+googletrans
