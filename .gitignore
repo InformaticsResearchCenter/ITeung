@@ -1,6 +1,5 @@
 chromedriver.exe
 # Byte-compiled / optimized / DLL files
-dawet.py
 .idea/
 client_secret.json
 __pycache__/
