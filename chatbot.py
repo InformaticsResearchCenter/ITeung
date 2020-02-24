@@ -3,13 +3,13 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-from oauth2client.service_account import ServiceAccountCredentials
+#from oauth2client.service_account import ServiceAccountCredentials
 from dateutil.parser import parse
 import datetime
 import face_recognition
 import cv2
 import numpy as np
-import gspread
+#import gspread
 import os
 from lib import dawet
 import random
