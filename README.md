@@ -1,5 +1,5 @@
 # ITeung
-IT Service Unsupervised Learning
+IT service utility integrated
 
 Requirements: 
 1. Install Microsoft Visual Studio (Newer Version) with C/C++ Compiler installed.
