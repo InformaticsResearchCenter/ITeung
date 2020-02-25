@@ -4,122 +4,27 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 #from oauth2client.service_account import ServiceAccountCredentials
-from dateutil.parser import parse
-import datetime
+from lib import prodi
 import face_recognition
 import cv2
 import numpy as np
 #import gspread
 import os
-from lib import dawet
+
 import random
 from time import sleep
 from googletrans import Translator
 
 class Chatbot(object):
-    # def __init__(self, filename):
-    #     self.filename = filename
-    #     self.openDb()
-    #
-    # def openDb(self):
-    #     scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-    #     creds = ServiceAccountCredentials.from_json_keyfile_name('client_secret.json', scope)
-    #     client = gspread.authorize(creds)
-    #     self.sheet = client.open(self.filename)
-    #
-    # def getData(self, rowname, colname, sheetnum):
-    #     self.dataError = True
-    #     while self.dataError:
-    #         try:
-    #             ambilData = self.sheet.get_worksheet(sheetnum).cell(
-    #                 self.sheet.get_worksheet(sheetnum).find(rowname).row,
-    #                 self.sheet.get_worksheet(sheetnum).find(colname).col).value
-    #             return ambilData
-    #         except Exception as e:
-    #             if str(e).find("RESOURCE_EXHAUSTED"):
-    #                 print("wait ...")
-    #                 sleep(100)
-    #                 self.dataError = True
-
-    def getNilaiMahasiswa(self, npm, pertemuan):
-        if npm[:3] == "118":
-            db = dawet.Dawet("BukuProyek2")
-        elif npm[:3] == "117":
-            db = dawet.Dawet("BukuProyek3")
-        else:
-            db = dawet.Dawet("BukuInternship1")
-
-        nilai = db.getData(npm, pertemuan, 0)
-
-        if nilai == "not_found":
-            return "invalid"
-        elif nilai == "pertemuan_not_found":
-            return "pertemuan_invalid"
-        else:
-            nama_mahasiswa = db.getData(npm, "nama", 0)
-            nilai_rata = db.getData(npm, "rata_rata", 0)
-
-            hasil = []
-            hasil.append(nilai)
-            hasil.append(nama_mahasiswa)
-            hasil.append(nilai_rata)
-
-            return hasil
-
-    def cekJadwalSidang(self, pilihan):
-        db = dawet.Dawet("Jadwal_Sidang_Proyek_2")
-
-        allData = db.getAllData(1)
-
-        sekarang = datetime.datetime.now().date()
-        besok = sekarang + datetime.timedelta(days=1)
-        kemaren = sekarang - datetime.timedelta(days=1)
-        lusa = sekarang + datetime.timedelta(days=2)
-
-        if pilihan == "sekarang":
-            self.pilihanTanggal = sekarang
-            runnerVariable = 1
-        if pilihan == "besok":
-            self.pilihanTanggal = besok
-            runnerVariable = 1
-        if pilihan == "kemarin":
-            self.pilihanTanggal = kemaren
-            runnerVariable = 1
-        if pilihan == "lusa":
-            self.pilihanTanggal = lusa
-            runnerVariable = 1
-
-        if runnerVariable == 1:
-            for data in allData:
-                try:
-                    tanggal = parse(data[0]).date()
-                    print(self.pilihanTanggal)
-
-                    print(tanggal)
-
-                    if self.pilihanTanggal == tanggal:
-                        getIndex = allData.index(data)
-
-                        nextData = allData[getIndex:]
-
-                        for nextdata in nextData:
-                            if nextdata[0] == '':
-                                getIndexNull = nextData.index(nextdata)
-
-                        result = nextData[:getIndexNull]
-
-                        return result
-
-                except:
-                    print("beda")
-        else:
-            return "no_pilihan"
-
-
-    def saveProfile(self):
+    def setProfile(self):
         self.options = webdriver.ChromeOptions()
         self.options.add_argument('--user-data-dir=./user_data')
         self.driver = webdriver.Chrome(chrome_options=self.options)
+    
+    def openBrowser(self):
+        self.setProfile()
+        self.driver.get("https://web.whatsapp.com/")
+        self.waitLogin()
 
     def splitString(self, string):
         li = list(string.split(" "))
@@ -207,7 +112,7 @@ class Chatbot(object):
                 self.typeAndSendMessage("ok, tunggu sebentar ya :-D")
                 getIndex = self.message.index("sidang")
                 try:
-                    jadwal = self.cekJadwalSidang(self.message[getIndex+1])
+                    jadwal = prodi.cekJadwalSidang(self.message[getIndex+1])
                     jadwal.pop(0)
                     jadwal.pop(0)
 
@@ -225,7 +130,7 @@ class Chatbot(object):
 
                 npm = self.message[getIndex+1]
                 pertemuan = self.message[getIndex+2]
-                hasil = self.getNilaiMahasiswa(npm, pertemuan)
+                hasil = prodi.getNilaiMahasiswa(npm, pertemuan)
 
                 if hasil == "invalid":
                     self.typeAndSendMessage("maaf npmnya ga wanda temuin :'-(, mungkin npmnya salah, coba dicek lagi deh :-)")
@@ -443,7 +348,8 @@ class Chatbot(object):
 
         except Exception as e:
             print(e)
-            print("No Message..")
+            print("errorr..")
+            self.typeAndSendMessage("Duh maaf program yang diminta lagi rusak nih.. tulisannya : \n _"+str(e)+"_ \n minta tolong dong forwadin pesan diatas ke akang teteh mimin ya... Makasih :) ")
 
     def listToString(self, message):
         pesan = " "
@@ -834,9 +740,4 @@ class Chatbot(object):
 
         return name
 
-    def openBrowser(self):
-        self.saveProfile()
-        self.driver.get("https://web.whatsapp.com/")
-        self.waitLogin()
 
-    #===========================COBA DLU GENGS
