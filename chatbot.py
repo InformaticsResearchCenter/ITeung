@@ -37,8 +37,8 @@ class Chatbot(object):
         self.wait.until(EC.presence_of_element_located((By.XPATH, self.x_arg)))
 
     def typeAndSendMessage(self, message):
-        self.message_target = self.driver.find_elements_by_xpath('//*[@id="main"]/footer/div[1]/div[2]/div/div[2]')[0]
-        self.message_target.send_keys(message)
+        self.getMessage_target = self.driver.find_elements_by_xpath('//*[@id="main"]/footer/div[1]/div[2]/div/div[2]')[0]
+        self.getMessage_target.send_keys(message)
         self.sendbutton = self.driver.find_elements_by_xpath('//*[@id="main"]/footer/div[1]/div[3]/button')[0]
         self.sendbutton.click()
 
@@ -70,49 +70,60 @@ class Chatbot(object):
 
             sleep(0.5)
 
-            self.span = self.driver.find_elements_by_xpath('(.//span)')[-11].text
+            stringMessage = self.driver.find_elements_by_xpath('(.//span)')[-11].text
+            stringMessageLower = stringMessage.lower()
+            message = self.splitString(stringMessageLower)
 
-            self.spanLower = self.span.lower()
+            numberPhone = self.driver.find_elements_by_class_name("ZObjg")[-1].text
 
-            self.message = self.splitString(self.spanLower)
+            aliasName = self.driver.find_elements_by_class_name("_1F9Ap")[-1].text
 
-            if "wanda" in self.message:
+            data = []
+            data.append(numberPhone)
+            data.append(aliasName)
+            data.append(message)
+
+            getNumberPhone = data[0]
+            getAliasName = data[1]
+            self.getMessage = data[2]
+
+            if "wanda" in self.getMessage:
                 list_jawaban = ["iyaaaaaa :-D", "iya, kenapa?", "iya, butuh bantuan?"]
                 jawaban = random.choice(list_jawaban)
                 self.typeAndSendMessage(jawaban)
 
-            if "wanda" in self.message and "perkenalkan" in self.message or "kenalan" in self.message:
+            if "wanda" in self.getMessage and "perkenalkan" in self.getMessage or "kenalan" in self.getMessage:
                 self.sendPictureWithoutPhoneNumber()
                 self.typeAndSendMessage("Halo, perkenalkan Nama aku wanda, Aku seorang mahasiswi poltekpos, Salam kenal ya")
 
-            if "terima" in self.message and "kasih" in self.message and "wanda" in self.message:
+            if "terima" in self.getMessage and "kasih" in self.getMessage and "wanda" in self.getMessage:
                 self.typeAndSendMessage("sama sama :-)")
 
-            if "nuhun" in self.message and "wanda" in self.message:
+            if "nuhun" in self.getMessage and "wanda" in self.getMessage:
                 self.typeAndSendMessage("sami sami :-D")
 
-            if "makasih" in self.message and "wanda" in self.message:
+            if "makasih" in self.getMessage and "wanda" in self.getMessage:
                 self.typeAndSendMessage("yoi, cama-cama")
 
-            if "pintar" in self.message and "wanda" in self.message:
+            if "pintar" in self.getMessage and "wanda" in self.getMessage:
                 self.typeAndSendMessage("Oo, iya dong, makasih atas pujiannya")
 
-            if "ngeselin" in self.message or "kesal" in self.message and "wanda" in self.message:
+            if "ngeselin" in self.getMessage or "kesal" in self.getMessage and "wanda" in self.getMessage:
                 self.typeAndSendMessage("hmm, maaf ya kalo wanda ada salah sama kamu")
 
-            if "beliin" in self.message and "rokok" in self.message and "wanda" in self.message:
+            if "beliin" in self.getMessage and "rokok" in self.getMessage and "wanda" in self.getMessage:
                 self.typeAndSendMessage("bukannya wanda gak mau beliin, tapi rokok itu gak baik buat kesehatan, lebih baik rokoknya diganti sama wanda aja gimana?")
 
-            if "centil" in self.message or "nakal" in self.message and "wanda" in self.message:
+            if "centil" in self.getMessage or "nakal" in self.getMessage and "wanda" in self.getMessage:
                 lst_jawaban = ["emang kenapa? ada masalah?", "trus? masalah buat kamu?"]
                 answer = random.choice(lst_jawaban)
                 self.typeAndSendMessage(answer)
 
-            if "sidang" in self.message and "wanda" in self.message:
+            if "sidang" in self.getMessage and "wanda" in self.getMessage:
                 self.typeAndSendMessage("ok, tunggu sebentar ya :-D")
-                getIndex = self.message.index("sidang")
+                getIndex = self.getMessage.index("sidang")
                 try:
-                    jadwal = prodi.cekJadwalSidang(self.message[getIndex+1])
+                    jadwal = prodi.cekJadwalSidang(self.getMessage[getIndex+1])
                     jadwal.pop(0)
                     jadwal.pop(0)
 
@@ -122,14 +133,14 @@ class Chatbot(object):
                         for i in jadwal:
                             self.typeAndSendMessage("NPM: "+i[0]+", Nama: "+i[1]+", Penguji utama: "+i[2]+", Penguji pendamping: "+i[3]+", Jam: "+i[5]+", Lokasi: "+i[6])
                 except:
-                    self.typeAndSendMessage("jadwal sidang "+self.message[getIndex+1]+" tidak ada")
+                    self.typeAndSendMessage("jadwal sidang "+self.getMessage[getIndex+1]+" tidak ada")
 
-            if "nilai" in self.message and "wanda" in self.message:
+            if "nilai" in self.getMessage and "wanda" in self.getMessage:
                 self.typeAndSendMessage("sip, ti antosan sakeudap :-)")
-                getIndex = self.message.index("nilai")
+                getIndex = self.getMessage.index("nilai")
 
-                npm = self.message[getIndex+1]
-                pertemuan = self.message[getIndex+2]
+                npm = self.getMessage[getIndex+1]
+                pertemuan = self.getMessage[getIndex+2]
                 hasil = prodi.getNilaiMahasiswa(npm, pertemuan)
 
                 if hasil == "invalid":
@@ -140,35 +151,35 @@ class Chatbot(object):
                     self.typeAndSendMessage("NPM: "+npm+", Nama: "+hasil[1]+", Nilai: "+hasil[0]+", Nilai rata-rata: "+hasil[2])
 
 
-            if "love" in self.message and "wanda" in self.message:
+            if "love" in self.getMessage and "wanda" in self.getMessage:
                 self.typeAndSendMessage("love you too <3")
             
-            if "aku" in self.message and "cantik" in self.message and "wanda" in self.message:
+            if "aku" in self.getMessage and "cantik" in self.getMessage and "wanda" in self.getMessage:
                 ihuy = [
                     "iya kamu cantik bangeett deehh (^o^)", "iya kamu cantik tapi masih cantikan akuu hehehe"
                     ,"iyaa zheyengg"
                 ]
                 love = random.choice(ihuy)
                 self.typeAndSendMessage(love)
-            if "kamu" in self.message and "cantik" in self.message and "wanda" in self.message:
+            if "kamu" in self.getMessage and "cantik" in self.getMessage and "wanda" in self.getMessage:
                 ayey = [
                     "terima kasihh kakak yang maniss (/◕ヮ◕)/","awww terima kasiihh (≧▽≦)","love you kak (ㆁωㆁ*)"
                 ]
                 loveu = random.choice(ayey)
                 self.typeAndSendMessage(loveu)
                 
-            if "bioskop" in self.message:
-                self.movieSchedule(self.message)
+            if "bioskop" in self.getMessage:
+                self.movieSchedule(self.getMessage)
 
-            if "perhutani" in self.message:
+            if "perhutani" in self.getMessage:
                 self.perhutani()
 
-            if "gmaps" in self.message:
-                self.message.pop(0)
-                desti2 = self.listToString(self.message)
+            if "gmaps" in self.getMessage:
+                self.getMessage.pop(0)
+                desti2 = self.listToString(self.getMessage)
                 self.gmaps(desti2)
 
-            if "foto" in self.message:
+            if "foto" in self.getMessage:
                 sleep(1)
                 name = self.getName()
                 sleep(1)
@@ -176,12 +187,12 @@ class Chatbot(object):
                 sleep(1)
                 self.renamePicture(name)
                 sleep(1)
-                self.sendPictureWithPhoneNumber(self.message[1], name)
+                self.sendPictureWithPhoneNumber(self.getMessage[1], name)
                 sleep(1)
                 self.deletePicture()
                 sleep(1)
 
-            if "gambar" in self.message:
+            if "gambar" in self.getMessage:
                 sleep(1)
                 name = self.getName()
                 sleep(1)
@@ -201,7 +212,7 @@ class Chatbot(object):
                     self.typeAndSendMessage(
                         "ihhhh, wanda gak tau ada apa aja digambar yang kamu kirimin, maaf ya, coba kirimin gambar yang lebih jelas")
 
-            if "face" in self.message:
+            if "face" in self.getMessage:
                 sleep(1)
                 name = self.getName()
                 sleep(1)
@@ -221,7 +232,7 @@ class Chatbot(object):
 
             # bully #
             rage_sentence = ["bodoh", "jelek", "anjing", "bangsat", "bego", "tolol", "idiot", "bau"] #kata yg diperkirakan dimasukkan
-            if any(x in self.message for x in rage_sentence) and "wanda" in self.message: #cek kata
+            if any(x in self.getMessage for x in rage_sentence) and "wanda" in self.getMessage: #cek kata
                 balesan = [
                     "Ya allah Tolongin Baim Ya allah (ಥ﹏ಥ)", "Kok kamu jahat bIiinNNNnngggGGHHiitzzz sich sama aku zheyeng ('・ω・')",
                     "Tak ada manusia yang terlahir \ndi download \n(´-﹏-`；)", "Ya Maaf (ಥ﹏ಥ)", "sudah cukup rhoma (｡ŏ﹏ŏ)",
@@ -232,18 +243,18 @@ class Chatbot(object):
                 self.typeAndSendMessage(marah)
 
             #formal
-            if "selamat" in self.message and "siang" in self.message and "wanda" in self.message:
+            if "selamat" in self.getMessage and "siang" in self.getMessage and "wanda" in self.getMessage:
                 self.typeAndSendMessage("iya, selamat siang :-)")
-            if "selamat" in self.message and "sore" in self.message and "wanda" in self.message:
+            if "selamat" in self.getMessage and "sore" in self.getMessage and "wanda" in self.getMessage:
                 self.typeAndSendMessage("iya, selamat sore :-)")
-            if "selamat" in self.message and "malam" in self.message and "wanda" in self.message:
+            if "selamat" in self.getMessage and "malam" in self.getMessage and "wanda" in self.getMessage:
                 self.typeAndSendMessage("iya, selamat malam :-)")
-            if "selamat" in self.message and "pagi" in self.message and "wanda" in self.message:
+            if "selamat" in self.getMessage and "pagi" in self.getMessage and "wanda" in self.getMessage:
                 self.typeAndSendMessage("iya, selamat pagi :-)")
 
             # Joke #
             joke_sentence = ["ngelucu", "ngelawak", "ngejoke", "ngereceh"] #kata yg diperkirakan dimasukkan
-            if any(x in self.message for x in joke_sentence) and "wanda" in self.message: #cek kata
+            if any(x in self.getMessage for x in joke_sentence) and "wanda" in self.getMessage: #cek kata
                 list_joke = [
                 "Sahabat dekat biasanya akan mengajak makan kepiting bareng, karena sahabat yang dekat adalah sahabat a crab :)",
                 "Rombongan bebek lagi nyebrang \nTrus ada satu bebek yang ketabrak motor \nBebek 1: Kamu gpp? \nBebek 2: Aku bebek aja kok :)",
@@ -263,27 +274,27 @@ class Chatbot(object):
                 self.typeAndSendMessage(joke)
 
             # santuy #
-            # if "salam" in self.message and "wanda" in self.message:
+            # if "salam" in self.getMessage and "wanda" in self.getMessage:
             #     self.typeAndSendMessage("assalamualaikum")
             #
-            # if "assalamualaikum" in self.message and "wanda" in self.message:
+            # if "assalamualaikum" in self.getMessage and "wanda" in self.getMessage:
             #     self.typeAndSendMessage("waalaikumsalam")
             #
-            # if "gimana kabarmu?" in self.message and "wanda" in self.message:
+            # if "gimana kabarmu?" in self.getMessage and "wanda" in self.getMessage:
             #     self.typeAndSendMessage("Saya baik-baik saja kok kak :-)")
             #
-            # if "siapa yang menciptakan kamu?" in self.message and "wanda" in self.message:
+            # if "siapa yang menciptakan kamu?" in self.getMessage and "wanda" in self.getMessage:
             #     self.typeAndSendMessage("Tim IRC kakak, mereka hebat-hebat makanya sekarang wanda menjadi pintar :-)")
             #
-            # if "aku cape" in self.message and "wanda" in self.message:
+            # if "aku cape" in self.getMessage and "wanda" in self.getMessage:
             #     self.typeAndSendMessage("jangan lupa makan dan istrahat ya kakak :-)")
             #
-            # if "sampurasun" in self.message and "wanda" in self.message:
+            # if "sampurasun" in self.getMessage and "wanda" in self.getMessage:
             #     self.typeAndSendMessage("Rampes")
 
             #teka-teki#
             teka_teki = ["teka-teki", "main"]
-            if any(x in self.message for x in teka_teki) and "wanda" in self.message: #cek kata
+            if any(x in self.getMessage for x in teka_teki) and "wanda" in self.getMessage: #cek kata
                 list_tekateki = [
                     "Ade ray kalau kentut bunyinya gimana? \n Brotot, brotot, brottott " , 
                     "Sandal apa yang paling enak di dunia? \n Sandal terasi", 
@@ -308,24 +319,24 @@ class Chatbot(object):
                 self.typeAndSendMessage(tekateki)
 
             # hiburan
-            if "wanda" in self.message and "hibur" in self.message or "hiburan" in self.message:
+            if "wanda" in self.getMessage and "hibur" in self.getMessage or "hiburan" in self.getMessage:
                 self.typeAndSendMessage("Boleh, mau lihat wanda ngedance atau nyanyi?")
 
-            if "wanda" in self.message and "ngedance" in self.message or "dance" in self.message or "nari" in self.message:
+            if "wanda" in self.getMessage and "ngedance" in self.getMessage or "dance" in self.getMessage or "nari" in self.getMessage:
                 self.typeAndSendMessage("tunggu sebentar ya, wanda rekaman dulu")
                 self.sendVideoWithoutPhoneNumber()
 
-            if "wanda" in self.message and "nyanyi" in self.message or "menyanyi" in self.message:
+            if "wanda" in self.getMessage and "nyanyi" in self.getMessage or "menyanyi" in self.getMessage:
                 self.typeAndSendMessage("tunggu sebentar ya, wanda rekaman dulu")
                 self.sendVideoWithoutPhoneNumber()
 
-            if "wanda" in self.message and "gaya" in self.message and "imutnya" in self.message:
+            if "wanda" in self.getMessage and "gaya" in self.getMessage and "imutnya" in self.getMessage:
                 self.typeAndSendMessage("bentar ya, rekaman dulu")
                 self.sendVideoWithoutPhoneNumber()
 
             # gombalan #
             gombalan = ["gombal", "rayu", "baper", "gombalin", "baperin", "gombalan", "rayuan"] #kata yg diperkirakan dimasukkan
-            if any(x in self.message for x in gombalan) and "wanda" in self.message: #cek kata
+            if any(x in self.getMessage for x in gombalan) and "wanda" in self.getMessage: #cek kata
                 list_gombal = [
                     "Sedang apa? Hari ini jika sehat berkenan lebih lama bersemayam di tubuh kita, maukah kau berkencan bersamaku? Hanya kita, berdua?", 
                     "Aku mengenalmu tanpa sengaja, lalu menyayangimu secara tiba-tiba, namun sayang belum jadi siapa-siapa, mungkin nanti atau esok?",
@@ -559,12 +570,12 @@ class Chatbot(object):
 
         path = r"C:\Users\rolly\Downloads"
 
-        if "ngedance" in self.message and "wanda" in self.message:
+        if "ngedance" in self.getMessage and "wanda" in self.getMessage:
             nameFile = ["wanda.mp4", "ngedance1.mp4", "ngedance2.mp4"]
             namaFile = random.choice(nameFile)
-        if "nyanyi" in self.message and "wanda" in self.message:
+        if "nyanyi" in self.getMessage and "wanda" in self.getMessage:
             namaFile = "nyanyi.mp4"
-        if "imutnya" in self.message and "wanda" in self.message and "gaya" in self.message:
+        if "imutnya" in self.getMessage and "wanda" in self.getMessage and "gaya" in self.getMessage:
             nameFile = ["imut1.mp4", "imut2.mp4"]
             namaFile = random.choice(nameFile)
 
