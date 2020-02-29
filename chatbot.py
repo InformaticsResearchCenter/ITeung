@@ -77,10 +77,10 @@ class Chatbot(object):
     def getMessage(self,driver):
         return driver.find_elements_by_xpath('(.//span)')[-11].text
 		
-    def getNumber(self,driver):
+    def getSenderNumber(self,driver):
         return driver.find_elements_by_class_name("ZObjg")[-1].text
 		
-    def getName(self,driver):
+    def getSenderName(self,driver):
         return driver.find_elements_by_class_name("_1F9Ap")[-1].text
     
     def normalize(self, message):
@@ -108,8 +108,8 @@ class Chatbot(object):
         try:
             self.openMessage(driver)
             msg = self.getMessage(driver)
-            num = self.getNumber(driver)
-            alname = self.getName(driver)
+            num = self.getSenderNumber(driver)
+            alname = self.getSenderName(driver)
 			
             msg = self.normalize(msg)
             msgs=self.splitString(msg)
@@ -594,7 +594,7 @@ class Chatbot(object):
         sleep(1)
 
     #add video hiburan wanda
-    def sendVideoWithoutPhoneNumber(self):
+    def sendVideoWithoutPhoneNumber(self, msgs):
         self.driver.find_element_by_css_selector("span[data-icon='clip']").click()
         sleep(2)
 
