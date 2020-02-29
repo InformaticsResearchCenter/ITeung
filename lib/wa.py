@@ -5,10 +5,10 @@ Created on Tue Feb 25 06:35:15 2020
 @author: rolly
 """
 
-def setProfile(self):
-    self.options = webdriver.ChromeOptions()
-    self.options.add_argument('--user-data-dir=./user_data')
-    self.driver = webdriver.Chrome(chrome_options=self.options)
+def setProfile():
+    options = webdriver.ChromeOptions()
+    options.add_argument('--user-data-dir=./user_data')
+    driver = webdriver.Chrome(chrome_options=self.options)
         
 def openWaWeb(self):
     setProfile()

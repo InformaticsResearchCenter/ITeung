@@ -4,6 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 #from oauth2client.service_account import ServiceAccountCredentials
+import config
 from lib import prodi
 import face_recognition
 import cv2
@@ -16,66 +17,94 @@ from time import sleep
 from googletrans import Translator
 
 class Chatbot(object):
-    def setProfile(self):
-        self.options = webdriver.ChromeOptions()
-        self.options.add_argument('--user-data-dir=./user_data')
-        self.driver = webdriver.Chrome(chrome_options=self.options)
+    def __init__(self):
+        self.driver = self.setProfie(config.profile_folder)
+        self.loginWA(self.driver)
+        
+    def setProfile(self, profile_folder):
+        options = webdriver.ChromeOptions()
+        set_dir = '--user-data-dir='+profile_folder
+        options.add_argument(set_dir)
+        driver = webdriver.Chrome(chrome_options=options)
+        return driver
     
-    def openBrowser(self):
-        self.setProfile()
-        self.driver.get("https://web.whatsapp.com/")
-        self.waitLogin()
+    def loginWA(self, driver):
+        driver.get("https://web.whatsapp.com/")
+        self.waitLogin(driver)
 
     def splitString(self, string):
         li = list(string.split(" "))
         return li
 
-    def waitLogin(self):
-        self.target = '"_3RWII"'
-        self.x_arg = '//div[contains(@class, ' + self.target + ')]'
-        self.wait = WebDriverWait(self.driver, 600)
-        self.wait.until(EC.presence_of_element_located((By.XPATH, self.x_arg)))
+    def waitLogin(self, driver):
+        target = '"_3RWII"'
+        x_arg = '//div[contains(@class, ' + target + ')]'
+        wait = WebDriverWait(driver, 600)
+        wait.until(EC.presence_of_element_located((By.XPATH, x_arg)))
 
-    def typeAndSendMessage(self, message):
-        self.message_target = self.driver.find_elements_by_xpath('//*[@id="main"]/footer/div[1]/div[2]/div/div[2]')[0]
-        self.message_target.send_keys(message)
-        self.sendbutton = self.driver.find_elements_by_xpath('//*[@id="main"]/footer/div[1]/div[3]/button')[0]
-        self.sendbutton.click()
+    def typeAndSendMessage(self, driver, message):
+        message_target = driver.find_elements_by_xpath('//*[@id="main"]/footer/div[1]/div[2]/div/div[2]')[0]
+        message_target.send_keys(message)
+        sendbutton = driver.find_elements_by_xpath('//*[@id="main"]/footer/div[1]/div[3]/button')[0]
+        sendbutton.click()
 
-    def deleteMessage(self):
-        self.driver.find_elements_by_class_name('_3j8Pd')[-1].click()
+    def deleteMessage(self, driver):
+        driver.find_elements_by_class_name('_3j8Pd')[-1].click()
         sleep(1)
 
-        value_name = self.driver.find_elements_by_class_name('_3zy-4')
+        value_name = driver.find_elements_by_class_name('_3zy-4')
         sleep(1)
 
         if 'Exit group' in value_name[4].text:
             print('group')
             value_name[3].click()
-            self.driver.find_elements_by_class_name('_2eK7W')[1].click()
+            driver.find_elements_by_class_name('_2eK7W')[1].click()
         else:
             print('personal')
             value_name[4].click()
-            self.driver.find_elements_by_class_name('_2eK7W')[1].click()
+            driver.find_elements_by_class_name('_2eK7W')[1].click()
 
-    def cekAndSendMessage(self):
+    def getMessage(self,driver):
         try:
-            try:
-                self.chat = self.driver.find_elements_by_class_name("P6z4j")[0]
-                self.chat.click()
-                self.chat.click()
-                self.chat.click()
-            except:
-                print('skip data')
-
-            sleep(0.5)
-
-            self.span = self.driver.find_elements_by_xpath('(.//span)')[-11].text
-
-            self.spanLower = self.span.lower()
-
-            self.message = self.splitString(self.spanLower)
-
+            chat = driver.find_elements_by_class_name("P6z4j")[0]
+            chat.click()
+            chat.click()
+            chat.click()
+        except:
+            print('skip data')
+        sleep(0.5)
+        return driver.find_elements_by_xpath('(.//span)')[-11].text
+    
+    def normalize(self, message):
+        msg = message.lower()
+        msg=msg.replace(',',' ')
+        msg=msg.replace('.',' ')
+        msg=msg.replace("'",' ')
+        msg=msg.replace('?',' ')
+        msg=msg.replace('!',' ')
+        msg=msg.replace('(',' ')
+        msg=msg.replace(')',' ')
+        msg=msg.replace(':',' ')
+        msg=msg.replace(';',' ')
+        msg=msg.replace('*',' ')
+        msg=msg.replace('&',' ')
+        msg=msg.replace('^',' ')
+        msg=msg.replace('%',' ')
+        msg=msg.replace('/',' ')
+        msg=msg.replace('[',' ')
+        msg=msg.replace(']',' ')
+        #message = self.splitString(tolowercase)
+        return msg
+        
+    def cekAndSendMessage(self,driver):
+        try:
+            msg = self.getMessage(driver)
+            msg = self.normalize(msg)
+            self.message=self.splitString(msg)
+            
+            if msg.find(config.bot_name) > 0:
+                print(msg)
+            
             if "wanda" in self.message:
                 list_jawaban = ["iyaaaaaa :-D", "iya, kenapa?", "iya, butuh bantuan?"]
                 jawaban = random.choice(list_jawaban)
