@@ -74,13 +74,13 @@ class Chatbot(object):
             print('skip data')
         sleep(0.5)
 	
-	def getMessage(self,driver):
+    def getMessage(self,driver):
         return driver.find_elements_by_xpath('(.//span)')[-11].text
 		
-	def getNumber(self,driver):
+    def getNumber(self,driver):
         return driver.find_elements_by_class_name("ZObjg")[-1].text
 		
-	def getName(self,driver):
+    def getName(self,driver):
         return driver.find_elements_by_class_name("_1F9Ap")[-1].text
     
     def normalize(self, message):
@@ -106,11 +106,10 @@ class Chatbot(object):
         
     def cekAndSendMessage(self,driver):
         try:
-			self.openMessage(driver)
-            
-			msg = msgs(driver)
-			num = self.getNumber(driver)
-			name = self.getName(driver)
+            self.openMessage(driver)
+            msg = self.getMessage(driver)
+            num = self.getNumber(driver)
+            alname = self.getName(driver)
 			
             msg = self.normalize(msg)
             msgs=self.splitString(msg)
