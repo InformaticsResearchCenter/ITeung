@@ -18,8 +18,10 @@ from googletrans import Translator
 
 class Chatbot(object):
     def __init__(self):
-        self.driver = self.setProfie(config.profile_folder)
-        self.loginWA(self.driver)
+        driver = self.setProfile(config.profile_folder)
+        self.loginWA(driver)
+        while True:
+            self.cekAndSendMessage(driver)
         
     def setProfile(self, profile_folder):
         options = webdriver.ChromeOptions()
@@ -108,19 +110,24 @@ class Chatbot(object):
         try:
             self.openMessage(driver)
             msg = self.getMessage(driver)
-            num = self.getSenderNumber(driver)
-            alname = self.getSenderName(driver)
-			
+            #num = self.getSenderNumber(driver)
+            #alname = self.getSenderName(driver)
+            #print(num+' - '+alname)
+            
             msg = self.normalize(msg)
             msgs=self.splitString(msg)
             
-            if msg.find(config.bot_name) > 0:
+            if msg.find(config.bot_name) >= 0:
+                list_jawaban = ["iyaaaaaa :-D", "iya, kenapa?", "iya, butuh bantuan?"]
+                jawaban = random.choice(list_jawaban)
+                self.typeAndSendMessage(driver,jawaban)
                 print(msg)
+                
             
             if "wanda" in msgs:
                 list_jawaban = ["iyaaaaaa :-D", "iya, kenapa?", "iya, butuh bantuan?"]
                 jawaban = random.choice(list_jawaban)
-                self.typeAndSendMessage(jawaban)
+                self.typeAndSendMessage(driver,jawaban)
 
             if "wanda" in msgs and "perkenalkan" in msgs or "kenalan" in msgs:
                 self.sendPictureWithoutPhoneNumber()
@@ -167,18 +174,18 @@ class Chatbot(object):
 
             if "nilai" in msgs and "wanda" in msgs:
                 self.typeAndSendMessage("sip, ti antosan sakeudap :-)")
-                getIndex = msgs.index("nilai")
+                getIndex = msgs.index(driver,"nilai")
 
                 npm = msgs[getIndex+1]
                 pertemuan = msgs[getIndex+2]
                 hasil = prodi.getNilaiMahasiswa(npm, pertemuan)
 
                 if hasil == "invalid":
-                    self.typeAndSendMessage("maaf npmnya ga wanda temuin :'-(, mungkin npmnya salah, coba dicek lagi deh :-)")
+                    self.typeAndSendMessage(driver,"maaf npmnya ga wanda temuin :'-(, mungkin npmnya salah, coba dicek lagi deh :-)")
                 elif hasil == "pertemuan_invalid":
-                    self.typeAndSendMessage("format salah, contoh: pertemuan1")
+                    self.typeAndSendMessage(driver,"format salah, contoh: pertemuan1")
                 else:
-                    self.typeAndSendMessage("NPM: "+npm+", Nama: "+hasil[1]+", Nilai: "+hasil[0]+", Nilai rata-rata: "+hasil[2])
+                    self.typeAndSendMessage(driver,"NPM: "+npm+", Nama: "+hasil[1]+", Nilai: "+hasil[0]+", Nilai rata-rata: "+hasil[2])
 
 
             if "love" in msgs and "wanda" in msgs:

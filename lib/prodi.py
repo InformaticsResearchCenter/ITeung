@@ -46,27 +46,27 @@ def cekJadwalSidang(pilihan):
     lusa = sekarang + datetime.timedelta(days=2)
 
     if pilihan == "sekarang":
-        self.pilihanTanggal = sekarang
+        pilihanTanggal = sekarang
         runnerVariable = 1
     if pilihan == "besok":
-        self.pilihanTanggal = besok
+        pilihanTanggal = besok
         runnerVariable = 1
     if pilihan == "kemarin":
-        self.pilihanTanggal = kemaren
+        pilihanTanggal = kemaren
         runnerVariable = 1
     if pilihan == "lusa":
-        self.pilihanTanggal = lusa
+        pilihanTanggal = lusa
         runnerVariable = 1
 
     if runnerVariable == 1:
         for data in allData:
             try:
                 tanggal = parse(data[0]).date()
-                print(self.pilihanTanggal)
+                print(pilihanTanggal)
 
                 print(tanggal)
 
-                if self.pilihanTanggal == tanggal:
+                if pilihanTanggal == tanggal:
                     getIndex = allData.index(data)
 
                     nextData = allData[getIndex:]
