@@ -17,7 +17,7 @@ def reply(driver,msg):
     hasil = getNilaiMahasiswa(npm, pertemuan)
 
     if hasil == "invalid":
-        res="maaf npmnya ga wanda temuin :'-(, mungkin npmnya salah, coba dicek lagi deh :-)"
+        res="maaf npmnya ga #BOTNAME# temuin :'-(, mungkin npmnya salah, coba dicek lagi deh :-)"
     elif hasil == "pertemuan_invalid":
         res="format salah, contoh: pertemuan1"
     else:
