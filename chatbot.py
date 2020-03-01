@@ -1,9 +1,4 @@
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-#from oauth2client.service_account import ServiceAccountCredentials
+from lib import wa
 import config
 from lib import prodi
 import face_recognition
@@ -18,116 +13,34 @@ from googletrans import Translator
 
 class Chatbot(object):
     def __init__(self):
-        driver = self.setProfile(config.profile_folder)
-        self.loginWA(driver)
+        driver = wa.setProfile(config.profile_folder)
+        wa.loginWA(driver)
         while True:
             self.cekAndSendMessage(driver)
         
-    def setProfile(self, profile_folder):
-        options = webdriver.ChromeOptions()
-        set_dir = '--user-data-dir='+profile_folder
-        options.add_argument(set_dir)
-        driver = webdriver.Chrome(chrome_options=options)
-        return driver
-    
-    def loginWA(self, driver):
-        driver.get("https://web.whatsapp.com/")
-        self.waitLogin(driver)
-
-    def splitString(self, string):
-        li = list(string.split(" "))
-        return li
-
-    def waitLogin(self, driver):
-        target = '"_3RWII"'
-        x_arg = '//div[contains(@class, ' + target + ')]'
-        wait = WebDriverWait(driver, 600)
-        wait.until(EC.presence_of_element_located((By.XPATH, x_arg)))
-
-    def typeAndSendMessage(self, driver, message):
-        message_target = driver.find_elements_by_xpath('//*[@id="main"]/footer/div[1]/div[2]/div/div[2]')[0]
-        message_target.send_keys(message)
-        sendbutton = driver.find_elements_by_xpath('//*[@id="main"]/footer/div[1]/div[3]/button')[0]
-        sendbutton.click()
-
-    def deleteMessage(self, driver):
-        driver.find_elements_by_class_name('_3j8Pd')[-1].click()
-        sleep(1)
-
-        value_name = driver.find_elements_by_class_name('_3zy-4')
-        sleep(1)
-
-        if 'Exit group' in value_name[4].text:
-            print('group')
-            value_name[3].click()
-            driver.find_elements_by_class_name('_2eK7W')[1].click()
-        else:
-            print('personal')
-            value_name[4].click()
-            driver.find_elements_by_class_name('_2eK7W')[1].click()
-
-    def openMessage(self,driver):
-        try:
-            chat = driver.find_elements_by_class_name("P6z4j")[0]
-            chat.click()
-            chat.click()
-            chat.click()
-        except:
-            print('skip data')
-        sleep(0.5)
-	
-    def getMessage(self,driver):
-        return driver.find_elements_by_xpath('(.//span)')[-11].text
-		
-    def getSenderNumber(self,driver):
-        return driver.find_elements_by_class_name("ZObjg")[-1].text
-		
-    def getSenderName(self,driver):
-        return driver.find_elements_by_class_name("_1F9Ap")[-1].text
-    
-    def normalize(self, message):
-        msg = message.lower()
-        msg=msg.replace(',',' ')
-        msg=msg.replace('.',' ')
-        msg=msg.replace("'",' ')
-        msg=msg.replace('?',' ')
-        msg=msg.replace('!',' ')
-        msg=msg.replace('(',' ')
-        msg=msg.replace(')',' ')
-        msg=msg.replace(':',' ')
-        msg=msg.replace(';',' ')
-        msg=msg.replace('*',' ')
-        msg=msg.replace('&',' ')
-        msg=msg.replace('^',' ')
-        msg=msg.replace('%',' ')
-        msg=msg.replace('/',' ')
-        msg=msg.replace('[',' ')
-        msg=msg.replace(']',' ')
-        #message = self.splitString(tolowercase)
-        return msg
-        
+       
     def cekAndSendMessage(self,driver):
         try:
-            self.openMessage(driver)
-            msg = self.getMessage(driver)
+            wa.openMessage(driver)
+            msg = wa.getMessage(driver)
             #num = self.getSenderNumber(driver)
             #alname = self.getSenderName(driver)
             #print(num+' - '+alname)
             
-            msg = self.normalize(msg)
-            msgs=self.splitString(msg)
+            msg  = wa.normalize(msg)
+            msgs = wa.splitString(msg)
             
             if msg.find(config.bot_name) >= 0:
                 list_jawaban = ["iyaaaaaa :-D", "iya, kenapa?", "iya, butuh bantuan?"]
                 jawaban = random.choice(list_jawaban)
-                self.typeAndSendMessage(driver,jawaban)
+                wa.typeAndSendMessage(driver,jawaban)
                 print(msg)
                 
             
             if "wanda" in msgs:
                 list_jawaban = ["iyaaaaaa :-D", "iya, kenapa?", "iya, butuh bantuan?"]
                 jawaban = random.choice(list_jawaban)
-                self.typeAndSendMessage(driver,jawaban)
+                wa.typeAndSendMessage(driver,jawaban)
 
             if "wanda" in msgs and "perkenalkan" in msgs or "kenalan" in msgs:
                 self.sendPictureWithoutPhoneNumber()
@@ -173,7 +86,7 @@ class Chatbot(object):
                     self.typeAndSendMessage("jadwal sidang "+msgs[getIndex+1]+" tidak ada")
 
             if "nilai" in msgs and "wanda" in msgs:
-                self.typeAndSendMessage(driver,"sip, ti antosan sakeudap :-)")
+                wa.typeAndSendMessage(driver,"sip, ti antosan sakeudap :-)")
                 getIndex = msgs.index("nilai")
 
                 npm = msgs[getIndex+1]
@@ -181,11 +94,11 @@ class Chatbot(object):
                 hasil = prodi.getNilaiMahasiswa(npm, pertemuan)
 
                 if hasil == "invalid":
-                    self.typeAndSendMessage(driver,"maaf npmnya ga wanda temuin :'-(, mungkin npmnya salah, coba dicek lagi deh :-)")
+                    wa.typeAndSendMessage(driver,"maaf npmnya ga wanda temuin :'-(, mungkin npmnya salah, coba dicek lagi deh :-)")
                 elif hasil == "pertemuan_invalid":
-                    self.typeAndSendMessage(driver,"format salah, contoh: pertemuan1")
+                    wa.typeAndSendMessage(driver,"format salah, contoh: pertemuan1")
                 else:
-                    self.typeAndSendMessage(driver,"NPM: "+npm+", Nama: "+hasil[1]+", Nilai: "+hasil[0]+", Nilai rata-rata: "+hasil[2])
+                    wa.typeAndSendMessage(driver,"NPM: "+npm+", Nama: "+hasil[1]+", Nilai: "+hasil[0]+", Nilai rata-rata: "+hasil[2])
 
 
             if "love" in msgs and "wanda" in msgs:
@@ -397,7 +310,7 @@ class Chatbot(object):
         except Exception as e:
             print(e)
             print("errorr..")
-            self.typeAndSendMessage(driver,"Duh maaf program yang diminta lagi rusak nih.. tulisannya : \n _"+str(e)+"_ \n minta tolong dong forwadin pesan diatas ke akang teteh mimin ya... Makasih :) ")
+            wa.typeAndSendMessage(driver,"Duh maaf program yang diminta lagi rusak nih.. tulisannya : \n _"+str(e)+"_ \n minta tolong dong forwadin pesan diatas ke akang teteh mimin ya... Makasih :) ")
 
     def listToString(self, message):
         pesan = " "
