@@ -8,3 +8,4 @@ numpy
 face_recognition
 random2
 googletrans
+pymysql
