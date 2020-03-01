@@ -5,7 +5,7 @@ Created on Tue Feb 25 06:35:15 2020
 @author: rolly
 """
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
+#from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -21,10 +21,6 @@ def setProfile(profile_folder):
 def loginWA(driver):
     driver.get("https://web.whatsapp.com/")
     waitLogin(driver)
-
-def splitString(string):
-    li = list(string.split(" "))
-    return li
 
 def waitLogin(driver):
     target = '"_3RWII"'

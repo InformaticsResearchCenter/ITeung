@@ -6,9 +6,23 @@ Created on Tue Feb 25 06:29:37 2020
 """
 from dateutil.parser import parse
 import datetime
-
+from lib import wa
 from lib import dawet 
 
+def cekNilai(driver,msgs):
+    wa.typeAndSendMessage(driver,"sip, ti antosan sakeudap :-)")
+    getIndex = msgs.index("nilai")
+
+    npm = msgs[getIndex+1]
+    pertemuan = msgs[getIndex+2]
+    hasil = getNilaiMahasiswa(npm, pertemuan)
+
+    if hasil == "invalid":
+        wa.typeAndSendMessage(driver,"maaf npmnya ga wanda temuin :'-(, mungkin npmnya salah, coba dicek lagi deh :-)")
+    elif hasil == "pertemuan_invalid":
+        wa.typeAndSendMessage(driver,"format salah, contoh: pertemuan1")
+    else:
+        wa.typeAndSendMessage(driver,"NPM: "+npm+", Nama: "+hasil[1]+", Nilai: "+hasil[0]+", Nilai rata-rata: "+hasil[2])
 
 def getNilaiMahasiswa(npm, pertemuan):
     if npm[:3] == "118":
