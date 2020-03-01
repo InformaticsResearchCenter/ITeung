@@ -173,8 +173,8 @@ class Chatbot(object):
                     self.typeAndSendMessage("jadwal sidang "+msgs[getIndex+1]+" tidak ada")
 
             if "nilai" in msgs and "wanda" in msgs:
-                self.typeAndSendMessage("sip, ti antosan sakeudap :-)")
-                getIndex = msgs.index(driver,"nilai")
+                self.typeAndSendMessage(driver,"sip, ti antosan sakeudap :-)")
+                getIndex = msgs.index("nilai")
 
                 npm = msgs[getIndex+1]
                 pertemuan = msgs[getIndex+2]
@@ -397,7 +397,7 @@ class Chatbot(object):
         except Exception as e:
             print(e)
             print("errorr..")
-            self.typeAndSendMessage("Duh maaf program yang diminta lagi rusak nih.. tulisannya : \n _"+str(e)+"_ \n minta tolong dong forwadin pesan diatas ke akang teteh mimin ya... Makasih :) ")
+            self.typeAndSendMessage(driver,"Duh maaf program yang diminta lagi rusak nih.. tulisannya : \n _"+str(e)+"_ \n minta tolong dong forwadin pesan diatas ke akang teteh mimin ya... Makasih :) ")
 
     def listToString(self, message):
         pesan = " "
