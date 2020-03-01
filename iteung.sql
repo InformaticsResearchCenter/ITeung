@@ -11,11 +11,24 @@
  Target Server Version : 100144
  File Encoding         : 65001
 
- Date: 01/03/2020 22:24:27
+ Date: 02/03/2020 06:53:51
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for error_message
+-- ----------------------------
+DROP TABLE IF EXISTS `error_message`;
+CREATE TABLE `error_message`  (
+  `content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of error_message
+-- ----------------------------
+INSERT INTO `error_message` VALUES ('Duh maaf programnya ada yang rusak nih.. tulisannya :  _#ERROR#_   ,#BOTNAME# sekarang yang minta tolong boleh? forwadin pesan ini ke akang teteh mimin ya... Makasih :) ');
 
 -- ----------------------------
 -- Table structure for keyword
@@ -115,6 +128,11 @@ DROP TABLE IF EXISTS `notfound_message`;
 CREATE TABLE `notfound_message`  (
   `content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of notfound_message
+-- ----------------------------
+INSERT INTO `notfound_message` VALUES ('duh maap... #BOTNAME# ga ngerti bahasanya.... huhuhu...');
 
 -- ----------------------------
 -- Table structure for opening_message
