@@ -35,13 +35,14 @@ class Chatbot(object):
                         wmsg=reply.getWaitingMessage(modulename)
                         wa.typeAndSendMessage(driver,wmsg)
                         msgreply=mod.reply(driver,msg)
-                msgreply=msgreply.replace("#BOTNAME#", config.bot_name)
-                wa.typeAndSendMessage(driver,msgreply)
         except Exception as e:
             print(e)
-            print("errorr..")
-            wa.typeAndSendMessage(driver,"Duh maaf program yang diminta lagi rusak nih.. tulisannya : \n _"+str(e)+"_ \n minta tolong dong forwadin pesan diatas ke akang teteh mimin ya... Makasih :) ")
-
+            msgreply=reply.getErrorMessage()
+            msgreply=msgreply.replace("#ERROR#", str(e))
+                                      
+        if 'msgreply' in locals():
+            msgreply=msgreply.replace("#BOTNAME#", config.bot_name)
+            wa.typeAndSendMessage(driver,msgreply)
 
 
 

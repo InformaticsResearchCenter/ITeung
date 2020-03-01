@@ -15,7 +15,7 @@ def dbConnect():
 
 def message(msg):
     keygroup = getKeywordGroup(msg)
-    replymsg = 'duh maap... '+config.bot_name+' ga ngerti bahasanya.... huhuhu...'
+    replymsg = getNotFoundMessage()
     if keygroup != '':
         if keygroup[:2] != 'm:':
             replymsg = getContentWithKeyword(keygroup)
@@ -70,6 +70,30 @@ def getOpeningMessage():
     db = dbConnect()
     content = ''
     sql = "SELECT content FROM opening_message ORDER BY RAND() LIMIT 1"
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        rows = cur.fetchone()
+        if rows is not None:
+            content = rows[0]
+    return content
+
+def getNotFoundMessage():
+    db = dbConnect()
+    content = ''
+    sql = "SELECT content FROM notfound_message ORDER BY RAND() LIMIT 1"
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        rows = cur.fetchone()
+        if rows is not None:
+            content = rows[0]
+    return content
+
+def getErrorMessage():
+    db = dbConnect()
+    content = ''
+    sql = "SELECT content FROM error_message ORDER BY RAND() LIMIT 1"
     with db:
         cur=db.cursor()
         cur.execute(sql)
