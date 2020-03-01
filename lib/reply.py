@@ -65,3 +65,27 @@ def getContentWithKeyword(keyword):
         if rows is not None:
             content = rows[0]
     return content
+
+def getOpeningMessage():
+    db = dbConnect()
+    content = ''
+    sql = "SELECT content FROM opening_message ORDER BY RAND() LIMIT 1"
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        rows = cur.fetchone()
+        if rows is not None:
+            content = rows[0]
+    return content
+
+def getWaitingMessage(module):
+    db = dbConnect()
+    content = ''
+    sql = "SELECT content FROM waiting_message WHERE module_name = '%s' ORDER BY RAND() LIMIT 1"%(module)
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        rows = cur.fetchone()
+        if rows is not None:
+            content = rows[0]
+    return content
