@@ -10,6 +10,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from time import sleep
+import config
 
 def setProfile(profile_folder):
     options = webdriver.ChromeOptions()
@@ -117,6 +118,8 @@ def normalize(message):
     msg=msg.replace('/',' ')
     msg=msg.replace('[',' ')
     msg=msg.replace(']',' ')
+    msg=msg.replace(config.bot_shortname,config.bot_name)
+    msg=msg.strip()
     #message = self.splitString(tolowercase)
     return msg
  

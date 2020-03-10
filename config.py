@@ -6,7 +6,7 @@ Created on Fri Feb 28 09:22:48 2020
 """
 
 bot_name='iteung'
-
+bot_shortname='teung'
 profile_folder='./user_data'
 
 db_host='localhost'
