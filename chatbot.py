@@ -17,10 +17,11 @@ class Chatbot(object):
         try:
             wa.openMessage(driver)
             msg = wa.getMessage(driver)
-            #num = self.getSenderNumber(driver)
+            num = self.getSenderNumber(driver)
             #alname = self.getSenderName(driver)
             #print(num+' - '+alname)
-            
+            print(num)
+			
             msg  = wa.normalize(msg)
             msgs = list(msg.split(" "))
             
