@@ -16,13 +16,11 @@ class Chatbot(object):
     def cekAndSendMessage(self,driver):
         try:
             wa.openMessage(driver)
-            #msg = wa.getMessage(driver)
-            data = wa.getData(driver)
-            msg=data[2]
-            num=data[0]
+            msg = wa.getMessage(driver)
+            #data = wa.getData(driver)
             #alname = self.getSenderName(driver)
             #print(num+' - '+alname)
-            print(num)
+            #print(num)
 			
             msg  = wa.normalize(msg)
             msgs = list(msg.split(" "))
