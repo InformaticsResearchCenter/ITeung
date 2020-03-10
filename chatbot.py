@@ -17,7 +17,7 @@ class Chatbot(object):
         try:
             wa.openMessage(driver)
             msg = wa.getMessage(driver)
-            num = self.getSenderNumber(driver)
+            num = wa.getSenderNumber(driver)
             #alname = self.getSenderName(driver)
             #print(num+' - '+alname)
             print(num)
