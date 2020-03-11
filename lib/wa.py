@@ -69,14 +69,12 @@ def getData(driver):
         # senderName = driver.find_elements_by_class_name("_1F9Ap")[-1].text
     except:
         # driver.find_element_by_class_name('_3fs0K').click()
-        sleep(1)
         try:
             senderNumber = driver.find_element_by_xpath("/html/body/div[1]/div/div/div[4]/div/header/div[2]/div[1]/div/span").text
         except:
             senderNumber = driver.find_element_by_xpath("/html/body/div[1]/div/div/div[4]/div/header/div[2]/div/div/span")
         # senderNumber = driver.find_element_by_xpath('/html/body/div[1]/div/div/div[4]/div/header/div[2]/div/div/span').text
         # senderName = driver.find_element_by_xpath('/html/body/div[1]/div/div/div[2]/div[3]/span/div/span/div/div/div[1]/div[1]/div[2]/span/span').text
-        sleep(.5)
         # driver.find_element_by_class_name("qfKkX").click()
     data.append(senderNumber)
     # data.append(senderName)
