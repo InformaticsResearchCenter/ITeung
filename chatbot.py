@@ -20,8 +20,7 @@ class Chatbot(object):
 
             print(data)
 
-            msg = data[2]
-            alname = data[1]
+            msg = data[1]
             num = data[0]
 
             msg  = wa.normalize(msg)
