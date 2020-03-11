@@ -58,7 +58,7 @@ def openMessage(driver):
         chat.click()
         chat.click()
     except:
-        print('skip data')
+        print('no notification')
     sleep(0.5)
 
 def getData(driver):
