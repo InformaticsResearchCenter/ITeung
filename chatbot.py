@@ -54,7 +54,7 @@ class Chatbot(object):
             try:
                 wa.typeAndSendMessage(driver,msgreply)
             except:
-                print("ga nemu box reply")
+                print("field reply not found!!")
 
 
 
