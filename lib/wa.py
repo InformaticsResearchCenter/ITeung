@@ -63,9 +63,7 @@ def openMessage(driver):
 
 def getData(driver):
     data = []
-    span = driver.find_elements_by_xpath("(.//span)")[-11].text
-    spanLower = span.lower()
-    message = spanLower.split()
+    message = driver.find_elements_by_xpath("(.//span)")[-11].text
     try:
         senderNumber = driver.find_elements_by_class_name("ZObjg")[-1].text
         senderName = driver.find_elements_by_class_name("_1F9Ap")[-1].text
