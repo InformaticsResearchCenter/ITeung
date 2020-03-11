@@ -30,10 +30,15 @@ def waitLogin(driver):
     wait.until(EC.presence_of_element_located((By.XPATH, x_arg)))
 
 def typeAndSendMessage(driver, message):
+    sleep(.5)
     message_target = driver.find_elements_by_xpath('//*[@id="main"]/footer/div[1]/div[2]/div/div[2]')[0]
+    sleep(.5)
     message_target.send_keys(message)
+    sleep(.5)
     sendbutton = driver.find_elements_by_xpath('//*[@id="main"]/footer/div[1]/div[3]/button')[0]
+    sleep(.5)
     sendbutton.click()
+    sleep(.5)
 
 def deleteMessage(driver):
     driver.find_elements_by_class_name('_3j8Pd')[-1].click()
