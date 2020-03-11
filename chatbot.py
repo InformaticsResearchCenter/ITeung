@@ -49,9 +49,9 @@ class Chatbot(object):
             msgreply=reply.getErrorMessage()
             msgreply=msgreply.replace("#ERROR#", str(e))
                                       
-        if 'msgreply' in locals():
-            msgreply=msgreply.replace("#BOTNAME#", config.bot_name)
-            wa.typeAndSendMessage(driver,msgreply)
+        # if 'msgreply' in locals():
+        #     msgreply=msgreply.replace("#BOTNAME#", config.bot_name)
+        #     wa.typeAndSendMessage(driver,msgreply)
 
 
 
