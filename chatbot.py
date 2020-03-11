@@ -22,13 +22,13 @@ class Chatbot(object):
             #print(num+' - '+alname)
             #print(num)
 
-            senderNumber = wa.getSenderNumber(driver)
-            senderName = wa.getSenderName(driver)
-            senderMessage = wa.getMessage(driver)
-
-            print(senderNumber)
-            print(senderName)
-            print(senderMessage)
+            # senderNumber = wa.getSenderNumber(driver)
+            # senderName = wa.getSenderName(driver)
+            # senderMessage = wa.getMessage(driver)
+            #
+            # print(senderNumber)
+            # print(senderName)
+            # print(senderMessage)
 			
             msg  = wa.normalize(msg)
             msgs = list(msg.split(" "))
@@ -49,9 +49,12 @@ class Chatbot(object):
             msgreply=reply.getErrorMessage()
             msgreply=msgreply.replace("#ERROR#", str(e))
                                       
-        # if 'msgreply' in locals():
-        #     msgreply=msgreply.replace("#BOTNAME#", config.bot_name)
-        #     wa.typeAndSendMessage(driver,msgreply)
+        if 'msgreply' in locals():
+            msgreply=msgreply.replace("#BOTNAME#", config.bot_name)
+            try:
+                wa.typeAndSendMessage(driver,msgreply)
+            except:
+                print("ga nemu box reply")
 
 
 
