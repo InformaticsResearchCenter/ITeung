@@ -22,13 +22,16 @@ class Chatbot(object):
             #print(num+' - '+alname)
             #print(num)
 
-            senderNumber = wa.getSenderNumber(driver)
-            senderName = wa.getSenderName(driver)
-            senderMessage = wa.getMessage(driver)
+            # senderNumber = wa.getSenderNumber(driver)
+            # senderName = wa.getSenderName(driver)
+            # senderMessage = wa.getMessage(driver)
+            #
+            # print(senderNumber)
+            # print(senderName)
+            # print(senderMessage)
 
-            print(senderNumber)
-            print(senderName)
-            print(senderMessage)
+            data = wa.getData(driver)
+            print(data)
 			
             msg  = wa.normalize(msg)
             msgs = list(msg.split(" "))

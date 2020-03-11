@@ -74,6 +74,8 @@ def getData(driver):
         sleep(1)
         senderNumber = driver.find_element_by_xpath('/html/body/div[1]/div/div/div[2]/div[3]/span/div/span/div/div/div[1]/div[1]/span/span').text
         senderName = driver.find_element_by_xpath('/html/body/div[1]/div/div/div[2]/div[3]/span/div/span/div/div/div[1]/div[1]/div[2]/span/span').text
+        sleep(.5)
+        driver.find_element_by_class_name("qfKkX").click()
     data.append(senderNumber)
     data.append(senderName)
     data.append(message)
