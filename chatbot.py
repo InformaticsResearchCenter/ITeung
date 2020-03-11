@@ -17,6 +17,9 @@ class Chatbot(object):
         try:
             wa.openMessage(driver)
             data = wa.getData(driver)
+
+            print(data)
+
             msg = data[2]
             alname = data[1]
             num = data[0]
