@@ -239,4 +239,18 @@ CREATE TABLE `waiting_message`  (
 INSERT INTO `waiting_message` VALUES ('prodi', 'Tunggu Sebentar Lagi Dicari Dulu Datanya');
 INSERT INTO `waiting_message` VALUES ('prodi', 'siappp..., di antosan sakeudap :-) yaaa');
 
+-- ----------------------------
+-- Table structure for waiting_message
+-- ----------------------------
+DROP TABLE IF EXISTS `reply_auth`;
+CREATE TABLE `reply_auth`  (
+  `reply_message` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of reply_auth
+-- ----------------------------
+INSERT INTO `reply_auth` VALUES ('Ih kamu capah minta-minta data, enak aja, #BOTNAME# gamau ngasih kekamu :-p');
+INSERT INTO `reply_auth` VALUES ('Enak aja minta data itu, ga boleh :-p');
+
 SET FOREIGN_KEY_CHECKS = 1;
