@@ -113,3 +113,28 @@ def getWaitingMessage(module):
         if rows is not None:
             content = rows[0]
     return content
+
+def getNumberGroup(num):
+    db = dbConnect()
+    sql = "SELECT group_id from group_auth where number = '%s'"%(num)
+    group_id = ''
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        rows=cur.fetchone()
+        if rows is not None:
+            group_id = rows[0]
+    return group_id
+
+
+def getAuth(group, module):
+    db = dbConnect()
+    sql = "SELECT * from number_auth where group_id = %s AND modul = '%s'"%(group, module)
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        rows=cur.rowcount
+    if rows:
+        return True
+    else:
+        return False
