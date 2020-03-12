@@ -22,7 +22,7 @@ CREATE TABLE `group_auth`  (
   `number` varchar(18)  NOT NULL,
   `group_id` int(2) NOT NULL,
   PRIMARY KEY(`number`)
-) 
+);
 
 INSERT INTO `group_auth` VALUES('+62 822-1740-1448', 2), ('+62 896-7770-9045', 1);
 
@@ -31,7 +31,7 @@ CREATE TABLE `number_auth`  (
   `group_id` int(2) NOT NULL,
   `modul` varchar(255) NOT NULL,
   PRIMARY KEY(`modul`)
-) 
+);
 
 INSERT INTO `number_auth` VALUES(1, 'siap'), (2, 'prodi');
 
@@ -186,7 +186,7 @@ INSERT INTO `reply` VALUES ('trims', 'sama sama :-)');
 INSERT INTO `reply` VALUES ('trims', 'yoi, cama-cama');
 INSERT INTO `reply` VALUES ('trims', 'sami sami :-D');
 INSERT INTO `reply` VALUES ('buli', 'Ya allah Tolongin Ya allah (ಥ﹏ಥ)\", \"Kok kamu jahat bIiinNNNnngggGGHHiitzzz sich sama aku zheyeng (\'・ω・\')');
-INSERT INTO `reply` VALUES ('perkenalan', 'Halo, perkenalkan Nama aku wanda, Aku seorang mahasiswi poltekpos, Salam kenal ya');
+INSERT INTO `reply` VALUES ('perkenalan', 'Halo, perkenalkan Nama aku #BOTNAME#, Aku seorang mahasiswi Informatics Research Center (IRC), Salam kenal ya');
 INSERT INTO `reply` VALUES ('pujian', 'Oo, iya dong, makasih atas pujiannya');
 INSERT INTO `reply` VALUES ('pujian', 'terima kasihh kakak yang maniss (/◕ヮ◕)/');
 INSERT INTO `reply` VALUES ('pujian', 'awww terima kasiihh (≧▽≦)');
