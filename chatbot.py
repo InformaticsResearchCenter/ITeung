@@ -31,8 +31,10 @@ class Chatbot(object):
                     msgreply=reply.message(msg)
                     if msgreply[:2] == 'm:':
                         group_id = reply.getNumberGroup(num)
-                        print(group_id)
-                        status = reply.getAuth(group_id, msgreply)
+                        if group_id is not None:
+                            status = reply.getAuth(group_id, msgreply)
+                        else:
+                            status=False
                         if status == True:
                             modulename = msgreply.split(':')[1]
                             mod=import_module('module.'+modulename)
@@ -41,7 +43,6 @@ class Chatbot(object):
                             msgreply=mod.reply(msg)
                         else:
                             msgreply=reply.getReplyAuth()
-                            wa.typeAndSendMessage(driver, msgreply)
         except Exception as e:
             print(e)
             msgreply=reply.getErrorMessage()

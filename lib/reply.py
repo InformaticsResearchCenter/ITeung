@@ -124,6 +124,8 @@ def getNumberGroup(num):
         rows=cur.fetchone()
         if rows is not None:
             group_id = rows[0]
+        else:
+            group_id=None
     return group_id
 
 
