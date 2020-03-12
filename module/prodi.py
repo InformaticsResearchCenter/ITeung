@@ -8,7 +8,7 @@ from dateutil.parser import parse
 import datetime
 from lib import dawet 
 
-def reply(driver,msg):
+def reply(msg):
     msgs = list(msg.split(" "))
     getIndex = msgs.index("nilai")
 
