@@ -33,7 +33,7 @@ CREATE TABLE `number_auth`  (
   PRIMARY KEY(`modul`)
 );
 
-INSERT INTO `number_auth` VALUES(1, 'siap'), (2, 'prodi');
+INSERT INTO `number_auth` VALUES(1, 'm:siap'), (2, 'm:prodi');
 
 -- ----------------------------
 -- Table structure for error_message
