@@ -31,8 +31,8 @@ class Chatbot(object):
                     msgreply=reply.message(msg)
                     if msgreply[:2] == 'm:':
                         group_id = reply.getNumberGroup(num)
+                        print(group_id)
                         status = reply.getAuth(group_id, msgreply)
-                        print(msgreply)
                         if status == True:
                             modulename = msgreply.split(':')[1]
                             mod=import_module('module.'+modulename)
