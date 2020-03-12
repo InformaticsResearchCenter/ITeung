@@ -138,3 +138,15 @@ def getAuth(group, module):
         return True
     else:
         return False
+
+def getReplyAuth():
+    db = dbConnect()
+    sql = "SELECT reply_message FROM reply_auth ORDER BY RAND() LIMIT 1"
+    content = ''
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        rows=cur.fetchone()
+        if rows is not None:
+            content=rows[0]
+    return content
