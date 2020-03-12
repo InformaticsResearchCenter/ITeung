@@ -40,7 +40,8 @@ class Chatbot(object):
                             wa.typeAndSendMessage(driver,wmsg)
                             msgreply=mod.reply(msg)
                         else:
-                            wa.typeAndSendMessage(driver, "Emang kamu siapa minta-minta data")
+                            msgreply=reply.getReplyAuth()
+                            wa.typeAndSendMessage(driver, msgreply)
         except Exception as e:
             print(e)
             msgreply=reply.getErrorMessage()
