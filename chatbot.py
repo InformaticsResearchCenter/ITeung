@@ -39,14 +39,17 @@ class Chatbot(object):
                             wmsg=reply.getWaitingMessage(modulename)
                             wa.typeAndSendMessage(driver,wmsg)
                             msgreply=mod.reply(msg)
+                        else:
+                            wa.typeAndSendMessage(driver, "Emang kamu siapa minta-minta data")
         except Exception as e:
             print(e)
             msgreply=reply.getErrorMessage()
             msgreply=msgreply.replace("#ERROR#", str(e))
 
         if 'msgreply' in locals():
-            msgreply=msgreply.replace("#BOTNAME#", config.bot_name)
-            if not "m:" in msgreply:
+            if msgreply[:2] != 'm:':
+                msgreply=msgreply.replace("#BOTNAME#", config.bot_name)
+                print(msgreply)
                 try:
                     wa.typeAndSendMessage(driver,msgreply)
                 except:
