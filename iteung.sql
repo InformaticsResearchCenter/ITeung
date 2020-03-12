@@ -17,6 +17,24 @@
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
+DROP TABLE IF EXISTS `group_auth`;
+CREATE TABLE `group_auth`  (
+  `number` varchar(18)  NOT NULL,
+  `group_id` int(2) NOT NULL,
+  PRIMARY KEY(`number`)
+) 
+
+INSERT INTO `group_auth` VALUES('+62 822-1740-1448', 2), ('+62 896-7770-9045', 1);
+
+DROP TABLE IF EXISTS `number_auth`;
+CREATE TABLE `number_auth`  (
+  `group_id` int(2) NOT NULL,
+  `modul` varchar(255) NOT NULL,
+  PRIMARY KEY(`modul`)
+) 
+
+INSERT INTO `number_auth` VALUES(1, 'siap'), (2, 'prodi');
+
 -- ----------------------------
 -- Table structure for error_message
 -- ----------------------------
