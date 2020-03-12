@@ -23,6 +23,10 @@ class Chatbot(object):
             msg = data[1]
             num = data[0]
 
+            checkAuth = wa.authWA(num)
+
+            print(checkAuth)
+
             msg  = wa.normalize(msg)
             msgs = list(msg.split(" "))
             
