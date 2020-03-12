@@ -102,14 +102,6 @@ def getSenderNumber(driver):
 def getMessage(driver):
     return driver.find_elements_by_xpath("(.//span)")[-11].text
 
-def authWA(num):
-    superadmin = ['+62 896-7770-9045']
-    admin = ['+62 822-1740-1448']
-    if num in admin:
-        return "admin"
-    if num in superadmin:
-        return "super admin"
-
 def normalize(message):
     msg = message.lower()
     msg=msg.replace(',',' ')
