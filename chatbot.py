@@ -18,8 +18,15 @@ class Chatbot(object):
             wa.openMessage(driver)
             data = wa.getData(driver)
 
-            msg = data[1]
-            num = data[0]
+            print(data)
+
+            if len(data) == 3:
+                msg = data[2]
+                als = data[1]
+                num = data[0]
+            else:
+                msg = data[1]
+                num = data[0]
 
             msg  = wa.normalize(msg)
             msgs = list(msg.split(" "))
@@ -47,6 +54,8 @@ class Chatbot(object):
             print(e)
             msgreply=reply.getErrorMessage()
             msgreply=msgreply.replace("#ERROR#", str(e))
+
+        print(locals())
 
         if 'msgreply' in locals():
             if msgreply[:2] != 'm:':
