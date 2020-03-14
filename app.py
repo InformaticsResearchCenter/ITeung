@@ -15,10 +15,11 @@ def sms_reply():
     msg = request.values.get('Body', None)
     wanum = request.values.get('From', None)
     num=wanum.split('+')[1]
-    #msgreply=iteung.get(num,msg)    
+    msgreply=iteung.get(num,msg)    
     
     resp = MessagingResponse()
-    resp.message(num)
+    
+    resp.message(msgreply)
     return str(resp)
 
 if __name__ == "__main__":
