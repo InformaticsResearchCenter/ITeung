@@ -9,7 +9,7 @@ bot_name='iteung'
 bot_shortname='teung'
 profile_folder='./user_data'
 
-db_host='localhost'
+db_host='192.168.1.223'
 db_port='3306'
 db_username='root'
 db_password='rollyganteng'
