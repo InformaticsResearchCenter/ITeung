@@ -13,7 +13,7 @@ def get(num,msg):
         msg  = message.normalize(msg)
         msgs = list(msg.split(" "))
 
-        if msg.find(config.bot_name) >= 0 and len(msgs) == 1:
+        if len(msgs) == 1:
             msgreply = reply.getOpeningMessage()
         else:
             msgreply=reply.message(msg)
