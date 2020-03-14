@@ -1,6 +1,5 @@
 from lib import wa,reply
 import config
-import random
 from importlib import import_module
 
 
