@@ -4,7 +4,7 @@ Created on Sat Mar 14 12:36:17 2020
 
 @author: rolly
 """
-from lib import reply,message
+from lib import reply,message,twl
 import config
 from importlib import import_module
 
@@ -27,7 +27,7 @@ def get(num,msg):
                     modulename = msgreply.split(':')[1]
                     mod=import_module('module.'+modulename)
                     wmsg=reply.getWaitingMessage(modulename)
-                    #wa.typeAndSendMessage(driver,wmsg)
+                    twl.sendMsg(num,wmsg)
                     msgreply=mod.reply(msg)
                 else:
                     msgreply=reply.getReplyAuth()
