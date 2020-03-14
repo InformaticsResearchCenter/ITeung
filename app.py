@@ -14,11 +14,11 @@ app = Flask(__name__)
 def sms_reply():
     msg = request.values.get('Body', None)
     wanum = request.values.get('From', None)
-    #num=wanum.split('+')[1]
+    num=wanum.split('+')[1]
     #msgreply=iteung.get(num,msg)    
     
     resp = MessagingResponse()
-    resp.message(msg+wanum)
+    resp.message(num)
     return str(resp)
 
 if __name__ == "__main__":
