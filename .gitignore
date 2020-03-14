@@ -11,7 +11,7 @@ coco.names
 yolov3.weights
 yolov3.cfg
 *.jpg
-
+config.py
 # C extensions
 *.so
 

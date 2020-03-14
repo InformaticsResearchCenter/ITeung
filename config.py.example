@@ -14,8 +14,3 @@ db_port='3306'
 db_username='root'
 db_password='rollyganteng'
 db_name='wanda'
-
-
-#twilio
-account_sid = "ACdb76ff1760dec6e97f1367c53f593235"
-auth_token  = "9a0dde0fecd337f14b58003fb14a7523"
