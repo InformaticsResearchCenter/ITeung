@@ -13,25 +13,24 @@ def get(num,msg):
         msg  = message.normalize(msg)
         msgs = list(msg.split(" "))
 
-        if msg.find(config.bot_name) >= 0:
-            if len(msgs) == 1:
-                msgreply = reply.getOpeningMessage()
-            else:
-                msgreply=reply.message(msg)
-                if msgreply[:2] == 'm:':
-                    group_id = reply.getNumberGroup(num)
-                    if group_id is not None:
-                        status = reply.getAuth(group_id, msgreply)
-                    else:
-                        status=False
-                    if status == True:
-                        modulename = msgreply.split(':')[1]
-                        mod=import_module('module.'+modulename)
-                        wmsg=reply.getWaitingMessage(modulename)
-                        #wa.typeAndSendMessage(driver,wmsg)
-                        msgreply=mod.reply(msg)
-                    else:
-                        msgreply=reply.getReplyAuth()
+        if msg.find(config.bot_name) >= 0 and len(msgs) == 1:
+            msgreply = reply.getOpeningMessage()
+        else:
+            msgreply=reply.message(msg)
+            if msgreply[:2] == 'm:':
+                group_id = reply.getNumberGroup(num)
+                if group_id is not None:
+                    status = reply.getAuth(group_id, msgreply)
+                else:
+                    status=False
+                if status == True:
+                    modulename = msgreply.split(':')[1]
+                    mod=import_module('module.'+modulename)
+                    wmsg=reply.getWaitingMessage(modulename)
+                    #wa.typeAndSendMessage(driver,wmsg)
+                    msgreply=mod.reply(msg)
+                else:
+                    msgreply=reply.getReplyAuth()
     except Exception as e:
         print(e)
         msgreply=reply.getErrorMessage()
