@@ -12,15 +12,9 @@ app = Flask(__name__)
 
 @app.route("/wa", methods=['GET', 'POST'])
 def sms_reply():
-    """Respond to incoming calls with a simple text message."""
     body = request.values.get('Body', None)
-    # Start our TwiML response
     resp = MessagingResponse()
-
-    # Add a message
     resp.message(body)
-    #resp.media("https://farm8.staticflickr.com/7090/6941316406_80b4d6d50e_z_d.jpg")
-
     return str(resp)
 
 if __name__ == "__main__":
