@@ -106,26 +106,4 @@ def getSenderNumber(driver):
 def getMessage(driver):
     return driver.find_elements_by_xpath("(.//span)")[-11].text
 
-def normalize(message):
-    msg = message.lower()
-    msg=msg.replace(',',' ')
-    msg=msg.replace('.',' ')
-    msg=msg.replace("'",' ')
-    msg=msg.replace('?',' ')
-    msg=msg.replace('!',' ')
-    msg=msg.replace('(',' ')
-    msg=msg.replace(')',' ')
-    msg=msg.replace(':',' ')
-    msg=msg.replace(';',' ')
-    msg=msg.replace('*',' ')
-    msg=msg.replace('&',' ')
-    msg=msg.replace('^',' ')
-    msg=msg.replace('%',' ')
-    msg=msg.replace('/',' ')
-    msg=msg.replace('[',' ')
-    msg=msg.replace(']',' ')
-    msg=msg.replace(config.bot_shortname,config.bot_name)
-    msg=msg.strip()
-    #message = self.splitString(tolowercase)
-    return msg
  

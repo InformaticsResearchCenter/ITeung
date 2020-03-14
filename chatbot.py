@@ -1,4 +1,4 @@
-from lib import wa,reply
+from lib import wa,reply,message
 import config
 from importlib import import_module
 
@@ -27,7 +27,7 @@ class Chatbot(object):
                 msg = data[1]
                 num = data[0]
 
-            msg  = wa.normalize(msg)
+            msg  = message.normalize(msg)
             msgs = list(msg.split(" "))
 
             if msg.find(config.bot_name) >= 0:

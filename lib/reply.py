@@ -8,7 +8,6 @@ import pymysql
 import config
 
 
-
 def dbConnect():
     db=pymysql.connect(config.db_host,config.db_username,config.db_password,config.db_name)
     return db
