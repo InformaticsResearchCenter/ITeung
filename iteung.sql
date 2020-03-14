@@ -24,7 +24,7 @@ CREATE TABLE `group_auth`  (
   PRIMARY KEY(`number`)
 );
 
-INSERT INTO `group_auth` VALUES('+62 822-1740-1448', 2), ('+62 896-7770-9045', 1);
+INSERT INTO `group_auth` VALUES('6282217401448', 2), ('6289677709045', 1);
 
 DROP TABLE IF EXISTS `number_auth`;
 CREATE TABLE `number_auth`  (
