@@ -16,11 +16,10 @@ def sms_reply():
     msg = request.values.get('Body', None)
     wanum = request.values.get('From', None)
     num=wanum.split('+')[1]
-    #msgreply=iteung.get(num,msg)    
-    msgreply=iteung.get('6281312000300','teung') 
-    
+    msgreply=iteung.get(num,msg)
+
     resp = MessagingResponse()
-    
+
     resp.message(msgreply)
     return str(resp)
 
