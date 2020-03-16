@@ -254,3 +254,18 @@ INSERT INTO `reply_auth` VALUES ('Ih kamu capah minta-minta data, enak aja, #BOT
 INSERT INTO `reply_auth` VALUES ('Enak aja minta data itu, ga boleh :-p');
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+create table d4ti_3a(
+    id int auto_increment primary key,
+	npm varchar(7) not null,
+    number_phone varchar(255) not null,
+ lecturer varchar(15) not null,
+    course varchar(15) not null,
+discussion text not null,
+    date_time datetime not null, 
+    message text not null
+);
+
+insert into d4ti_3a(npm, number_phone, lecturer, course, discussion, date_time, message) 
+values('1174006', '+62 896-7770-9045', 'TI122L', 'TI122L', 'Pengantar Sistem Pakar', '2020-03-16 10:27:00', 'baik pak');
+
