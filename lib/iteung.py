@@ -16,7 +16,7 @@ def get(num,msg):
         if len(msgs) == 1:
             msgreply = reply.getOpeningMessage()
         else:
-            msgreply=reply.message(msg)
+            msgreply=reply.message(num)
             if msgreply[:2] == 'm:':
                 modulename = msgreply.split(':')[1]
                 mod=import_module('module.'+modulename)
