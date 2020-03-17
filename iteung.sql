@@ -27,7 +27,7 @@ SET time_zone = "+00:00";
 --
 -- Table structure for table `d4ti_3a`
 --
-
+DROP TABLE if EXISTS `d4ti_3a`;
 CREATE TABLE `d4ti_3a` (
   `id` int(11) NOT NULL,
   `npm` varchar(7) NOT NULL,
@@ -53,7 +53,7 @@ INSERT INTO `d4ti_3a` (`id`, `npm`, `number_phone`, `lecturer`, `course`, `discu
 --
 -- Table structure for table `dosen`
 --
-
+DROP TABLE if EXISTS `dosen`;
 CREATE TABLE `dosen` (
   `kode_dosen` varchar(10) NOT NULL,
   `nama` varchar(255) NOT NULL
@@ -198,7 +198,7 @@ INSERT INTO `dosen` (`kode_dosen`, `nama`) VALUES
 --
 -- Table structure for table `error_message`
 --
-
+DROP TABLE if EXISTS `error_message`;
 CREATE TABLE `error_message` (
   `content` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
@@ -215,7 +215,7 @@ INSERT INTO `error_message` (`content`) VALUES
 --
 -- Table structure for table `group_auth`
 --
-
+DROP TABLE if EXISTS `group_auth`;
 CREATE TABLE `group_auth` (
   `number` varchar(18) NOT NULL,
   `group_id` int(2) NOT NULL
@@ -234,7 +234,7 @@ INSERT INTO `group_auth` (`number`, `group_id`) VALUES
 --
 -- Table structure for table `keyword`
 --
-
+DROP TABLE if EXISTS `keyword`;
 CREATE TABLE `keyword` (
   `keyword_group` varchar(255) DEFAULT NULL,
   `keyword` varchar(255) DEFAULT NULL
@@ -307,7 +307,7 @@ INSERT INTO `keyword` (`keyword_group`, `keyword`) VALUES
 --
 -- Table structure for table `multi_key`
 --
-
+DROP TABLE if EXISTS `multi_key`;
 CREATE TABLE `multi_key` (
   `multiple_keywords` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
@@ -334,7 +334,7 @@ INSERT INTO `multi_key` (`multiple_keywords`) VALUES
 --
 -- Table structure for table `notfound_message`
 --
-
+DROP TABLE if EXISTS `notfound_message`;
 CREATE TABLE `notfound_message` (
   `content` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
@@ -351,7 +351,7 @@ INSERT INTO `notfound_message` (`content`) VALUES
 --
 -- Table structure for table `number_auth`
 --
-
+DROP TABLE if EXISTS `number_auth`;
 CREATE TABLE `number_auth` (
   `group_id` int(2) NOT NULL,
   `modul` varchar(55) NOT NULL
@@ -371,7 +371,7 @@ INSERT INTO `number_auth` (`group_id`, `modul`) VALUES
 --
 -- Table structure for table `opening_message`
 --
-
+DROP TABLE if EXISTS `opening_message`;
 CREATE TABLE `opening_message` (
   `content` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
@@ -390,7 +390,7 @@ INSERT INTO `opening_message` (`content`) VALUES
 --
 -- Table structure for table `reply`
 --
-
+DROP TABLE if EXISTS `reply`;
 CREATE TABLE `reply` (
   `keyword_group` varchar(255) DEFAULT NULL,
   `content` varchar(255) DEFAULT NULL
@@ -451,7 +451,7 @@ INSERT INTO `reply` (`keyword_group`, `content`) VALUES
 --
 -- Table structure for table `reply_auth`
 --
-
+DROP TABLE if EXISTS `reply_auth`;
 CREATE TABLE `reply_auth` (
   `reply_message` varchar(255) DEFAULT NULL,
   `module` varchar(255) NOT NULL
@@ -472,7 +472,7 @@ INSERT INTO `reply_auth` (`reply_message`, `module`) VALUES
 --
 -- Table structure for table `waiting_message`
 --
-
+DROP TABLE if EXISTS `waiting_message`;
 CREATE TABLE `waiting_message` (
   `module_name` varchar(255) DEFAULT NULL,
   `content` varchar(255) DEFAULT NULL
@@ -510,6 +510,1261 @@ ALTER TABLE `group_auth`
 ALTER TABLE `number_auth`
   ADD PRIMARY KEY (`modul`);
 COMMIT;
+
+-- D4TI
+
+drop table if exists d4ti_1a;
+
+create table d4ti_1a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4ti_1b;
+
+create table d4ti_1b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4ti_2a;
+
+create table d4ti_2a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4ti_2b;
+
+create table d4ti_2b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4ti_2c;
+
+create table d4ti_2c(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4ti_3a;
+
+create table d4ti_3a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(25) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4ti_3b;
+
+create table d4ti_3b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(25) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4ti_3c;
+
+create table d4ti_3c(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+-- D4TI
+
+-- D3TI
+
+drop table if exists d3ti_1a;
+
+create table d3ti_1a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3ti_2a;
+
+create table d3ti_2a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3ti_2b;
+
+create table d3ti_2b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+-- D3TI
+
+-- D3MI
+
+drop table if exists d3mi_1a;
+
+create table d3mi_1a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3mi_2a;
+
+create table d3mi_2a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3mi_3a;
+
+create table d3mi_3a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+-- D3MI
+
+-- D4AK
+
+drop table if exists d4ak_1a;
+
+create table d4ak_1a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4ak_1b;
+
+create table d4ak_1b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4ak_2a;
+
+create table d4ak_2a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4ak_2b;
+
+create table d4ak_2b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4ak_3a;
+
+create table d4ak_3a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4ak_3b;
+
+create table d4ak_3b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4ak_4a;
+
+create table d4ak_4a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4ak_4b;
+
+create table d4ak_4b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4ak_4c;
+
+create table d4ak_4c(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+-- D4AK
+
+-- D3AK
+
+drop table if exists d3ak_1a;
+
+create table d3ak_1a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3ak_2a;
+
+create table d3ak_2a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3ak_2b;
+
+create table d3ak_2b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3ak_3a;
+
+create table d3ak_3a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3ak_3b;
+
+create table d3ak_3b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+-- D3AK
+
+-- D4MP
+
+drop table if exists d4mp_1a;
+
+create table d4mp_1a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4mp_1b;
+
+create table d4mp_1b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4mp_2a;
+
+create table d4mp_2a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4mp_2b;
+
+create table d4mp_2b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4mp_2c;
+
+create table d4mp_2c(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4mp_2d;
+
+create table d4mp_2d (
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4mp_3a;
+
+create table d4mp_3a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4mp_3b;
+
+create table d4mp_3b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4mp_3c;
+
+create table d4mp_3c(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4mp_3d;
+
+create table d4mp_3d(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4mp_4a;
+
+create table d4mp_4a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4mp_4b;
+
+create table d4mp_4b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4mp_4c;
+
+create table d4mp_4c(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+
+-- D4MP
+
+-- D3MP
+
+drop table if exists d3mp_1a;
+
+create table d3mp_1a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3mp_2a;
+
+create table d3mp_2a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3mp_2b;
+
+create table d3mp_2b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3mp_3a;
+
+create table d3mp_3a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3mp_3b;
+
+create table d3mp_3b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+-- D3MP
+
+-- D4LB
+
+drop table if exists d4lb_1a;
+
+create table d4lb_1a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_1b;
+
+create table d4lb_1b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_1c;
+
+create table d4lb_1c(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_1d;
+
+create table d4lb_1d(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_1e;
+
+create table d4lb_1e(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_1f;
+
+create table d4lb_1f(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_2a;
+
+create table d4lb_2a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_2b;
+
+create table d4lb_2b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_2c;
+
+create table d4lb_2c(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_2d;
+
+create table d4lb_2d(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_2e;
+
+create table d4lb_2e(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_2f;
+
+create table d4lb_2f(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_2g;
+
+create table d4lb_2g(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_2h;
+
+create table d4lb_2h(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_3a;
+
+create table d4lb_3a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_3b;
+
+create table d4lb_3b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_3c;
+
+create table d4lb_3c(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_3d;
+
+create table d4lb_3d(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_3e;
+
+create table d4lb_3e(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_3f;
+
+create table d4lb_3f (
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_4a;
+
+create table d4lb_4a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_4b;
+
+create table d4lb_4b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_4c;
+
+create table d4lb_4c(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_4d;
+
+create table d4lb_4d(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_4e;
+
+create table d4lb_4e(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_4f;
+
+create table d4lb_4f(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_4g;
+
+create table d4lb_4g(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+-- D4LB
+
+-- D3AL
+
+drop table if exists d3al_1a;
+
+create table d3al_1a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3al_1b;
+
+create table d3al_1b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3al_1c;
+
+create table d3al_1c(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3al_1d;
+
+create table d3al_1d(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3al_2a;
+
+create table d3al_2a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3al_2b;
+
+create table d3al_2b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3al_2c;
+
+create table d3al_2c(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3al_2d;
+
+create table d3al_2d(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3al_2e;
+
+create table d3al_2e(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3al_3a;
+
+create table d3al_3a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3al_3b;
+
+create table d3al_3b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3al_3c;
+
+create table d3al_3c(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3al_3d;
+
+create table d3al_3d(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3al_3e;
+
+create table d3al_3e(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+-- D3AL
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
