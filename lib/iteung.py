@@ -33,5 +33,5 @@ def get(num,msg):
                 msgreply=msgreply.replace("#BOTNAME#", config.bot_name)
             except:
                 msgreply="field reply not found!!"
-                
+
     return msgreply
