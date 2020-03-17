@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 16, 2020 at 01:04 PM
+-- Generation Time: Mar 17, 2020 at 10:21 AM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.3
 
@@ -36,74 +36,17 @@ CREATE TABLE `d4ti_3a` (
   `course` varchar(15) NOT NULL,
   `discussion` text NOT NULL,
   `date_time` datetime NOT NULL,
-  `message` text NOT NULL
+  `message` text NOT NULL,
+  `kode_matkul` varchar(15) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `d4ti_3a`
 --
 
-INSERT INTO `d4ti_3a` (`id`, `npm`, `number_phone`, `lecturer`, `course`, `discussion`, `date_time`, `message`) VALUES
-(395, '1184047', '+62 822-1740-1448', 'nn255ll', 'database 1', 'pengenalan database', '2020-03-16 18:21:55', ''),
-(396, '1184047', '+62 822-1740-1448', 'nn255ll', 'database 1', 'pengenalan database', '2020-03-16 18:21:59', 'wekwek'),
-(397, '1174006', '+62 896-7770-9045', 'nn255ll', 'database 1', 'pengenalan database', '2020-03-16 18:22:10', 'rwrw'),
-(398, '1174006', '+62 896-7770-9045', 'nn255ll', 'database 1', 'pengenalan database', '2020-03-16 18:22:15', 'hhh'),
-(399, '1174006', '+62 896-7770-9045', 'nn255ll', 'database 1', 'pengenalan database', '2020-03-16 18:22:17', 'rwrw'),
-(400, '1184047', '+62 822-1740-1448', 'nn255ll', 'database 1', 'pengenalan database', '2020-03-16 18:22:36', 'rwrw'),
-(401, '1184047', '+62 822-1740-1448', 'nn255ll', 'database 1', 'pengenalan database', '2020-03-16 18:22:36', 'iiteung matkul database 1 selesai'),
-(402, '1184047', '+62 822-1740-1448', 'nn255ll', 'database 1', 'pengenalan database', '2020-03-16 18:31:21', ''),
-(403, '1184047', '+62 822-1740-1448', 'nn255ll', 'database 1', 'pengenalan database', '2020-03-16 18:31:32', 'iiteung matkul database 1 selesai'),
-(404, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:32:55', ''),
-(405, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:32:59', 'wiu wiu'),
-(406, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:33:09', 'iiteung matkul kecerdasan buatan selesai'),
-(407, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:42:52', ''),
-(408, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:43:01', 'iiteung matkul kecerdasan buatan selesai'),
-(409, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:43:41', ''),
-(410, '1174006', '+62 896-7770-9045', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:43:44', 'mama'),
-(411, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:43:44', 'mama'),
-(412, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:43:44', 'kakaka'),
-(413, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:43:46', 'jsnwndjjxnd'),
-(414, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:43:47', 'mamwmsjmx'),
-(415, '1174006', '+62 896-7770-9045', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:43:49', 'mini'),
-(416, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:43:52', 'ayo mulai'),
-(417, '1174006', '+62 896-7770-9045', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:43:54', 'tetew'),
-(418, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:43:54', 'crot crot'),
-(419, '1174006', '+62 896-7770-9045', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:43:58', 'crot crot'),
-(420, '1174006', '+62 896-7770-9045', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:43:59', 'ayo pak'),
-(421, '1174006', '+62 896-7770-9045', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:44:06', 'saya udh masuk'),
-(422, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:44:09', 'iiteung matkul kecerdasan buatan selesai'),
-(423, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:45:23', ''),
-(424, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:45:26', 'yo'),
-(425, '1174006', '+62 896-7770-9045', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:45:28', '5555'),
-(426, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:45:29', 'kita mulai yo'),
-(427, '1174006', '+62 896-7770-9045', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:45:30', '4444'),
-(428, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:45:31', '4444'),
-(429, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:45:31', 'yoyo'),
-(430, '1174006', '+62 896-7770-9045', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:45:32', '33333'),
-(431, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:45:33', 'masuk yo'),
-(432, '1174006', '+62 896-7770-9045', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:45:37', 'iya'),
-(433, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:45:43', 'iya'),
-(434, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:45:43', 'iiteung matkul kecerdasan buatan selesai'),
-(435, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:47:46', ''),
-(436, '1174006', '+62 896-7770-9045', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:47:49', ''),
-(437, '1174006', '+62 896-7770-9045', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:47:49', 'i have to be honest with the people'),
-(438, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:47:49', 'kakakxm'),
-(439, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:47:50', 'akakaka'),
-(440, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:47:53', 'hehe'),
-(441, '1174006', '+62 896-7770-9045', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:47:53', 'i no longer have a job'),
-(442, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:47:54', 'waw'),
-(443, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:47:58', 'iteung'),
-(444, '1174006', '+62 896-7770-9045', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:48:02', 'i am not sure if you are aware of this but i am interested in the job'),
-(445, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:48:04', 'i am not sure if you are aware of this but i am interested in the job'),
-(446, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:48:04', 'woi iteung'),
-(447, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:48:17', 'iiteung matkul kecerdasan buatan selesai'),
-(448, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:49:33', ''),
-(449, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:49:37', 'yok mare'),
-(450, '1174006', '+62 896-7770-9045', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:49:51', 'yok mare'),
-(451, '1174006', '+62 896-7770-9045', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:49:52', 'i am not sure if you are aware of this'),
-(452, '1174006', '+62 896-7770-9045', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:49:52', 'i have to go to work'),
-(453, '1174006', '+62 896-7770-9045', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:49:58', 'i will try to get a hold of you'),
-(454, '1184047', '+62 822-1740-1448', 'nn257l', 'database 1', 'kecerdasan buatan yg dibuat buat oleh manusia hehe', '2020-03-16 18:49:59', 'iiteung matkul kecerdasan buatan selesai');
+INSERT INTO `d4ti_3a` (`id`, `npm`, `number_phone`, `lecturer`, `course`, `discussion`, `date_time`, `message`, `kode_matkul`) VALUES
+(521, '1184047', '+62 822-1740-1448', 'nn257l', 'kecerdasan buat', 'pengenalan ai', '2020-03-17 13:46:00', '', 'TI3466'),
+(522, '1184047', '+62 822-1740-1448', 'nn257l', 'kecerdasan buat', 'pengenalan ai', '2020-03-17 13:46:18', 'iteung matkul kecerdasan buatan selesai', 'TI3466');
 
 -- --------------------------------------------------------
 
@@ -121,7 +64,134 @@ CREATE TABLE `dosen` (
 --
 
 INSERT INTO `dosen` (`kode_dosen`, `nama`) VALUES
-('NN257L', 'Rolly Maulana Awangga S.T.,M.T.');
+('AK002T', 'CAHYAT ROHYANA, SE'),
+('AK007T', 'SURYA RAMADHAN NOOR, SE. MM'),
+('AK009T', 'YOHANES CASMADI, SE., MM'),
+('AK012T', 'Dr. DHANANG WIDIJAWAN, SH.'),
+('AK031T', 'DEWI SELVIANI Y, SS., M.Pd.'),
+('AK058L', 'INDRA FIRMANSYAH, SE., MM'),
+('AK061L', 'MARWANTO RAHMATULOH, ST., MT.'),
+('AK086L', 'RADEN TOTO SUWARSA, SE'),
+('AK096L', 'EDI SUPARDI, SE., AAAIK., MM'),
+('D14N', 'DIAN NURENDAH, MA'),
+('D19011', 'Afiat Juli Hadir Santoso, ST.'),
+('D19016', 'Dr. KHAERUDIN KURNIAWAN, M.Pd.'),
+('D19019', 'Indra Riyadi, S.IP.,MM, '),
+('D20001', 'ASEP NURDIN DANU DIBRATA, '),
+('D20002', 'INDIANA AYU ALWASIAH, M.Pd.'),
+('G4RT1K4', 'GARTIKA PANDU BHUANA, SS.,M.pd'),
+('HRYNTO', 'HARIYANTO, SE., MM'),
+('LB001L', 'DR. IR. AGUS PURNOMO,, MT.'),
+('LB003T', 'HILMAN SETIADI, S.Pd., SE., MT.'),
+('LB005T', 'FARID MADANI, SH.'),
+('LB009T', 'I WAYAN KEMARA GIRI, S.Sos.'),
+('LB020T', 'EDUARD SONDAKH, S.Si., MT.'),
+('LB053L', 'Rd. NURAINI SITI FATHONAH, SS., M.Hum.'),
+('LB055L', 'MADE IRMA DWI PUTRANTI, SE., MT.'),
+('LB062L', 'DODI PERMADI, ST., MT.'),
+('LB095L', 'DARFIAL GUSLAN, ST. MT'),
+('LB096L', 'DR. DIAR FAHMI, ST.'),
+('LB097T', 'EKRA SANGGALA, ST., M.Sc'),
+('LB098T', 'FEBRIANI SULISTIYANINGSIH, S.Kom., M.Cs.'),
+('LB099T', 'REZA FAYAQUN, SE., MT'),
+('LB43055', 'Irpan Numang, .ST.,MT.'),
+('MI001T', 'MUHAMMAD IBNU CHOLDUN RACHMATULLAH, ST., MT.'),
+('MI018T', 'SARI ARMIATI, ST., MT.'),
+('MI033L', 'MUBASSIRAN, S.Si., MT.'),
+('MI079L', 'SHIYAMI MIL#BOTNAME#RI, S.Kom., MT.'),
+('NN001L', 'ASARETKHA ADJANE ANNISAWATI, SE., MAB'),
+('NN004L', 'ACHMAD ANDRIYANTO, ST., MT.'),
+('NN009L', 'ADE PIPIT FATMAWATI, SE., M.Pd'),
+('NN011L', 'ADITIA SOVIA PRAMUDITA, ST., MAB'),
+('NN020L', 'ALI MOHAMAD REZZA, ST., MM'),
+('NN021L', 'AMRI YANUAR, ST., M.MOT'),
+('NN037L', 'ASEP BUDIARSA, SE. MM'),
+('NN046L', 'Bambang Agus Warjoko, SE, MM'),
+('NN053L', 'BHEBEN OSCAR, S.MB.MM'),
+('NN056L', 'CAHYO PRIANTO, S.Pd., MT.'),
+('NN059L', 'CHRISTINE RIANI ELISABETH, SE., MM.'),
+('NN063L', 'DANI LEONIDAS SUMARNA, ST. MT'),
+('NN068L', 'DERA THORFIANI, S.MB., MM.'),
+('NN071L', 'DEWI LESTARI H.W, S.Pd.'),
+('NN075L', 'DIANA MARYANA, SE., M.Si'),
+('NN092L', 'DR. PRETY DIAWATI, S.Sos., MM.'),
+('NN093L', 'Assoc Prof Dr. SUDJANA,  S.H., M.Si'),
+('NN107L', 'DRS. GUNAWAN, M.M'),
+('NN114L', 'ENTIS SUTISNA, SE. MM.'),
+('NN115L', 'DR. ERNA MULYATI, ST., MT'),
+('NN129L', 'GILANG BINTANG, SS.'),
+('NN133L', 'GUGUM GUMILANG WIRAKANDA, ST., MM.'),
+('NN152L', 'HESTI SUGESTI, S.Pd., MM.'),
+('NN155L', 'I MADE YADI DHARMA, S.Kom., M.Kom.'),
+('NN166L', 'IRTA RAHARDIAN, SE'),
+('NN169L', 'IVONNE SUSAN, M.Pd'),
+('NN173L', 'JAKA MAULANA, SE., AK., M.Ak., CA., CPSAK'),
+('NN177L', 'JOESMAN KARTAPRAWIRA, SH'),
+('NN195L', 'MUHAMMAD ARDHYA BISMA, ST., MBA'),
+('NN196L', 'MUHAMMAD RIZAL SATRIA, SE., M.Ak.'),
+('NN197L', 'MUHAMMAD YAZIDUS SYUKRI, SS., M.Pd'),
+('NN201L', 'MANIAH, S.Kom., MT.'),
+('NN202L', 'MARISMIATI, SE., M.Si.'),
+('NN208L', 'MOHAMAD HARRY KHOMAS SAPUTRA, ST., M.TI'),
+('NN222L', 'NISA HANUM HARANI, S.Kom., MT.'),
+('NN223L', 'NONENG NURJANAH, SP., MT.'),
+('NN225L', 'NOVIANA RIZA, S.Si., MT.'),
+('NN226L', 'NUGROHO, SE.'),
+('NN229L', 'NUR AZIZ SUGIHARTO, SE Ak .MM .CA'),
+('NN231L', 'NURISKA NOVIANTORO, S.Pd.'),
+('NN250L', 'RIANI TANJUNG, SE., M.Si'),
+('NN252L', 'RIMA SUNDARI, SE., M.Ak.'),
+('NN255L', 'Ripta Permata Nuary, M.Hum'),
+('NN257L', 'ROLLY MAULANA AWANGGA, ST., MT'),
+('NN258L', 'RONI ANDARSYAH, ST., M.Kom.'),
+('NN260L', 'RUKMI JUWITA, SE., M.Si'),
+('NN265L', 'DR. SAPTONO KUSDANU WASKITO, SE., MM'),
+('NN275L', 'SITI SOPIAH, S.Pd.'),
+('NN277L', 'SOMADI, SE., MM., MT'),
+('NN283L', 'SRI SUHARTI, SE.'),
+('NN285L', 'SUCI FIKA WIDYANA, SE., MM'),
+('NN290L', 'SUPONO, ST., MT.'),
+('NN298L', 'TAMADARA HILMAN, S.IP., MBA'),
+('NN305L', 'TIA SETIANI, S.Pd., MM.'),
+('NN318L', 'VIRDIANDRY PUTRATAMA, ST., M.Kom.'),
+('NN326L', 'WELLDA DESVITARINA,'),
+('NN339L', 'Zakie Asidiky, S.Pd., M.Hum.'),
+('NN345L', 'Irfan Hardian, '),
+('NN352L', 'Dr. Hana Suryana, Dr. Drs., MM'),
+('NN354L', 'IFA SAIDATUNINGTYAS, S.Si., MT'),
+('NN356L', 'TRISNENDRI SYAHRIZAL, '),
+('NN363L', 'Badeli Arief, '),
+('NN365L', 'Gede Yoshiharta Permana, '),
+('NN367L', 'RIDO GALIH, S.AB., M.AB'),
+('NN368L', 'Dr. Encep Sopandi, Dr., M.Si., S.Sos.'),
+('NN369L', 'Ricky Agung Laksono, '),
+('NN372L', 'MUHAMMAD ALDERIZAL, S.Si., MT.'),
+('NN373L', 'Sofi Anida, SS., MM'),
+('NSDJDI', 'Drs. NS. Djunaedi, '),
+('PM013T', 'IMAM KAMBALI, SE., MM'),
+('PM021T', 'SUPARNO SAPUTRA, SE., MM'),
+('PM043L', 'RACHMAT TRI YULI YANTO, SE., MM'),
+('PM058L', 'Dra. ASROFAH,  MM.'),
+('PM063L', 'SENNY HANDAYANI, SE., MM.'),
+('PM082L', 'KHAIRANINGRUM MULYANTI, S.Pd., M.Pd.'),
+('PM083L', 'ANGGA DEWI ANGGRAENI, SE., MM.'),
+('PM085L', 'BAMBANG TRIPUTRANTO, SE., MM.'),
+('PM086L', 'SIGIT SANTOSA, SE., MM'),
+('TI001T', 'SANTOSO, S.Si.'),
+('TI013T', 'SAEPUDIN NIRWAN, S.Kom., M.Kom.'),
+('TI015T', 'SUPRIADY, ST., MT.'),
+('TI020T', 'DINI HAMIDIN, S.SI., MBA., MT.'),
+('TI027L', 'SRI NURYULIAWATI, Dra'),
+('TI033T', 'WIDIA RESDIANA, SS., M.Pd.'),
+('TI041L', 'WORO ISTI RAHAYU, ST., MT.'),
+('TI066L', 'IWAN SETIAWAN, ST., MT.'),
+('TI069L', 'TIM (KAPITA SELEKTA),'),
+('TI117L', 'RONI HABIBI, S.Kom.,MT.'),
+('TI118L', 'MUHAMMAD RUSLAN MAULANI, S. Kom.MT'),
+('TI119L', 'KRISNA YUDHA BHAKTI, SS.'),
+('TI122L', 'MOHAMAD NURKAMAL FAUZAN, ST., MT.'),
+('TI125L', 'SYAFRIAL FACHRI PANE, ST., M.TI.,EBDP'),
+('TI126L', 'MUHAMMAD YUSRIL HELMI SETYAWAN, S.Kom., M.Kom.');
 
 -- --------------------------------------------------------
 
@@ -368,8 +438,8 @@ INSERT INTO `reply` (`keyword_group`, `content`) VALUES
 ('cantik', 'terima kasihh kakak yang maniss (/◕ヮ◕)/'),
 ('cantik', 'awww terima kasiihh (≧▽≦)'),
 ('cantik', 'love you kak (ㆁωㆁ*)'),
-('rokok', 'bukannya wanda gak mau beliin, tapi rokok itu gak baik buat kesehatan, lebih baik rokoknya diganti sama wanda aja gimana?'),
-('kesal', 'hmm, maaf ya kalo wanda ada salah sama kamu'),
+('rokok', 'bukannya #BOTNAME# gak mau beliin, tapi rokok itu gak baik buat kesehatan, lebih baik rokoknya diganti sama #BOTNAME# aja gimana?'),
+('kesal', 'hmm, maaf ya kalo #BOTNAME# ada salah sama kamu'),
 ('centil', 'emang kenapa? ada masalah?'),
 ('centil', 'trus? masalah buat kamu?'),
 ('buli', 'Ya Maaf (ಥ﹏ಥ)'),
@@ -454,8 +524,1263 @@ ALTER TABLE `number_auth`
 -- AUTO_INCREMENT for table `d4ti_3a`
 --
 ALTER TABLE `d4ti_3a`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=455;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=523;
 COMMIT;
+
+-- D4TI
+
+drop table if exists d4ti_1a;
+
+create table d4ti_1a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4ti_1b;
+
+create table d4ti_1b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4ti_2a;
+
+create table d4ti_2a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4ti_2b;
+
+create table d4ti_2b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4ti_2c;
+
+create table d4ti_2c(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4ti_3a;
+
+create table d4ti_3a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(25) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4ti_3b;
+
+create table d4ti_3b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(25) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4ti_3c;
+
+create table d4ti_3c(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+-- D4TI
+
+-- D3TI
+
+drop table if exists d3ti_1a;
+
+create table d3ti_1a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3ti_2a;
+
+create table d3ti_2a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3ti_2b;
+
+create table d3ti_2b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+-- D3TI
+
+-- D3MI
+
+drop table if exists d3mi_1a;
+
+create table d3mi_1a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3mi_2a;
+
+create table d3mi_2a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3mi_3a;
+
+create table d3mi_3a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+-- D3MI
+
+-- D4AK
+
+drop table if exists d4ak_1a;
+
+create table d4ak_1a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4ak_1b;
+
+create table d4ak_1b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4ak_2a;
+
+create table d4ak_2a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4ak_2b;
+
+create table d4ak_2b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4ak_3a;
+
+create table d4ak_3a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4ak_3b;
+
+create table d4ak_3b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4ak_4a;
+
+create table d4ak_4a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4ak_4b;
+
+create table d4ak_4b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4ak_4c;
+
+create table d4ak_4c(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+-- D4AK
+
+-- D3AK
+
+drop table if exists d3ak_1a;
+
+create table d3ak_1a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3ak_2a;
+
+create table d3ak_2a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3ak_2b;
+
+create table d3ak_2b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3ak_3a;
+
+create table d3ak_3a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3ak_3b;
+
+create table d3ak_3b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+-- D3AK
+
+-- D4MP
+
+drop table if exists d4mp_1a;
+
+create table d4mp_1a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4mp_1b;
+
+create table d4mp_1b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4mp_2a;
+
+create table d4mp_2a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4mp_2b;
+
+create table d4mp_2b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4mp_2c;
+
+create table d4mp_2c(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4mp_2d;
+
+create table d4mp_2d (
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4mp_3a;
+
+create table d4mp_3a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4mp_3b;
+
+create table d4mp_3b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4mp_3c;
+
+create table d4mp_3c(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4mp_3d;
+
+create table d4mp_3d(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4mp_4a;
+
+create table d4mp_4a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4mp_4b;
+
+create table d4mp_4b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4mp_4c;
+
+create table d4mp_4c(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+
+-- D4MP
+
+-- D3MP
+
+drop table if exists d3mp_1a;
+
+create table d3mp_1a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3mp_2a;
+
+create table d3mp_2a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3mp_2b;
+
+create table d3mp_2b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3mp_3a;
+
+create table d3mp_3a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3mp_3b;
+
+create table d3mp_3b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+-- D3MP
+
+-- D4LB
+
+drop table if exists d4lb_1a;
+
+create table d4lb_1a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_1b;
+
+create table d4lb_1b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_1c;
+
+create table d4lb_1c(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_1d;
+
+create table d4lb_1d(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_1e;
+
+create table d4lb_1e(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_1f;
+
+create table d4lb_1f(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_2a;
+
+create table d4lb_2a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_2b;
+
+create table d4lb_2b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_2c;
+
+create table d4lb_2c(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_2d;
+
+create table d4lb_2d(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_2e;
+
+create table d4lb_2e(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_2f;
+
+create table d4lb_2f(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_2g;
+
+create table d4lb_2g(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_2h;
+
+create table d4lb_2h(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_3a;
+
+create table d4lb_3a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_3b;
+
+create table d4lb_3b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_3c;
+
+create table d4lb_3c(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_3d;
+
+create table d4lb_3d(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_3e;
+
+create table d4lb_3e(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_3f;
+
+create table d4lb_3f (
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_4a;
+
+create table d4lb_4a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_4b;
+
+create table d4lb_4b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_4c;
+
+create table d4lb_4c(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_4d;
+
+create table d4lb_4d(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_4e;
+
+create table d4lb_4e(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_4f;
+
+create table d4lb_4f(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d4lb_4g;
+
+create table d4lb_4g(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+-- D4LB
+
+-- D3AL
+
+drop table if exists d3al_1a;
+
+create table d3al_1a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3al_1b;
+
+create table d3al_1b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3al_1c;
+
+create table d3al_1c(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3al_1d;
+
+create table d3al_1d(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3al_2a;
+
+create table d3al_2a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3al_2b;
+
+create table d3al_2b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3al_2c;
+
+create table d3al_2c(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3al_2d;
+
+create table d3al_2d(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3al_2e;
+
+create table d3al_2e(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3al_3a;
+
+create table d3al_3a(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3al_3b;
+
+create table d3al_3b(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3al_3c;
+
+create table d3al_3c(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3al_3d;
+
+create table d3al_3d(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+drop table if exists d3al_3e;
+
+create table d3al_3e(
+	id int auto_increment primary key,
+	npm varchar(7) not null,
+	number_phone varchar(255) not null,
+	lecturer varchar(15) not null,
+	course varchar(15) not null,
+	discussion text not null,
+	date_time datetime not null,
+	message text not null,
+	kode_matkul varchar(15) not null
+);
+
+-- D3AL
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
