@@ -1,259 +1,363 @@
-/*
- Navicat Premium Data Transfer
+-- phpMyAdmin SQL Dump
+-- version 5.0.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Mar 16, 2020 at 01:04 PM
+-- Server version: 10.4.11-MariaDB
+-- PHP Version: 7.4.3
 
- Source Server         : localhost
- Source Server Type    : MySQL
- Source Server Version : 100144
- Source Host           : localhost:3306
- Source Schema         : wanda
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+SET time_zone = "+00:00";
 
- Target Server Type    : MySQL
- Target Server Version : 100144
- File Encoding         : 65001
 
- Date: 02/03/2020 06:53:51
-*/
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
-SET NAMES utf8mb4;
-SET FOREIGN_KEY_CHECKS = 0;
+--
+-- Database: `iteung`
+--
 
-DROP TABLE IF EXISTS `group_auth`;
-CREATE TABLE `group_auth`  (
-  `number` varchar(18)  NOT NULL,
+--
+-- Table structure for table `dosen`
+--
+
+CREATE TABLE `dosen` (
+  `kode_dosen` varchar(10) NOT NULL,
+  `nama` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `dosen`
+--
+
+INSERT INTO `dosen` (`kode_dosen`, `nama`) VALUES
+('NN257L', 'Rolly Maulana Awangga S.T.,M.T.');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `error_message`
+--
+
+CREATE TABLE `error_message` (
+  `content` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+
+--
+-- Dumping data for table `error_message`
+--
+
+INSERT INTO `error_message` (`content`) VALUES
+('Duh maaf programnya ada yang rusak nih.. tulisannya :  _#ERROR#_   ,#BOTNAME# sekarang yang minta tolong boleh? forwadin pesan ini ke akang teteh mimin ya... Makasih :) ');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `group_auth`
+--
+
+CREATE TABLE `group_auth` (
+  `number` varchar(18) NOT NULL,
+  `group_id` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `group_auth`
+--
+
+INSERT INTO `group_auth` (`number`, `group_id`) VALUES
+('6282217401448', 2),
+('6289677709045', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `keyword`
+--
+
+CREATE TABLE `keyword` (
+  `keyword_group` varchar(255) DEFAULT NULL,
+  `keyword` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+
+--
+-- Dumping data for table `keyword`
+--
+
+INSERT INTO `keyword` (`keyword_group`, `keyword`) VALUES
+('perkenalan', 'kenalan'),
+('perkenalan', 'perkenalkan'),
+('trims', 'terimakasih'),
+('trims', 'haturnuhun'),
+('trims', 'nuhun'),
+('trims', 'makasih'),
+('pujian', 'pintar'),
+('love', 'love'),
+('pujian', 'cantik'),
+('buli', 'bodoh'),
+('buli', 'jelek'),
+('buli', 'bangsat'),
+('buli', 'bego'),
+('buli', 'tolol'),
+('buli', 'idiot'),
+('buli', 'bau'),
+('trims', 'trims'),
+('formal', 'siang'),
+('formal', 'sore'),
+('formal', 'malam'),
+('formal', 'pagi'),
+('teka_teki', 'teka-teki'),
+('teka_teki', 'main'),
+('gombal', 'gombal'),
+('gombal', 'rayu'),
+('gombal', 'baper'),
+('gombal', 'gombalin'),
+('gombal', 'baperin'),
+('gombal', 'gombalan'),
+('gombal', 'rayuan'),
+('joke', 'ngelucu'),
+('joke', 'ngelawak'),
+('joke', 'ngereceh'),
+('joke', 'lawakan'),
+('user_cantik', 'aku-cantik'),
+('m:sendVideoWithoutPhoneNumber', 'ngedance'),
+('m:sendVideoWithoutPhoneNumber', 'dance'),
+('m:sendVideoWithoutPhoneNumber', 'nari'),
+('m:sendVideoWithoutPhoneNumber', 'nyanyi'),
+('m:sendVideoWithoutPhoneNumber', 'menyanyi'),
+('m:sendVideoWithoutPhoneNumber', 'gaya'),
+('m:sendVideoWithoutPhoneNumber', 'imutnya'),
+('cantik', 'kamu-cantik'),
+('cantik', 'kamu-cantik'),
+('rokok', 'beliin-rokok'),
+('rokok', 'beli-rokok'),
+('rokok', 'belikan-rokok'),
+('rokok', 'beli-udud'),
+('rokok', 'beliin-udud'),
+('kesal', 'ngeselin'),
+('kesal', 'kesal'),
+('centil', 'centil'),
+('centil', 'nakal'),
+('m:prodi', 'nilai'),
+('pujian', 'pinter'),
+('m:kelas', 'matkul');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `multi_key`
+--
+
+CREATE TABLE `multi_key` (
+  `multiple_keywords` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+
+--
+-- Dumping data for table `multi_key`
+--
+
+INSERT INTO `multi_key` (`multiple_keywords`) VALUES
+('aku-cantik'),
+('kamu-cantik'),
+('selamat-siang'),
+('selamat-sore'),
+('selamat-malam'),
+('selamat-pagi'),
+('beli-rokok'),
+('beliin-rokok'),
+('belikan-rokok'),
+('beli-udud'),
+('beliin-udud');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notfound_message`
+--
+
+CREATE TABLE `notfound_message` (
+  `content` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+
+--
+-- Dumping data for table `notfound_message`
+--
+
+INSERT INTO `notfound_message` (`content`) VALUES
+('duh maap... #BOTNAME# ga ngerti bahasanya.... huhuhu...');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `number_auth`
+--
+
+CREATE TABLE `number_auth` (
   `group_id` int(2) NOT NULL,
-  PRIMARY KEY(`number`)
-);
+  `modul` varchar(55) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `group_auth` VALUES('6282217401448', 2), ('6289677709045', 1);
+--
+-- Dumping data for table `number_auth`
+--
 
-DROP TABLE IF EXISTS `number_auth`;
-CREATE TABLE `number_auth`  (
-  `group_id` int(2) NOT NULL,
-  `modul` varchar(255) NOT NULL,
-  PRIMARY KEY(`modul`)
-);
+INSERT INTO `number_auth` (`group_id`, `modul`) VALUES
+(2, 'm:kelas'),
+(2, 'm:prodi'),
+(1, 'm:siap');
 
-INSERT INTO `number_auth` VALUES(1, 'm:siap'), (2, 'm:prodi');
+-- --------------------------------------------------------
 
--- ----------------------------
--- Table structure for error_message
--- ----------------------------
-DROP TABLE IF EXISTS `error_message`;
-CREATE TABLE `error_message`  (
-  `content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+--
+-- Table structure for table `opening_message`
+--
 
--- ----------------------------
--- Records of error_message
--- ----------------------------
-INSERT INTO `error_message` VALUES ('Duh maaf programnya ada yang rusak nih.. tulisannya :  _#ERROR#_   ,#BOTNAME# sekarang yang minta tolong boleh? forwadin pesan ini ke akang teteh mimin ya... Makasih :) ');
+CREATE TABLE `opening_message` (
+  `content` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
--- ----------------------------
--- Table structure for keyword
--- ----------------------------
-DROP TABLE IF EXISTS `keyword`;
-CREATE TABLE `keyword`  (
-  `keyword_group` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `keyword` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+--
+-- Dumping data for table `opening_message`
+--
 
--- ----------------------------
--- Records of keyword
--- ----------------------------
-INSERT INTO `keyword` VALUES ('perkenalan', 'kenalan');
-INSERT INTO `keyword` VALUES ('perkenalan', 'perkenalkan');
-INSERT INTO `keyword` VALUES ('trims', 'terimakasih');
-INSERT INTO `keyword` VALUES ('trims', 'haturnuhun');
-INSERT INTO `keyword` VALUES ('trims', 'nuhun');
-INSERT INTO `keyword` VALUES ('trims', 'makasih');
-INSERT INTO `keyword` VALUES ('pujian', 'pintar');
-INSERT INTO `keyword` VALUES ('love', 'love');
-INSERT INTO `keyword` VALUES ('pujian', 'cantik');
-INSERT INTO `keyword` VALUES ('buli', 'bodoh');
-INSERT INTO `keyword` VALUES ('buli', 'jelek');
-INSERT INTO `keyword` VALUES ('buli', 'bangsat');
-INSERT INTO `keyword` VALUES ('buli', 'bego');
-INSERT INTO `keyword` VALUES ('buli', 'tolol');
-INSERT INTO `keyword` VALUES ('buli', 'idiot');
-INSERT INTO `keyword` VALUES ('buli', 'bau');
-INSERT INTO `keyword` VALUES ('trims', 'trims');
-INSERT INTO `keyword` VALUES ('formal', 'siang');
-INSERT INTO `keyword` VALUES ('formal', 'sore');
-INSERT INTO `keyword` VALUES ('formal', 'malam');
-INSERT INTO `keyword` VALUES ('formal', 'pagi');
-INSERT INTO `keyword` VALUES ('teka_teki', 'teka-teki');
-INSERT INTO `keyword` VALUES ('teka_teki', 'main');
-INSERT INTO `keyword` VALUES ('gombal', 'gombal');
-INSERT INTO `keyword` VALUES ('gombal', 'rayu');
-INSERT INTO `keyword` VALUES ('gombal', 'baper');
-INSERT INTO `keyword` VALUES ('gombal', 'gombalin');
-INSERT INTO `keyword` VALUES ('gombal', 'baperin');
-INSERT INTO `keyword` VALUES ('gombal', 'gombalan');
-INSERT INTO `keyword` VALUES ('gombal', 'rayuan');
-INSERT INTO `keyword` VALUES ('joke', 'ngelucu');
-INSERT INTO `keyword` VALUES ('joke', 'ngelawak');
-INSERT INTO `keyword` VALUES ('joke', 'ngereceh');
-INSERT INTO `keyword` VALUES ('joke', 'lawakan');
-INSERT INTO `keyword` VALUES ('user_cantik', 'aku-cantik');
-INSERT INTO `keyword` VALUES ('m:sendVideoWithoutPhoneNumber', 'ngedance');
-INSERT INTO `keyword` VALUES ('m:sendVideoWithoutPhoneNumber', 'dance');
-INSERT INTO `keyword` VALUES ('m:sendVideoWithoutPhoneNumber', 'nari');
-INSERT INTO `keyword` VALUES ('m:sendVideoWithoutPhoneNumber', 'nyanyi');
-INSERT INTO `keyword` VALUES ('m:sendVideoWithoutPhoneNumber', 'menyanyi');
-INSERT INTO `keyword` VALUES ('m:sendVideoWithoutPhoneNumber', 'gaya');
-INSERT INTO `keyword` VALUES ('m:sendVideoWithoutPhoneNumber', 'imutnya');
-INSERT INTO `keyword` VALUES ('cantik', 'kamu-cantik');
-INSERT INTO `keyword` VALUES ('cantik', 'kamu-cantik');
-INSERT INTO `keyword` VALUES ('rokok', 'beliin-rokok');
-INSERT INTO `keyword` VALUES ('rokok', 'beli-rokok');
-INSERT INTO `keyword` VALUES ('rokok', 'belikan-rokok');
-INSERT INTO `keyword` VALUES ('rokok', 'beli-udud');
-INSERT INTO `keyword` VALUES ('rokok', 'beliin-udud');
-INSERT INTO `keyword` VALUES ('kesal', 'ngeselin');
-INSERT INTO `keyword` VALUES ('kesal', 'kesal');
-INSERT INTO `keyword` VALUES ('centil', 'centil');
-INSERT INTO `keyword` VALUES ('centil', 'nakal');
-INSERT INTO `keyword` VALUES ('m:prodi', 'nilai');
-INSERT INTO `keyword` VALUES ('pujian', 'pinter');
+INSERT INTO `opening_message` (`content`) VALUES
+('iyaaaaaa :-D #BOTNAME# disini, selalu menantimu'),
+('iya, butuh bantuan? atau cuman rindu sama #BOTNAME# :D'),
+('iya, kenapa? ada yang bisa #BOTNAME# bantukah??');
 
--- ----------------------------
--- Table structure for multi_key
--- ----------------------------
-DROP TABLE IF EXISTS `multi_key`;
-CREATE TABLE `multi_key`  (
-  `multiple_keywords` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+-- --------------------------------------------------------
 
--- ----------------------------
--- Records of multi_key
--- ----------------------------
-INSERT INTO `multi_key` VALUES ('aku-cantik');
-INSERT INTO `multi_key` VALUES ('kamu-cantik');
-INSERT INTO `multi_key` VALUES ('selamat-siang');
-INSERT INTO `multi_key` VALUES ('selamat-sore');
-INSERT INTO `multi_key` VALUES ('selamat-malam');
-INSERT INTO `multi_key` VALUES ('selamat-pagi');
-INSERT INTO `multi_key` VALUES ('beli-rokok');
-INSERT INTO `multi_key` VALUES ('beliin-rokok');
-INSERT INTO `multi_key` VALUES ('belikan-rokok');
-INSERT INTO `multi_key` VALUES ('beli-udud');
-INSERT INTO `multi_key` VALUES ('beliin-udud');
+--
+-- Table structure for table `reply`
+--
 
--- ----------------------------
--- Table structure for notfound_message
--- ----------------------------
-DROP TABLE IF EXISTS `notfound_message`;
-CREATE TABLE `notfound_message`  (
-  `content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+CREATE TABLE `reply` (
+  `keyword_group` varchar(255) DEFAULT NULL,
+  `content` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
--- ----------------------------
--- Records of notfound_message
--- ----------------------------
-INSERT INTO `notfound_message` VALUES ('duh maap... #BOTNAME# ga ngerti bahasanya.... huhuhu...');
+--
+-- Dumping data for table `reply`
+--
 
--- ----------------------------
--- Table structure for opening_message
--- ----------------------------
-DROP TABLE IF EXISTS `opening_message`;
-CREATE TABLE `opening_message`  (
-  `content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+INSERT INTO `reply` (`keyword_group`, `content`) VALUES
+('buli', 'Tak ada manusia yang terlahir \\n di download \\n (´-﹏-`；)'),
+('buli', 'Bumi ini aja aku pijak \\napalagi kepala kau \\n (；･`д･´)'),
+('buli', 'rangga yang kamu lakukan ke saya itu \\n JAHAT \\n (;´༎ຶД༎ຶ`)'),
+('trims', 'sama sama :-)'),
+('trims', 'yoi, cama-cama'),
+('trims', 'sami sami :-D'),
+('buli', 'Ya allah Tolongin Ya allah (ಥ﹏ಥ)\", \"Kok kamu jahat bIiinNNNnngggGGHHiitzzz sich sama aku zheyeng (\'・ω・\')'),
+('perkenalan', 'Halo, perkenalkan Nama aku #BOTNAME#, Aku seorang mahasiswi Informatics Research Center (IRC), Salam kenal ya'),
+('pujian', 'Oo, iya dong, makasih atas pujiannya'),
+('pujian', 'terima kasihh kakak yang maniss (/◕ヮ◕)/'),
+('pujian', 'awww terima kasiihh (≧▽≦)'),
+('joke', 'Sahabat dekat biasanya akan mengajak makan kepiting bareng, karena sahabat yang dekat adalah sahabat a crab :)'),
+('joke', 'Rombongan bebek lagi nyebrang \\n Trus ada satu bebek yang ketabrak motor \\n Bebek 1: Kamu gpp? \\n Bebek 2: Aku bebek aja kok :)'),
+('joke', 'Kalo semua hal harus dipikirkan masak-masak, gimana nasib orang-orang yg ngga bisa masak :('),
+('joke', 'Bang peseng es campurnya satu, tapi dipisah ya bang. Soalnya aku khawatir nggak bisa bedain mana yang tulus dan mana yg modus :)'),
+('joke', 'Pembeli: Bang, ngapain ngobrol sama martabak? \\nPenjual: Kata pembelinya, martabaknya jgn dikacangin :)'),
+('joke', 'Pembeli: Mbak, beli es tehnya \\nPenjual: Manis gak? \\nPembeli: Gak usah manis-manis, yg penting setia dan mau menerima saya apa adanya :)'),
+('joke', 'Kalo ketemu begal di jalan, jgn takut. Kasi balsem aja, karena balsem bisa menghilangkan begal-begal :)'),
+('joke', 'Kalo bercanda jgn suka kelewatan, soalnya kalo kelewatan ntar lo mesti muter balik :)'),
+('joke', 'Jalan sama gebetan pake flat shoes, ditengah jalan ketemu mantannya dia, trus mereka ngobrol, aku dan sepatuku gak ada hak :\')'),
+('joke', 'Cewek itu makhluk kuat, listrik aja dipake dibibir :('),
+('joke', 'Kunci rumah gue hilang, mau masuk gak bisa. Gue cari dimana-mana gak ketemu. Akhirnya gue ambil napas panjang dan istigfar, eh pintunya kebuka. Baru inget kalo ternyata kuncinya sabar :\')'),
+('joke', 'Pray for Banten, ibukotanya di serang :\')'),
+('joke', 'Aku barusan ke kantor polisi bikin surat kehilangan, tp ditolak. Aku bilangnya aku kehilangan kamu :('),
+('gombal', 'Sedang apa? Hari ini jika sehat berkenan lebih lama bersemayam di tubuh kita, maukah kau berkencan bersamaku? Hanya kita, berdua?'),
+('gombal', 'Aku mengenalmu tanpa sengaja, lalu menyayangimu secara tiba-tiba, namun sayang belum jadi siapa-siapa, mungkin nanti atau esok?'),
+('gombal', 'Kamu sejenis keyboard ya? soalnya you are my type'),
+('teka_teki', 'Ade ray kalau kentut bunyinya gimana? \\n Brotot, brotot, brottott '),
+('teka_teki', 'Sandal apa yang paling enak di dunia? \\n Sandal terasi'),
+('teka_teki', 'Apa perbedaan aksi dengan demo? \\n Kalo aksi rodanya empat kalo demo rodanya tiga'),
+('love', 'love you too <3'),
+('user_cantik', 'iya kamu cantik bangeett deehh (^o^)'),
+('user_cantik', 'iya kamu cantik tapi masih cantikan akuu hehehe'),
+('user_cantik', 'iyaa zheyengg'),
+('cantik', 'terima kasihh kakak yang maniss (/◕ヮ◕)/'),
+('cantik', 'awww terima kasiihh (≧▽≦)'),
+('cantik', 'love you kak (ㆁωㆁ*)'),
+('rokok', 'bukannya wanda gak mau beliin, tapi rokok itu gak baik buat kesehatan, lebih baik rokoknya diganti sama wanda aja gimana?'),
+('kesal', 'hmm, maaf ya kalo wanda ada salah sama kamu'),
+('centil', 'emang kenapa? ada masalah?'),
+('centil', 'trus? masalah buat kamu?'),
+('buli', 'Ya Maaf (ಥ﹏ಥ)'),
+('buli', 'sudah cukup rhoma (｡ŏ﹏ŏ)'),
+('buli', 'Kamu belom pernah liat aku marah yaaahhh!!! (；･`д･´)');
 
--- ----------------------------
--- Records of opening_message
--- ----------------------------
-INSERT INTO `opening_message` VALUES ('iyaaaaaa :-D #BOTNAME# disini, selalu menantimu');
-INSERT INTO `opening_message` VALUES ('iya, butuh bantuan? atau cuman rindu sama #BOTNAME# :D');
-INSERT INTO `opening_message` VALUES ('iya, kenapa? ada yang bisa #BOTNAME# bantukah??');
+-- --------------------------------------------------------
 
--- ----------------------------
--- Table structure for reply
--- ----------------------------
-DROP TABLE IF EXISTS `reply`;
-CREATE TABLE `reply`  (
-  `keyword_group` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+--
+-- Table structure for table `reply_auth`
+--
 
--- ----------------------------
--- Records of reply
--- ----------------------------
-INSERT INTO `reply` VALUES ('buli', 'Tak ada manusia yang terlahir \\n di download \\n (´-﹏-`；)');
-INSERT INTO `reply` VALUES ('buli', 'Bumi ini aja aku pijak \\napalagi kepala kau \\n (；･`д･´)');
-INSERT INTO `reply` VALUES ('buli', 'rangga yang kamu lakukan ke saya itu \\n JAHAT \\n (;´༎ຶД༎ຶ`)');
-INSERT INTO `reply` VALUES ('trims', 'sama sama :-)');
-INSERT INTO `reply` VALUES ('trims', 'yoi, cama-cama');
-INSERT INTO `reply` VALUES ('trims', 'sami sami :-D');
-INSERT INTO `reply` VALUES ('buli', 'Ya allah Tolongin Ya allah (ಥ﹏ಥ)\", \"Kok kamu jahat bIiinNNNnngggGGHHiitzzz sich sama aku zheyeng (\'・ω・\')');
-INSERT INTO `reply` VALUES ('perkenalan', 'Halo, perkenalkan Nama aku #BOTNAME#, Aku seorang mahasiswi Informatics Research Center (IRC), Salam kenal ya');
-INSERT INTO `reply` VALUES ('pujian', 'Oo, iya dong, makasih atas pujiannya');
-INSERT INTO `reply` VALUES ('pujian', 'terima kasihh kakak yang maniss (/◕ヮ◕)/');
-INSERT INTO `reply` VALUES ('pujian', 'awww terima kasiihh (≧▽≦)');
-INSERT INTO `reply` VALUES ('joke', 'Sahabat dekat biasanya akan mengajak makan kepiting bareng, karena sahabat yang dekat adalah sahabat a crab :)');
-INSERT INTO `reply` VALUES ('joke', 'Rombongan bebek lagi nyebrang \\n Trus ada satu bebek yang ketabrak motor \\n Bebek 1: Kamu gpp? \\n Bebek 2: Aku bebek aja kok :)');
-INSERT INTO `reply` VALUES ('joke', 'Kalo semua hal harus dipikirkan masak-masak, gimana nasib orang-orang yg ngga bisa masak :(');
-INSERT INTO `reply` VALUES ('joke', 'Bang peseng es campurnya satu, tapi dipisah ya bang. Soalnya aku khawatir nggak bisa bedain mana yang tulus dan mana yg modus :)');
-INSERT INTO `reply` VALUES ('joke', 'Pembeli: Bang, ngapain ngobrol sama martabak? \\nPenjual: Kata pembelinya, martabaknya jgn dikacangin :)');
-INSERT INTO `reply` VALUES ('joke', 'Pembeli: Mbak, beli es tehnya \\nPenjual: Manis gak? \\nPembeli: Gak usah manis-manis, yg penting setia dan mau menerima saya apa adanya :)');
-INSERT INTO `reply` VALUES ('joke', 'Kalo ketemu begal di jalan, jgn takut. Kasi balsem aja, karena balsem bisa menghilangkan begal-begal :)');
-INSERT INTO `reply` VALUES ('joke', 'Kalo bercanda jgn suka kelewatan, soalnya kalo kelewatan ntar lo mesti muter balik :)');
-INSERT INTO `reply` VALUES ('joke', 'Jalan sama gebetan pake flat shoes, ditengah jalan ketemu mantannya dia, trus mereka ngobrol, aku dan sepatuku gak ada hak :\')');
-INSERT INTO `reply` VALUES ('joke', 'Cewek itu makhluk kuat, listrik aja dipake dibibir :(');
-INSERT INTO `reply` VALUES ('joke', 'Kunci rumah gue hilang, mau masuk gak bisa. Gue cari dimana-mana gak ketemu. Akhirnya gue ambil napas panjang dan istigfar, eh pintunya kebuka. Baru inget kalo ternyata kuncinya sabar :\')');
-INSERT INTO `reply` VALUES ('joke', 'Pray for Banten, ibukotanya di serang :\')');
-INSERT INTO `reply` VALUES ('joke', 'Aku barusan ke kantor polisi bikin surat kehilangan, tp ditolak. Aku bilangnya aku kehilangan kamu :(');
-INSERT INTO `reply` VALUES ('gombal', 'Sedang apa? Hari ini jika sehat berkenan lebih lama bersemayam di tubuh kita, maukah kau berkencan bersamaku? Hanya kita, berdua?');
-INSERT INTO `reply` VALUES ('gombal', 'Aku mengenalmu tanpa sengaja, lalu menyayangimu secara tiba-tiba, namun sayang belum jadi siapa-siapa, mungkin nanti atau esok?');
-INSERT INTO `reply` VALUES ('gombal', 'Kamu sejenis keyboard ya? soalnya you are my type');
-INSERT INTO `reply` VALUES ('teka_teki', 'Ade ray kalau kentut bunyinya gimana? \\n Brotot, brotot, brottott ');
-INSERT INTO `reply` VALUES ('teka_teki', 'Sandal apa yang paling enak di dunia? \\n Sandal terasi');
-INSERT INTO `reply` VALUES ('teka_teki', 'Apa perbedaan aksi dengan demo? \\n Kalo aksi rodanya empat kalo demo rodanya tiga');
-INSERT INTO `reply` VALUES ('love', 'love you too <3');
-INSERT INTO `reply` VALUES ('user_cantik', 'iya kamu cantik bangeett deehh (^o^)');
-INSERT INTO `reply` VALUES ('user_cantik', 'iya kamu cantik tapi masih cantikan akuu hehehe');
-INSERT INTO `reply` VALUES ('user_cantik', 'iyaa zheyengg');
-INSERT INTO `reply` VALUES ('cantik', 'terima kasihh kakak yang maniss (/◕ヮ◕)/');
-INSERT INTO `reply` VALUES ('cantik', 'awww terima kasiihh (≧▽≦)');
-INSERT INTO `reply` VALUES ('cantik', 'love you kak (ㆁωㆁ*)');
-INSERT INTO `reply` VALUES ('rokok', 'bukannya wanda gak mau beliin, tapi rokok itu gak baik buat kesehatan, lebih baik rokoknya diganti sama wanda aja gimana?');
-INSERT INTO `reply` VALUES ('kesal', 'hmm, maaf ya kalo wanda ada salah sama kamu');
-INSERT INTO `reply` VALUES ('centil', 'emang kenapa? ada masalah?');
-INSERT INTO `reply` VALUES ('centil', 'trus? masalah buat kamu?');
-INSERT INTO `reply` VALUES ('buli', 'Ya Maaf (ಥ﹏ಥ)');
-INSERT INTO `reply` VALUES ('buli', 'sudah cukup rhoma (｡ŏ﹏ŏ)');
-INSERT INTO `reply` VALUES ('buli', 'Kamu belom pernah liat aku marah yaaahhh!!! (；･`д･´)');
+CREATE TABLE `reply_auth` (
+  `reply_message` varchar(255) DEFAULT NULL,
+  `module` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
--- ----------------------------
--- Table structure for waiting_message
--- ----------------------------
-DROP TABLE IF EXISTS `waiting_message`;
-CREATE TABLE `waiting_message`  (
-  `module_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+--
+-- Dumping data for table `reply_auth`
+--
 
--- ----------------------------
--- Records of waiting_message
--- ----------------------------
-INSERT INTO `waiting_message` VALUES ('prodi', 'Tunggu Sebentar Lagi Dicari Dulu Datanya');
-INSERT INTO `waiting_message` VALUES ('prodi', 'siappp..., di antosan sakeudap :-) yaaa');
+INSERT INTO `reply_auth` (`reply_message`, `module`) VALUES
+('Ih kamu capah minta-minta data, enak aja, #BOTNAME# gamau ngasih kekamu :-p', 'prodi'),
+('Enak aja minta data itu, ga boleh :-p', 'prodi'),
+('Ih gaboleh kamu yang mulai, harus dosen tercinta yg harus mulai kuliahnya wleeee :-P', 'kelas'),
+('kamu nakal ya mau main mulai jam kuliah aja, ibu/bapak dosen nih ada yang nakal nih wleeee :-P', 'kelas');
 
--- ----------------------------
--- Table structure for waiting_message
--- ----------------------------
-DROP TABLE IF EXISTS `reply_auth`;
-CREATE TABLE `reply_auth`  (
-  `reply_message` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+-- --------------------------------------------------------
 
--- ----------------------------
--- Records of reply_auth
--- ----------------------------
-INSERT INTO `reply_auth` VALUES ('Ih kamu capah minta-minta data, enak aja, #BOTNAME# gamau ngasih kekamu :-p');
-INSERT INTO `reply_auth` VALUES ('Enak aja minta data itu, ga boleh :-p');
+--
+-- Table structure for table `waiting_message`
+--
 
-SET FOREIGN_KEY_CHECKS = 1;
+CREATE TABLE `waiting_message` (
+  `module_name` varchar(255) DEFAULT NULL,
+  `content` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+
+--
+-- Dumping data for table `waiting_message`
+--
+
+INSERT INTO `waiting_message` (`module_name`, `content`) VALUES
+('prodi', 'Tunggu Sebentar Lagi Dicari Dulu Datanya'),
+('prodi', 'siappp..., di antosan sakeudap :-) yaaa'),
+('kelas', 'Oke, mari kita mulai matakuliah #MATKUL#, mohon kepada teman teman disimak baik-baik ya apa yang akan disampaikan oleh Bapak/Ibu dosen, kepada Bapak/Ibu dosen #BOTNAME# persilahkan untuk mengajar :-)'),
+('kelas', 'Yuhu, #MATKUL# akan segera dimulai yuk kepada teman-teman kita simak dosen-dosen terkece kita mengajar :-)');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `dosen`
+--
+ALTER TABLE `dosen`
+  ADD PRIMARY KEY (`kode_dosen`);
+
+--
+-- Indexes for table `group_auth`
+--
+ALTER TABLE `group_auth`
+  ADD PRIMARY KEY (`number`);
+
+--
+-- Indexes for table `number_auth`
+--
+ALTER TABLE `number_auth`
+  ADD PRIMARY KEY (`modul`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
 
 -- D4TI
 
@@ -1510,3 +1614,7 @@ create table d3al_3e(
 
 -- D3AL
 
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

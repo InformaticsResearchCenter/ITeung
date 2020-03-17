@@ -5,10 +5,30 @@ Created on Tue Feb 25 06:29:37 2020
 @author: rolly
 """
 from dateutil.parser import parse
+from lib import dawet, wa
 import datetime
-from lib import dawet 
+import pymysql
+import config
 
-def reply(msg):
+def dbConnect():
+    db = pymysql.connect(config.db_host, config.db_username, config.db_password, config.db_name)
+    return db
+
+def getWaitingMessage(module):
+    db = dbConnect()
+    content = ''
+    sql = "SELECT content FROM waiting_message WHERE module_name = '%s' ORDER BY RAND() LIMIT 1"%(module)
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        rows = cur.fetchone()
+        if rows is not None:
+            content = rows[0]
+    return content
+
+def replymsg(driver, msg):
+    wa.typeAndSendMessage(driver, getWaitingMessage('prodi'))
+
     msgs = list(msg.split(" "))
     getIndex = msgs.index("nilai")
 
