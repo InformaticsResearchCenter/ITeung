@@ -6,7 +6,11 @@ def dbConnect():
     return db
 
 def replymsg(num):
-    msgreply=insertNumber(num)
+    try:
+        insertNumber(num)
+        msgreply="oke data sudah masuk dengan berhasil, sekarang Bapak/Ibu dosen sudah bisa memulai kegiatan kelas, selamat mengajar :-)"
+    except:
+        msgreply="sepertinya nomer ini udah kedaftar deh coba minta tolong ke akang/teteh admin untuk dicek nomor hpnya..."
     return msgreply
 
 def insertNumber(num):
