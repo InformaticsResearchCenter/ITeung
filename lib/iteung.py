@@ -13,17 +13,18 @@ def get(num,msg):
         msg  = message.normalize(msg)
         msgs = list(msg.split(" "))
 
-        if len(msgs) == 1:
-            msgreply = reply.getOpeningMessage()
-        else:
-            msgreply=reply.message(msg)
-            if msgreply[:2] == 'm:':
-                modulename = msgreply.split(':')[1]
-                mod=import_module('module.'+modulename)
-                msgreply=mod.replymsg(msg)
+        if msg.find(config.bot_name) >= 0:
+            if len(msgs) == 1:
+                msgreply = reply.getOpeningMessage()
             else:
-                modulename = msgreply.split(':')[1]
-                msgreply=reply.getReplyAuth(modulename)
+                msgreply=reply.message(msg)
+                if msgreply[:2] == 'm:':
+                    modulename = msgreply.split(':')[1]
+                    mod=import_module('module.'+modulename)
+                    msgreply=mod.replymsg(msg)
+                else:
+                    modulename = msgreply.split(':')[1]
+                    msgreply=reply.getReplyAuth(modulename)
     except Exception as e:
         print(e)
         msgreply=reply.getErrorMessage()
