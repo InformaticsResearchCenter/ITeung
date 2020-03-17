@@ -16,11 +16,11 @@ def get(num,msg):
         if len(msgs) == 1:
             msgreply = reply.getOpeningMessage()
         else:
-            msgreply=reply.message(num)
+            msgreply=reply.message(msg)
             if msgreply[:2] == 'm:':
                 modulename = msgreply.split(':')[1]
                 mod=import_module('module.'+modulename)
-                msgreply=mod.replymsg(msg)
+                msgreply=mod.replymsg(num)
     except Exception as e:
         print(e)
         msgreply=reply.getErrorMessage()
