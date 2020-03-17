@@ -17,6 +17,7 @@ def get(num,msg):
             msgreply = reply.getOpeningMessage()
         else:
             msgreply=reply.message(msg)
+            print(msgreply)
             if msgreply[:2] == 'm:':
                 modulename = msgreply.split(':')[1]
                 mod=import_module('module.'+modulename)
@@ -32,4 +33,5 @@ def get(num,msg):
                 msgreply=msgreply.replace("#BOTNAME#", config.bot_name)
             except:
                 msgreply="field reply not found!!"
+                
     return msgreply

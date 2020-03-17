@@ -11,7 +11,7 @@ def replymsg(num):
 
 def insertNumber(num):
     db=dbConnect()
-    sql="INSERT INTO group_auth(number, group_id) VALUES ('%s',2)"%(num)
+    sql="INSERT INTO group_auth(number, group_id) VALUES('%s',2)"%(num)
     with db:
         cur=db.cursor()
         cur.execute(sql)

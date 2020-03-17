@@ -20,7 +20,7 @@ def message(msg):
         if keygroup[:2] != 'm:':
             replymsg=getContentWithKeyword(keygroup)
         else:
-            replymsg=getContentWithKeyword(keygroup)
+            replymsg=keygroup
     return replymsg
 
 def normalizeKeywords(msg):
@@ -52,8 +52,6 @@ def getKeywordGroup(msg):
             if rows is not None:
                 keygroup = rows[0]
     return keygroup
-
-print(getKeywordGroup("teung bodoh"))
     
 def getContentWithKeyword(keyword):
     db = dbConnect()
