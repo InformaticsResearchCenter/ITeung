@@ -16,10 +16,7 @@ def message(msg):
     keygroup = getKeywordGroup(msg)
     replymsg = getNotFoundMessage()
     if keygroup != '':
-        if keygroup[:2] != 'm:':
-            replymsg = getContentWithKeyword(keygroup)
-        else:
-            replymsg=keygroup
+        replymsg = getContentWithKeyword(keygroup)
     return replymsg
 
 def normalizeKeywords(msg):
