@@ -8,6 +8,7 @@ import pymysql
 import config
 
 
+
 def dbConnect():
     db=pymysql.connect(config.db_host,config.db_username,config.db_password,config.db_name)
     return db
@@ -16,7 +17,10 @@ def message(msg):
     keygroup = getKeywordGroup(msg)
     replymsg = getNotFoundMessage()
     if keygroup != '':
-        replymsg = getContentWithKeyword(keygroup)
+        if keygroup[:2] != 'm:':
+            replymsg=getContentWithKeyword(keygroup)
+        else:
+            replymsg=getContentWithKeyword(keygroup)
     return replymsg
 
 def normalizeKeywords(msg):
@@ -48,7 +52,8 @@ def getKeywordGroup(msg):
             if rows is not None:
                 keygroup = rows[0]
     return keygroup
-    
+
+print(getKeywordGroup("teung bodoh"))
     
 def getContentWithKeyword(keyword):
     db = dbConnect()
