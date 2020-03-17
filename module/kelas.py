@@ -1,4 +1,4 @@
-from lib import lecturerPhoneNumber, message, wa, reply
+from lib import message, wa, reply
 from datetime import datetime
 from importlib import import_module
 from time import sleep
@@ -60,14 +60,6 @@ def selesaiMatkul(msg):
 def listtostring(msg):
     msgs = ' '
     return msgs.join(msg)
-
-
-def numberAuth(num):
-    if num in lecturerPhoneNumber.phoneNumber:
-        return True
-    else:
-        return False
-
 
 def inserttod4ti_3a(npm, number_phone, lecturer, course, discussion, date_time, message, kode_matkul):
     db = dbConnect()
