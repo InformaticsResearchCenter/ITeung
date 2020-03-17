@@ -226,7 +226,6 @@ CREATE TABLE `group_auth` (
 --
 
 INSERT INTO `group_auth` (`number`, `group_id`) VALUES
-('6282217401448', 2),
 ('6289677709045', 1);
 
 -- --------------------------------------------------------
@@ -300,7 +299,8 @@ INSERT INTO `keyword` (`keyword_group`, `keyword`) VALUES
 ('centil', 'nakal'),
 ('m:prodi', 'nilai'),
 ('pujian', 'pinter'),
-('m:kelas', 'matkul');
+('m:kelas', 'matkul'),
+('m:daftar', 'daftar');
 
 -- --------------------------------------------------------
 
