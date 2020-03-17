@@ -21,15 +21,10 @@ def get(num,msg):
                 modulename = msgreply.split(':')[1]
                 mod=import_module('module.'+modulename)
                 msgreply=mod.replymsg(msg)
-            else:
-                modulename = msgreply.split(':')[1]
-                msgreply=reply.getReplyAuth(modulename)
     except Exception as e:
         print(e)
         msgreply=reply.getErrorMessage()
         msgreply=msgreply.replace("#ERROR#", str(e))
-
-    print(locals())
 
     if 'msgreply' in locals():
         if msgreply[:2] != 'm:':
