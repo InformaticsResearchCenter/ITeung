@@ -64,9 +64,10 @@ def openMessage(driver):
 def getData(driver):
     data = []
     try:
-        message = driver.find_elements_by_class_name("_12pGw")[-1].text
-    except:
-        message = "(objek gambar)"
+        message = driver.find_elements_by_xpath("'.//span'")[-11].text
+    except Exception as e:
+        print(str(e))
+        message = ''
     try:
         senderNumber = driver.find_elements_by_class_name("ZObjg")[-1].text
         senderAlias = driver.find_elements_by_class_name("_1F9Ap")[-1].text
