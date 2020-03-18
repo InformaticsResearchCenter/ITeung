@@ -64,7 +64,7 @@ def openMessage(driver):
 def getData(driver):
     data = []
     try:
-        message = driver.find_elements_by_xpath("(.//span)")[-11].text
+        message = driver.find_elements_by_class_name("_12pGw")[-1].text
     except:
         message = "(objek gambar)"
     try:
