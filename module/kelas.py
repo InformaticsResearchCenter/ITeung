@@ -349,14 +349,11 @@ def Mahasiswa(driver, npm):
     jumMahasiswa = int(driver.find_elements_by_class_name("inp1")[-1].text)
     index = 1
     for getNpm in range(jumMahasiswa):
-        npm = driver.find_element_by_xpath(
-            "/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[4]/table/tbody/tr[" + str(
-                index) + "]/td[2]").text
-        for npmmahasiswa in mahasiswa:
-            if npmmahasiswa == npm:
-                driver.find_element_by_xpath(
-                    "/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[4]/table/tbody/tr[" + str(
-                        index) + "]/td[4]/select/option[1]").click()
+        npm = driver.find_element_by_xpath("/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[4]/table/tbody/tr["+str(index)+"]/td[2]").text
+        if npm in mahasiswa:
+            driver.find_element_by_xpath("/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[4]/table/tbody/tr["+str(index)+"]/td[4]/select/option[1]").click()
+        else:
+            driver.find_element_by_xpath("/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[4]/table/tbody/tr["+str(index)+"]/td[4]/select/option[4]").click()
         index += 1
 
 
