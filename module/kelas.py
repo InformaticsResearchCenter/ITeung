@@ -340,10 +340,8 @@ def simpan(driver):
 
 
 def AddMahasiswa(driver):
-    jumTabel = int(driver.find_elements_by_class_name("inp1")[-1].text)
-    return driver.find_element_by_xpath(
-        "/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[3]/table/tbody/tr[" + str(
-            jumTabel + 1) + "]/td[8]/a").click()
+    jumTabel = driver.find_elements_by_xpath("/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[3]/table/tbody/tr")
+    return len(jumTabel)
 
 
 def Mahasiswa(driver, npm):
