@@ -21,6 +21,7 @@ def get(num,msg):
             if msgreply[:2] == 'm:':
                 modulename = msgreply.split(':')[1]
                 mod=import_module('module.'+modulename)
+                print(msg)
                 msgreply=mod.replymsg(num,msg)
     except Exception as e:
         print(e)

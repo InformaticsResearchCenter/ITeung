@@ -10,3 +10,4 @@ random2
 googletrans
 pymysql
 twilio
+pandas
