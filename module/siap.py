@@ -10,7 +10,7 @@ import config
 import pymysql
 
 def replymsg(num,msg):
-    kodedosen=msg.split(' ')[-1]
+    kodedosen=msg.split(' ')[-1].upper()
     df=getDataframe()
     df=selectTahunID(df,'20191')
     df=selectKodeDosen(df,kodedosen)
