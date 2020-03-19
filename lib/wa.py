@@ -66,24 +66,17 @@ def getData(driver):
     try:
         message = driver.find_elements_by_xpath("(.//span)")[-11].text
     except Exception as e:
-        print(str(e))
         message=''
     try:
         senderNumber = driver.find_elements_by_class_name("ZObjg")[-1].text
         senderAlias = driver.find_elements_by_class_name("_1F9Ap")[-1].text
         group = True
     except Exception as e:
-        # driver.find_element_by_class_name('_3fs0K').click()
-        print(e)
-        message=''
         senderAlias=''
         try:
             senderNumber = driver.find_element_by_xpath("/html/body/div[1]/div/div/div[4]/div/header/div[2]/div[1]/div/span").text
         except:
             senderNumber = driver.find_element_by_xpath("/html/body/div[1]/div/div/div[4]/div/header/div[2]/div/div/span")
-        # senderNumber = driver.find_element_by_xpath('/html/body/div[1]/div/div/div[4]/div/header/div[2]/div/div/span').text
-        # senderName = driver.find_element_by_xpath('/html/body/div[1]/div/div/div[2]/div[3]/span/div/span/div/div/div[1]/div[1]/div[2]/span/span').text
-        # driver.find_element_by_class_name("qfKkX").click()
         group = False
     data.append(senderNumber)
     if group:

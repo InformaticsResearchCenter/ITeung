@@ -14,7 +14,6 @@ class Chatbot(object):
         try:
             wa.openMessage(driver)
             data = wa.getData(driver)
-
             if len(data) == 3:
                 msg = data[2]
                 als = data[1]
@@ -22,7 +21,6 @@ class Chatbot(object):
             else:
                 msg = data[1]
                 num = data[0]
-
             msg = message.normalize(msg)
             msgs = list(msg.split(" "))
 
@@ -43,8 +41,6 @@ class Chatbot(object):
             msgreply = reply.getErrorMessage()
             msgreply = msgreply.replace("#ERROR#", str(e))
 
-        print(locals())
-
         if 'msgreply' in locals():
             if msgreply[:2] != 'm:':
                 msgreply = msgreply.replace("#BOTNAME#", config.bot_name)
@@ -53,6 +49,3 @@ class Chatbot(object):
                     wa.typeAndSendMessage(driver, msgreply)
                 except:
                     print("field reply not found!!")
-
-
-
