@@ -33,7 +33,7 @@ def selectTahunID(df,tahunid):
 
 def selectKodeDosen(df,kodedosen):
     df=df[df['DosenID']==kodedosen]
-    return df
+    return df[['Nama','Final','Presentase']].reset_index(drop=True)
 
 def toString(df):
     return df.to_string()
