@@ -5,7 +5,8 @@ Created on Tue Feb 25 06:35:15 2020
 @author: rolly
 """
 from selenium import webdriver
-#from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -34,6 +35,16 @@ def typeAndSendMessage(driver, message):
     message_target.send_keys(message)
     sendbutton = driver.find_elements_by_xpath('//*[@id="main"]/footer/div[1]/div[3]/button')[0]
     sendbutton.click()
+
+def typeMessage(driver, message):
+    return driver.find_elements_by_xpath('//*[@id="main"]/footer/div[1]/div[2]/div/div[2]')[0].send_keys(message)
+
+def sendMessage(driver):
+    return driver.find_elements_by_xpath('//*[@id="main"]/footer/div[1]/div[3]/button')[0].click()
+
+def lineBreakWhatsapp(driver):
+    return ActionChains(driver).key_down(Keys.SHIFT).send_keys(Keys.ENTER).key_up(Keys.SHIFT).perform()
+
 
 def deleteMessage(driver):
     driver.find_elements_by_class_name('_3j8Pd')[-1].click()
