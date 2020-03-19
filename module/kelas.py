@@ -239,10 +239,12 @@ def beritaAcara(driver, kodedosen, course, discussion, timestart):
                    "Waktu Mulai: " + str(waktumulai) + actionChains(driver).key_down(Keys.SHIFT).send_keys(Keys.ENTER).key_up(Keys.SHIFT).perform() + \
                    "Waktu Selesai: " + str(waktuselesai) + actionChains(driver).key_down(Keys.SHIFT).send_keys(Keys.ENTER).key_up(Keys.SHIFT).perform() + \
                    "Materi: " + str(materi)
+        print(messages)
         number = 1
         for npm in data:
             messages=messages+actionChains(driver).key_down(Keys.SHIFT).send_keys(Keys.ENTER).key_up(Keys.SHIFT).perform()+str(number)+". "+str(npm)
             number=int(number)+1
+            print(messages)
         wa.typeAndSendMessage(driver, messages)
 
 
