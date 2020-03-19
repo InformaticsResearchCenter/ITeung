@@ -227,10 +227,12 @@ def beritaAcara(driver, kodedosen, course, discussion, timestart):
     print(materi)
     kehadirannpm = getHadirNpm(timestart)
     print(kehadirannpm)
+    print(getNamaGroup(driver).split('-')[1])
     data = []
     for kehadiran in kehadirannpm:
         for npm in kehadiran:
             data.append(npm)
+    print(data)
     for i in range(1):
         messages = "Nama Dosen: " + str(namadosen) + actionChains(driver).key_down(Keys.SHIFT).send_keys(Keys.ENTER).key_up(Keys.SHIFT).perform() + \
                    "Mata Kuliah: " + str(matkul) + actionChains(driver).key_down(Keys.SHIFT).send_keys(Keys.ENTER).key_up(Keys.SHIFT).perform() +\
