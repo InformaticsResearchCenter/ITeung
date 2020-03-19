@@ -214,12 +214,19 @@ def getHadirNpm(time):
 
 def beritaAcara(driver, kodedosen, course, discussion, timestart):
     namadosen = getNamaDosen(kodedosen)
+    print(namadosen)
     matkul = course
+    print(matkul)
     tanggal = getTanggalTerakhir()
+    print(tanggal)
     waktumulai = str(timestart).split(" ")[1]
+    print(waktumulai)
     waktuselesai = getJamTerakhir()
+    print(waktuselesai)
     materi = listtostring(discussion)
+    print(materi)
     kehadirannpm = getHadirNpm(timestart)
+    print(kehadirannpm)
     data = []
     for kehadiran in kehadirannpm:
         for npm in kehadiran:
