@@ -226,16 +226,12 @@ def beritaAcara(driver, kodedosen, course, discussion, timestart):
     for msg in messages:
         wa.typeMessage(driver, msg)
         wa.lineBreakWhatsapp(driver)
-    wa.sendMessage(driver)
     number = 1
     for npm in data:
-        messages=messages+str(number)+". "+str(npm)
+        wa.typeMessage(driver, str(number)+". "+str(npm))
+        wa.lineBreakWhatsapp(driver)
         number=int(number)+1
-    print(messages)
-    wa.typeAndSendMessage(driver, messages)
-
-    Keys.
-
+    wa.sendMessage(driver)
 
 def siapAbsensi(driver, kodedosen, namagroup, timestart):
     kehadirannpm = getHadirNpm(timestart)
