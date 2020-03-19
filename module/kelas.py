@@ -277,7 +277,6 @@ def siapAbsensi(driver, kodedosen, namagroup, timestart, namamatkul):
         msgreply = "error: " + str(e)
         closeTab(driver)
         switchWindowsHandleto0(driver)
-        wa.typeMessage(driver, msgreply)
     return msgreply
 
 
