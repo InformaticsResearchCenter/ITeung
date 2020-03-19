@@ -3,7 +3,7 @@ from datetime import datetime
 from importlib import import_module
 from time import sleep
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.action_chains import ActionChains
+
 
 import config
 import pymysql
@@ -70,9 +70,6 @@ def inserttod4ti_3a(npm, number_phone, lecturer, course, discussion, date_time, 
     with db:
         cur = db.cursor()
         cur.execute(sql)
-
-def actionChains(driver):
-    return ActionChains(driver)
 
 def startkelas(driver, kelas, msg):
     msgcek = ''
@@ -214,39 +211,30 @@ def getHadirNpm(time):
 
 def beritaAcara(driver, kodedosen, course, discussion, timestart):
     namadosen = getNamaDosen(kodedosen)
-    print(namadosen)
     matkul = course
-    print(matkul)
     tanggal = getTanggalTerakhir()
-    print(tanggal)
     waktumulai = str(timestart).split(" ")[1]
-    print(waktumulai)
     waktuselesai = getJamTerakhir()
-    print(waktuselesai)
     materi = listtostring(discussion)
-    print(materi)
     kehadirannpm = getHadirNpm(timestart)
-    print(kehadirannpm)
-    print(getNamaGroup(driver).split('-')[1])
     data = []
     for kehadiran in kehadirannpm:
         for npm in kehadiran:
             data.append(npm)
-    print(data)
-    messages = "Nama Dosen: " + str(namadosen) +\
-               "Mata Kuliah: " + str(matkul) +\
-               "Kelas: " +str(getNamaGroup(driver).split('-')[1]) +\
-               "Tanggal: " + str(tanggal) +\
-               "Waktu Mulai: " + str(waktumulai) +\
-               "Waktu Selesai: " + str(waktuselesai) +\
-               "Materi: " + str(materi)
-    print(messages)
+    messages="Nama Dosen: " + str(namadosen)+"\nMata Kuliah: " + str(matkul)+"\nKelas: " +str(getNamaGroup(driver).split('-')[1])+"\nTanggal: " + str(tanggal)+"\nWaktu Mulai: " + str(waktumulai)+"\nWaktu Selesai: " + str(waktuselesai)+"\nMateri: " + str(materi)
+    messages=messages.split("\n")
+    for msg in messages:
+        wa.typeMessage(driver, msg)
+        wa.lineBreakWhatsapp(driver)
+    wa.sendMessage(driver)
     number = 1
     for npm in data:
-        messages=messages+actionChains(driver).key_down(Keys.SHIFT).send_keys(Keys.ENTER).key_up(Keys.SHIFT).perform()+str(number)+". "+str(npm)
+        messages=messages+str(number)+". "+str(npm)
         number=int(number)+1
     print(messages)
     wa.typeAndSendMessage(driver, messages)
+
+    Keys.
 
 
 def siapAbsensi(driver, kodedosen, namagroup, timestart):
