@@ -4,7 +4,6 @@ from importlib import import_module
 from time import sleep
 from selenium.webdriver.common.keys import Keys
 
-
 import config
 import pymysql
 
@@ -16,7 +15,7 @@ def dbConnect():
 
 def replymsg(driver, msg):
     if sudahinput(getNamaGroup(driver).split("-")[0]) == True:
-        msgreply="mohon maaf matakuliah ini tidak bisa dimulai, mohon menunggu hingga minggu depan... terima kasih"
+        msgreply = "mohon maaf matakuliah ini tidak bisa dimulai, mohon menunggu hingga minggu depan... terima kasih"
     else:
         msgs = getAwaitingMessageKelasStart('kelas')
         msgs = msgs.replace('#MATKUL#', getMatkul(msg))
@@ -57,19 +56,22 @@ def selesaiMatkul(msg):
     matakuliah = listtostring(msgs[getIndexClass + 1:getIndexStart])
     return matakuliah
 
+
 def listtostring(msg):
     msgs = ' '
     return msgs.join(msg)
+
 
 def inserttod4ti_3a(npm, number_phone, lecturer, course, discussion, date_time, message, kode_matkul, alias):
     db = dbConnect()
     discussion = listtostring(discussion)
     sql = "insert into d4ti_2b(npm, number_phone, lecturer, course, discussion, date_time, message, kode_matkul, alias) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')" % (
-    npm, number_phone, lecturer, course, discussion, date_time, message, kode_matkul, alias)
+        npm, number_phone, lecturer, course, discussion, date_time, message, kode_matkul, alias)
     print(sql)
     with db:
         cur = db.cursor()
         cur.execute(sql)
+
 
 def startkelas(driver, kelas, msg):
     msgcek = ''
@@ -93,7 +95,8 @@ def startkelas(driver, kelas, msg):
         msgs = msg.split(" ")
         if msgcek != msg or (numcek != num and alscek != alss):
             inserttod4ti_3a(npm=alss, number_phone=num, lecturer=kodedosen, course=course, discussion=discussion,
-                            date_time=datetimenow, message=msg, kode_matkul=getNamaGroup(driver).split("-")[0], alias=als)
+                            date_time=datetimenow, message=msg, kode_matkul=getNamaGroup(driver).split("-")[0],
+                            alias=als)
             msgcek = msg
             numcek = num
             alscek = alss
@@ -108,10 +111,9 @@ def startkelas(driver, kelas, msg):
                             modulename = msgreply.split(":")[1]
                             mod = import_module('module.' + modulename)
                             namamatkul = mod.selesaiMatkul(msg)
-                            msgreply = "oke, matkul " + namamatkul + " selesai, dan teman teman yang hadir tadi sudah diinputkan ke absensi siap, terima kasih Bapak/Ibu dosen yang sudah mengajar, selamat beraktivitas kembali, dan jangan lupa ya Cuci Tangan agar temen-temen semua sehat, sampai ketemu dipertemuan selanjutnya dadahhhhh........"
                             kelas = False
     beritaAcara(driver, kodedosen, course, discussion, timestart)
-    siapAbsensi(driver, kodedosen, getNamaGroup(driver), timestart)
+    msgreply = siapAbsensi(driver, kodedosen, getNamaGroup(driver), timestart, namamatkul)
     return msgreply
 
 
@@ -131,7 +133,8 @@ def getAwaitingMessageKelasStart(module):
 
 def sudahinput(kodematkul):
     db = dbConnect()
-    sql = "SELECT * from d4ti_2b WHERE DATE_FORMAT(date_time, '%Y-%m-%d') = CURDATE() and kode_matkul = '{0}'".format(kodematkul)
+    sql = "SELECT * from d4ti_2b WHERE DATE_FORMAT(date_time, '%Y-%m-%d') = CURDATE() and kode_matkul = '{0}'".format(
+        kodematkul)
     status = False
     with db:
         cur = db.cursor()
@@ -201,7 +204,7 @@ def getNamaGroup(driver):
 
 def getHadirNpm(time):
     db = dbConnect()
-    sql = "SELECT DISTINCT npm from d4ti_2b WHERE date_time > '{0}'".format(time)
+    sql = "SELECT DISTINCT alias from d4ti_2b WHERE date_time > '{0}'".format(time)
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -221,46 +224,61 @@ def beritaAcara(driver, kodedosen, course, discussion, timestart):
     for kehadiran in kehadirannpm:
         for npm in kehadiran:
             data.append(npm)
-    messages="Nama Dosen: " + str(namadosen)+"\nMata Kuliah: " + str(matkul)+"\nKelas: " +str(getNamaGroup(driver).split('-')[1])+"\nTanggal: " + str(tanggal)+"\nWaktu Mulai: " + str(waktumulai)+"\nWaktu Selesai: " + str(waktuselesai)+"\nMateri: " + str(materi)
-    messages=messages.split("\n")
+    messages = "Nama Dosen: " + str(namadosen) + \
+               "\nMata Kuliah: " + str(matkul) + \
+               "\nKelas: " + str(getNamaGroup(driver).split('-')[1]) + \
+               "\nTanggal: " + str(tanggal) + \
+               "\nWaktu Mulai: " + str(waktumulai) + \
+               "\nWaktu Selesai: " + str(waktuselesai) + \
+               "\nMateri: " + str(materi)
+    messages = messages.split("\n")
     for msg in messages:
         wa.typeMessage(driver, msg)
         wa.lineBreakWhatsapp(driver)
     number = 1
     for npm in data:
-        wa.typeMessage(driver, str(number)+". "+str(npm))
+        wa.typeMessage(driver, str(number) + ". " + str(npm).replace('-', ' '))
         wa.lineBreakWhatsapp(driver)
-        number=int(number)+1
+        number = int(number) + 1
     wa.sendMessage(driver)
 
-def siapAbsensi(driver, kodedosen, namagroup, timestart):
-    kehadirannpm = getHadirNpm(timestart)
-    datakehadirannpm = []
-    for kehadiran in kehadirannpm:
-        for npm in kehadiran:
-            datakehadirannpm.append(npm)
-    namagroupsplit = namagroup.split("-")
-    kodematkul = namagroupsplit[0]
-    kodekelas = namagroupsplit[1]
-    openSiapwithNewTab(driver)
-    switchWindowsHandleto1(driver)
+
+def siapAbsensi(driver, kodedosen, namagroup, timestart, namamatkul):
     try:
-        loginSiap(driver)
-    except:
-        print("sudah login")
-    sleep(1)
-    ClickPresensi(driver)
-    TahunAkad(driver)
-    findLecturerCode(driver, kodedosen)
-    findMatkul(driver, kodematkul, kodekelas)
-    TambahPresensi(driver)
-    simpan(driver)
-    sleep(1)
-    AddMahasiswa(driver)
-    Mahasiswa(driver, datakehadirannpm)
-    Refresh(driver)
-    closeTab(driver)
-    switchWindowsHandleto0(driver)
+        kehadirannpm = getHadirNpm(timestart)
+        datakehadirannpm = []
+        for kehadiran in kehadirannpm:
+            for npm in kehadiran:
+                datakehadirannpm.append(npm)
+        namagroupsplit = namagroup.split("-")
+        kodematkul = namagroupsplit[0]
+        kodekelas = namagroupsplit[1]
+        openSiapwithNewTab(driver)
+        switchWindowsHandleto1(driver)
+        try:
+            loginSiap(driver)
+        except:
+            print("sudah login")
+        sleep(1)
+        ClickPresensi(driver)
+        TahunAkad(driver)
+        findLecturerCode(driver, kodedosen)
+        findMatkul(driver, kodematkul, kodekelas)
+        TambahPresensi(driver)
+        simpan(driver)
+        sleep(1)
+        AddMahasiswa(driver)
+        Mahasiswa(driver, datakehadirannpm)
+        Refresh(driver)
+        closeTab(driver)
+        switchWindowsHandleto0(driver)
+        msgreply = "oke, matkul " + namamatkul + " selesai, dan teman teman yang hadir tadi sudah diinputkan ke absensi siap, terima kasih Bapak/Ibu dosen yang sudah mengajar, selamat beraktivitas kembali, dan jangan lupa ya Cuci Tangan agar temen-temen semua sehat, sampai ketemu dipertemuan selanjutnya dadahhhhh........"
+    except Exception as e:
+        msgreply = "error: " + str(e)
+        closeTab(driver)
+        switchWindowsHandleto0(driver)
+        wa.typeMessage(driver, msgreply)
+    return msgreply
 
 
 def closeTab(driver):
@@ -339,8 +357,11 @@ def simpan(driver):
 
 
 def AddMahasiswa(driver):
-    jumTabel = driver.find_elements_by_xpath("/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[3]/table/tbody/tr")
-    return driver.find_element_by_xpath("/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[3]/table/tbody/tr["+str(len(jumTabel))+"]/td[8]/a").click()
+    jumTabel = driver.find_elements_by_xpath(
+        "/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[3]/table/tbody/tr")
+    return driver.find_element_by_xpath(
+        "/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[3]/table/tbody/tr[" + str(
+            len(jumTabel)) + "]/td[8]/a").click()
 
 
 def Mahasiswa(driver, npm):
@@ -348,11 +369,17 @@ def Mahasiswa(driver, npm):
     jumMahasiswa = int(driver.find_elements_by_class_name("inp1")[-1].text)
     index = 1
     for getNpm in range(jumMahasiswa):
-        npm = driver.find_element_by_xpath("/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[4]/table/tbody/tr["+str(index)+"]/td[2]").text
+        npm = driver.find_element_by_xpath(
+            "/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[4]/table/tbody/tr[" + str(
+                index) + "]/td[2]").text
         if npm in mahasiswa:
-            driver.find_element_by_xpath("/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[4]/table/tbody/tr["+str(index)+"]/td[4]/select/option[1]").click()
+            driver.find_element_by_xpath(
+                "/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[4]/table/tbody/tr[" + str(
+                    index) + "]/td[4]/select/option[1]").click()
         else:
-            driver.find_element_by_xpath("/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[4]/table/tbody/tr["+str(index)+"]/td[4]/select/option[4]").click()
+            driver.find_element_by_xpath(
+                "/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[4]/table/tbody/tr[" + str(
+                    index) + "]/td[4]/select/option[4]").click()
         index += 1
 
 
