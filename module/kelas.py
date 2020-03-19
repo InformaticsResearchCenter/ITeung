@@ -225,16 +225,16 @@ def beritaAcara(driver, kodedosen, course, discussion, timestart):
         for npm in kehadiran:
             data.append(npm)
     for i in range(1):
-        messages = "Nama Dosen: " + namadosen + actionChains(driver).key_down(Keys.SHIFT).send_keys(Keys.ENTER).key_up(Keys.SHIFT).perform() + \
-                   "Mata Kuliah: " + matkul + actionChains(driver).key_down(Keys.SHIFT).send_keys(Keys.ENTER).key_up(Keys.SHIFT).perform() +\
-                   "Kelas: " +getNamaGroup(driver).split('-')[1] + actionChains(driver).key_down(Keys.SHIFT).send_keys(Keys.ENTER).key_up(Keys.SHIFT).perform() + \
-                   "Tanggal: " + tanggal + actionChains(driver).key_down(Keys.SHIFT).send_keys(Keys.ENTER).key_up(Keys.SHIFT).perform() + \
-                   "Waktu Mulai: " + waktumulai + actionChains(driver).key_down(Keys.SHIFT).send_keys(Keys.ENTER).key_up(Keys.SHIFT).perform() + \
-                   "Waktu Selesai: " + waktuselesai + actionChains(driver).key_down(Keys.SHIFT).send_keys(Keys.ENTER).key_up(Keys.SHIFT).perform() + \
-                   "Materi: " + materi
+        messages = "Nama Dosen: " + str(namadosen) + actionChains(driver).key_down(Keys.SHIFT).send_keys(Keys.ENTER).key_up(Keys.SHIFT).perform() + \
+                   "Mata Kuliah: " + str(matkul) + actionChains(driver).key_down(Keys.SHIFT).send_keys(Keys.ENTER).key_up(Keys.SHIFT).perform() +\
+                   "Kelas: " +str(getNamaGroup(driver).split('-')[1]) + actionChains(driver).key_down(Keys.SHIFT).send_keys(Keys.ENTER).key_up(Keys.SHIFT).perform() + \
+                   "Tanggal: " + str(tanggal) + actionChains(driver).key_down(Keys.SHIFT).send_keys(Keys.ENTER).key_up(Keys.SHIFT).perform() + \
+                   "Waktu Mulai: " + str(waktumulai) + actionChains(driver).key_down(Keys.SHIFT).send_keys(Keys.ENTER).key_up(Keys.SHIFT).perform() + \
+                   "Waktu Selesai: " + str(waktuselesai) + actionChains(driver).key_down(Keys.SHIFT).send_keys(Keys.ENTER).key_up(Keys.SHIFT).perform() + \
+                   "Materi: " + str(materi)
         number = 1
         for npm in data:
-            messages=messages+Keys.SHIFT+Keys.ENTER+str(number)+". "+npm
+            messages=messages+actionChains(driver).key_down(Keys.SHIFT).send_keys(Keys.ENTER).key_up(Keys.SHIFT).perform()+str(number)+". "+str(npm)
             number=int(number)+1
         wa.typeAndSendMessage(driver, messages)
 
