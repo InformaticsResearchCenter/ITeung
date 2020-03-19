@@ -1,7 +1,8 @@
-from lib import message, wa, reply
+from lib import message, wa, reply, alias
 from datetime import datetime
 from importlib import import_module
 from time import sleep
+from selenium.webdriver.common.keys import Keys
 
 import config
 import pymysql
@@ -50,7 +51,6 @@ def getDiscussion(msg):
 
 def selesaiMatkul(msg):
     msgs = msg.split(" ")
-    print(msgs)
     getIndexStart = msgs.index("selesai")
     getIndexClass = msgs.index("matkul")
     matakuliah = listtostring(msgs[getIndexClass + 1:getIndexStart])
@@ -61,11 +61,11 @@ def listtostring(msg):
     msgs = ' '
     return msgs.join(msg)
 
-def inserttod4ti_3a(npm, number_phone, lecturer, course, discussion, date_time, message, kode_matkul):
+def inserttod4ti_3a(npm, number_phone, lecturer, course, discussion, date_time, message, kode_matkul, alias):
     db = dbConnect()
     discussion = listtostring(discussion)
-    sql = "insert into d4ti_3a(npm, number_phone, lecturer, course, discussion, date_time, message, kode_matkul) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')" % (
-    npm, number_phone, lecturer, course, discussion, date_time, message, kode_matkul)
+    sql = "insert into d4ti_2b(npm, number_phone, lecturer, course, discussion, date_time, message, kode_matkul, alias) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')" % (
+    npm, number_phone, lecturer, course, discussion, date_time, message, kode_matkul, alias)
     print(sql)
     with db:
         cur = db.cursor()
@@ -88,15 +88,16 @@ def startkelas(driver, kelas, msg):
         msg = data[2]
         als = data[1]
         num = data[0]
-        als = als.split('-')[0]
+        alss = als.split('-')[0]
+        alss = alias.normalize(alss)
         msg = message.normalize(msg)
         msgs = msg.split(" ")
-        if msgcek != msg or (numcek != num and alscek != als):
-            inserttod4ti_3a(npm=als, number_phone=num, lecturer=kodedosen, course=course, discussion=discussion,
-                            date_time=datetimenow, message=msg, kode_matkul=getNamaGroup(driver).split("-")[0])
+        if msgcek != msg or (numcek != num and alscek != alss):
+            inserttod4ti_3a(npm=alss, number_phone=num, lecturer=kodedosen, course=course, discussion=discussion,
+                            date_time=datetimenow, message=msg, kode_matkul=getNamaGroup(driver).split("-")[0], alias=als)
             msgcek = msg
             numcek = num
-            alscek = als
+            alscek = alss
         if msg.find(config.bot_name) >= 0:
             if len(msgs) == 1:
                 msgreply = reply.getOpeningMessage()
@@ -131,7 +132,7 @@ def getAwaitingMessageKelasStart(module):
 
 def sudahinput(kodematkul):
     db = dbConnect()
-    sql = "SELECT * from d4ti_3a WHERE DATE_FORMAT(date_time, '%Y-%m-%d') = CURDATE() and kode_matkul = '{0}'".format(kodematkul)
+    sql = "SELECT * from d4ti_2b WHERE DATE_FORMAT(date_time, '%Y-%m-%d') = CURDATE() and kode_matkul = '{0}'".format(kodematkul)
     status = False
     with db:
         cur = db.cursor()
@@ -145,7 +146,7 @@ def sudahinput(kodematkul):
 def getTanggalTerakhir():
     db = dbConnect()
     tanggal = ''
-    sql = "SELECT DATE_FORMAT(date_time, '%d-%m-%Y') FROM d4ti_3a ORDER BY date_time DESC LIMIT 1"
+    sql = "SELECT DATE_FORMAT(date_time, '%d-%m-%Y') FROM d4ti_2b ORDER BY date_time DESC LIMIT 1"
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -158,7 +159,7 @@ def getTanggalTerakhir():
 def getJamTerakhir():
     db = dbConnect()
     tanggal = ''
-    sql = "SELECT DATE_FORMAT(date_time, '%H:%i:%s') FROM d4ti_3a ORDER BY date_time DESC LIMIT 1"
+    sql = "SELECT DATE_FORMAT(date_time, '%H:%i:%s') FROM d4ti_2b ORDER BY date_time DESC LIMIT 1"
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -201,7 +202,7 @@ def getNamaGroup(driver):
 
 def getHadirNpm(time):
     db = dbConnect()
-    sql = "SELECT DISTINCT npm from d4ti_3a WHERE date_time > '{0}'".format(time)
+    sql = "SELECT DISTINCT npm from d4ti_2b WHERE date_time > '{0}'".format(time)
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -221,17 +222,13 @@ def beritaAcara(driver, kodedosen, course, discussion, timestart):
     for kehadiran in kehadirannpm:
         for npm in kehadiran:
             data.append(npm)
-    messages = "Nama Dosen: " + namadosen \
-               + "\n Mata Kuliah: " + matkul \
-               + "\n Tanggal: " + tanggal \
-               + "\n Waktu Mulai: " + waktumulai \
-               + "\n Waktu Selesai: " + waktuselesai \
-               + "\n Materi: " + materi
-    wa.typeAndSendMessage(driver, messages)
-    number = 1
-    for npm in data:
-        wa.typeAndSendMessage(driver, str(number) + ". " + npm)
-        number = int(number) + 1
+    for i in range(1):
+        messages = "Nama Dosen: " + namadosen + Keys.SHIFT + Keys.ENTER + "Mata Kuliah: " + matkul + Keys.SHIFT + Keys.ENTER + "Kelas: " +getNamaGroup(driver).split('-')[1] + Keys.SHIFT + Keys.ENTER + "Tanggal: " + tanggal + Keys.SHIFT + Keys.ENTER + "Waktu Mulai: " + waktumulai + Keys.SHIFT + Keys.ENTER + "Waktu Selesai: " + waktuselesai + Keys.SHIFT + Keys.ENTER + "Materi: " + materi
+        number = 1
+        for npm in data:
+            messages=messages+Keys.SHIFT+Keys.ENTER+str(number)+". "+npm
+            number=int(number)+1
+        wa.typeAndSendMessage(driver, messages)
 
 
 def siapAbsensi(driver, kodedosen, namagroup, timestart):
