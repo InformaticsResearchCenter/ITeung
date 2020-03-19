@@ -113,7 +113,7 @@ def startkelas(driver, kelas, msg):
                             namamatkul = mod.selesaiMatkul(msg)
                             kelas = False
     beritaAcara(driver, kodedosen, course, discussion, timestart)
-    msgreply = siapAbsensi(driver, kodedosen, getNamaGroup(driver), timestart, namamatkul)
+    msgreply=siapAbsensi(driver, kodedosen, getNamaGroup(driver), timestart, namamatkul)
     return msgreply
 
 
@@ -202,7 +202,7 @@ def getNamaGroup(driver):
     return driver.find_element_by_xpath('/html/body/div[1]/div/div/div[4]/div/header/div[2]/div[1]/div/span').text
 
 
-def getHadirNpm(time):
+def getHadirAlias(time):
     db = dbConnect()
     sql = "SELECT DISTINCT alias from d4ti_2b WHERE date_time > '{0}'".format(time)
     with db:
@@ -211,6 +211,14 @@ def getHadirNpm(time):
         rows = cur.fetchall()
     return rows
 
+def getHadirNpm(time):
+    db = dbConnect()
+    sql = "SELECT DISTINCT npm from d4ti_2b WHERE date_time > '{0}'".format(time)
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        rows = cur.fetchall()
+    return rows
 
 def beritaAcara(driver, kodedosen, course, discussion, timestart):
     namadosen = getNamaDosen(kodedosen)
@@ -219,11 +227,11 @@ def beritaAcara(driver, kodedosen, course, discussion, timestart):
     waktumulai = str(timestart).split(" ")[1]
     waktuselesai = getJamTerakhir()
     materi = listtostring(discussion)
-    kehadirannpm = getHadirNpm(timestart)
+    kehadiranalias = getHadirAlias(timestart)
     data = []
-    for kehadiran in kehadirannpm:
-        for npm in kehadiran:
-            data.append(npm)
+    for kehadiran in kehadiranalias:
+        for hadir in kehadiran:
+            data.append(hadir)
     messages = "Nama Dosen: " + str(namadosen) + \
                "\nMata Kuliah: " + str(matkul) + \
                "\nKelas: " + str(getNamaGroup(driver).split('-')[1]) + \
