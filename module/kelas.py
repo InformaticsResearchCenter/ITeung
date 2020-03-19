@@ -3,6 +3,7 @@ from datetime import datetime
 from importlib import import_module
 from time import sleep
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
 
 import config
 import pymysql
@@ -56,7 +57,6 @@ def selesaiMatkul(msg):
     matakuliah = listtostring(msgs[getIndexClass + 1:getIndexStart])
     return matakuliah
 
-
 def listtostring(msg):
     msgs = ' '
     return msgs.join(msg)
@@ -71,6 +71,8 @@ def inserttod4ti_3a(npm, number_phone, lecturer, course, discussion, date_time, 
         cur = db.cursor()
         cur.execute(sql)
 
+def actionChains(driver):
+    return ActionChains(driver)
 
 def startkelas(driver, kelas, msg):
     msgcek = ''
@@ -223,7 +225,13 @@ def beritaAcara(driver, kodedosen, course, discussion, timestart):
         for npm in kehadiran:
             data.append(npm)
     for i in range(1):
-        messages = "Nama Dosen: " + namadosen + Keys.SHIFT + Keys.ENTER + "Mata Kuliah: " + matkul + Keys.SHIFT + Keys.ENTER + "Kelas: " +getNamaGroup(driver).split('-')[1] + Keys.SHIFT + Keys.ENTER + "Tanggal: " + tanggal + Keys.SHIFT + Keys.ENTER + "Waktu Mulai: " + waktumulai + Keys.SHIFT + Keys.ENTER + "Waktu Selesai: " + waktuselesai + Keys.SHIFT + Keys.ENTER + "Materi: " + materi
+        messages = "Nama Dosen: " + namadosen + actionChains(driver).key_down(Keys.SHIFT).send_keys(Keys.ENTER).key_up(Keys.SHIFT).perform() + \
+                   "Mata Kuliah: " + matkul + actionChains(driver).key_down(Keys.SHIFT).send_keys(Keys.ENTER).key_up(Keys.SHIFT).perform() +\
+                   "Kelas: " +getNamaGroup(driver).split('-')[1] + actionChains(driver).key_down(Keys.SHIFT).send_keys(Keys.ENTER).key_up(Keys.SHIFT).perform() + \
+                   "Tanggal: " + tanggal + actionChains(driver).key_down(Keys.SHIFT).send_keys(Keys.ENTER).key_up(Keys.SHIFT).perform() + \
+                   "Waktu Mulai: " + waktumulai + actionChains(driver).key_down(Keys.SHIFT).send_keys(Keys.ENTER).key_up(Keys.SHIFT).perform() + \
+                   "Waktu Selesai: " + waktuselesai + actionChains(driver).key_down(Keys.SHIFT).send_keys(Keys.ENTER).key_up(Keys.SHIFT).perform() + \
+                   "Materi: " + materi
         number = 1
         for npm in data:
             messages=messages+Keys.SHIFT+Keys.ENTER+str(number)+". "+npm
