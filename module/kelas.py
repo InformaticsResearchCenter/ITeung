@@ -2,7 +2,6 @@ from lib import message, wa, reply, alias
 from datetime import datetime
 from importlib import import_module
 from time import sleep
-from selenium.webdriver.common.keys import Keys
 
 import config
 import pymysql
@@ -83,35 +82,43 @@ def startkelas(driver, kelas, msg):
     getdatetimenow = datetime.now()
     timestart = getdatetimenow.strftime("%Y-%m-%d %H:%M:%S")
     while kelas:
-        data = wa.getData(driver)
-        getDateTimeNow = datetime.now()
-        datetimenow = getDateTimeNow.strftime("%Y-%m-%d %H:%M:%S")
-        msg = data[2]
-        als = data[1]
-        num = data[0]
-        alss = als.split('-')[0]
-        alss = alias.normalize(alss)
-        msg = message.normalize(msg)
-        msgs = msg.split(" ")
-        if msgcek != msg or (numcek != num and alscek != alss):
-            inserttod4ti_3a(npm=alss, number_phone=num, lecturer=kodedosen, course=course, discussion=discussion,
-                            date_time=datetimenow, message=msg, kode_matkul=getNamaGroup(driver).split("-")[0],
-                            alias=als)
-            msgcek = msg
-            numcek = num
-            alscek = alss
-        if msg.find(config.bot_name) >= 0:
-            if len(msgs) == 1:
-                msgreply = reply.getOpeningMessage()
-            else:
-                msgreply = reply.message(msg)
-                if msgreply[:2] == 'm:':
-                    if msgreply[2:] == 'kelas':
-                        if msgs[-1] == "selesai":
-                            modulename = msgreply.split(":")[1]
-                            mod = import_module('module.' + modulename)
-                            namamatkul = mod.selesaiMatkul(msg)
-                            kelas = False
+        try:
+            data = wa.getData(driver)
+            getDateTimeNow = datetime.now()
+            datetimenow = getDateTimeNow.strftime("%Y-%m-%d %H:%M:%S")
+            msg = data[2]
+            als = data[1]
+            num = data[0]
+            alss = als.split('-')[0]
+            alss = alias.normalize(alss)
+            msg = message.normalize(msg)
+            msgs = msg.split(" ")
+            if msgcek != msg or (numcek != num and alscek != alss):
+                inserttod4ti_3a(npm=alss, number_phone=num, lecturer=kodedosen, course=course, discussion=discussion,
+                                date_time=datetimenow, message=msg, kode_matkul=getNamaGroup(driver).split("-")[0],
+                                alias=als)
+                msgcek = msg
+                numcek = num
+                alscek = alss
+            if msg.find(config.bot_name) >= 0:
+                if len(msgs) == 1:
+                    msgreply = reply.getOpeningMessage()
+                    wa.typeAndSendMessage(driver, msgreply)
+                else:
+                    msgreply = reply.message(msg)
+                    if msgreply[:2] == 'm:':
+                        if msgreply[2:] == 'kelas':
+                            if msgs[-1] == "selesai":
+                                modulename = msgreply.split(":")[1]
+                                mod = import_module('module.' + modulename)
+                                namamatkul = mod.selesaiMatkul(msg)
+                                kelas = False
+                    else:
+                        wa.typeAndSendMessage(driver, msgreply)
+        except Exception as e:
+            messages="aduh iteung #BOTNAME#, akang teteh bisa #BOTNAME# bisa minta tolong ga? forward pesan ini ke admin #BOTNAME# dong..., terima kasih yaaa :-). Error: " + str(e)
+            messages=messages.replace("#BOTNAME#", config.bot_name)
+            wa.typeAndSendMessage(driver, messages)
     beritaAcara(driver, kodedosen, course, discussion, timestart)
     msgreply=siapAbsensi(driver, kodedosen, getNamaGroup(driver), timestart, namamatkul)
     return msgreply
