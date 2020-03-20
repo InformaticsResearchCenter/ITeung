@@ -5,7 +5,7 @@ def dbConnect():
     db=pymysql.connect(config.db_host, config.db_username, config.db_password, config.db_name)
     return db
 
-def replymsg(num):
+def replymsg(num,msg):
     try:
         insertNumber(num)
         msgreply="oke data sudah masuk dengan berhasil, sekarang Bapak/Ibu dosen sudah bisa memulai kegiatan kelas, selamat mengajar :-)"
