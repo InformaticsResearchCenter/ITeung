@@ -15,8 +15,9 @@ class Chatbot(object):
             wa.openMessage(driver)
             data = wa.getData(driver)
             if len(data) == 3:
-                msg = data[2]
-                als = data[1]
+                msg = data[3]
+                als = data[2]
+                grp = data[1]
                 num = data[0]
             else:
                 msg = data[1]
