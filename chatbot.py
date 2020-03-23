@@ -18,6 +18,7 @@ class Chatbot(object):
             als = data[2]
             grp = data[1]
             num = data[0]
+            #log.save(data) # buat di folder lib file log.py simpan data ke tabel log
             msg = message.normalize(msg)
             msgs = list(msg.split(" "))
 
