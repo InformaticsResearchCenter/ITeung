@@ -13,7 +13,7 @@ def dbConnect():
 
 
 def replymsg(driver, msg):
-    if sudahinput(getNamaGroup(driver).split("-")[0]) == True:
+    if sudahinput(wa.getGroupName(driver).split("-")[0]) == True:
         msgreply = "mohon maaf matakuliah ini tidak bisa dimulai, mohon menunggu hingga minggu depan... terima kasih"
     else:
         msgs = getAwaitingMessageKelasStart('kelas')
@@ -95,7 +95,7 @@ def startkelas(driver, kelas, msg):
             msgs = msg.split(" ")
             if msgcek != msg or (numcek != num and alscek != alss):
                 inserttod4ti_3a(npm=alss, number_phone=num, lecturer=kodedosen, course=course, discussion=discussion,
-                                date_time=datetimenow, message=msg, kode_matkul=getNamaGroup(driver).split("-")[0],
+                                date_time=datetimenow, message=msg, kode_matkul=wa.getGroupName(driver).split("-")[0],
                                 alias=als)
                 msgcek = msg
                 numcek = num
@@ -103,6 +103,7 @@ def startkelas(driver, kelas, msg):
             if msg.find(config.bot_name) >= 0:
                 if len(msgs) == 1:
                     msgreply = reply.getOpeningMessage()
+                    msgreply=msgreply.replace("#BOTNAME#", config.bot_name)
                     wa.typeAndSendMessage(driver, msgreply)
                 else:
                     msgreply = reply.message(msg)
@@ -114,13 +115,14 @@ def startkelas(driver, kelas, msg):
                                 namamatkul = mod.selesaiMatkul(msg)
                                 kelas = False
                     else:
+                        msgreply = msgreply.replace("#BOTNAME#", config.bot_name)
                         wa.typeAndSendMessage(driver, msgreply)
         except Exception as e:
             messages="aduh iteung #BOTNAME#, akang teteh bisa #BOTNAME# bisa minta tolong ga? forward pesan ini ke admin #BOTNAME# dong..., terima kasih yaaa :-). Error: " + str(e)
             messages=messages.replace("#BOTNAME#", config.bot_name)
             wa.typeAndSendMessage(driver, messages)
     beritaAcara(driver, kodedosen, course, discussion, timestart)
-    msgreply=siapAbsensi(driver, kodedosen, getNamaGroup(driver), timestart, namamatkul)
+    msgreply=siapAbsensi(driver, kodedosen, wa.getGroupName(driver), timestart, namamatkul)
     return msgreply
 
 
@@ -204,11 +206,6 @@ def getNamaDosen(kodedosen):
             nama = rows[0]
     return nama
 
-
-def getNamaGroup(driver):
-    return driver.find_element_by_xpath('/html/body/div[1]/div/div/div[4]/div/header/div[2]/div[1]/div/span').text
-
-
 def getHadirAlias(time):
     db = dbConnect()
     sql = "SELECT DISTINCT alias from d4ti_2b WHERE date_time > '{0}'".format(time)
@@ -241,7 +238,7 @@ def beritaAcara(driver, kodedosen, course, discussion, timestart):
             data.append(hadir)
     messages = "Nama Dosen: " + str(namadosen) + \
                "\nMata Kuliah: " + str(matkul) + \
-               "\nKelas: " + str(getNamaGroup(driver).split('-')[1]) + \
+               "\nKelas: " + str(wa.getGroupName(driver).split('-')[1]) + \
                "\nTanggal: " + str(tanggal) + \
                "\nWaktu Mulai: " + str(waktumulai) + \
                "\nWaktu Selesai: " + str(waktuselesai) + \
