@@ -74,10 +74,7 @@ def openMessage(driver):
 
 def getData(driver):
     data = []
-    try:
-        message = driver.find_elements_by_xpath("(.//span)")[-11].text
-    except Exception as e:
-        message=''
+    message=getMessage(driver)
     try:
         senderNumber = driver.find_elements_by_class_name("ZObjg")[-1].text
         senderAlias = driver.find_elements_by_class_name("_1F9Ap")[-1].text
@@ -91,6 +88,7 @@ def getData(driver):
         group = False
     data.append(senderNumber)
     if group:
+        data.append(getGroupName(driver))
         data.append(senderAlias)
     data.append(message)
     return data
@@ -104,6 +102,9 @@ def getSenderName(driver):
         senderName = driver.find_element_by_xpath('/html/body/div[1]/div/div/div[2]/div[3]/span/div/span/div/div/div[1]/div[1]/div[2]/span/span').text
     return senderName
 
+def getGroupName(driver):
+    return driver.find_element_by_xpath('/html/body/div[1]/div/div/div[4]/div/header/div[2]/div[1]/div/span').text
+
 def getSenderNumber(driver):
     try:
         senderNumber = driver.find_elements_by_class_name("ZObjg")[-1].text
@@ -114,6 +115,8 @@ def getSenderNumber(driver):
     return senderNumber
 
 def getMessage(driver):
-    return driver.find_elements_by_xpath("(.//span)")[-11].text
-
- 
+    try:
+        message = driver.find_elements_by_xpath("(.//span)")[-11].text
+    except:
+        message=''
+    return message
