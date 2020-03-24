@@ -137,16 +137,20 @@ def getAwaitingMessageKelasStop(module):
 
 
 def getNamaDosen(kodedosen):
-    db = dbConnect()
+    db = dbConnectSiap()
     nama = ''
-    sql = "SELECT nama FROM dosen WHERE kode_dosen = '{0}'".format(kodedosen)
+    sql = "select Nama, Gelar from simak_mst_dosen where Login = '{0}'".format(kodedosen)
     with db:
         cur = db.cursor()
         cur.execute(sql)
         rows = cur.fetchone()
         if rows is not None:
-            nama = rows[0]
-    return nama
+            namadosen=rows[0]
+            gelar= rows[1]
+            if gelar[0]=='D' or gelar[0]=="I" or gelar[0]=='i':
+                return gelar+namadosen
+            else:
+                return namadosen+gelar
 
 def getHadirAlias(time):
     db = dbConnect()
