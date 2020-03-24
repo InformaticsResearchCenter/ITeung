@@ -15,7 +15,6 @@ def dbConnectSiap():
     db= pymysql.connect(config.db_host_siap, config.db_username_siap, config.db_password_siap, config.db_name_siap)
     return db
 
-
 def replymsg(driver, msg):
     if sudahinput(wa.getGroupName(driver).split("-")[0]) == True:
         msgreply = "mohon maaf matakuliah ini tidak bisa dimulai, mohon menunggu hingga minggu depan... terima kasih"
@@ -67,35 +66,10 @@ def getKodeDosen(num):
             kodedosen=rows[0]
     return kodedosen
 
-def getDiscussion(msg):
-    msgs = msg.split(" ")
-    getIndexMateri = msgs.index("materi")
-    getIndexMulai = msgs.index("mulai")
-    discussion = msgs[getIndexMateri + 1:getIndexMulai]
-    return discussion
-
-def mulaiMatkul(kodematkul, num):
-    num=numbers.normalize(num)
-    kodedosen=getKodeDosen(num)
-
-
-
-def selesaiMatkul(msg):
-    msgs = msg.split(" ")
-    getIndexStart = msgs.index("selesai")
-    getIndexClass = msgs.index("matkul")
-    matakuliah = listtostring(msgs[getIndexClass + 1:getIndexStart])
-    return matakuliah
-
-def listtostring(msg):
-    msgs = ' '
-    return msgs.join(msg)
-
 def getAwaitingMessageKelasStart(module):
     db = dbConnect()
     content = ''
-    sql = "SELECT content FROM waiting_message WHERE module_name = '{0}' AND content LIKE '%mulai%' ORDER BY RAND() LIMIT 1".format(
-        module)
+    sql = "SELECT content FROM waiting_message WHERE module_name = '{0}' AND content LIKE '%mulai%' ORDER BY RAND() LIMIT 1".format(module)
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -104,11 +78,9 @@ def getAwaitingMessageKelasStart(module):
             content = rows[0]
     return content
 
-
-def sudahinput(kodematkul):
+def sudahinput(groupname):
     db = dbConnect()
-    sql = "SELECT * from d4ti_2b WHERE DATE_FORMAT(date_time, '%Y-%m-%d') = CURDATE() and kode_matkul = '{0}'".format(
-        kodematkul)
+    sql = "SELECT * from log WHERE DATE_FORMAT(timestamps, '%Y-%m-%d') = CURDATE() and groupname = '{0}' and message LIKE '%teung kelas mulai%'".format(groupname)
     status = False
     with db:
         cur = db.cursor()
