@@ -150,7 +150,7 @@ def getNamaDosen(kodedosen):
             if gelar[0]=='D' or gelar[0]=="I" or gelar[0]=='i':
                 return gelar+namadosen
             else:
-                return namadosen+gelar
+                return namadosen+' '+gelar
 
 def getHadirAlias(time):
     db = dbConnect()
