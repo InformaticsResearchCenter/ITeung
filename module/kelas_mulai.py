@@ -18,4 +18,5 @@ def replymsg(driver, data):
             msgreply = messages
         else:
             msgreply = 'mohon maaf kode dosen bapak/ibu dengan kode matkul ini tidak ditemukan'
+    print(msgreply)
     return msgreply
