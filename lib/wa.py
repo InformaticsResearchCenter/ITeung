@@ -78,7 +78,15 @@ def getData(driver):
     data.append(getGroupName(driver))
     data.append(getSenderAlias(driver))
     data.append(getMessage(driver))
+    data.append(isGroup(driver))
     return data
+
+def isGroup(driver):
+    if getSenderAlias(driver) == '':
+        group='false'
+    else:
+        group='true'
+    return group
     
 def getSenderAlias(driver):
     try:
