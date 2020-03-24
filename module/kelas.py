@@ -1,4 +1,4 @@
-from lib import message, wa, reply, alias
+from lib import message, wa, reply, alias, numbers
 from datetime import datetime
 from importlib import import_module
 from time import sleep
@@ -9,6 +9,10 @@ import pymysql
 
 def dbConnect():
     db = pymysql.connect(config.db_host, config.db_username, config.db_password, config.db_name)
+    return db
+
+def dbConnectSiap():
+    db= pymysql.connect(config.db_host_siap, config.db_username_siap, config.db_password_siap, config.db_name_siap)
     return db
 
 
@@ -32,13 +36,18 @@ def getMatkul(msg):
     matakuliah = listtostring(msgs[getIndexMatkul + 1:getIndexMateri])
     return matakuliah
 
-
-def getKodeDosen(msg):
-    msgs = msg.split(" ")
-    getIndexKodeDosen = msgs.index("dosen")
-    kodeDosen = msgs[getIndexKodeDosen + 1]
-    return kodeDosen
-
+def getKodeDosen(num):
+    num = numbers.normalize(num)
+    kodedosen=''
+    db=dbConnectSiap()
+    sql="select Login from simak_mst_dosen where Handphone = '{0}'".format(num)
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        rows=cur.fetchone()
+        if rows is not None:
+            kodedosen=rows[0]
+    return kodedosen
 
 def getDiscussion(msg):
     msgs = msg.split(" ")
@@ -55,76 +64,9 @@ def selesaiMatkul(msg):
     matakuliah = listtostring(msgs[getIndexClass + 1:getIndexStart])
     return matakuliah
 
-
 def listtostring(msg):
     msgs = ' '
     return msgs.join(msg)
-
-
-def inserttod4ti_3a(npm, number_phone, lecturer, course, discussion, date_time, message, kode_matkul, alias):
-    db = dbConnect()
-    discussion = listtostring(discussion)
-    sql = "insert into d4ti_2b(npm, number_phone, lecturer, course, discussion, date_time, message, kode_matkul, alias) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')" % (
-        npm, number_phone, lecturer, course, discussion, date_time, message, kode_matkul, alias)
-    print(sql)
-    with db:
-        cur = db.cursor()
-        cur.execute(sql)
-
-
-def startkelas(driver, kelas, msg):
-    msgcek = ''
-    alscek = ''
-    numcek = ''
-    discussion = getDiscussion(msg)
-    course = getMatkul(msg)
-    kodedosen = getKodeDosen(msg)
-    getdatetimenow = datetime.now()
-    timestart = getdatetimenow.strftime("%Y-%m-%d %H:%M:%S")
-    while kelas:
-        try:
-            data = wa.getData(driver)
-            getDateTimeNow = datetime.now()
-            datetimenow = getDateTimeNow.strftime("%Y-%m-%d %H:%M:%S")
-            msg = data[2]
-            als = data[1]
-            num = data[0]
-            alss = als.split('-')[0]
-            alss = alias.normalize(alss)
-            msg = message.normalize(msg)
-            msgs = msg.split(" ")
-            if msgcek != msg or (numcek != num and alscek != alss):
-                inserttod4ti_3a(npm=alss, number_phone=num, lecturer=kodedosen, course=course, discussion=discussion,
-                                date_time=datetimenow, message=msg, kode_matkul=wa.getGroupName(driver).split("-")[0],
-                                alias=als)
-                msgcek = msg
-                numcek = num
-                alscek = alss
-            if msg.find(config.bot_name) >= 0:
-                if len(msgs) == 1:
-                    msgreply = reply.getOpeningMessage()
-                    msgreply=msgreply.replace("#BOTNAME#", config.bot_name)
-                    wa.typeAndSendMessage(driver, msgreply)
-                else:
-                    msgreply = reply.message(msg)
-                    if msgreply[:2] == 'm:':
-                        if msgreply[2:] == 'kelas':
-                            if msgs[-1] == "selesai":
-                                modulename = msgreply.split(":")[1]
-                                mod = import_module('module.' + modulename)
-                                namamatkul = mod.selesaiMatkul(msg)
-                                kelas = False
-                    else:
-                        msgreply = msgreply.replace("#BOTNAME#", config.bot_name)
-                        wa.typeAndSendMessage(driver, msgreply)
-        except Exception as e:
-            messages="aduh iteung #BOTNAME#, akang teteh bisa #BOTNAME# bisa minta tolong ga? forward pesan ini ke admin #BOTNAME# dong..., terima kasih yaaa :-). Error: " + str(e)
-            messages=messages.replace("#BOTNAME#", config.bot_name)
-            wa.typeAndSendMessage(driver, messages)
-    beritaAcara(driver, kodedosen, course, discussion, timestart)
-    msgreply=siapAbsensi(driver, kodedosen, wa.getGroupName(driver), timestart, namamatkul)
-    return msgreply
-
 
 def getAwaitingMessageKelasStart(module):
     db = dbConnect()
