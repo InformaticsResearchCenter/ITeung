@@ -10,10 +10,11 @@ def getDatetimeNow():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 def save(data):
-    if data[3] == 'iteung kelas mulai' or data[3] == 'iiteung kelas mulai':
-        print("not input")
-    else:
+    if "teung kelas mulai" not in data[3]:
         inserttolog(data)
+
+def logSaveIteungStart(data):
+    return inserttolog(data)
 
 def inserttolog(data):
     db = dbConnectIteung()
