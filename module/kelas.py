@@ -25,7 +25,9 @@ def replymsg(driver, data):
                 messages=messages.replace('#MATKUL#', coursename)
                 messages=messages.replace('#BOTNAME#', config.bot_name)
                 msgreply=messages
-        if msgs[-1] == 'selesai':
+            else:
+                msgreply='mohon maaf kode dosen bapak/ibu dengan kode matkul ini tidak ditemukan'
+        else:
             msgreply='oke selesai crot!'
             beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, grp)
     return msgreply
