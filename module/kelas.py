@@ -16,16 +16,36 @@ def dbConnectSiap():
     return db
 
 def replymsg(driver, msg):
-    if sudahinput(wa.getGroupName(driver).split("-")[0]) == True:
+    if sudahinput(wa.getGroupName(driver)) == True:
         msgreply = "mohon maaf matakuliah ini tidak bisa dimulai, mohon menunggu hingga minggu depan... terima kasih"
     else:
-        msgs = getAwaitingMessageKelasStart('kelas')
-        msgs = msgs.replace('#MATKUL#', getMatkul(msg))
-        msgs = msgs.replace('#BOTNAME#', config.bot_name)
-        msgs.strip()
-        wa.typeAndSendMessage(driver, msgs)
-        msgreply = startkelas(driver, True, msg)
+
     return msgreply
+
+def getnumonly():
+    db=dbConnect()
+    sql="select distinct number from log where DATE_FORMAT(timestamps, '%Y-%m-%d') = CURDATE()"
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        rows=cur.fetchall()
+        if rows is not None:
+            return rows
+        else:
+            return ''
+
+def getNpmandNameMahasiswa(num):
+    num = numbers.normalize(num)
+    db=dbConnectSiap()
+    sql="select MhswID, Nama from simak_mst_mahasiswa where Handphone = '{0}'".format(num)
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        rows=cur.fetchone()
+        if rows is not None:
+            return rows
+        else:
+            return ''
 
 def isMatkul(kodematkul, kodekelas,num):
     num=numbers.normalize(num)
