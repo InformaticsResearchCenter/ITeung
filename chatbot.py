@@ -22,7 +22,6 @@ class Chatbot(object):
             als = data[2]
             grp = data[1]
             num = data[0]
-            print(msg)
             if self.msgcheck != msg or (self.numcheck != num and self.alscheck != als):
                 log.save(data)
                 self.msgcheck=msg
