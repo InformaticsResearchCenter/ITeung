@@ -1,4 +1,4 @@
-from lib import message, wa, reply, alias, numbers
+from lib import message, wa, numbers, log
 from datetime import datetime
 from importlib import import_module
 from time import sleep
@@ -10,6 +10,7 @@ def replymsg(driver, data):
     if sudahinput(wa.getGroupName(driver)) == True:
         msgreply = "mohon maaf matakuliah ini tidak bisa dimulai, mohon menunggu hingga minggu depan... terima kasih"
     else:
+        log.logSaveIteungStart(data)
         msg = data[3]
         grp = data[1]
         num = data[0]
