@@ -44,7 +44,7 @@ def isMatkul(kodematkul, kodekelas,num):
 def getDataMatkul(kodematkul, kodekelas, num):
     num = numbers.normalize(num)
     db = dbConnectSiap()
-    sql = "select MKKode, Nama, HariID, JamMulai, JamSelesai, NamaKelas from simak_trn_jadwal where DosenID = '{0}' and TahunID = '".format(getKodeDosen(num)) + config.siap_tahun_id + "' and NamaKelas = '{0}' and MKKode = '{1}'".format(kodekelas, kodematkul)
+    sql = "select MKKode, Nama, HariID, DATE_FORMAT(JamMulai, '%H:%i:%s'), DATE_FORMAT(JamSelesai, '%H:%i:%s'), NamaKelas from simak_trn_jadwal where DosenID = '{0}' and TahunID = '".format(getKodeDosen(num)) + config.siap_tahun_id + "' and NamaKelas = '{0}' and MKKode = '{1}'".format(kodekelas, kodematkul)
     with db:
         cur = db.cursor()
         cur.execute(sql)
