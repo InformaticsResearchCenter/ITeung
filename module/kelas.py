@@ -7,19 +7,19 @@ import config
 import pymysql
 
 def replymsg(driver, data):
-    if sudahinput(wa.getGroupName(driver)) == True:
-        msgreply = "mohon maaf matakuliah ini tidak bisa dimulai, mohon menunggu hingga minggu depan... terima kasih"
-    else:
-        log.logSaveIteungStart(data)
-        msg = data[3]
-        grp = data[1]
-        num = data[0]
-        msg = message.normalize(msg)
-        msgs = list(msg.split(" "))
-        coursename=getDataMatkul(grp.split('-')[0], kodeKelas(grp.split('-')[1]), num)[1]
-        starttimeclass=getDataMatkul(grp.split('-')[0], kodeKelas(grp.split('-')[1]), num)[3]
-        endtimeclass=getDataMatkul(grp.split('-')[0], kodeKelas(grp.split('-')[1]), num)[4]
-        if msgs[-1] == 'mulai':
+    log.logSaveIteungStart(data)
+    msg = data[3]
+    grp = data[1]
+    num = data[0]
+    msg = message.normalize(msg)
+    msgs = list(msg.split(" "))
+    coursename=getDataMatkul(grp.split('-')[0], kodeKelas(grp.split('-')[1]), num)[1]
+    starttimeclass=getDataMatkul(grp.split('-')[0], kodeKelas(grp.split('-')[1]), num)[3]
+    endtimeclass=getDataMatkul(grp.split('-')[0], kodeKelas(grp.split('-')[1]), num)[4]
+    if msgs[-1] == 'mulai':
+        if sudahinput(wa.getGroupName(driver)) == True:
+            msgreply = "mohon maaf matakuliah ini tidak bisa dimulai, mohon menunggu hingga minggu depan... terima kasih"
+        else:
             if isMatkul(grp.split('-')[0], kodeKelas(grp.split('-')[1]), num):
                 messages=getAwaitingMessageKelasStart('kelas')
                 messages=messages.replace('#MATKUL#', coursename)
@@ -27,9 +27,9 @@ def replymsg(driver, data):
                 msgreply=messages
             else:
                 msgreply='mohon maaf kode dosen bapak/ibu dengan kode matkul ini tidak ditemukan'
-        else:
-            msgreply='oke selesai crot!'
-            beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, grp)
+    else:
+        msgreply='oke selesai crot!'
+        beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, grp)
     return msgreply
 
 def dbConnect():
