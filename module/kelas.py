@@ -31,7 +31,7 @@ def replymsg(driver, msg):
 def isMatkul(kodematkul, kodekelas,num):
     num=numbers.normalize(num)
     db=dbConnectSiap()
-    sql="select MKKode, Nama, HariID, JamMulai, JamSelesai, NamaKelas from simak_trn_jadwal where DosenID = '{0}' and TahunID = "+config.siap_tahun_id+" and NamaKelas = {1} and MKKode = {2}".format(getKodeDosen(num), kodekelas, kodematkul)
+    sql = "select MKKode, Nama, HariID, JamMulai, JamSelesai, NamaKelas from simak_trn_jadwal where DosenID = '{0}' and TahunID = ".format(getKodeDosen(num)) + config.siap_tahun_id + " and NamaKelas = {0} and MKKode = {1}".format(kodekelas, kodematkul)
     with db:
         cur=db.cursor()
         cur.execute(sql)
@@ -44,8 +44,7 @@ def isMatkul(kodematkul, kodekelas,num):
 def getDataMatkul(kodematkul, kodekelas, num):
     num = numbers.normalize(num)
     db = dbConnectSiap()
-    sql = "select MKKode, Nama, HariID, JamMulai, JamSelesai, NamaKelas from simak_trn_jadwal where DosenID = '{0}' and TahunID = " + config.siap_tahun_id + " and NamaKelas = {1} and MKKode = {2}".format(
-        getKodeDosen(num), kodekelas, kodematkul)
+    sql = "select MKKode, Nama, HariID, JamMulai, JamSelesai, NamaKelas from simak_trn_jadwal where DosenID = '{0}' and TahunID = ".format(getKodeDosen(num)) + config.siap_tahun_id + " and NamaKelas = {0} and MKKode = {1}".format(kodekelas, kodematkul)
     with db:
         cur = db.cursor()
         cur.execute(sql)
