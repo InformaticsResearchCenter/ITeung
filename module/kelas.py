@@ -28,13 +28,32 @@ def replymsg(driver, msg):
         msgreply = startkelas(driver, True, msg)
     return msgreply
 
+def isMatkul(kodematkul, kodekelas,num):
+    num=numbers.normalize(num)
+    db=dbConnectSiap()
+    sql="select MKKode, Nama, HariID, JamMulai, JamSelesai, NamaKelas from simak_trn_jadwal where DosenID = '{0}' and TahunID = "+config.siap_tahun_id+" and NamaKelas = {1} and MKKode = {2}".format(getKodeDosen(num), kodekelas, kodematkul)
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        rows=cur.fetchone()
+        if rows is not None:
+            return True
+        else:
+            return False
 
-def getMatkul(msg):
-    msgs = msg.split(" ")
-    getIndexMateri = msgs.index("materi")
-    getIndexMatkul = msgs.index("matkul")
-    matakuliah = listtostring(msgs[getIndexMatkul + 1:getIndexMateri])
-    return matakuliah
+def getDataMatkul(kodematkul, kodekelas, num):
+    num = numbers.normalize(num)
+    db = dbConnectSiap()
+    sql = "select MKKode, Nama, HariID, JamMulai, JamSelesai, NamaKelas from simak_trn_jadwal where DosenID = '{0}' and TahunID = " + config.siap_tahun_id + " and NamaKelas = {1} and MKKode = {2}".format(
+        getKodeDosen(num), kodekelas, kodematkul)
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        rows = cur.fetchone()
+        if rows is not None:
+            return rows
+        else:
+            return ''
 
 def getKodeDosen(num):
     num = numbers.normalize(num)
@@ -55,6 +74,11 @@ def getDiscussion(msg):
     getIndexMulai = msgs.index("mulai")
     discussion = msgs[getIndexMateri + 1:getIndexMulai]
     return discussion
+
+def mulaiMatkul(kodematkul, num):
+    num=numbers.normalize(num)
+    kodedosen=getKodeDosen(num)
+
 
 
 def selesaiMatkul(msg):
@@ -138,7 +162,6 @@ def getAwaitingMessageKelasStop(module):
 
 def getNamaDosen(kodedosen):
     db = dbConnectSiap()
-    nama = ''
     sql = "select Nama, Gelar from simak_mst_dosen where Login = '{0}'".format(kodedosen)
     with db:
         cur = db.cursor()
