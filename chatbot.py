@@ -22,6 +22,7 @@ class Chatbot(object):
             als = data[2]
             grp = data[1]
             num = data[0]
+            print(msg)
             if self.msgcheck != msg or (self.numcheck != num and self.alscheck != als):
                 log.save(data)
                 self.msgcheck=msg
@@ -42,14 +43,12 @@ class Chatbot(object):
                         else:
                             msgreply=reply.getReplyAuth(modulename)
         except Exception as e:
-            print(e)
             msgreply = reply.getErrorMessage()
             msgreply = msgreply.replace("#ERROR#", str(e))
 
         if 'msgreply' in locals():
             if msgreply[:2] != 'm:':
                 msgreply = msgreply.replace("#BOTNAME#", config.bot_name)
-                print(msgreply)
                 try:
                     wa.typeAndSendMessage(driver, msgreply)
                 except:
