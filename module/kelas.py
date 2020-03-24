@@ -6,31 +6,31 @@ from time import sleep
 import config
 import pymysql
 
-def replymsg(driver, data):
-    log.logSaveIteungStart(data)
-    msg = data[3]
-    grp = data[1]
-    num = data[0]
-    msg = message.normalize(msg)
-    msgs = list(msg.split(" "))
-    coursename=getDataMatkul(grp.split('-')[0], kodeKelas(grp.split('-')[1]), num)[1]
-    starttimeclass=getDataMatkul(grp.split('-')[0], kodeKelas(grp.split('-')[1]), num)[3]
-    endtimeclass=getDataMatkul(grp.split('-')[0], kodeKelas(grp.split('-')[1]), num)[4]
-    if msgs[-1] == 'mulai':
-        if sudahinput(wa.getGroupName(driver)) == True:
-            msgreply = "mohon maaf matakuliah ini tidak bisa dimulai, mohon menunggu hingga minggu depan... terima kasih"
-        else:
-            if isMatkul(grp.split('-')[0], kodeKelas(grp.split('-')[1]), num):
-                messages=getAwaitingMessageKelasStart('kelas')
-                messages=messages.replace('#MATKUL#', coursename)
-                messages=messages.replace('#BOTNAME#', config.bot_name)
-                msgreply=messages
-            else:
-                msgreply='mohon maaf kode dosen bapak/ibu dengan kode matkul ini tidak ditemukan'
-    else:
-        msgreply='oke selesai crot!'
-        beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, grp)
-    return msgreply
+# def replymsg(driver, data):
+#     log.logSaveIteungStart(data)
+#     msg = data[3]
+#     grp = data[1]
+#     num = data[0]
+#     msg = message.normalize(msg)
+#     msgs = list(msg.split(" "))
+#     coursename=getDataMatkul(grp.split('-')[0], kodeKelas(grp.split('-')[1]), num)[1]
+#     starttimeclass=getDataMatkul(grp.split('-')[0], kodeKelas(grp.split('-')[1]), num)[3]
+#     endtimeclass=getDataMatkul(grp.split('-')[0], kodeKelas(grp.split('-')[1]), num)[4]
+#     if msgs[-1] == 'mulai':
+#         if sudahinput(wa.getGroupName(driver)) == True:
+#             msgreply = "mohon maaf matakuliah ini tidak bisa dimulai, mohon menunggu hingga minggu depan... terima kasih"
+#         else:
+#             if isMatkul(grp.split('-')[0], kodeKelas(grp.split('-')[1]), num):
+#                 messages=getAwaitingMessageKelasStart('kelas')
+#                 messages=messages.replace('#MATKUL#', coursename)
+#                 messages=messages.replace('#BOTNAME#', config.bot_name)
+#                 msgreply=messages
+#             else:
+#                 msgreply='mohon maaf kode dosen bapak/ibu dengan kode matkul ini tidak ditemukan'
+#     else:
+#         msgreply='oke selesai crot!'
+#         beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, grp)
+#     return msgreply
 
 def dbConnect():
     db = pymysql.connect(config.db_host, config.db_username, config.db_password, config.db_name)
