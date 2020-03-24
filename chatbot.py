@@ -34,6 +34,7 @@ class Chatbot(object):
                     msgreply = reply.getOpeningMessage()
                 else:
                     msgreply = reply.message(msg)
+                    print(msgreply)
                     if msgreply[:2] == 'm:':
                         modulename = msgreply.split(':')[1]
                         if auth.valid(num, msgreply):
