@@ -10,9 +10,7 @@ def replymsg(driver, data):
     if sudahinput(wa.getGroupName(driver)) == True:
         msgreply = "mohon maaf matakuliah ini tidak bisa dimulai, mohon menunggu hingga minggu depan... terima kasih"
     else:
-        isgrp = data[4]
         msg = data[3]
-        als = data[2]
         grp = data[1]
         num = data[0]
         msg = message.normalize(msg)
@@ -202,7 +200,12 @@ def beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, groupname
     number = 1
     studentnumber=getnumonly(groupname)
     for studentnum in studentnumber:
-        
+        studentid=getNpmandNameMahasiswa(studentnum[0])[0]
+        studentname=getNpmandNameMahasiswa(studentnum[0])[1]
+        wa.typeMessage(driver, str(number)+". "+studentid+" "+studentname)
+        wa.lineBreakWhatsapp(driver)
+        number=int(number)+1
+    wa.sendMessage(driver)
 
 
 def siapAbsensi(driver, kodedosen, namagroup, timestart, namamatkul):
