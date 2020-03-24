@@ -6,6 +6,30 @@ from time import sleep
 import config
 import pymysql
 
+def replymsg(driver, data):
+    if sudahinput(wa.getGroupName(driver)) == True:
+        msgreply = "mohon maaf matakuliah ini tidak bisa dimulai, mohon menunggu hingga minggu depan... terima kasih"
+    else:
+        isgrp = data[4]
+        msg = data[3]
+        als = data[2]
+        grp = data[1]
+        num = data[0]
+        msg = message.normalize(msg)
+        msgs = list(msg.split(" "))
+        coursename=getDataMatkul(grp.split('-')[0], kodeKelas(grp.split('-')[1]), num)[1]
+        starttimeclass=getDataMatkul(grp.split('-')[0], kodeKelas(grp.split('-')[1]), num)[3]
+        endtimeclass=getDataMatkul(grp.split('-')[0], kodeKelas(grp.split('-')[1]), num)[4]
+        if msgs[-1] == 'mulai':
+            if isMatkul(grp.split('-')[0], kodeKelas(grp.split('-')[1]), num):
+                messages=getAwaitingMessageKelasStart('kelas')
+                messages=messages.replace('#MATKUL#', coursename)
+                messages=messages.replace('#BOTNAME#', config.bot_name)
+                msgreply=messages
+        if msgs[-1] == 'selesai':
+            msgreply='oke selesai crot!'
+            beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, grp)
+    return msgreply
 
 def dbConnect():
     db = pymysql.connect(config.db_host, config.db_username, config.db_password, config.db_name)
@@ -15,16 +39,24 @@ def dbConnectSiap():
     db= pymysql.connect(config.db_host_siap, config.db_username_siap, config.db_password_siap, config.db_name_siap)
     return db
 
-def replymsg(driver, msg):
-    if sudahinput(wa.getGroupName(driver)) == True:
-        msgreply = "mohon maaf matakuliah ini tidak bisa dimulai, mohon menunggu hingga minggu depan... terima kasih"
-    else:
+def kodeKelas(kode):
+    switcher = {
+        'A': '01',
+        'B': '02',
+        'C': '03',
+        'D': '04',
+        'E': '05',
+        'F': '06',
+        'G': '07',
+        'H': '08',
+        'I': '09',
+        'J': '10',
+    }
+    return switcher.get(kode, "Not Found!")
 
-    return msgreply
-
-def getnumonly():
+def getnumonly(groupname):
     db=dbConnect()
-    sql="select distinct number from log where DATE_FORMAT(timestamps, '%Y-%m-%d') = CURDATE()"
+    sql="select distinct number from log where DATE_FORMAT(timestamps, '%Y-%m-%d') = CURDATE() and groupname = '{0}'".format(groupname)
     with db:
         cur=db.cursor()
         cur.execute(sql)
@@ -44,8 +76,6 @@ def getNpmandNameMahasiswa(num):
         rows=cur.fetchone()
         if rows is not None:
             return rows
-        else:
-            return ''
 
 def isMatkul(kodematkul, kodekelas,num):
     num=numbers.normalize(num)
@@ -110,20 +140,6 @@ def sudahinput(groupname):
             status = True
     return status
 
-
-def getTanggalTerakhir():
-    db = dbConnect()
-    tanggal = ''
-    sql = "SELECT DATE_FORMAT(date_time, '%d-%m-%Y') FROM d4ti_2b ORDER BY date_time DESC LIMIT 1"
-    with db:
-        cur = db.cursor()
-        cur.execute(sql)
-        rows = cur.fetchone()
-        if rows is not None:
-            tanggal = rows[0]
-    return tanggal
-
-
 def getJamTerakhir():
     db = dbConnect()
     tanggal = ''
@@ -135,21 +151,6 @@ def getJamTerakhir():
         if rows is not None:
             tanggal = rows[0]
     return tanggal
-
-
-def getAwaitingMessageKelasStop(module):
-    db = dbConnect()
-    content = ''
-    sql = "SELECT content FROM waiting_message WHERE module_name = '{0}' AND content LIKE '%mulai%' ORDER BY RAND() LIMIT 1".format(
-        module)
-    with db:
-        cur = db.cursor()
-        cur.execute(sql)
-        rows = cur.fetchone()
-        if rows is not None:
-            content = rows[0]
-    return content
-
 
 def getNamaDosen(kodedosen):
     db = dbConnectSiap()
@@ -184,35 +185,24 @@ def getHadirNpm(time):
         rows = cur.fetchall()
     return rows
 
-def beritaAcara(driver, kodedosen, course, discussion, timestart):
-    namadosen = getNamaDosen(kodedosen)
-    matkul = course
-    tanggal = getTanggalTerakhir()
-    waktumulai = str(timestart).split(" ")[1]
-    waktuselesai = getJamTerakhir()
-    materi = listtostring(discussion)
-    kehadiranalias = getHadirAlias(timestart)
-    data = []
-    for kehadiran in kehadiranalias:
-        for hadir in kehadiran:
-            data.append(hadir)
-    messages = "Nama Dosen: " + str(namadosen) + \
-               "\nMata Kuliah: " + str(matkul) + \
-               "\nKelas: " + str(wa.getGroupName(driver).split('-')[1]) + \
+def beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, groupname):
+    lecturername = getNamaDosen(getKodeDosen(num))
+    tanggal = datetime.now().strftime("%d-%m-%Y")
+    kodekelas=wa.getGroupName(driver).split('-')[1]
+    messages = "Nama Dosen: " + str(lecturername) + \
+               "\nMata Kuliah: " + str(coursename) + \
+               "\nKelas: " + str(kodekelas) + \
                "\nTanggal: " + str(tanggal) + \
-               "\nWaktu Mulai: " + str(waktumulai) + \
-               "\nWaktu Selesai: " + str(waktuselesai) + \
-               "\nMateri: " + str(materi)
+               "\nWaktu Mulai: " + str(starttimeclass) + \
+               "\nWaktu Selesai: " + str(endtimeclass)
     messages = messages.split("\n")
     for msg in messages:
         wa.typeMessage(driver, msg)
         wa.lineBreakWhatsapp(driver)
     number = 1
-    for npm in data:
-        wa.typeMessage(driver, str(number) + ". " + str(npm).replace('-', ' '))
-        wa.lineBreakWhatsapp(driver)
-        number = int(number) + 1
-    wa.sendMessage(driver)
+    studentnumber=getnumonly(groupname)
+    for studentnum in studentnumber:
+        
 
 
 def siapAbsensi(driver, kodedosen, namagroup, timestart, namamatkul):
