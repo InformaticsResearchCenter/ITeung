@@ -1,4 +1,4 @@
-from lib import wa, reply, message, auth
+from lib import wa, reply, message, auth, log
 from importlib import import_module
 import config
 
@@ -7,6 +7,9 @@ class Chatbot(object):
     def __init__(self):
         driver = wa.setProfile(config.profile_folder)
         wa.loginWA(driver)
+        self.msgcheck=''
+        self.alscheck=''
+        self.numcheck=''
         while True:
             self.cekAndSendMessage(driver)
 
@@ -14,14 +17,18 @@ class Chatbot(object):
         try:
             wa.openMessage(driver)
             data = wa.getData(driver)
+            isgrp= data[4]
             msg = data[3]
             als = data[2]
             grp = data[1]
             num = data[0]
-            #log.save(data) # buat di folder lib file log.py simpan data ke tabel log
+            if self.msgcheck != msg or (self.numcheck != num and self.alscheck != als):
+                log.save(data)
+                self.msgcheck=msg
+                self.numcheck=num
+                self.alscheck=als
             msg = message.normalize(msg)
             msgs = list(msg.split(" "))
-
             if msg.find(config.bot_name) >= 0:
                 if len(msgs) == 1:
                     msgreply = reply.getOpeningMessage()
@@ -31,7 +38,7 @@ class Chatbot(object):
                         modulename = msgreply.split(':')[1]
                         if auth.valid(num, msgreply):
                             mod=import_module('module.' + modulename)
-                            msgreply=mod.replymsg(driver, msg)
+                            msgreply=mod.replymsg(driver, data)
                         else:
                             msgreply=reply.getReplyAuth(modulename)
         except Exception as e:
