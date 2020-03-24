@@ -1,6 +1,5 @@
-from lib import message, wa, numbers, log
+from lib import wa, numbers
 from datetime import datetime
-from importlib import import_module
 from time import sleep
 
 import config
@@ -203,11 +202,12 @@ def beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, groupname
     number = 1
     studentnumber=getnumonly(groupname)
     for studentnum in studentnumber:
-        studentid=getNpmandNameMahasiswa(studentnum[0])[0]
-        studentname=getNpmandNameMahasiswa(studentnum[0])[1]
-        wa.typeMessage(driver, str(number)+". "+studentid+" "+studentname)
-        wa.lineBreakWhatsapp(driver)
-        number=int(number)+1
+        if getNpmandNameMahasiswa(studentnum[0]) is not None:
+            studentid=getNpmandNameMahasiswa(studentnum[0])[0]
+            studentname=getNpmandNameMahasiswa(studentnum[0])[1]
+            wa.typeMessage(driver, str(number)+". "+studentid+" "+studentname)
+            wa.lineBreakWhatsapp(driver)
+            number=int(number)+1
     wa.sendMessage(driver)
 
 
