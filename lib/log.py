@@ -2,6 +2,8 @@ import pymysql, config
 
 from datetime import datetime
 
+
+#close commit #3
 def dbConnectIteung():
     db = pymysql.connect(config.db_host, config.db_username, config.db_password, config.db_name)
     return db
