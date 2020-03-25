@@ -17,6 +17,5 @@ def replymsg(driver, data):
             messages = messages.replace('#BOTNAME#', config.bot_name)
             msgreply = messages
         else:
-            msgreply = 'mohon maaf kode dosen bapak/ibu dengan kode matkul ini tidak ditemukan'
-    print(msgreply)
+            msgreply = 'mohon maaf kode dosen bapak/ibu dengan kode matkul yang berada digroup ini tidak ditemukan, mohon untuk cek kembali, terima kasih :-)'
     return msgreply

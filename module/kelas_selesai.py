@@ -1,11 +1,11 @@
 from module import kelas
 
 def replymsg(driver, data):
-    msgreply = 'oke selesai crot!'
     grp = data[1]
     num = data[0]
     coursename = kelas.getDataMatkul(grp.split('-')[0], kelas.kodeKelas(grp.split('-')[1]), num)[1]
     starttimeclass = kelas.getDataMatkul(grp.split('-')[0], kelas.kodeKelas(grp.split('-')[1]), num)[3]
     endtimeclass = kelas.getDataMatkul(grp.split('-')[0], kelas.kodeKelas(grp.split('-')[1]), num)[4]
-    kelas.beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, grp)
+    msgreply=kelas.siapAbsensi(driver=driver, namagroup=grp, num=num, namamatkul=kelas.getDataMatkul(kodematkul=grp.split('-')[0], kodekelas=grp.split('-')[1], num=num))
+    msgreply=kelas.beritaAcara(driver=driver, num=num, coursename=coursename, starttimeclass=starttimeclass, endtimeclass=endtimeclass, groupname=grp, data=msgreply)
     return msgreply

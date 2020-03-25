@@ -185,7 +185,7 @@ def getHadirNpm(time):
         rows = cur.fetchall()
     return rows
 
-def beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, groupname):
+def beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, groupname, data):
     lecturername = getNamaDosen(getKodeDosen(num))
     tanggal = datetime.now().strftime("%d-%m-%Y")
     kodekelas=wa.getGroupName(driver).split('-')[1]
@@ -209,15 +209,13 @@ def beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, groupname
             wa.lineBreakWhatsapp(driver)
             number=int(number)+1
     wa.sendMessage(driver)
+    msgreply="Oke teman-teman Matakuliah "+coursename+" sudah selesai dan telah berhasil diinputkan absensinya, mohon jaga kesehatan teman-teman yaaaa.... selalu cuci tangan teman-teman, dadaaaahhhhhh <3"
+    return msgreply
 
 
-def siapAbsensi(driver, kodedosen, namagroup, timestart, namamatkul):
+def siapAbsensi(driver, num, namagroup, namamatkul):
     try:
-        kehadirannpm = getHadirNpm(timestart)
-        datakehadirannpm = []
-        for kehadiran in kehadirannpm:
-            for npm in kehadiran:
-                datakehadirannpm.append(npm)
+        tanggalsekarang=datetime.now().strftime("%d/%m/%Y")
         namagroupsplit = namagroup.split("-")
         kodematkul = namagroupsplit[0]
         kodekelas = namagroupsplit[1]
@@ -230,17 +228,26 @@ def siapAbsensi(driver, kodedosen, namagroup, timestart, namamatkul):
         sleep(1)
         ClickPresensi(driver)
         TahunAkad(driver)
-        findLecturerCode(driver, kodedosen)
+        findLecturerCode(driver, getKodeDosen(num).lower())
         findMatkul(driver, kodematkul, kodekelas)
-        TambahPresensi(driver)
-        simpan(driver)
-        sleep(1)
-        AddMahasiswa(driver)
-        Mahasiswa(driver, datakehadirannpm)
-        Refresh(driver)
-        closeTab(driver)
-        switchWindowsHandleto0(driver)
-        msgreply = "oke, matkul " + namamatkul + " selesai, dan teman teman yang hadir tadi sudah diinputkan ke absensi siap, terima kasih Bapak/Ibu dosen yang sudah mengajar, selamat beraktivitas kembali, dan jangan lupa ya Cuci Tangan agar temen-temen semua sehat, sampai ketemu dipertemuan selanjutnya dadahhhhh........"
+        gettanggalabsen=driver.find_elements_by_xpath('/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[3]/table/tbody/tr')
+        gettanggalabsensiapterakhir=driver.find_element_by_xpath('/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[3]/table/tbody/tr['+str(len(gettanggalabsen))+']/td[3]').text
+        if tanggalsekarang == gettanggalabsensiapterakhir:
+            AddMahasiswa(driver)
+            hadir=Mahasiswa(driver, namagroup)
+            Refresh(driver)
+            closeTab(driver)
+            switchWindowsHandleto0(driver)
+        else:
+            TambahPresensi(driver)
+            simpan(driver)
+            sleep(1)
+            hadir=AddMahasiswa(driver)
+            Mahasiswa(driver, namagroup)
+            Refresh(driver)
+            closeTab(driver)
+            switchWindowsHandleto0(driver)
+        msgreply = hadir
     except Exception as e:
         msgreply = "error: " + str(e)
         closeTab(driver)
@@ -296,8 +303,6 @@ def findLecturerCode(driver, kodedosen):
 
 
 def findMatkul(driver, matkul, kelas):
-    print(matkul)
-    print(kelas)
     listofmatkul = driver.find_elements_by_xpath(
         '/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p/table/tbody/tr[3]/td[2]/select/option')
     for data in listofmatkul:
@@ -324,30 +329,33 @@ def simpan(driver):
 
 
 def AddMahasiswa(driver):
-    jumTabel = driver.find_elements_by_xpath(
-        "/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[3]/table/tbody/tr")
-    return driver.find_element_by_xpath(
-        "/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[3]/table/tbody/tr[" + str(
-            len(jumTabel)) + "]/td[8]/a").click()
+    jumTabel = driver.find_elements_by_xpath("/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[3]/table/tbody/tr")
+    return driver.find_element_by_xpath("/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[3]/table/tbody/tr[" + str(len(jumTabel)) + "]/td[8]/a").click()
 
 
-def Mahasiswa(driver, npm):
-    mahasiswa = npm
+def Mahasiswa(driver, groupname):
+    dataPhoneNumber=[]
     jumMahasiswa = int(driver.find_elements_by_class_name("inp1")[-1].text)
     index = 1
+    numberphone=getnumonly(groupname)
     for getNpm in range(jumMahasiswa):
-        npm = driver.find_element_by_xpath(
-            "/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[4]/table/tbody/tr[" + str(
-                index) + "]/td[2]").text
-        if npm in mahasiswa:
-            driver.find_element_by_xpath(
-                "/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[4]/table/tbody/tr[" + str(
-                    index) + "]/td[4]/select/option[1]").click()
-        else:
-            driver.find_element_by_xpath(
-                "/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[4]/table/tbody/tr[" + str(
-                    index) + "]/td[4]/select/option[4]").click()
+        for number in numberphone:
+            if getNpmandNameMahasiswa(number[0]) is not None:
+                npmMahasiswa=getNpmandNameMahasiswa(number[0])[0]
+                npm = driver.find_element_by_xpath(
+                    "/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[4]/table/tbody/tr[" + str(
+                        index) + "]/td[2]").text
+                if npm == npmMahasiswa:
+                    driver.find_element_by_xpath(
+                        "/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[4]/table/tbody/tr[" + str(
+                            index) + "]/td[4]/select/option[1]").click()
+                    dataPhoneNumber.append(number[0])
+                else:
+                    driver.find_element_by_xpath(
+                        "/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[4]/table/tbody/tr[" + str(
+                            index) + "]/td[4]/select/option[4]").click()
         index += 1
+    return dataPhoneNumber
 
 
 def Refresh(driver):
