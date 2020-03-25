@@ -1,8 +1,13 @@
 from module import kelas
+from lib import wa
+import config
 
 def replymsg(driver, data):
     grp = data[1]
     num = data[0]
+    messages = kelas.getAwaitingMessageKelasStart('kelas_selesai')
+    messages = messages.replace('#BOTNAME#', config.bot_name)
+    wa.typeMessage(driver, messages)
     coursename = kelas.getDataMatkul(grp.split('-')[0], kelas.kodeKelas(grp.split('-')[1]), num)[1]
     starttimeclass = kelas.getDataMatkul(grp.split('-')[0], kelas.kodeKelas(grp.split('-')[1]), num)[3]
     endtimeclass = kelas.getDataMatkul(grp.split('-')[0], kelas.kodeKelas(grp.split('-')[1]), num)[4]
