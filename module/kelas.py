@@ -77,6 +77,16 @@ def getNpmandNameMahasiswa(num):
         if rows is not None:
             return rows
 
+def getHandphoneMahasiswa(npm):
+    db=dbConnectSiap()
+    sql="select Handphone from simak_mst_mahasiswa where MhswID = '{0}'".format(npm)
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        rows=cur.fetchone()
+        if rows is not None:
+            return rows[0]
+
 def isMatkul(kodematkul, kodekelas,num):
     num=numbers.normalize(num)
     db=dbConnectSiap()
@@ -338,26 +348,28 @@ def AddMahasiswa(driver):
 
 
 def Mahasiswa(driver, groupname):
-    dataPhoneNumber=[]
+    dataPhoneNumber = []
     jumMahasiswa = int(driver.find_elements_by_class_name("inp1")[-1].text)
     index = 1
-    numberphone=getnumonly(groupname)
+    numberphone = getnumonly(groupname)
+    data = []
+    for number in numberphone:
+        if getNpmandNameMahasiswa(number[0]) is not None:
+            npmMahasiswa = getNpmandNameMahasiswa(getNpmandNameMahasiswa(number[0]))[0]
+            data.append(npmMahasiswa)
     for getNpm in range(jumMahasiswa):
-        for number in numberphone:
-            if getNpmandNameMahasiswa(number[0]) is not None:
-                npmMahasiswa=getNpmandNameMahasiswa(number[0])[0]
-                npm = driver.find_element_by_xpath(
-                    "/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[4]/table/tbody/tr[" + str(
-                        index) + "]/td[2]").text
-                if npm == npmMahasiswa:
-                    driver.find_element_by_xpath(
-                        "/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[4]/table/tbody/tr[" + str(
-                            index) + "]/td[4]/select/option[1]").click()
-                    dataPhoneNumber.append(number[0])
-                else:
-                    driver.find_element_by_xpath(
-                        "/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[4]/table/tbody/tr[" + str(
-                            index) + "]/td[4]/select/option[4]").click()
+        npm = driver.find_element_by_xpath(
+            "/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[4]/table/tbody/tr[" + str(
+                index) + "]/td[2]").text
+        if npm in data:
+            driver.find_element_by_xpath(
+                "/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[4]/table/tbody/tr[" + str(
+                    index) + "]/td[4]/select/option[1]").click()
+            dataPhoneNumber.append(getHandphoneMahasiswa(npm))
+        else:
+            driver.find_element_by_xpath(
+                "/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[4]/table/tbody/tr[" + str(
+                    index) + "]/td[4]/select/option[4]").click()
         index += 1
     dataPhoneNumber.append(pertemuanke(driver))
     return dataPhoneNumber
