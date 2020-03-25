@@ -194,7 +194,8 @@ def beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, groupname
                "\nKelas: " + str(kodekelas) + \
                "\nTanggal: " + str(tanggal) + \
                "\nWaktu Mulai: " + str(starttimeclass) + \
-               "\nWaktu Selesai: " + str(endtimeclass)
+               "\nWaktu Selesai: " + str(endtimeclass) + \
+               "\nPertemuan ke: " + str(data[-1])
     messages = messages.split("\n")
     for msg in messages:
         wa.typeMessage(driver, msg)
@@ -213,7 +214,7 @@ def beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, groupname
     return msgreply
 
 
-def siapAbsensi(driver, num, namagroup, namamatkul):
+def siapAbsensi(driver, num, namagroup):
     try:
         tanggalsekarang=datetime.now().strftime("%d/%m/%Y")
         namagroupsplit = namagroup.split("-")
@@ -242,8 +243,8 @@ def siapAbsensi(driver, num, namagroup, namamatkul):
             TambahPresensi(driver)
             simpan(driver)
             sleep(1)
-            hadir=AddMahasiswa(driver)
-            Mahasiswa(driver, namagroup)
+            AddMahasiswa(driver)
+            hadir=Mahasiswa(driver, namagroup)
             Refresh(driver)
             closeTab(driver)
             switchWindowsHandleto0(driver)
@@ -257,6 +258,9 @@ def siapAbsensi(driver, num, namagroup, namamatkul):
 
 def closeTab(driver):
     return driver.close()
+
+def pertemuanke(driver):
+    return driver.find_element_by_xpath('/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[3]/table/tbody/tr[1]/td[2]').text
 
 
 def openSiapwithNewTab(driver):
@@ -355,6 +359,7 @@ def Mahasiswa(driver, groupname):
                         "/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[4]/table/tbody/tr[" + str(
                             index) + "]/td[4]/select/option[4]").click()
         index += 1
+    dataPhoneNumber.append(pertemuanke(driver))
     return dataPhoneNumber
 
 
