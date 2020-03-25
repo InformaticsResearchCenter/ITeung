@@ -14,12 +14,16 @@ class Chatbot(object):
             self.cekAndSendMessage(driver)
 
     def cekAndSendMessage(self, driver):
+        messageindex = config.message_wa_index
+        alsandnumindex = config.default_alias_number_index
         for loop in range(wa.messageunread(driver)):
             try:
                 wa.openMessage(driver)
                 messageindex=config.message_wa_index
                 alsandnumindex=config.default_alias_number_index
                 data = wa.getData(driver, message_wa_index=messageindex, default_alias_number_index=alsandnumindex)
+                messageindex-=10
+                alsandnumindex-=1
                 isgrp= data[4]
                 msg = data[3]
                 als = data[2]
