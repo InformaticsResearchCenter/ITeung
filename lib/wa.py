@@ -72,25 +72,31 @@ def openMessage(driver):
         print('no notification')
     sleep(0.5)
 
-def getData(driver):
+def messageunread(driver):
+    try:
+        return int(driver.find_elements_by_class_name("P6z4j")[0].text)
+    except:
+        return 1
+
+def getData(driver, message_wa_index, default_alias_number_index):
     data = []
-    data.append(getSenderNumber(driver))
+    data.append(getSenderNumber(driver, default_alias_number_index))
     data.append(getGroupName(driver))
-    data.append(getSenderAlias(driver))
-    data.append(getMessage(driver))
-    data.append(isGroup(driver))
+    data.append(getSenderAlias(driver, default_alias_number_index))
+    data.append(getMessage(driver, message_wa_index))
+    data.append(isGroup(driver, default_alias_number_index))
     return data
 
-def isGroup(driver):
-    if getSenderAlias(driver) == '':
+def isGroup(driver, default_alias_number_index):
+    if getSenderAlias(driver, default_alias_number_index) == '':
         group='false'
     else:
         group='true'
     return group
     
-def getSenderAlias(driver):
+def getSenderAlias(driver, default_alias_number_index):
     try:
-        senderAlias = driver.find_elements_by_class_name("_1F9Ap")[-1].text
+        senderAlias = driver.find_elements_by_class_name("_1F9Ap")[default_alias_number_index].text
     except:
         senderAlias = ''
     return senderAlias
@@ -102,9 +108,9 @@ def getGroupName(driver):
         groupname=''
     return groupname
 
-def getSenderNumber(driver):
+def getSenderNumber(driver, default_alias_number_index):
     try:
-        senderNumber = driver.find_elements_by_class_name("ZObjg")[-1].text
+        senderNumber = driver.find_elements_by_class_name("ZObjg")[default_alias_number_index].text
     except:
         try:
             senderNumber = driver.find_element_by_xpath("/html/body/div[1]/div/div/div[4]/div/header/div[2]/div[1]/div/span").text
@@ -112,9 +118,9 @@ def getSenderNumber(driver):
             senderNumber = driver.find_element_by_xpath("/html/body/div[1]/div/div/div[4]/div/header/div[2]/div/div/span").text
     return senderNumber
 
-def getMessage(driver):
+def getMessage(driver, message_wa_index):
     try:
-        message = driver.find_elements_by_xpath("(.//span)")[-11].text
+        message = driver.find_elements_by_xpath("(.//span)")[message_wa_index].text
     except:
         message=''
     return message
