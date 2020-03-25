@@ -355,7 +355,7 @@ def Mahasiswa(driver, groupname):
     data = []
     for number in numberphone:
         if getNpmandNameMahasiswa(number[0]) is not None:
-            npmMahasiswa = getNpmandNameMahasiswa(getNpmandNameMahasiswa(number[0]))[0]
+            npmMahasiswa = getNpmandNameMahasiswa(number[0])[0]
             data.append(npmMahasiswa)
     for getNpm in range(jumMahasiswa):
         npm = driver.find_element_by_xpath(
