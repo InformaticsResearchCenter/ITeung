@@ -19,8 +19,6 @@ class Chatbot(object):
         for loop in range(wa.messageunread(driver)):
             try:
                 wa.openMessage(driver)
-                messageindex=config.message_wa_index
-                alsandnumindex=config.default_alias_number_index
                 data = wa.getData(driver, message_wa_index=messageindex, default_alias_number_index=alsandnumindex)
                 messageindex-=10
                 alsandnumindex-=1
