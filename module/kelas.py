@@ -200,9 +200,9 @@ def beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, groupname
         wa.typeMessage(driver, msg)
         wa.lineBreakWhatsapp(driver)
     number = 1
-    studentnumber=getnumonly(groupname)
+    studentnumber=data
     for studentnum in studentnumber:
-        if getNpmandNameMahasiswa(studentnum[0]) is not None:
+        if studentnum is not '':
             studentid=getNpmandNameMahasiswa(studentnum[0])[0]
             studentname=getNpmandNameMahasiswa(studentnum[0])[1]
             wa.typeMessage(driver, str(number)+". "+studentid+" "+studentname)
