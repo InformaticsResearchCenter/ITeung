@@ -12,7 +12,7 @@ def replymsg(driver, data):
     else:
         if kelas.isMatkul(grp.split('-')[0], kelas.kodeKelas(grp.split('-')[1]), num):
             coursename = kelas.getDataMatkul(grp.split('-')[0], kelas.kodeKelas(grp.split('-')[1]), num)[1]
-            messages = kelas.getAwaitingMessageKelasStart('kelas')
+            messages = kelas.getAwaitingMessageKelasStart('kelas_mulai')
             messages = messages.replace('#MATKUL#', coursename)
             messages = messages.replace('#BOTNAME#', config.bot_name)
             msgreply = messages
