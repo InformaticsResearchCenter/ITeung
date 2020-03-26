@@ -27,7 +27,9 @@ def replymsg(driver, data):
                 messages = messages.replace('#BOTNAME#', config.bot_name)
                 msgreply = messages
             else:
-                msgreply = 'Kelas Tidak Ada'
+                listMK=kelas.getListMK(kelas.getKodeDosen(data[0]))
+                guide = 'Yahh... kayaknya kode mata kuliah atau kelasnya masih salah deh coba cek yahh : \n'
+                msgreply = guide+listMK
         except:
             listMK=kelas.getListMK(kelas.getKodeDosen(data[0]))
             guide = 'Di setting dulu ya nama groupnya jadi KODEMK-KELAS-NAMA contoh : TI3466-A-KECERDASAN BUAT, ini daftarnya : \n'

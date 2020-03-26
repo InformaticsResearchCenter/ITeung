@@ -54,6 +54,33 @@ def kodeKelas(kode):
     }
     return switcher.get(kode, "Not Found!")
 
+def toKelas(kode):
+    switcher = {
+        '01': 'A',
+        '02': 'B',
+        '03': 'C',
+        '04': 'D',
+        '05': 'E',
+        '06': 'F',
+        '07': 'G',
+        '08': 'H',
+        '09': 'I',
+        '10': 'J',
+    }
+    return switcher.get(kode, "Not Found!")
+
+def toHari(kode):
+    switcher = {
+        '1': 'Senin',
+        '2': 'Selasa',
+        '3': 'Rabu',
+        '4': 'Kamis',
+        '5': 'Jumat',
+        '6': 'Sabtu',
+        '7': 'Minggu',
+    }
+    return switcher.get(kode, "Not Found!")
+
 def getnumonly(groupname):
     db=dbConnect()
     sql="select distinct number from log where DATE_FORMAT(timestamps, '%Y-%m-%d') = CURDATE() and groupname = '{0}'".format(groupname)
@@ -109,7 +136,7 @@ def getListMK(kodedosen):
         cur.execute(sql)
         records=cur.fetchall()
         for row in records:
-            listMK=listMK+str(row[0])+' | '+str(row[1])+' | '+str(row[2])+' | '+str(row[3])+' | '+str(row[4])+' | '+str(row[5])+' \n '
+            listMK=listMK+str(row[0])+' | '+str(row[1])+' | '+toKelas(str(row[2]))+' | '+toHari(str(row[3]))+' | '+str(row[4])+' | '+str(row[5])+' \n '
     return listMK
 
 def getDataMatkul(kodematkul, kodekelas, num):
