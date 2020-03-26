@@ -111,7 +111,7 @@ def getWaitingMessage(module):
         rows = cur.fetchone()
         if rows is not None:
             content = rows[0]
-    return content
+    return content.replace("#BOTNAME#", config.bot_name)
 
 def getNumberGroup(num):
     db = dbConnect()
