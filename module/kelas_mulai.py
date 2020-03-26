@@ -19,13 +19,16 @@ def replymsg(driver, data):
     if kelas.sudahinput(wa.getGroupName(driver)) == True:
         msgreply = "mohon maaf matakuliah ini tidak bisa dimulai, mohon menunggu hingga minggu depan... terima kasih"
     else:
-        if kelas.isMatkul(grp.split('-')[0], kelas.kodeKelas(grp.split('-')[1]), num):
-            coursename = kelas.getDataMatkul(grp.split('-')[0], kelas.kodeKelas(grp.split('-')[1]), num)[1]
-            messages = kelas.getAwaitingMessageKelasStart('kelas_mulai')
-            messages = messages.replace('#MATKUL#', coursename)
-            messages = messages.replace('#BOTNAME#', config.bot_name)
-            msgreply = messages
-        else:
+        try:
+            if kelas.isMatkul(grp.split('-')[0], kelas.kodeKelas(grp.split('-')[1]), num):
+                coursename = kelas.getDataMatkul(grp.split('-')[0], kelas.kodeKelas(grp.split('-')[1]), num)[1]
+                messages = kelas.getAwaitingMessageKelasStart('kelas_mulai')
+                messages = messages.replace('#MATKUL#', coursename)
+                messages = messages.replace('#BOTNAME#', config.bot_name)
+                msgreply = messages
+            else:
+                msgreply = 'Kelas Tidak Ada'
+        except:
             listMK=kelas.getListMK(kelas.getKodeDosen(data[0]))
             guide = 'Di setting dulu ya nama groupnya jadi KODEMK-KELAS-NAMA contoh : TI3466-A-KECERDASAN BUAT, ini daftarnya : \n'
             msgreply = guide+listMK
