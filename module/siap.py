@@ -4,10 +4,17 @@ Created on Thu Mar 19 23:07:53 2020
 
 @author: rolly
 """
-
+from module import kelas
 import pandas as pd
 import config
 import pymysql
+
+def auth(data):
+    if kelas.getKodeDosen(data[0]) == '':
+        ret=False
+    else:
+        ret=True
+    return ret
 
 def replymsg(num,msg):
     kodedosen=msg.split(' ')[-1].upper()

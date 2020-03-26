@@ -2,6 +2,13 @@ from module import kelas
 from lib import wa
 import config
 
+def auth(data):
+    if kelas.getKodeDosen(data[0]) == '':
+        ret=False
+    else:
+        ret=True
+    return ret
+
 def replymsg(driver, data):
     grp = data[1]
     num = data[0]

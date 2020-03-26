@@ -3,6 +3,15 @@ from module import kelas
 
 import config
 
+
+
+def auth(data):
+    if kelas.getKodeDosen(data[0]) == '':
+        ret=False
+    else:
+        ret=True
+    return ret
+    
 #close commit #2
 def replymsg(driver, data):
     grp = data[1]
@@ -17,5 +26,7 @@ def replymsg(driver, data):
             messages = messages.replace('#BOTNAME#', config.bot_name)
             msgreply = messages
         else:
-            msgreply = 'mohon maaf kode dosen bapak/ibu dengan kode matkul yang berada digroup ini tidak ditemukan, mohon untuk cek kembali, terima kasih :-)'
+            listMK=kelas.getListMK(kelas.getKodeDosen(data[0]))
+            guide = 'Di setting dulu ya nama groupnya jadi KODEMK-KELAS-NAMA contoh : TI3466-A-KECERDASAN BUAT, ini daftarnya : \n'
+            msgreply = guide+listMK
     return msgreply

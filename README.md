@@ -26,7 +26,7 @@ Requirements:
 2. insert into keyword table, with a lot of same name of keyword_group(example: m:prodi) and a lot of different possibility keyword 
 3. Do not insert into reply table
 4. create file with module_name.py inside module folder
-5. in the module_name.py , at least have one function to interact with bot apps: def reply(driver,msg):
+5. in the module_name.py , at least have two function to interact with bot apps: def replymsg(driver, data): return message; and auth(data) return Boolean
 6. driver is the webdriver for selenium command and msg is a string that come from user message.
 
 ### for multiple keyword : 
@@ -35,7 +35,7 @@ Requirements:
 2. insert into keyword table, with a row of keyword_group and a row of keyword which is same with multiple_keyword field in multi_key table
 3. do not insert into reply table
 4. create file with module_name.py inside module folder
-5. in the module_name.py , at least have one function to interact with bot apps : def reply(driver,msg):
+5. in the module_name.py , at least have two function to interact with bot apps : def replymsg(driver, data): return message; and auth(data) return Boolean
 6. driver is the webdriver for selenium command and msg is a string that come from user message.
 
 ### Variabels in Message Reply

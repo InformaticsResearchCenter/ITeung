@@ -43,8 +43,8 @@ class Chatbot(object):
                         msgreply = reply.message(msg)
                         if msgreply[:2] == 'm:':
                             modulename = msgreply.split(':')[1]
-                            if auth.valid(num, msgreply):
-                                mod=import_module('module.' + modulename)
+                            mod=import_module('module.' + modulename)
+                            if mod.auth(data):
                                 msgreply=mod.replymsg(driver, data)
                             else:
                                 msgreply=reply.getReplyAuth(modulename)

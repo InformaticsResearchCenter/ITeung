@@ -99,6 +99,18 @@ def isMatkul(kodematkul, kodekelas,num):
             return True
         else:
             return False
+        
+def getListMK(kodedosen):
+    listMK='Kode MK | Mata Kuliah | Kelas | Hari | Jam Mulai | Jam Selesai \n '
+    db=dbConnectSiap()
+    sql="select MKKode, Nama, NamaKelas, HariID, JamMulai, JamSelesai from simak_trn_jadwal where DosenID = '{0}' and TahunID = '{1}'".format(kodedosen,config.siap_tahun_id)
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        records=cur.fetchall()
+        for row in records:
+            listMK=listMK+str(row[0])+' | '+str(row[1])+' | '+str(row[2])+' | '+str(row[3])+' | '+str(row[4])+' | '+str(row[5])+' \n '
+    return listMK
 
 def getDataMatkul(kodematkul, kodekelas, num):
     num = numbers.normalize(num)
@@ -213,7 +225,7 @@ def beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, groupname
     number = 1
     studentnumber=data
     for studentnum in studentnumber:
-        if studentnum is not '' and getNpmandNameMahasiswa(studentnum) is not None:
+        if studentnum != '' and getNpmandNameMahasiswa(studentnum) != None:
             studentid=getNpmandNameMahasiswa(studentnum)[0]
             studentname=getNpmandNameMahasiswa(studentnum)[1]
             wa.typeMessage(driver, str(number)+". "+studentid+" "+studentname)
