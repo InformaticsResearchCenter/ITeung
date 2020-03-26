@@ -38,6 +38,27 @@ Requirements:
 5. in the module_name.py , at least have two function to interact with bot apps : def replymsg(driver, data): return message; and auth(data) return Boolean
 6. driver is the webdriver for selenium command and msg is a string that come from user message.
 
+### Module Content
+Module development example:
+
+```py
+import os
+from lib import wa,reply
+
+def auth(data):
+	xxx
+	xxx
+	return True/False
+	
+def replymsg(driver,data):
+	xxx
+	xxx
+	waitmessage=reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
+    wa.typeAndSendMessage(driver,waitmessage)
+	xxx
+	return stringmessage
+```
+
 ### Variabels in Message Reply
 * #ERROR# for error message from python
 * #BOTNAME# return bot name for reply message
