@@ -31,10 +31,11 @@ def waitLogin(driver):
     wait.until(EC.presence_of_element_located((By.XPATH, x_arg)))
 
 def typeAndSendMessage(driver, message):
-    message_target = driver.find_elements_by_xpath('//*[@id="main"]/footer/div[1]/div[2]/div/div[2]')[0]
-    message_target.send_keys(message)
-    sendbutton = driver.find_elements_by_xpath('//*[@id="main"]/footer/div[1]/div[3]/button')[0]
-    sendbutton.click()
+    messages = message.split("\n")
+    for msg in messages:
+        typeMessage(driver, msg)
+        lineBreakWhatsapp(driver)
+    return sendMessage(driver)
 
 def typeMessage(driver, message):
     return driver.find_elements_by_xpath('//*[@id="main"]/footer/div[1]/div[2]/div/div[2]')[0].send_keys(message)
