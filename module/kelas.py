@@ -238,6 +238,7 @@ def beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, groupname
     lecturername = getNamaDosen(getKodeDosen(num))
     tanggal = datetime.now().strftime("%d-%m-%Y")
     kodekelas=wa.getGroupName(driver).split('-')[1]
+    print(data)
     messages = "Nama Dosen: " + str(lecturername) + \
                "\nMata Kuliah: " + str(coursename) + \
                "\nKelas: "+ getTingkat(data) + str(kodekelas) + \
