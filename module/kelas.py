@@ -276,7 +276,7 @@ def siapAbsensi(driver, num, namagroup):
         except:
             print("sudah login")
         sleep(1)
-        ClickPresensi(driver)
+        openPresensi(driver)
         TahunAkad(driver)
         findLecturerCode(driver, getKodeDosen(num).lower())
         findMatkul(driver, kodematkul, kodekelas)
@@ -339,8 +339,8 @@ def loginSiap(driver):
     login.click()
 
 
-def ClickPresensi(driver):
-    return driver.find_elements_by_class_name("side")[-1].click()
+def openPresensi(driver):
+    driver.get('http://siap.poltekpos.ac.id/siap/modul/simpati/index.php?mnux=jadwal.presensi&mdlid=63')
 
 
 def findLecturerCode(driver, kodedosen):
