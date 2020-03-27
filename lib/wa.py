@@ -64,7 +64,7 @@ def deleteMessage(driver):
 
 def openMessage(driver):
     try:
-        chat = driver.find_elements_by_class_name("P6z4j")[0]
+        chat = driver.find_elements_by_class_name("OUeyt")[0]
         chat.click()
         chat.click()
         chat.click()
@@ -74,7 +74,7 @@ def openMessage(driver):
 
 def messageunread(driver):
     try:
-        return int(driver.find_elements_by_class_name("P6z4j")[0].text)
+        return int(driver.find_elements_by_class_name("OUeyt")[0].text)
     except:
         return 1
 
