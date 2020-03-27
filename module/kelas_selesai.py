@@ -22,6 +22,6 @@ def replymsg(driver, data):
         msgreply=kelas.beritaAcara(driver=driver, num=num, coursename=coursename, starttimeclass=starttimeclass, endtimeclass=endtimeclass, groupname=grp, data=msgreply)
     except:
         listMK=kelas.getListMK(kelas.getKodeDosen(data[0]))
-        guide = 'yahh....nama groupnya jangan diubah dong. hihihi coba ganti lagi ya... : \n'
+        guide = 'yahh....nama groupnya jangan diubah dong. hihihi ganti lagi ya.jadi KodeMK-KELAS-NAMAMK,contoh : TI3466-A-KECERDASAN BUATAN : \n'
         msgreply = guide+listMK
     return msgreply
