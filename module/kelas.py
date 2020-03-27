@@ -240,7 +240,7 @@ def beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, groupname
     kodekelas=wa.getGroupName(driver).split('-')[1]
     messages = "Nama Dosen: " + str(lecturername) + \
                "\nMata Kuliah: " + str(coursename) + \
-               "\nKelas: " + str(kodekelas) + \
+               "\nKelas: "+ getTingkat(data) + str(kodekelas) + \
                "\nTanggal: " + str(tanggal) + \
                "\nWaktu Mulai: " + str(starttimeclass) + \
                "\nWaktu Selesai: " + str(endtimeclass) + \
@@ -262,6 +262,15 @@ def beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, groupname
     msgreply="Oke teman-teman Matakuliah "+coursename+" sudah selesai dan telah berhasil diinputkan absensinya, mohon jaga kesehatan teman-teman yaaaa.... selalu cuci tangan teman-teman, dadaaaahhhhhh <3"
     return msgreply
 
+def getTingkat(data):
+    studentnumber=data
+    median=len(studentnumber)//2+1
+    studentnum=studentnumber[median]
+    npm=getNpmandNameMahasiswa(studentnum)[0]
+    thn2=npm[1:3]
+    selisih=int(config.siap_tahun_id[2:4])-int(thn2)
+    tingkat=selisih+1
+    return str(tingkat)
 
 def siapAbsensi(driver, num, namagroup):
     try:
