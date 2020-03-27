@@ -25,7 +25,7 @@ def loginWA(driver):
     waitLogin(driver)
 
 def waitLogin(driver):
-    target = '"_3RWII"'
+    target = '"_3ZW2E"'
     x_arg = '//div[contains(@class, ' + target + ')]'
     wait = WebDriverWait(driver, 600)
     wait.until(EC.presence_of_element_located((By.XPATH, x_arg)))
@@ -44,23 +44,6 @@ def sendMessage(driver):
 
 def lineBreakWhatsapp(driver):
     return ActionChains(driver).key_down(Keys.SHIFT).send_keys(Keys.ENTER).key_up(Keys.SHIFT).perform()
-
-
-def deleteMessage(driver):
-    driver.find_elements_by_class_name('_3j8Pd')[-1].click()
-    sleep(1)
-
-    value_name = driver.find_elements_by_class_name('_3zy-4')
-    sleep(1)
-
-    if 'Exit group' in value_name[4].text:
-        print('group')
-        value_name[3].click()
-        driver.find_elements_by_class_name('_2eK7W')[1].click()
-    else:
-        print('personal')
-        value_name[4].click()
-        driver.find_elements_by_class_name('_2eK7W')[1].click()
 
 def openMessage(driver):
     try:
@@ -96,7 +79,7 @@ def isGroup(driver, default_alias_number_index):
     
 def getSenderAlias(driver, default_alias_number_index):
     try:
-        senderAlias = driver.find_elements_by_class_name("_1F9Ap")[default_alias_number_index].text
+        senderAlias = driver.find_elements_by_class_name("_3Ye_R")[default_alias_number_index].text
     except:
         senderAlias = ''
     return senderAlias
@@ -110,7 +93,7 @@ def getGroupName(driver):
 
 def getSenderNumber(driver, default_alias_number_index):
     try:
-        senderNumber = driver.find_elements_by_class_name("ZObjg")[default_alias_number_index].text
+        senderNumber = driver.find_elements_by_class_name("RZ7GO")[default_alias_number_index].text
     except:
         try:
             senderNumber = driver.find_element_by_xpath("/html/body/div[1]/div/div/div[4]/div/header/div[2]/div[1]/div/span").text
