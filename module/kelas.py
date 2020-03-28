@@ -240,7 +240,7 @@ def beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, groupname
     kodekelas=wa.getGroupName(driver).split('-')[1]
     messages = "Nama Dosen: " + str(lecturername) + \
                "\nMata Kuliah: " + str(coursename) + \
-               "\nKelas: "+ getTingkat(data) + str(kodekelas) + \
+               "\nKelas: "+ str(getTingkat(data)) + str(kodekelas) + \
                "\nTanggal: " + str(tanggal) + \
                "\nWaktu Mulai: " + str(starttimeclass) + \
                "\nWaktu Selesai: " + str(endtimeclass) + \
@@ -273,7 +273,7 @@ def getTingkat(data):
     thn2=npm[1:3]
     selisih=int(config.siap_tahun_id[2:4])-int(thn2)
     tingkat=selisih+1
-    return str(tingkat)
+    return tingkat
 
 def siapAbsensi(driver, num, namagroup):
     try:
