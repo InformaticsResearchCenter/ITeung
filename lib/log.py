@@ -18,9 +18,14 @@ def save(data):
 def logSaveIteungStart(data):
     return inserttolog(data)
 
+def normalizeSql(msg):
+    msg = msg.replace("'", "")
+    msg = msg.strip()
+    return msg
+
 def inserttolog(data):
     db = dbConnectIteung()
-    sql = "INSERT INTO log VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}')".format(getDatetimeNow(), data[0], data[3], data[2], data[1], data[4])
+    sql = "INSERT INTO log VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}')".format(getDatetimeNow(), data[0], normalizeSql(data[3]), data[2], data[1], data[4])
     with db:
         cur = db.cursor()
         cur.execute(sql)
