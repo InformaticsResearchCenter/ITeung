@@ -42,6 +42,7 @@ Requirements:
 Module development example:
 
 ```py
+import config
 import os
 from lib import wa,reply
 
