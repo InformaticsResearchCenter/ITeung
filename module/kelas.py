@@ -264,9 +264,12 @@ def beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, groupname
 
 def getTingkat(data):
     studentnumber=data
-    median=len(studentnumber)//2+1
+    median=len(studentnumber)//2
+    print('median: '+median)
     studentnum=studentnumber[median]
+    print('studentnum: '+studentnum)
     npm=getNpmandNameMahasiswa(studentnum)[0]
+    print('npm: '+npm)
     thn2=npm[1:3]
     selisih=int(config.siap_tahun_id[2:4])-int(thn2)
     tingkat=selisih+1

@@ -20,7 +20,7 @@ def replymsg(driver, data):
     wa.typeAndSendMessage(driver,wmsg)
     msgreply=kelas.siapAbsensi(driver=driver, namagroup=grp, num=num,)
     print('isi dari msgreply: ')
-    print(*msgreply)
+    print(msgreply)
     msgreply=kelas.beritaAcara(driver=driver, num=num, coursename=coursename, starttimeclass=starttimeclass, endtimeclass=endtimeclass, groupname=grp, data=msgreply)
 #    except:
 #        listMK=kelas.getListMK(kelas.getKodeDosen(data[0]))
