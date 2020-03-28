@@ -266,7 +266,7 @@ def getTingkat(data):
     studentnumber=data
     median=len(studentnumber)//2
     print('median: '+str(median))
-    studentnum=studentnumber[median]
+    studentnum=studentnumber[median-1]
     print('studentnum: '+str(studentnum))
     npm=getNpmandNameMahasiswa(studentnum)[0]
     print('npm: '+str(npm))
