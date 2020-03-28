@@ -42,20 +42,25 @@ Requirements:
 Module development example:
 
 ```py
+import config
 import os
 from lib import wa,reply
 
 def auth(data):
-	xxx
-	xxx
-	return True/False
+	if authenticated:
+		ret=True
+	else:
+		ret=False
+	return ret
 	
 def replymsg(driver,data):
 	xxx
-	xxx
+	#if you module takes time, please set waiting message for user
 	waitmessage=reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
-    wa.typeAndSendMessage(driver,waitmessage)
+    	waitmessage = waitmessage.replace('#BOTNAME#', config.bot_name)
+	wa.typeAndSendMessage(driver,waitmessage)
 	xxx
+	stringmessage=resultfromyourmodule
 	return stringmessage
 ```
 
