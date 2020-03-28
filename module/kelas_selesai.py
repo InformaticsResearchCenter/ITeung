@@ -1,7 +1,9 @@
 from module import kelas
 from lib import wa,reply
+from numba import jit
 import os
 
+@jit(nopython=True)
 def auth(data):
     if kelas.getKodeDosen(data[0]) == '':
         ret=False
@@ -9,6 +11,7 @@ def auth(data):
         ret=True
     return ret
 
+@jit(nopython=True)
 def replymsg(driver, data):
     grp = data[1]
     num = data[0]

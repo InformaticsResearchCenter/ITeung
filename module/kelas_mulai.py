@@ -1,10 +1,11 @@
 from lib import wa
 from module import kelas
+from numba import jit
 
 import config
 
 
-
+@jit(nopython=True)
 def auth(data):
     if kelas.getKodeDosen(data[0]) == '':
         ret=False
@@ -12,7 +13,7 @@ def auth(data):
         ret=True
     return ret
     
-#close commit #2
+@jit(nopython=True)
 def replymsg(driver, data):
     grp = data[1]
     num = data[0]

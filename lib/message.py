@@ -5,7 +5,9 @@ Created on Sat Mar 14 12:32:40 2020
 @author: rolly
 """
 import config
+from numba import jit
 
+@jit(nopython=True)
 def normalize(message):
     msg = message.lower()
     msg=msg.replace(',',' ')

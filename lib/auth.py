@@ -1,5 +1,7 @@
 from lib import reply, numbers
+from numba import jit
 
+@jit(nopython=True)
 def valid(num, msgreply):
     num=numbers.normalize(num)
     print(num)

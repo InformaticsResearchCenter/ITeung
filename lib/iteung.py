@@ -7,7 +7,9 @@ Created on Sat Mar 14 12:36:17 2020
 from lib import reply,message
 import config
 from importlib import import_module
+from numba import jit
 
+@jit(nopython=True)
 def get(num,msg):
     try:
         msg  = message.normalize(msg)

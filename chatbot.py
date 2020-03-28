@@ -1,5 +1,6 @@
 from lib import wa, reply, message, auth, log
 from importlib import import_module
+from numba import jit
 import config
 
 
@@ -13,6 +14,7 @@ class Chatbot(object):
         while True:
             self.cekAndSendMessage(driver)
 
+    @jit(nopython=True)
     def cekAndSendMessage(self, driver):
         messageindex = config.message_wa_index
         alsandnumindex = config.default_alias_number_index

@@ -1,6 +1,7 @@
 from lib import wa, numbers
 from datetime import datetime
 from time import sleep
+from numba import jit
 
 import config
 import pymysql
@@ -31,14 +32,17 @@ import pymysql
 #         beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, grp)
 #     return msgreply
 
+@jit(nopython=True)
 def dbConnect():
     db = pymysql.connect(config.db_host, config.db_username, config.db_password, config.db_name)
     return db
 
+@jit(nopython=True)
 def dbConnectSiap():
     db= pymysql.connect(config.db_host_siap, config.db_username_siap, config.db_password_siap, config.db_name_siap)
     return db
 
+@jit(nopython=True)
 def kodeKelas(kode):
     switcher = {
         'A': '01',
@@ -54,6 +58,7 @@ def kodeKelas(kode):
     }
     return switcher.get(kode, "Not Found!")
 
+@jit(nopython=True)
 def toKelas(kode):
     switcher = {
         '01': 'A',
@@ -69,6 +74,7 @@ def toKelas(kode):
     }
     return switcher.get(kode, "Not Found!")
 
+@jit(nopython=True)
 def toHari(kode):
     switcher = {
         '1': 'Senin',
@@ -81,6 +87,7 @@ def toHari(kode):
     }
     return switcher.get(kode, "Not Found!")
 
+@jit(nopython=True)
 def getnumonly(groupname):
     db=dbConnect()
     sql="select distinct number from log where DATE_FORMAT(timestamps, '%Y-%m-%d') = CURDATE() and groupname = '{0}'".format(groupname)
@@ -93,6 +100,7 @@ def getnumonly(groupname):
         else:
             return ''
 
+@jit(nopython=True)
 def getNpmandNameMahasiswa(num):
     num = numbers.normalize(num)
     db=dbConnectSiap()
@@ -104,6 +112,7 @@ def getNpmandNameMahasiswa(num):
         if rows is not None:
             return rows
 
+@jit(nopython=True)
 def getHandphoneMahasiswa(npm):
     db=dbConnectSiap()
     sql="select Handphone from simak_mst_mahasiswa where MhswID = '{0}'".format(npm)
@@ -114,6 +123,7 @@ def getHandphoneMahasiswa(npm):
         if rows is not None:
             return rows[0]
 
+@jit(nopython=True)
 def isMatkul(kodematkul, kodekelas,num):
     num=numbers.normalize(num)
     db=dbConnectSiap()
@@ -126,7 +136,8 @@ def isMatkul(kodematkul, kodekelas,num):
             return True
         else:
             return False
-        
+
+@jit(nopython=True)
 def getListMK(kodedosen):
     listMK='Kode MK | Mata Kuliah | Kelas | Hari | Jam\n '
     db=dbConnectSiap()
@@ -139,6 +150,7 @@ def getListMK(kodedosen):
             listMK=listMK+str(row[0])+' | '+str(row[1])+' | '+toKelas(str(row[2]))+' | '+toHari(str(row[3]))+' | '+str(row[4])[:-3]+'-'+str(row[5])[:-3]+' \n '
     return listMK
 
+@jit(nopython=True)
 def getDataMatkul(kodematkul, kodekelas, num):
     num = numbers.normalize(num)
     db = dbConnectSiap()
@@ -152,6 +164,7 @@ def getDataMatkul(kodematkul, kodekelas, num):
         else:
             return ''
 
+@jit(nopython=True)
 def getKodeDosen(num):
     num = numbers.normalize(num)
     kodedosen=''
@@ -165,6 +178,7 @@ def getKodeDosen(num):
             kodedosen=rows[0]
     return kodedosen
 
+@jit(nopython=True)
 def getAwaitingMessageKelasStart(module):
     db = dbConnect()
     content = ''
@@ -177,6 +191,7 @@ def getAwaitingMessageKelasStart(module):
             content = rows[0]
     return content
 
+@jit(nopython=True)
 def sudahinput(groupname):
     db = dbConnect()
     sql = "SELECT * from log WHERE DATE_FORMAT(timestamps, '%Y-%m-%d') = CURDATE() and groupname = '{0}' and message LIKE '%teung kelas mulai%'".format(groupname)
@@ -189,6 +204,7 @@ def sudahinput(groupname):
             status = True
     return status
 
+@jit(nopython=True)
 def getJamTerakhir():
     db = dbConnect()
     tanggal = ''
@@ -201,6 +217,7 @@ def getJamTerakhir():
             tanggal = rows[0]
     return tanggal
 
+@jit(nopython=True)
 def getNamaDosen(kodedosen):
     db = dbConnectSiap()
     sql = "select Nama, Gelar from simak_mst_dosen where Login = '{0}'".format(kodedosen)
@@ -216,6 +233,7 @@ def getNamaDosen(kodedosen):
             else:
                 return namadosen+' '+gelar
 
+@jit(nopython=True)
 def getHadirAlias(time):
     db = dbConnect()
     sql = "SELECT DISTINCT alias from d4ti_2b WHERE date_time > '{0}'".format(time)
@@ -225,6 +243,7 @@ def getHadirAlias(time):
         rows = cur.fetchall()
     return rows
 
+@jit(nopython=True)
 def getHadirNpm(time):
     db = dbConnect()
     sql = "SELECT DISTINCT npm from d4ti_2b WHERE date_time > '{0}'".format(time)
@@ -234,6 +253,7 @@ def getHadirNpm(time):
         rows = cur.fetchall()
     return rows
 
+@jit(nopython=True)
 def beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, groupname, data):
     lecturername = getNamaDosen(getKodeDosen(num))
     tanggal = datetime.now().strftime("%d-%m-%Y")
@@ -263,6 +283,7 @@ def beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, groupname
     msgreply="Oke teman-teman Matakuliah "+coursename+" sudah selesai dan telah berhasil diinputkan absensinya, mohon jaga kesehatan teman-teman yaaaa.... selalu cuci tangan teman-teman, dadaaaahhhhhh <3"
     return msgreply
 
+@jit(nopython=True)
 def getTingkat(data):
     studentnumber=data
     median=len(studentnumber)//2
@@ -279,6 +300,7 @@ def getTingkat(data):
         tingkat=''
     return tingkat
 
+@jit(nopython=True)
 def siapAbsensi(driver, num, namagroup):
     try:
         tanggalsekarang=datetime.now().strftime("%d/%m/%Y")
@@ -320,26 +342,27 @@ def siapAbsensi(driver, num, namagroup):
         switchWindowsHandleto0(driver)
     return msgreply
 
-
+@jit(nopython=True)
 def closeTab(driver):
     return driver.close()
 
+@jit(nopython=True)
 def pertemuanke(driver):
     return driver.find_element_by_xpath('/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[3]/table/tbody/tr[1]/td[2]').text
 
-
+@jit(nopython=True)
 def openSiapwithNewTab(driver):
     return driver.execute_script("window.open('http://siap.poltekpos.ac.id/siap/besan.depan.php');")
 
-
+@jit(nopython=True)
 def switchWindowsHandleto1(driver):
     return driver.switch_to_window(driver.window_handles[1])
 
-
+@jit(nopython=True)
 def switchWindowsHandleto0(driver):
     return driver.switch_to_window(driver.window_handles[0])
 
-
+@jit(nopython=True)
 def loginSiap(driver):
     username = driver.find_elements_by_class_name("textbox")[0]
     username.send_keys(config.username_siap)
@@ -354,11 +377,11 @@ def loginSiap(driver):
     login = driver.find_element_by_class_name("button")
     login.click()
 
-
+@jit(nopython=True)
 def openPresensi(driver):
     driver.get('http://siap.poltekpos.ac.id/siap/modul/simpati/index.php?mnux=jadwal.presensi&mdlid=63')
 
-
+@jit(nopython=True)
 def findLecturerCode(driver, kodedosen):
     lecturercode = driver.find_elements_by_xpath(
         '/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p/table/tbody/tr[2]/td[2]/select/option')
@@ -370,7 +393,7 @@ def findLecturerCode(driver, kodedosen):
             i.click()
             break
 
-
+@jit(nopython=True)
 def findMatkul(driver, matkul, kelas):
     listofmatkul = driver.find_elements_by_xpath(
         '/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p/table/tbody/tr[3]/td[2]/select/option')
@@ -386,22 +409,22 @@ def findMatkul(driver, matkul, kelas):
             data.click()
             break
 
-
+@jit(nopython=True)
 def TambahPresensi(driver):
     return driver.find_element_by_xpath(
         "/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[2]/table/tbody/tr[5]/td/input[2]").click()
 
-
+@jit(nopython=True)
 def simpan(driver):
     return driver.find_element_by_xpath(
         "/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[3]/table/tbody/tr[7]/td/input[1]").click()
 
-
+@jit(nopython=True)
 def AddMahasiswa(driver):
     jumTabel = driver.find_elements_by_xpath("/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[3]/table/tbody/tr")
     return driver.find_element_by_xpath("/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[3]/table/tbody/tr[" + str(len(jumTabel)) + "]/td[8]/a").click()
 
-
+@jit(nopython=True)
 def Mahasiswa(driver, groupname):
     dataPhoneNumber = []
     jumMahasiswa = int(driver.find_elements_by_class_name("inp1")[-1].text)
@@ -429,12 +452,12 @@ def Mahasiswa(driver, groupname):
     dataPhoneNumber.append(pertemuanke(driver))
     return dataPhoneNumber
 
-
+@jit(nopython=True)
 def Refresh(driver):
     driver.find_element_by_xpath(
         "/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[2]/table/tbody/tr[5]/td/input[3]").click()
 
-
+@jit(nopython=True)
 def TahunAkad(driver):
     return driver.find_element_by_xpath(
         "/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[1]/table/tbody/tr[1]/td[3]/select/option[2]").click()
