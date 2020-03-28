@@ -17,7 +17,7 @@ def replymsg(driver, data):
     grp = data[1]
     num = data[0]
     if kelas.sudahinput(wa.getGroupName(driver)) == True:
-        msgreply = "mohon maaf matakuliah ini tidak bisa dimulai, mohon menunggu hingga minggu depan... terima kasih"
+        msgreply = "yuhuuuu..... semangat banget sih, kan minggu ini udah kuliah. tunggu minggu depan ya... terima kasih"
     else:
         try:
             if kelas.isMatkul(grp.split('-')[0], kelas.kodeKelas(grp.split('-')[1]), num):
@@ -28,7 +28,7 @@ def replymsg(driver, data):
                 msgreply = messages
             else:
                 listMK=kelas.getListMK(kelas.getKodeDosen(data[0]))
-                guide = 'Yahh... kayaknya kode mata kuliah atau kelasnya masih salah deh coba cek yahh : \n'
+                guide = 'Yahh... Nama grupnya belum KODEMK-KELAS-NAMA. yuk ubah #BOTNAME# kasih contoh TI3466-A-KECERDASAN BUAT klo lupa kode mata kuliah #BOTNAME# kasih ya ini daftarnya : \n'
                 msgreply = guide+listMK
         except:
             listMK=kelas.getListMK(kelas.getKodeDosen(data[0]))
