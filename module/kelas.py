@@ -238,9 +238,10 @@ def beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, groupname
     lecturername = getNamaDosen(getKodeDosen(num))
     tanggal = datetime.now().strftime("%d-%m-%Y")
     kodekelas=wa.getGroupName(driver).split('-')[1]
-    messages = "Nama Dosen: " + str(lecturername) + \
+    messages = "*(Sudah di input Iteung)*" + \
+               "\nNama Dosen: " + str(lecturername) + \
                "\nMata Kuliah: " + str(coursename) + \
-               "\nKelas: "+ str(getTingkat(data)) + str(kodekelas) + \
+               "\nKelas: "+ getTingkat(data) + str(kodekelas) + \
                "\nTanggal: " + str(tanggal) + \
                "\nWaktu Mulai: " + str(starttimeclass) + \
                "\nWaktu Selesai: " + str(endtimeclass) + \
@@ -266,13 +267,16 @@ def getTingkat(data):
     studentnumber=data
     median=len(studentnumber)//2
     print('median: '+str(median))
-    studentnum=studentnumber[median-1]
-    print('studentnum: '+str(studentnum))
-    npm=getNpmandNameMahasiswa(studentnum)[0]
-    print('npm: '+str(npm))
-    thn2=npm[1:3]
-    selisih=int(config.siap_tahun_id[2:4])-int(thn2)
-    tingkat=selisih+1
+    if median != 0:
+        studentnum=studentnumber[median-1]
+        print('studentnum: '+str(studentnum))
+        npm=getNpmandNameMahasiswa(studentnum)[0]
+        print('npm: '+str(npm))
+        thn2=npm[1:3]
+        selisih=int(config.siap_tahun_id[2:4])-int(thn2)
+        tingkat=str(selisih+1)
+    else:
+        tingkat=''
     return tingkat
 
 def siapAbsensi(driver, num, namagroup):
