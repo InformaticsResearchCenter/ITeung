@@ -130,13 +130,13 @@ def isMatkul(kodematkul, kodekelas,num):
 def getListMK(kodedosen):
     listMK='Kode MK | Mata Kuliah | Kelas | Hari | Jam\n '
     db=dbConnectSiap()
-    sql="select MKKode, Nama, NamaKelas, HariID, JamMulai, JamSelesai from simak_trn_jadwal where DosenID = '{0}' and TahunID = '{1}'".format(kodedosen,config.siap_tahun_id)
+    sql="select MKKode, Nama, NamaKelas, HariID, JamMulai, JamSelesai, RuangID from simak_trn_jadwal where DosenID = '{0}' and TahunID = '{1}'".format(kodedosen,config.siap_tahun_id)
     with db:
         cur=db.cursor()
         cur.execute(sql)
         records=cur.fetchall()
         for row in records:
-            listMK=listMK+str(row[0])+' | '+str(row[1])+' | '+toKelas(str(row[2]))+' | '+toHari(str(row[3]))+' | '+str(row[4])[:-3]+'-'+str(row[5])[:-3]+' \n '
+            listMK=listMK+str(row[0])+' | '+str(row[1])+' | '+toKelas(str(row[2]))+' | '+toHari(str(row[3]))+' | '+str(row[4])[:-3]+'-'+str(row[5])[:-3]+' | '+str(row[6])+' \n '
     return listMK
 
 def getDataMatkul(kodematkul, kodekelas, num):

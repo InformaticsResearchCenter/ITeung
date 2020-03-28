@@ -74,11 +74,11 @@ def jadwalKuliah(hari, num):
     kelas.dbConnect()
     db = kelas.dbConnectSiap()
     listMK = 'Kode Dosen | Kode MK | Mata Kuliah | Kelas | Hari | Jam Mulai | Jam Selesai \n '
-    sql = "select DosenID, MKKode, Nama, NamaKelas, HariID, JamMulai, JamSelesai from simak_trn_jadwal where DosenID = '{0}' and TahunID = '".format(kelas.getKodeDosen(num)) + config.siap_tahun_id + "' and HariID = '{0}'".format(hari)
+    sql = "select DosenID, MKKode, Nama, NamaKelas, HariID, JamMulai, JamSelesai, RuangID from simak_trn_jadwal where DosenID = '{0}' and TahunID = '".format(kelas.getKodeDosen(num)) + config.siap_tahun_id + "' and HariID = '{0}'".format(hari)
     with db:
         cur = db.cursor()
         cur.execute(sql)
         rows = cur.fetchall()
         for row in rows:
-            listMK = listMK + str(row[0]) + ' | ' + str(row[1]) + ' | ' +str(row[2])+ ' | ' + kelas.toKelas(str(row[3])) + ' | ' + kelas.toHari(str(row[4])) + ' | ' + str(row[5]) + ' | ' + str(row[6]) + ' \n '
+            listMK = listMK + str(row[0]) + ' | ' + str(row[1]) + ' | ' +str(row[2])+ ' | ' + kelas.toKelas(str(row[3])) + ' | ' + kelas.toHari(str(row[4])) + ' | ' + str(row[5]) + ' | ' + str(row[6]) +' | '+str(row[7])+' \n '
     return listMK
