@@ -26,5 +26,8 @@ def normalize(message):
     msg=msg.replace(']',' ')
     msg=msg.replace(config.bot_shortname,config.bot_name)
     msg=msg.strip()
-    #message = self.splitString(tolowercase)
+    return msg
+
+def newlineNormalize(msg):
+    msg = msg.replace('\\n', '\n')
     return msg

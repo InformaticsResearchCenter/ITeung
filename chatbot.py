@@ -1,4 +1,4 @@
-from lib import wa, reply, message, auth, log, sending
+from lib import wa, reply, message, auth, log
 from importlib import import_module
 import config
 
@@ -55,7 +55,7 @@ class Chatbot(object):
                 if msgreply[:2] != 'm:':
                     msgreply = msgreply.replace("#BOTNAME#", config.bot_name)
                     try:
-                        msgreply = sending.sendingnormalize(msgreply)
+                        msgreply = message.newlineNormalize(msgreply)
                         wa.typeAndSendMessage(driver, msgreply)
                     except:
                         print("field reply not found!!")

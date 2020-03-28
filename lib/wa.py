@@ -33,7 +33,7 @@ def waitLogin(driver):
 def typeAndSendMessage(driver, message):
     messages = message.split("\n")
     for msg in messages:
-        typeMessage(driver, msg)
+        typeMessage(driver, msg.strip())
         lineBreakWhatsapp(driver)
     return sendMessage(driver)
 
