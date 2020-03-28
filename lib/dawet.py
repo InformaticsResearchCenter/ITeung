@@ -1,28 +1,23 @@
 import gspread
 import time
 from oauth2client.service_account import  ServiceAccountCredentials
-from numba import jit
 
 class Dawet(object):
-    @jit(nopython=True)
     def __init__(self, filename):
         self.filename = filename
         self.opendb()
 
-    @jit(nopython=True)
     def opendb(self):
         scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
         creds = ServiceAccountCredentials.from_json_keyfile_name('client_secret.json', scope)
         client = gspread.authorize(creds)
         self.sheet = client.open(self.filename)
 
-    @jit(nopython=True)
     def getAllData(self, sheetnum):
         list_value = self.sheet.get_worksheet(sheetnum).get_all_values()
 
         return list_value
 
-    @jit(nopython=True)
     def getData(self, rowname, colname, sheetnum):
         dataError = True
         while dataError:
@@ -44,12 +39,10 @@ class Dawet(object):
                     time.sleep(10)
                     dataError = True
 
-    @jit(nopython=True)
     def setData(self, rowname, colname, sheetnum, content):
         setv = self.sheet.get_worksheet(sheetnum).update_cell(self.sheet.get_worksheet(sheetnum).find(rowname).row, self.sheet.get_worksheet(sheetnum).find(colname).col, content)
         return setv
 
-    @jit(nopython=True)
     def setRowData(self, data):
         dataLimit = True
         while dataLimit:

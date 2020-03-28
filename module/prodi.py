@@ -6,17 +6,14 @@ Created on Tue Feb 25 06:29:37 2020
 """
 from dateutil.parser import parse
 from lib import dawet, wa
-from numba import jit
 import datetime
 import pymysql
 import config
 
-@jit(nopython=True)
 def dbConnect():
     db = pymysql.connect(config.db_host, config.db_username, config.db_password, config.db_name)
     return db
 
-@jit(nopython=True)
 def getWaitingMessage(module):
     db = dbConnect()
     content = ''
@@ -29,7 +26,6 @@ def getWaitingMessage(module):
             content = rows[0]
     return content
 
-@jit(nopython=True)
 def replymsg(driver, msg):
     wa.typeAndSendMessage(driver, getWaitingMessage('prodi'))
 
@@ -48,7 +44,6 @@ def replymsg(driver, msg):
         res="NPM: "+npm+", Nama: "+hasil[1]+", Nilai: "+hasil[0]+", Nilai rata-rata: "+hasil[2]
     return res
 
-@jit(nopython=True)
 def getNilaiMahasiswa(npm, pertemuan):
     if npm[:3] == "118":
         db = dawet.Dawet("BukuProyek2")
@@ -74,7 +69,6 @@ def getNilaiMahasiswa(npm, pertemuan):
 
         return hasil
 
-@jit(nopython=True)
 def cekJadwalSidang(pilihan):
     db = dawet.Dawet("Jadwal_Sidang_Proyek_2")
 

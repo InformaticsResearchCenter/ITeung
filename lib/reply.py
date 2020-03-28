@@ -7,14 +7,12 @@ Created on Sun Mar  1 14:44:01 2020
 import pymysql
 import config
 
-from numba import jit
 
-@jit(nopython=True)
+
 def dbConnect():
     db=pymysql.connect(config.db_host,config.db_username,config.db_password,config.db_name)
     return db
 
-@jit(nopython=True)
 def message(msg):
     keygroup = getKeywordGroup(msg)
     replymsg = getNotFoundMessage()
@@ -25,7 +23,6 @@ def message(msg):
             replymsg=keygroup
     return replymsg
 
-@jit(nopython=True)
 def normalizeKeywords(msg):
     db = dbConnect()
     sql = "SELECT multiple_keywords FROM multi_key"
@@ -39,7 +36,7 @@ def normalizeKeywords(msg):
                 msg=msg+' '+mkey
     return msg
     
-@jit(nopython=True)
+    
 def getKeywordGroup(msg):
     msg=normalizeKeywords(msg)
     msgs = list(msg.split(" "))
@@ -55,8 +52,7 @@ def getKeywordGroup(msg):
             if rows is not None:
                 keygroup = rows[0]
     return keygroup
-
-@jit(nopython=True)
+    
 def getContentWithKeyword(keyword):
     db = dbConnect()
     content = ''
@@ -69,7 +65,6 @@ def getContentWithKeyword(keyword):
             content = rows[0]
     return content
 
-@jit(nopython=True)
 def getOpeningMessage():
     db = dbConnect()
     content = ''
@@ -82,7 +77,6 @@ def getOpeningMessage():
             content = rows[0]
     return content
 
-@jit(nopython=True)
 def getNotFoundMessage():
     db = dbConnect()
     content = ''
@@ -95,7 +89,6 @@ def getNotFoundMessage():
             content = rows[0]
     return content
 
-@jit(nopython=True)
 def getErrorMessage():
     db = dbConnect()
     content = ''
@@ -108,7 +101,6 @@ def getErrorMessage():
             content = rows[0]
     return content
 
-@jit(nopython=True)
 def getWaitingMessage(module):
     db = dbConnect()
     content = ''
@@ -121,7 +113,6 @@ def getWaitingMessage(module):
             content = rows[0]
     return content.replace("#BOTNAME#", config.bot_name)
 
-@jit(nopython=True)
 def getNumberGroup(num):
     db = dbConnect()
     sql = "SELECT group_id from group_auth where number = '%s'"%(num)
@@ -136,7 +127,7 @@ def getNumberGroup(num):
             group_id=None
     return group_id
 
-@jit(nopython=True)
+
 def getAuth(group, module):
     db = dbConnect()
     sql = "SELECT * from number_auth where group_id = %s AND modul = '%s'"%(group, module)
@@ -149,7 +140,6 @@ def getAuth(group, module):
     else:
         return False
 
-@jit(nopython=True)
 def getReplyAuth(module):
     db = dbConnect()
     sql = "SELECT reply_message FROM reply_auth WHERE module='%s' ORDER BY RAND() LIMIT 1"%(module)

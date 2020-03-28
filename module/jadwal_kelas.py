@@ -3,9 +3,7 @@ import config
 from lib import reply
 import os
 from lib import wa
-from numba import jit
 
-@jit(nopython=True)
 def kodeHari(kode):
     switcher = {
         'senin' : '1',
@@ -18,7 +16,7 @@ def kodeHari(kode):
     }
     return switcher.get(kode, "Not Found!")
 
-@jit(nopython=True)
+
 def auth(data):
     if kelas.getKodeDosen(data[0]) == '':
         ret = False
@@ -26,7 +24,6 @@ def auth(data):
         ret = True
     return ret
 
-@jit(nopython=True)
 def dataHari(msg):
     datahari = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu']
     msgs = msg.split(' ')
@@ -38,7 +35,6 @@ def dataHari(msg):
             hari = ''
     return hari
 
-@jit(nopython=True)
 def normalizeday(msg):
     msg = msg.lower()
     msg = msg.replace(',', ' ')
@@ -61,7 +57,6 @@ def normalizeday(msg):
     msg = msg.strip()
     return msg
 
-@jit(nopython=True)
 def replymsg(driver, data):
     wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
     wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
@@ -75,7 +70,6 @@ def replymsg(driver, data):
     msgreply = "Ini ya jadwal kuliah yang bapak/ibu minta \n"+msgreply
     return msgreply
 
-@jit(nopython=True)
 def jadwalKuliah(hari, num):
     kelas.dbConnect()
     db = kelas.dbConnectSiap()
