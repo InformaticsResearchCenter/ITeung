@@ -128,7 +128,7 @@ def isMatkul(kodematkul, kodekelas,num):
             return False
         
 def getListMK(kodedosen):
-    listMK='Kode MK | Mata Kuliah | Kelas | Hari | Jam\n '
+    listMK='Kode MK | Mata Kuliah | Kelas | Hari | Jam | Kelas \n '
     db=dbConnectSiap()
     sql="select MKKode, Nama, NamaKelas, HariID, JamMulai, JamSelesai, RuangID from simak_trn_jadwal where DosenID = '{0}' and TahunID = '{1}'".format(kodedosen,config.siap_tahun_id)
     with db:
