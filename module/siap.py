@@ -16,8 +16,8 @@ def auth(data):
         ret=True
     return ret
 
-def replymsg(num,msg):
-    kodedosen=msg.split(' ')[-1].upper()
+def replymsg(driver, data):
+    kodedosen=kelas.getKodeDosen(data[0])
     df=getDataframe()
     df=selectTahunID(df,'20191')
     df=selectKodeDosen(df,kodedosen)
