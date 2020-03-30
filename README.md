@@ -57,7 +57,7 @@ def replymsg(driver,data):
 	xxx
 	#if you module takes time, please set waiting message for user
 	waitmessage=reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
-    waitmessage = waitmessage.replace('#BOTNAME#', config.bot_name)
+        waitmessage = waitmessage.replace('#BOTNAME#', config.bot_name)
 	wa.typeAndSendMessage(driver,waitmessage)
 	xxx
 	stringmessage=resultfromyourmodule
