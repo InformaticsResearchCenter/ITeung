@@ -318,7 +318,8 @@ def getHadirNpm(time):
 def beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, groupname, data):
     lecturername = getNamaDosen(getKodeDosen(num))
     tanggal = datetime.now().strftime("%d-%m-%Y")
-    kodekelas=wa.getGroupName(driver).split('-')[1]
+    kodekelas=groupname.split('-')[1]
+    mkkode=groupname.split('-')[0]
     messages = "*(Sudah di input Iteung)*" + \
                "\nNama Dosen: " + str(lecturername) + \
                "\nMata Kuliah: " + str(coursename) + \
@@ -326,7 +327,7 @@ def beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, groupname
                "\nTanggal: " + str(tanggal) + \
                "\nWaktu Mulai: " + str(starttimeclass) + \
                "\nWaktu Selesai: " + str(endtimeclass) + \
-               "\nPertemuan ke: " + str(data[-1])
+               "\nPertemuan ke: " + str(getLastpertemuan(kodedosen=getKodeDosen(num), jadwalid=getJadwalId(kelas=kodeKelas(kodekelas), mkkode=mkkode)))
     messages = messages.split("\n")
     for msg in messages:
         wa.typeMessage(driver, msg)
