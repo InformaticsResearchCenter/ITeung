@@ -387,8 +387,7 @@ def studentattendance(grp, jadwalid):
     for data in studentabsent:
         datastudentabsenfromsiap.append(data[-1])
     npmdata = []
-    # studentnumberphone=getnumonly(groupname=grp)
-    studentnumberphone=(('6282217401448',), ('6281261290107',), ('6289677709045',))
+    studentnumberphone=getnumonly(groupname=grp)
     for phonenumber in studentnumberphone:
         npm=getNpmandNameMahasiswa(phonenumber[0])[0]
         npmdata.append(npm)
