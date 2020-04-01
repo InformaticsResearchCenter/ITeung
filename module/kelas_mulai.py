@@ -27,8 +27,8 @@ def replymsg(driver, data):
                 abc = 1
                 listStudent='\n\nBerikut Peserta Absensinya:\n'
                 for i in kelas.pesertaAbsensi(JadwalID):
-                    npm = i[-1]
-                    nama = kelas.getStudentNameOnly(npm)
+                    npm=i[-1]
+                    nama=kelas.getStudentNameOnly(npm)
                     listStudent=listStudent+str(abc)+'. '+npm+' '+nama+'\n'
                     abc+=1
                 coursename = kelas.getDataMatkul(grp.split('-')[0], kelas.kodeKelas(grp.split('-')[1]), num)[1]
@@ -36,6 +36,8 @@ def replymsg(driver, data):
                 messages = messages.replace('#MATKUL#', coursename)
                 messages = messages.replace('#BOTNAME#', config.bot_name)
                 msgreply = messages + listStudent
+                wa.typeAndSendMessage(driver, msgreply)
+                msgreply=''
             else:
                 listMK=kelas.getListMK(kelas.getKodeDosen(data[0]))
                 guide = 'Yahh... Nama grupnya belum KODEMK-KELAS-NAMA. yuk ubah #BOTNAME# kasih contoh TI3466-A-KECERDASAN BUAT klo lupa kode mata kuliah #BOTNAME# kasih ya ini daftarnya : \n'
