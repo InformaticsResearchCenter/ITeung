@@ -31,7 +31,7 @@ def replymsg(driver, data):
                     nama=kelas.getStudentNameOnly(npm)
                     listStudent=listStudent+str(abc)+'. '+npm+' '+nama+'\n'
                     abc+=1
-                coursename = kelas.getDataMatkul(grp.split('-')[0], kelas.kodeKelas(grp.split('-')[1]), num)[1]
+                coursename = kelas.getDataMatkul(grp.split('-')[0], kelas.kodeKelas(grp.split('-')[1]), kelas.getKodeDosen(num))[1]
                 messages = kelas.getAwaitingMessageKelasStart('kelas_mulai')
                 messages = messages.replace('#MATKUL#', coursename)
                 messages = messages.replace('#BOTNAME#', config.bot_name)
