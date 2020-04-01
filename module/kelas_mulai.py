@@ -21,11 +21,21 @@ def replymsg(driver, data):
     else:
         try:
             if kelas.isMatkul(grp.split('-')[0], kelas.kodeKelas(grp.split('-')[1]), num):
-                coursename = kelas.getDataMatkul(grp.split('-')[0], kelas.kodeKelas(grp.split('-')[1]), num)[1]
+                mkkode = grp.split('-')[0]
+                kodekelas = kelas.kodeKelas(grp.split('-')[1])
+                JadwalID = kelas.getJadwalId(kelas=kodekelas, mkkode=mkkode)
+                abc = 1
+                listStudent='\n\nBerikut Peserta Absensinya:\n'
+                for i in kelas.pesertaAbsensi(JadwalID):
+                    npm=i[-1]
+                    nama=kelas.getStudentNameOnly(npm)
+                    listStudent=listStudent+str(abc)+'. '+npm+' '+nama+'\n'
+                    abc+=1
+                coursename = kelas.getDataMatkul(grp.split('-')[0], kelas.kodeKelas(grp.split('-')[1]), kelas.getKodeDosen(num))[1]
                 messages = kelas.getAwaitingMessageKelasStart('kelas_mulai')
                 messages = messages.replace('#MATKUL#', coursename)
                 messages = messages.replace('#BOTNAME#', config.bot_name)
-                msgreply = messages
+                msgreply = messages + listStudent
             else:
                 listMK=kelas.getListMK(kelas.getKodeDosen(data[0]))
                 guide = 'Yahh... Nama grupnya belum KODEMK-KELAS-NAMA. yuk ubah #BOTNAME# kasih contoh TI3466-A-KECERDASAN BUAT klo lupa kode mata kuliah #BOTNAME# kasih ya ini daftarnya : \n'

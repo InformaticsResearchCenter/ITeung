@@ -27,7 +27,7 @@ class Chatbot(object):
                 als = data[2]
                 grp = data[1]
                 num = data[0]
-                messageindex-=4
+                messageindex-=10
                 alsandnumindex-=1
                 if self.msgcheck != msg or (self.numcheck != num and self.alscheck != als):
                     log.save(data)
@@ -57,5 +57,6 @@ class Chatbot(object):
                     try:
                         msgreply = message.newlineNormalize(msgreply)
                         wa.typeAndSendMessage(driver, msgreply)
+                        msgreply = ''
                     except:
                         print("field reply not found!!")
