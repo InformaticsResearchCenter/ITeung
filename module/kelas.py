@@ -421,11 +421,15 @@ def siapabsensiwithsql(grp, num):
     mkkode=grp.split('-')[0]
     kodekelas = kodeKelas(grp.split('-')[1])
     jadwalid = getJadwalId(kelas=kodekelas, mkkode=mkkode)
+    print(jadwalid)
     lecturercode=getKodeDosen(num)
+    print(lecturercode)
     resultattendance = studentattendance(grp=grp, jadwalid=jadwalid)
     attend = resultattendance[0]
     notattend = resultattendance[1]
+    print(attend)
     if not isSudahKelas(jadwalid=jadwalid, lecturercode=lecturercode):
+        print('issudahkelas')
         lastpertemuan=getLastpertemuan(kodedosen=lecturercode, jadwalid=jadwalid)
         yearmonthdaynow=datetime.now().strftime("%Y-%m-%d")
         yearmonthdaytimenow=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
