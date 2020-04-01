@@ -18,7 +18,8 @@ def replymsg(driver, data):
         endtimeclass = kelas.getDataMatkul(grp.split('-')[0], kelas.kodeKelas(grp.split('-')[1]), num)[4]
         wmsg=reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
         wa.typeAndSendMessage(driver,wmsg)
-        msgreply=kelas.siapAbsensi(driver=driver, namagroup=grp, num=num,)
+        msgreply=kelas.siapabsensiwithsql(grp=grp, num=num)
+        # msgreply=kelas.siapAbsensi(driver=driver, namagroup=grp, num=num,) for website
         msgreply=kelas.beritaAcara(driver=driver, num=num, coursename=coursename, starttimeclass=starttimeclass, endtimeclass=endtimeclass, groupname=grp, data=msgreply)
     except:
         listMK=kelas.getListMK(kelas.getKodeDosen(data[0]))
