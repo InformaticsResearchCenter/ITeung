@@ -23,7 +23,7 @@ def replymsg(driver, data):
             if kelas.isMatkul(grp.split('-')[0], kelas.kodeKelas(grp.split('-')[1]), num):
                 mkkode = grp.split('-')[0]
                 kodekelas = kelas.kodeKelas(grp.split('-')[1])
-                JadwalID = kelas.getJadwalId(kelas=kodekelas, mkkode=mkkode)[0]
+                JadwalID = kelas.getJadwalId(kelas=kodekelas, mkkode=mkkode)
                 abc = 1
                 listStudent='\n\nBerikut Peserta Absensinya:\n'
                 for i in kelas.pesertaAbsensi(JadwalID):
