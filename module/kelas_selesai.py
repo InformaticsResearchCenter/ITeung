@@ -20,8 +20,6 @@ def replymsg(driver, data):
         wa.typeAndSendMessage(driver,wmsg)
         msgreply=kelas.siapAbsensi(driver=driver, namagroup=grp, num=num,)
         msgreply=kelas.beritaAcara(driver=driver, num=num, coursename=coursename, starttimeclass=starttimeclass, endtimeclass=endtimeclass, groupname=grp, data=msgreply)
-        wa.typeAndSendMessage(driver, msgreply)
-        msgreply=''
     except:
         listMK=kelas.getListMK(kelas.getKodeDosen(data[0]))
         guide = 'yahh....nama groupnya jangan diubah dong. hihihi ganti lagi ya.jadi KodeMK-KELAS-NAMAMK,contoh : TI3466-A-KECERDASAN BUATAN : \n'

@@ -36,8 +36,6 @@ def replymsg(driver, data):
                 messages = messages.replace('#MATKUL#', coursename)
                 messages = messages.replace('#BOTNAME#', config.bot_name)
                 msgreply = messages + listStudent
-                wa.typeAndSendMessage(driver, msgreply)
-                msgreply=''
             else:
                 listMK=kelas.getListMK(kelas.getKodeDosen(data[0]))
                 guide = 'Yahh... Nama grupnya belum KODEMK-KELAS-NAMA. yuk ubah #BOTNAME# kasih contoh TI3466-A-KECERDASAN BUAT klo lupa kode mata kuliah #BOTNAME# kasih ya ini daftarnya : \n'
