@@ -13,9 +13,9 @@ def replymsg(driver, data):
     grp = data[1]
     num = data[0]
     try:
-        coursename = kelas.getDataMatkul(grp.split('-')[0], kelas.kodeKelas(grp.split('-')[1]), num)[1]
-        starttimeclass = kelas.getDataMatkul(grp.split('-')[0], kelas.kodeKelas(grp.split('-')[1]), num)[3]
-        endtimeclass = kelas.getDataMatkul(grp.split('-')[0], kelas.kodeKelas(grp.split('-')[1]), num)[4]
+        coursename = kelas.getDataMatkul(grp.split('-')[0], kelas.kodeKelas(grp.split('-')[1]), kelas.getKodeDosen(num))[1]
+        starttimeclass = kelas.getDataMatkul(grp.split('-')[0], kelas.kodeKelas(grp.split('-')[1]), kelas.getKodeDosen(num))[3]
+        endtimeclass = kelas.getDataMatkul(grp.split('-')[0], kelas.kodeKelas(grp.split('-')[1]), kelas.getKodeDosen(num))[4]
         wmsg=reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
         wa.typeAndSendMessage(driver,wmsg)
         msgreply=kelas.siapabsensiwithsql(grp=grp, num=num)
