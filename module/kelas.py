@@ -365,12 +365,11 @@ def beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, groupname
     messages = "*(Sudah di input Iteung)*" + \
                "\nNama Dosen: " + str(lecturername) + \
                "\nMata Kuliah: " + str(coursename) + \
-               "\nKelas: " + getTingkat(data) + str(kodekelas) + \
+               "\nKelas: " + str(kodekelas) + \
                "\nTanggal: " + str(tanggal) + \
                "\nWaktu Mulai: " + str(starttimeclass) + \
                "\nWaktu Selesai: " + str(endtimeclass) + \
-               "\nPertemuan ke: " + str(
-        getLastpertemuan(kodedosen=getKodeDosen(num), jadwalid=getJadwalId(kelas=kodeKelas(kodekelas), mkkode=mkkode)))
+               "\nPertemuan ke: " + str(getLastpertemuan(kodedosen=getKodeDosen(num), jadwalid=getJadwalId(kelas=kodeKelas(kodekelas), mkkode=mkkode)))
     messages = messages.split("\n")
     for msg in messages:
         wa.typeMessage(driver, msg)
