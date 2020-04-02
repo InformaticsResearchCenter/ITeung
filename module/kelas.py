@@ -389,11 +389,14 @@ def beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, groupname
 
 
 def getTingkat(data):
-    studentnumber = data
-    median = len(studentnumber) // 2
+    studentid=[]
+    for i in data:
+        npm=i[-1]
+        studentid.append(npm)
+    median = len(studentid) // 2
     print('median: ' + str(median))
     if median != 0:
-        studentnum = studentnumber[median - 1]
+        studentnum = studentid[median - 1]
         print('studentnum: ' + str(studentnum))
         npm = getNpmandNameMahasiswa(studentnum)[0]
         print('npm: ' + str(npm))
