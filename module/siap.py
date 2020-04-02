@@ -24,7 +24,7 @@ def replymsg(driver, data):
     return toString(df)
     
 def dbConnect():
-    db=pymysql.connect(user=config.siap_db_user, password=config.siap_db_password, database=config.siap_db_name, host=config.siap_db_host)
+    db=pymysql.connect(user=config.db_username_siap, password=config.db_password_siap, database=config.db_name_siap, host=config.db_host_siap)
     return db
 
 def getDataframe():
