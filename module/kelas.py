@@ -122,6 +122,15 @@ def getStudentNameOnly(npm):
         rows = cur.fetchone()
     return rows[0]
 
+def getStudentIDOnly(npm):
+    db = dbConnectSiap()
+    sql = "select MhswID from simak_mst_mahasiswa where MhswID = '{0}'".format(npm)
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        rows = cur.fetchone()
+    return rows[0]
+
 
 def getHandphoneMahasiswa(npm):
     db = dbConnectSiap()
@@ -284,8 +293,7 @@ def getJadwalId(kelas, mkkode):
 
 def getLastpertemuan(kodedosen, jadwalid):
     db = dbConnectSiap()
-    sql = "select Pertemuan from simak_trn_presensi_dosen where DosenID = '{0}' and TahunID = {1} and JadwalID = {2} GROUP BY Pertemuan DESC LIMIT 1".format(
-        kodedosen, config.siap_tahun_id, jadwalid)
+    sql = "select Pertemuan from simak_trn_presensi_dosen where DosenID = '{0}' and TahunID = {1} and JadwalID = {2} GROUP BY Pertemuan DESC LIMIT 1".format(kodedosen, config.siap_tahun_id, jadwalid)
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -358,19 +366,21 @@ def getHadirNpm(time):
 
 
 def beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, groupname, data):
-    lecturername = getNamaDosen(getKodeDosen(num))
-    tanggal = datetime.now().strftime("%d-%m-%Y")
-    mkkode = groupname.split('-')[0]
-    kodekelas = kodeKelas(groupname.split('-')[1])
-    jadwalid = getJadwalId(kelas=kodekelas, mkkode=mkkode)
+    lecturername=getNamaDosen(getKodeDosen(num))
+    lecturercode=getKodeDosen(num)
+    tanggal=datetime.now().strftime("%d-%m-%Y")
+    mkkode=groupname.split('-')[0]
+    kodekelas=kodeKelas(groupname.split('-')[1])
+    jadwalid=getJadwalId(kelas=kodekelas, mkkode=mkkode)
+    studentgrade=getTingkat(pesertaAbsensi(jadwalid=jadwalid))
     messages = "*(Sudah di input Iteung)*" + \
                "\nNama Dosen: " + str(lecturername) + \
                "\nMata Kuliah: " +str(coursename) + \
-               "\nKelas: " +str(getTingkat(pesertaAbsensi(jadwalid=jadwalid)))+str(kodekelas) + \
+               "\nKelas: " +str(studentgrade)+''+str(toKelas(kodekelas)) + \
                "\nTanggal: " + str(tanggal) + \
                "\nWaktu Mulai: " + str(starttimeclass) + \
                "\nWaktu Selesai: " + str(endtimeclass) + \
-               "\nPertemuan ke: " + str(getLastpertemuan(kodedosen=getKodeDosen(num), jadwalid=getJadwalId(kelas=kodeKelas(kodekelas), mkkode=mkkode)))
+               "\nPertemuan ke: " + str(getLastpertemuan(kodedosen=lecturercode, jadwalid=jadwalid))
     messages = messages.split("\n")
     for msg in messages:
         wa.typeMessage(driver, msg)
@@ -396,9 +406,9 @@ def getTingkat(data):
     median = len(studentid) // 2
     print('median: ' + str(median))
     if median != 0:
-        studentnum = studentid[median - 1]
-        print('studentnum: ' + str(studentnum))
-        npm = getNpmandNameMahasiswa(studentnum)[0]
+        studentid = studentid[median - 1]
+        print('studentnum: ' + str(studentid))
+        npm = getStudentIDOnly(studentid)
         print('npm: ' + str(npm))
         thn2 = npm[1:3]
         selisih = int(config.siap_tahun_id[2:4]) - int(thn2)
