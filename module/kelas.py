@@ -376,7 +376,7 @@ def beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, groupname
     messages = "*(Sudah di input Iteung)*" + \
                "\nNama Dosen: " + str(lecturername) + \
                "\nMata Kuliah: " +str(coursename) + \
-               "\nKelas: " +str(studentgrade)+''+str(toKelas(kodekelas)) + \
+               "\nKelas: " +str(studentgrade) +''+str(toKelas(kodekelas)) + \
                "\nTanggal: " + str(tanggal) + \
                "\nWaktu Mulai: " + str(starttimeclass) + \
                "\nWaktu Selesai: " + str(endtimeclass) + \
