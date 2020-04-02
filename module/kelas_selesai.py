@@ -1,5 +1,5 @@
 from module import kelas
-from lib import wa,reply
+from lib import wa,reply,numbers
 import os
 
 def auth(data):
@@ -18,7 +18,7 @@ def replymsg(driver, data):
         endtimeclass = kelas.getDataMatkul(grp.split('-')[0], kelas.kodeKelas(grp.split('-')[1]), kelas.getKodeDosen(num))[4]
         wmsg=reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
         wa.typeAndSendMessage(driver,wmsg)
-        msgreply=kelas.siapabsensiwithsql(grp=grp, num=num)
+        msgreply=kelas.siapabsensiwithsql(grp=grp, num=numbers.normalize(num))
         # msgreply=kelas.siapabsensiwithweb(driver=driver, num=num,namagroup=grp)
         msgreply=kelas.beritaAcara(driver=driver, num=num, coursename=coursename, starttimeclass=starttimeclass, endtimeclass=endtimeclass, groupname=grp, data=msgreply)
     except:
