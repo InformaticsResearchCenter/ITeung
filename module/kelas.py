@@ -5,6 +5,7 @@ from time import sleep
 import config
 import pymysql
 
+
 # def replymsg(driver, data):
 #     log.logSaveIteungStart(data)
 #     msg = data[3]
@@ -35,9 +36,11 @@ def dbConnect():
     db = pymysql.connect(config.db_host, config.db_username, config.db_password, config.db_name)
     return db
 
+
 def dbConnectSiap():
-    db= pymysql.connect(config.db_host_siap, config.db_username_siap, config.db_password_siap, config.db_name_siap)
+    db = pymysql.connect(config.db_host_siap, config.db_username_siap, config.db_password_siap, config.db_name_siap)
     return db
+
 
 def kodeKelas(kode):
     switcher = {
@@ -54,6 +57,7 @@ def kodeKelas(kode):
     }
     return switcher.get(kode, "Not Found!")
 
+
 def toKelas(kode):
     switcher = {
         '01': 'A',
@@ -69,6 +73,7 @@ def toKelas(kode):
     }
     return switcher.get(kode, "Not Found!")
 
+
 def toHari(kode):
     switcher = {
         '1': 'Senin',
@@ -81,28 +86,32 @@ def toHari(kode):
     }
     return switcher.get(kode, "Not Found!")
 
+
 def getnumonly(groupname):
-    db=dbConnect()
-    sql="select distinct number from log where DATE_FORMAT(timestamps, '%Y-%m-%d') = CURDATE() and groupname = '{0}'".format(groupname)
+    db = dbConnect()
+    sql = "select distinct number from log where DATE_FORMAT(timestamps, '%Y-%m-%d') = CURDATE() and groupname = '{0}'".format(
+        groupname)
     with db:
-        cur=db.cursor()
+        cur = db.cursor()
         cur.execute(sql)
-        rows=cur.fetchall()
+        rows = cur.fetchall()
         if rows is not None:
             return rows
         else:
             return ''
 
+
 def getNpmandNameMahasiswa(num):
     num = numbers.normalize(num)
-    db=dbConnectSiap()
-    sql="select MhswID, Nama from simak_mst_mahasiswa where Handphone = '{0}'".format(num)
+    db = dbConnectSiap()
+    sql = "select MhswID, Nama from simak_mst_mahasiswa where Handphone = '{0}'".format(num)
     with db:
-        cur=db.cursor()
+        cur = db.cursor()
         cur.execute(sql)
-        rows=cur.fetchone()
+        rows = cur.fetchone()
         if rows is not None:
             return rows
+
 
 def getStudentNameOnly(npm):
     db = dbConnectSiap()
@@ -113,44 +122,53 @@ def getStudentNameOnly(npm):
         rows = cur.fetchone()
     return rows[0]
 
+
 def getHandphoneMahasiswa(npm):
-    db=dbConnectSiap()
-    sql="select Handphone from simak_mst_mahasiswa where MhswID = '{0}'".format(npm)
+    db = dbConnectSiap()
+    sql = "select Handphone from simak_mst_mahasiswa where MhswID = '{0}'".format(npm)
     with db:
-        cur=db.cursor()
+        cur = db.cursor()
         cur.execute(sql)
-        rows=cur.fetchone()
+        rows = cur.fetchone()
         if rows is not None:
             return rows[0]
 
-def isMatkul(kodematkul, kodekelas,num):
-    num=numbers.normalize(num)
-    db=dbConnectSiap()
-    sql = "select MKKode, Nama, HariID, JamMulai, JamSelesai, NamaKelas from simak_trn_jadwal where DosenID = '{0}' and TahunID = '".format(getKodeDosen(num)) + config.siap_tahun_id + "' and NamaKelas = '{0}' and MKKode = '{1}'".format(kodekelas, kodematkul)
+
+def isMatkul(kodematkul, kodekelas, num):
+    num = numbers.normalize(num)
+    db = dbConnectSiap()
+    sql = "select MKKode, Nama, HariID, JamMulai, JamSelesai, NamaKelas from simak_trn_jadwal where DosenID = '{0}' and TahunID = '".format(
+        getKodeDosen(num)) + config.siap_tahun_id + "' and NamaKelas = '{0}' and MKKode = '{1}'".format(kodekelas,
+                                                                                                        kodematkul)
     with db:
-        cur=db.cursor()
+        cur = db.cursor()
         cur.execute(sql)
-        rows=cur.fetchone()
+        rows = cur.fetchone()
         if rows is not None:
             return True
         else:
             return False
-        
+
+
 def getListMK(kodedosen):
-    listMK='Kode MK | Mata Kuliah | Kelas | Hari | Jam | Kelas \n '
-    db=dbConnectSiap()
-    sql="select MKKode, Nama, NamaKelas, HariID, JamMulai, JamSelesai, RuangID from simak_trn_jadwal where DosenID = '{0}' and TahunID = '{1}'".format(kodedosen,config.siap_tahun_id)
+    listMK = 'Kode MK | Mata Kuliah | Kelas | Hari | Jam | Kelas \n '
+    db = dbConnectSiap()
+    sql = "select MKKode, Nama, NamaKelas, HariID, JamMulai, JamSelesai, RuangID from simak_trn_jadwal where DosenID = '{0}' and TahunID = '{1}'".format(
+        kodedosen, config.siap_tahun_id)
     with db:
-        cur=db.cursor()
+        cur = db.cursor()
         cur.execute(sql)
-        records=cur.fetchall()
+        records = cur.fetchall()
         for row in records:
-            listMK=listMK+str(row[0])+' | '+str(row[1])+' | '+toKelas(str(row[2]))+' | '+toHari(str(row[3]))+' | '+str(row[4])[:-3]+'-'+str(row[5])[:-3]+' | '+str(row[6])+' \n '
+            listMK = listMK + str(row[0]) + ' | ' + str(row[1]) + ' | ' + toKelas(str(row[2])) + ' | ' + toHari(
+                str(row[3])) + ' | ' + str(row[4])[:-3] + '-' + str(row[5])[:-3] + ' | ' + str(row[6]) + ' \n '
     return listMK
+
 
 def getDataMatkul(kodematkul, kodekelas, kodedosen):
     db = dbConnectSiap()
-    sql = "select MKKode, Nama, HariID, DATE_FORMAT(JamMulai, '%H:%i:%s'), DATE_FORMAT(JamSelesai, '%H:%i:%s'), NamaKelas from simak_trn_jadwal where DosenID = '{0}' and TahunID = '".format(kodedosen) + config.siap_tahun_id + "' and NamaKelas = '{0}' and MKKode = '{1}'".format(kodekelas, kodematkul)
+    sql = "select MKKode, Nama, HariID, DATE_FORMAT(JamMulai, '%H:%i:%s'), DATE_FORMAT(JamSelesai, '%H:%i:%s'), NamaKelas from simak_trn_jadwal where DosenID = '{0}' and TahunID = '".format(
+        kodedosen) + config.siap_tahun_id + "' and NamaKelas = '{0}' and MKKode = '{1}'".format(kodekelas, kodematkul)
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -160,23 +178,26 @@ def getDataMatkul(kodematkul, kodekelas, kodedosen):
         else:
             return ''
 
+
 def getKodeDosen(num):
     num = numbers.normalize(num)
-    kodedosen=''
-    db=dbConnectSiap()
-    sql="select Login from simak_mst_dosen where Handphone = '{0}'".format(num)
+    kodedosen = ''
+    db = dbConnectSiap()
+    sql = "select Login from simak_mst_dosen where Handphone = '{0}'".format(num)
     with db:
-        cur=db.cursor()
+        cur = db.cursor()
         cur.execute(sql)
-        rows=cur.fetchone()
+        rows = cur.fetchone()
         if rows is not None:
-            kodedosen=rows[0]
+            kodedosen = rows[0]
     return kodedosen
+
 
 def getAwaitingMessageKelasStart(module):
     db = dbConnect()
     content = ''
-    sql = "SELECT content FROM waiting_message WHERE module_name = '{0}' AND content LIKE '%mulai%' ORDER BY RAND() LIMIT 1".format(module)
+    sql = "SELECT content FROM waiting_message WHERE module_name = '{0}' AND content LIKE '%mulai%' ORDER BY RAND() LIMIT 1".format(
+        module)
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -185,9 +206,11 @@ def getAwaitingMessageKelasStart(module):
             content = rows[0]
     return content
 
+
 def sudahinput(groupname):
     db = dbConnect()
-    sql = "SELECT * from log WHERE DATE_FORMAT(timestamps, '%Y-%m-%d') = CURDATE() and groupname = '{0}' and message LIKE '%teung kelas mulai%'".format(groupname)
+    sql = "SELECT * from log WHERE DATE_FORMAT(timestamps, '%Y-%m-%d') = CURDATE() and groupname = '{0}' and message LIKE '%teung kelas mulai%'".format(
+        groupname)
     status = False
     with db:
         cur = db.cursor()
@@ -196,6 +219,7 @@ def sudahinput(groupname):
         if rows is not None:
             status = True
     return status
+
 
 def getJamTerakhir():
     db = dbConnect()
@@ -209,6 +233,7 @@ def getJamTerakhir():
             tanggal = rows[0]
     return tanggal
 
+
 def getNamaDosen(kodedosen):
     db = dbConnectSiap()
     sql = "select Nama, Gelar from simak_mst_dosen where Login = '{0}'".format(kodedosen)
@@ -217,12 +242,13 @@ def getNamaDosen(kodedosen):
         cur.execute(sql)
         rows = cur.fetchone()
         if rows is not None:
-            namadosen=rows[0]
-            gelar= rows[1]
-            if gelar[0]=='D' or gelar[0]=="I" or gelar[0]=='i':
-                return gelar+namadosen
+            namadosen = rows[0]
+            gelar = rows[1]
+            if gelar[0] == 'D' or gelar[0] == "I" or gelar[0] == 'i':
+                return gelar + namadosen
             else:
-                return namadosen+' '+gelar
+                return namadosen + ' ' + gelar
+
 
 def getHadirAlias(time):
     db = dbConnect()
@@ -233,18 +259,22 @@ def getHadirAlias(time):
         rows = cur.fetchall()
     return rows
 
+
 def pesertaAbsensi(jadwalid):
-    db=dbConnectSiap()
-    sql = "select j.JadwalID, j.TahunID, j.MKKode, j.Nama, j.DosenID, krs.MhswID from simak_trn_jadwal as j join simak_trn_krs as krs where j.jadwalid = krs.jadwalid and j.tahunid="+config.siap_tahun_id+" and j.JadwalID = '{0}'".format(jadwalid)
+    db = dbConnectSiap()
+    sql = "select j.JadwalID, j.TahunID, j.MKKode, j.Nama, j.DosenID, krs.MhswID from simak_trn_jadwal as j join simak_trn_krs as krs where j.jadwalid = krs.jadwalid and j.tahunid=" + config.siap_tahun_id + " and j.JadwalID = '{0}'".format(
+        jadwalid)
     with db:
-        cur=db.cursor()
+        cur = db.cursor()
         cur.execute(sql)
-        rows= cur.fetchall()
+        rows = cur.fetchall()
     return rows
+
 
 def getJadwalId(kelas, mkkode):
     db = dbConnectSiap()
-    sql = "select JadwalID from simak_trn_jadwal where TahunID={0} and NamaKelas='{1}' and MKKode='{2}'".format(config.siap_tahun_id, kelas, mkkode)
+    sql = "select JadwalID from simak_trn_jadwal where TahunID={0} and NamaKelas='{1}' and MKKode='{2}'".format(
+        config.siap_tahun_id, kelas, mkkode)
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -254,39 +284,47 @@ def getJadwalId(kelas, mkkode):
 
 def getLastpertemuan(kodedosen, jadwalid):
     db = dbConnectSiap()
-    sql = "select Pertemuan from simak_trn_presensi_dosen where DosenID = '{0}' and TahunID = {1} and JadwalID = {2} GROUP BY Pertemuan DESC LIMIT 1".format(kodedosen,config.siap_tahun_id, jadwalid)
+    sql = "select Pertemuan from simak_trn_presensi_dosen where DosenID = '{0}' and TahunID = {1} and JadwalID = {2} GROUP BY Pertemuan DESC LIMIT 1".format(
+        kodedosen, config.siap_tahun_id, jadwalid)
     with db:
         cur = db.cursor()
         cur.execute(sql)
         rows = cur.fetchone()
         return rows[0]
+
 
 def getJamMulai(kodedosen, kodekelas):
     db = dbConnectSiap()
-    sql = "select JamMulai from simak_trn_presensi_dosen where DosenID = '{0}' and TahunID = '{1}' and JadwalID = '{2}' order by Pertemuan DESC LIMIT 1".format(kodedosen,config.siap_tahun_id, kodekelas)
+    sql = "select JamMulai from simak_trn_presensi_dosen where DosenID = '{0}' and TahunID = '{1}' and JadwalID = '{2}' order by Pertemuan DESC LIMIT 1".format(
+        kodedosen, config.siap_tahun_id, kodekelas)
     with db:
         cur = db.cursor()
         cur.execute(sql)
         rows = cur.fetchone()
         return rows
+
 
 def getJamSelesai(kodedosen, kodekelas):
     db = dbConnectSiap()
-    sql = "select JamSelesai from simak_trn_presensi_dosen where DosenID = '{0}' and TahunID = '{1}' and JadwalID = '{2}' order by Pertemuan DESC LIMIT 1".format(kodedosen,config.siap_tahun_id, kodekelas)
+    sql = "select JamSelesai from simak_trn_presensi_dosen where DosenID = '{0}' and TahunID = '{1}' and JadwalID = '{2}' order by Pertemuan DESC LIMIT 1".format(
+        kodedosen, config.siap_tahun_id, kodekelas)
     with db:
         cur = db.cursor()
         cur.execute(sql)
         rows = cur.fetchone()
         return rows
 
+
 def getLastPresensiID(kodedosen, jadwalid):
     db = dbConnectSiap()
-    sql = "select PresensiID from simak_trn_presensi_dosen where TahunID={tahunid} and DosenID='{kodedosen}' and JadwalID={jadwalid} ORDER BY Pertemuan DESC LIMIT 1".format(tahunid=config.siap_tahun_id,kodedosen=kodedosen, jadwalid=jadwalid)
+    sql = "select PresensiID from simak_trn_presensi_dosen where TahunID={tahunid} and DosenID='{kodedosen}' and JadwalID={jadwalid} ORDER BY Pertemuan DESC LIMIT 1".format(
+        tahunid=config.siap_tahun_id, kodedosen=kodedosen, jadwalid=jadwalid)
     with db:
         cur = db.cursor()
         cur.execute(sql)
         rows = cur.fetchone()
         return rows[0]
+
 
 def getListNpm(num):
     studentnumber = num
@@ -297,14 +335,17 @@ def getListNpm(num):
             dataList.append(studentid)
     return dataList
 
+
 def getDataKrs(studentid, mkkode):
     db = dbConnectSiap()
-    sql = "select KRSID from simak_trn_krs where MhswID = '{studentid}' and TahunID = '{tahunid}' and MKKode = '{mkkode}'".format(studentid=studentid, tahunid=config.siap_tahun_id, mkkode=mkkode)
+    sql = "select KRSID from simak_trn_krs where MhswID = '{studentid}' and TahunID = '{tahunid}' and MKKode = '{mkkode}'".format(
+        studentid=studentid, tahunid=config.siap_tahun_id, mkkode=mkkode)
     with db:
         cur = db.cursor()
         cur.execute(sql)
         rows = cur.fetchone()
         return rows[0]
+
 
 def getHadirNpm(time):
     db = dbConnect()
@@ -315,143 +356,160 @@ def getHadirNpm(time):
         rows = cur.fetchall()
     return rows
 
+
 def beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, groupname, data):
     lecturername = getNamaDosen(getKodeDosen(num))
     tanggal = datetime.now().strftime("%d-%m-%Y")
-    kodekelas=groupname.split('-')[1]
-    mkkode=groupname.split('-')[0]
+    kodekelas = groupname.split('-')[1]
+    mkkode = groupname.split('-')[0]
     messages = "*(Sudah di input Iteung)*" + \
                "\nNama Dosen: " + str(lecturername) + \
                "\nMata Kuliah: " + str(coursename) + \
-               "\nKelas: "+ getTingkat(data) + str(kodekelas) + \
+               "\nKelas: " + getTingkat(data) + str(kodekelas) + \
                "\nTanggal: " + str(tanggal) + \
                "\nWaktu Mulai: " + str(starttimeclass) + \
                "\nWaktu Selesai: " + str(endtimeclass) + \
-               "\nPertemuan ke: " + str(getLastpertemuan(kodedosen=getKodeDosen(num), jadwalid=getJadwalId(kelas=kodeKelas(kodekelas), mkkode=mkkode)))
+               "\nPertemuan ke: " + str(
+        getLastpertemuan(kodedosen=getKodeDosen(num), jadwalid=getJadwalId(kelas=kodeKelas(kodekelas), mkkode=mkkode)))
     messages = messages.split("\n")
     for msg in messages:
         wa.typeMessage(driver, msg)
         wa.lineBreakWhatsapp(driver)
     number = 1
-    studentidlist=data
+    studentidlist = data
     for studentid in studentidlist:
         if studentid != '' and studentid != None:
-            studentname=getStudentNameOnly(studentid)
-            wa.typeMessage(driver, str(number)+". "+studentid+" "+studentname)
+            studentname = getStudentNameOnly(studentid)
+            wa.typeMessage(driver, str(number) + ". " + studentid + " " + studentname)
             wa.lineBreakWhatsapp(driver)
-            number=int(number)+1
+            number = int(number) + 1
     wa.sendMessage(driver)
-    msgreply="Oke teman-teman Matakuliah "+coursename+" sudah selesai dan telah berhasil diinputkan absensinya, mohon jaga kesehatan teman-teman yaaaa.... selalu cuci tangan teman-teman, dadaaaahhhhhh <3"
+    msgreply = "Oke teman-teman Matakuliah " + coursename + " sudah selesai dan telah berhasil diinputkan absensinya, mohon jaga kesehatan teman-teman yaaaa.... selalu cuci tangan teman-teman, dadaaaahhhhhh <3"
     return msgreply
 
+
 def getTingkat(data):
-    studentnumber=data
-    median=len(studentnumber)//2
-    print('median: '+str(median))
+    studentnumber = data
+    median = len(studentnumber) // 2
+    print('median: ' + str(median))
     if median != 0:
-        studentnum=studentnumber[median-1]
-        print('studentnum: '+str(studentnum))
-        npm=getNpmandNameMahasiswa(studentnum)[0]
-        print('npm: '+str(npm))
-        thn2=npm[1:3]
-        selisih=int(config.siap_tahun_id[2:4])-int(thn2)
-        tingkat=str(selisih+1)
+        studentnum = studentnumber[median - 1]
+        print('studentnum: ' + str(studentnum))
+        npm = getNpmandNameMahasiswa(studentnum)[0]
+        print('npm: ' + str(npm))
+        thn2 = npm[1:3]
+        selisih = int(config.siap_tahun_id[2:4]) - int(thn2)
+        tingkat = str(selisih + 1)
     else:
-        tingkat=''
+        tingkat = ''
     return tingkat
+
 
 def insertAbsenSiapDosen(jadwalid, pertemuan, lecturercode, tanggalinsert, jammulai, jamselesai, jamupdate):
     db = dbConnectSiap()
-    sql = "INSERT INTO `simak_trn_presensi_dosen`(`PresensiID`, `HonorDosenID`, `TahunID`, `JadwalID`, `Pertemuan`, `DosenID`, `Tanggal`, `JamMulai`, `JamSelesai`, `Durasi`, `Durasi_terlambat`, `Hitung`, `BAPID`, `Catatan`, `TunjanganSKS`, `TunjanganTransport`, `TunjanganTetap`, `NA`, `LoginBuat`, `TanggalBuat`, `LoginEdit`, `RuangID`, `TanggalEdit`, `status_bap`, `Jam_TapMasuk`, `Jam_TapKeluar`, `MP`) VALUES (DEFAULT, 0, '{tahunid}', {jadwalid}, {pertemuan}, '{kodedosen}', '{tanggalinsert}', '{jammulai}', '{jamselesai}', NULL, NULL, 'N', NULL, '', 0, 0, 0, 'N', 'ITeung', '{jamupdate}', NULL, '', '0000-00-00 00:00:00', 'BELUM', NULL, NULL, NULL)".format(tahunid=config.siap_tahun_id, jadwalid=jadwalid, pertemuan=pertemuan, kodedosen=lecturercode, tanggalinsert=tanggalinsert, jammulai=jammulai, jamselesai=jamselesai, jamupdate=jamupdate)
+    sql = "INSERT INTO `simak_trn_presensi_dosen`(`PresensiID`, `HonorDosenID`, `TahunID`, `JadwalID`, `Pertemuan`, `DosenID`, `Tanggal`, `JamMulai`, `JamSelesai`, `Durasi`, `Durasi_terlambat`, `Hitung`, `BAPID`, `Catatan`, `TunjanganSKS`, `TunjanganTransport`, `TunjanganTetap`, `NA`, `LoginBuat`, `TanggalBuat`, `LoginEdit`, `RuangID`, `TanggalEdit`, `status_bap`, `Jam_TapMasuk`, `Jam_TapKeluar`, `MP`) VALUES (DEFAULT, 0, '{tahunid}', {jadwalid}, {pertemuan}, '{kodedosen}', '{tanggalinsert}', '{jammulai}', '{jamselesai}', NULL, NULL, 'N', NULL, '', 0, 0, 0, 'N', 'ITeung', '{jamupdate}', NULL, '', '0000-00-00 00:00:00', 'BELUM', NULL, NULL, NULL)".format(
+        tahunid=config.siap_tahun_id, jadwalid=jadwalid, pertemuan=pertemuan, kodedosen=lecturercode,
+        tanggalinsert=tanggalinsert, jammulai=jammulai, jamselesai=jamselesai, jamupdate=jamupdate)
     with db:
         cur = db.cursor()
         cur.execute(sql)
 
+
 def insertAbsenSiapMahasiswa(jadwalid, krsid, presensiid, studentid, attend, valueattend):
-    db=dbConnectSiap()
-    sql="INSERT INTO `simak_trn_presensi_mahasiswa`(`PresensiMhswID`, `JadwalID`, `KRSID`, `PresensiID`, `MhswID`, `JenisPresensiID`, `Jam`, `Nilai`, `NA`, `Durasi_terlambat_mhs`) VALUES (DEFAULT, {jadwalid}, {krsid}, {presensiid}, '{studentid}', '{attend}', '00:00:00', {valueattend}, 'N', NULL)".format(jadwalid=jadwalid, krsid=krsid, presensiid=presensiid, studentid=studentid, attend=attend, valueattend=valueattend)
+    db = dbConnectSiap()
+    sql = "INSERT INTO `simak_trn_presensi_mahasiswa`(`PresensiMhswID`, `JadwalID`, `KRSID`, `PresensiID`, `MhswID`, `JenisPresensiID`, `Jam`, `Nilai`, `NA`, `Durasi_terlambat_mhs`) VALUES (DEFAULT, {jadwalid}, {krsid}, {presensiid}, '{studentid}', '{attend}', '00:00:00', {valueattend}, 'N', NULL)".format(
+        jadwalid=jadwalid, krsid=krsid, presensiid=presensiid, studentid=studentid, attend=attend,
+        valueattend=valueattend)
     with db:
-        cur=db.cursor()
+        cur = db.cursor()
         cur.execute(sql)
+
 
 def updateAbsenSiapMahasiswa(presensiid, studentid, attend, valueattend):
-    db=dbConnectSiap()
-    sql="UPDATE simak_trn_presensi_mahasiswa SET JenisPresensiID='{attend}', Nilai={valueattend} WHERE MhswID={studentid} and PresensiID={presensiid}".format(attend=attend, valueattend=valueattend, studentid=studentid, presensiid=presensiid)
+    db = dbConnectSiap()
+    sql = "UPDATE simak_trn_presensi_mahasiswa SET JenisPresensiID='{attend}', Nilai={valueattend} WHERE MhswID={studentid} and PresensiID={presensiid}".format(
+        attend=attend, valueattend=valueattend, studentid=studentid, presensiid=presensiid)
     with db:
-        cur=db.cursor()
+        cur = db.cursor()
         cur.execute(sql)
 
+
 def studentattendance(grp, jadwalid):
-    studentabsent=pesertaAbsensi(jadwalid=jadwalid)
+    studentabsent = pesertaAbsensi(jadwalid=jadwalid)
     datastudentabsenfromsiap = []
     for data in studentabsent:
         datastudentabsenfromsiap.append(data[-1])
     npmdata = []
-    studentnumberphone=getnumonly(groupname=grp)
+    studentnumberphone = getnumonly(groupname=grp)
     for phonenumber in studentnumberphone:
-        npm=getNpmandNameMahasiswa(numbers.normalize(phonenumber[0]))[0]
+        npm = getNpmandNameMahasiswa(numbers.normalize(phonenumber[0]))
         if npm is not None:
-            npmdata.append(npm)
-    attend=[]
+            npmdata.append(npm[0])
+    attend = []
     for npm in npmdata:
         if npm in datastudentabsenfromsiap:
             index = datastudentabsenfromsiap.index(npm)
             attend.append(npm)
             datastudentabsenfromsiap.pop(index)
-    notattend=[]
+    notattend = []
     for notattendstudentid in datastudentabsenfromsiap:
         notattend.append(notattendstudentid)
-    resultattend=[]
+    resultattend = []
     resultattend.append(attend)
     resultattend.append(notattend)
     return resultattend
 
+
 def isSudahKelas(jadwalid, lecturercode):
-    db=dbConnectSiap()
-    sql="select * from simak_trn_presensi_dosen where JadwalID={jadwalid} and DosenID='{lecturercode}' and Tanggal = CURRENT_DATE".format(jadwalid=jadwalid, lecturercode=lecturercode)
+    db = dbConnectSiap()
+    sql = "select * from simak_trn_presensi_dosen where JadwalID={jadwalid} and DosenID='{lecturercode}' and Tanggal = CURRENT_DATE".format(
+        jadwalid=jadwalid, lecturercode=lecturercode)
     with db:
-        cur=db.cursor()
+        cur = db.cursor()
         cur.execute(sql)
-        row=cur.fetchone()
+        row = cur.fetchone()
         if row is not None:
             return True
         else:
             return False
 
+
 def siapabsensiwithsql(grp, num):
-    mkkode=grp.split('-')[0]
+    mkkode = grp.split('-')[0]
     kodekelas = kodeKelas(grp.split('-')[1])
     jadwalid = getJadwalId(kelas=kodekelas, mkkode=mkkode)
-    lecturercode=getKodeDosen(num)
+    lecturercode = getKodeDosen(num)
     resultattendance = studentattendance(grp=grp, jadwalid=jadwalid)
     attend = resultattendance[0]
     notattend = resultattendance[1]
     if not isSudahKelas(jadwalid=jadwalid, lecturercode=lecturercode):
-        lastpertemuan=getLastpertemuan(kodedosen=lecturercode, jadwalid=jadwalid)
-        yearmonthdaynow=datetime.now().strftime("%Y-%m-%d")
-        yearmonthdaytimenow=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        starttime=getDataMatkul(kodedosen=lecturercode, kodekelas=kodekelas, kodematkul=mkkode)[3]
-        endtime=getDataMatkul(kodedosen=lecturercode, kodekelas=kodekelas, kodematkul=mkkode)[4]
-        insertAbsenSiapDosen(jadwalid=jadwalid, pertemuan=int(lastpertemuan)+1, lecturercode=lecturercode, tanggalinsert=yearmonthdaynow, jammulai=starttime, jamselesai=endtime, jamupdate=yearmonthdaytimenow)
-        presensiid=getLastPresensiID(kodedosen=lecturercode, jadwalid=jadwalid)
+        lastpertemuan = getLastpertemuan(kodedosen=lecturercode, jadwalid=jadwalid)
+        yearmonthdaynow = datetime.now().strftime("%Y-%m-%d")
+        yearmonthdaytimenow = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        starttime = getDataMatkul(kodedosen=lecturercode, kodekelas=kodekelas, kodematkul=mkkode)[3]
+        endtime = getDataMatkul(kodedosen=lecturercode, kodekelas=kodekelas, kodematkul=mkkode)[4]
+        insertAbsenSiapDosen(jadwalid=jadwalid, pertemuan=int(lastpertemuan) + 1, lecturercode=lecturercode,
+                             tanggalinsert=yearmonthdaynow, jammulai=starttime, jamselesai=endtime,
+                             jamupdate=yearmonthdaytimenow)
+        presensiid = getLastPresensiID(kodedosen=lecturercode, jadwalid=jadwalid)
         for studentid in attend:
-            if studentid is not '' and studentid is not None:
-                krsid=getDataKrs(studentid=studentid, mkkode=mkkode)
-                insertAbsenSiapMahasiswa(jadwalid=jadwalid, krsid=krsid, presensiid=presensiid, studentid=studentid, attend='H', valueattend=1)
+            krsid = getDataKrs(studentid=studentid, mkkode=mkkode)
+            insertAbsenSiapMahasiswa(jadwalid=jadwalid, krsid=krsid, presensiid=presensiid, studentid=studentid,
+                                     attend='H', valueattend=1)
         for studentid in notattend:
-            if studentid is not '' and studentid is not None:
-                krsid = getDataKrs(studentid=studentid, mkkode=mkkode)
-                insertAbsenSiapMahasiswa(jadwalid=jadwalid, krsid=krsid, presensiid=presensiid, studentid=studentid, attend='M', valueattend=0)
+            krsid = getDataKrs(studentid=studentid, mkkode=mkkode)
+            insertAbsenSiapMahasiswa(jadwalid=jadwalid, krsid=krsid, presensiid=presensiid, studentid=studentid,
+                                     attend='M', valueattend=0)
     else:
-        presensiid=getLastPresensiID(kodedosen=lecturercode, jadwalid=jadwalid)
+        presensiid = getLastPresensiID(kodedosen=lecturercode, jadwalid=jadwalid)
         for studentid in attend:
-            if studentid is not '' and studentid is not None:
-                updateAbsenSiapMahasiswa(presensiid=presensiid, studentid=studentid, attend='H', valueattend=1)
+            updateAbsenSiapMahasiswa(presensiid=presensiid, studentid=studentid, attend='H', valueattend=1)
     return attend
+
 
 def siapabsensiwithweb(driver, num, namagroup):
     try:
-        tanggalsekarang=datetime.now().strftime("%d/%m/%Y")
+        tanggalsekarang = datetime.now().strftime("%d/%m/%Y")
         namagroupsplit = namagroup.split("-")
         kodematkul = namagroupsplit[0]
         kodekelas = namagroupsplit[1]
@@ -466,11 +524,14 @@ def siapabsensiwithweb(driver, num, namagroup):
         TahunAkad(driver)
         findLecturerCode(driver, getKodeDosen(num).lower())
         findMatkul(driver, kodematkul, kodekelas)
-        gettanggalabsen=driver.find_elements_by_xpath('/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[3]/table/tbody/tr')
-        gettanggalabsensiapterakhir=driver.find_element_by_xpath('/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[3]/table/tbody/tr['+str(len(gettanggalabsen))+']/td[3]').text
+        gettanggalabsen = driver.find_elements_by_xpath(
+            '/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[3]/table/tbody/tr')
+        gettanggalabsensiapterakhir = driver.find_element_by_xpath(
+            '/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[3]/table/tbody/tr[' + str(
+                len(gettanggalabsen)) + ']/td[3]').text
         if tanggalsekarang == gettanggalabsensiapterakhir:
             AddMahasiswa(driver)
-            hadir=Mahasiswa(driver, namagroup)
+            hadir = Mahasiswa(driver, namagroup)
             Refresh(driver)
             closeTab(driver)
             switchWindowsHandleto0(driver)
@@ -479,7 +540,7 @@ def siapabsensiwithweb(driver, num, namagroup):
             simpan(driver)
             sleep(1)
             AddMahasiswa(driver)
-            hadir=Mahasiswa(driver, namagroup)
+            hadir = Mahasiswa(driver, namagroup)
             Refresh(driver)
             closeTab(driver)
             switchWindowsHandleto0(driver)
@@ -490,11 +551,14 @@ def siapabsensiwithweb(driver, num, namagroup):
         switchWindowsHandleto0(driver)
     return msgreply
 
+
 def closeTab(driver):
     return driver.close()
 
+
 def pertemuanke(driver):
-    return driver.find_element_by_xpath('/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[3]/table/tbody/tr[1]/td[2]').text
+    return driver.find_element_by_xpath(
+        '/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[3]/table/tbody/tr[1]/td[2]').text
 
 
 def openSiapwithNewTab(driver):
@@ -567,8 +631,11 @@ def simpan(driver):
 
 
 def AddMahasiswa(driver):
-    jumTabel = driver.find_elements_by_xpath("/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[3]/table/tbody/tr")
-    return driver.find_element_by_xpath("/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[3]/table/tbody/tr[" + str(len(jumTabel)) + "]/td[8]/a").click()
+    jumTabel = driver.find_elements_by_xpath(
+        "/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[3]/table/tbody/tr")
+    return driver.find_element_by_xpath(
+        "/html/body/table/tbody/tr[5]/td/table[3]/tbody/tr[1]/td[2]/p[3]/table/tbody/tr[" + str(
+            len(jumTabel)) + "]/td[8]/a").click()
 
 
 def Mahasiswa(driver, groupname):
