@@ -360,12 +360,13 @@ def getHadirNpm(time):
 def beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, groupname, data):
     lecturername = getNamaDosen(getKodeDosen(num))
     tanggal = datetime.now().strftime("%d-%m-%Y")
-    kodekelas = groupname.split('-')[1]
     mkkode = groupname.split('-')[0]
+    kodekelas = kodeKelas(groupname.split('-')[1])
+    jadwalid = getJadwalId(kelas=kodekelas, mkkode=mkkode)
     messages = "*(Sudah di input Iteung)*" + \
                "\nNama Dosen: " + str(lecturername) + \
-               "\nMata Kuliah: " + str(coursename) + \
-               "\nKelas: " + str(kodekelas) + \
+               "\nMata Kuliah: " +str(coursename) + \
+               "\nKelas: " +str(getTingkat(pesertaAbsensi(jadwalid=jadwalid)))+str(kodekelas) + \
                "\nTanggal: " + str(tanggal) + \
                "\nWaktu Mulai: " + str(starttimeclass) + \
                "\nWaktu Selesai: " + str(endtimeclass) + \
