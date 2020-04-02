@@ -389,7 +389,7 @@ def studentattendance(grp, jadwalid):
     npmdata = []
     studentnumberphone=getnumonly(groupname=grp)
     for phonenumber in studentnumberphone:
-        npm=getNpmandNameMahasiswa(phonenumber[0])[0]
+        npm=getNpmandNameMahasiswa(numbers.normalize(phonenumber[0]))[0]
         npmdata.append(npm)
     attend=[]
     for npm in npmdata:
@@ -434,15 +434,18 @@ def siapabsensiwithsql(grp, num):
         insertAbsenSiapDosen(jadwalid=jadwalid, pertemuan=int(lastpertemuan)+1, lecturercode=lecturercode, tanggalinsert=yearmonthdaynow, jammulai=starttime, jamselesai=endtime, jamupdate=yearmonthdaytimenow)
         presensiid=getLastPresensiID(kodedosen=lecturercode, jadwalid=jadwalid)
         for studentid in attend:
-            krsid=getDataKrs(studentid=studentid, mkkode=mkkode)
-            insertAbsenSiapMahasiswa(jadwalid=jadwalid, krsid=krsid, presensiid=presensiid, studentid=studentid, attend='H', valueattend=1)
+            if studentid is not '' and studentid is not None:
+                krsid=getDataKrs(studentid=studentid, mkkode=mkkode)
+                insertAbsenSiapMahasiswa(jadwalid=jadwalid, krsid=krsid, presensiid=presensiid, studentid=studentid, attend='H', valueattend=1)
         for studentid in notattend:
-            krsid = getDataKrs(studentid=studentid, mkkode=mkkode)
-            insertAbsenSiapMahasiswa(jadwalid=jadwalid, krsid=krsid, presensiid=presensiid, studentid=studentid, attend='M', valueattend=0)
+            if studentid is not '' and studentid is not None:
+                krsid = getDataKrs(studentid=studentid, mkkode=mkkode)
+                insertAbsenSiapMahasiswa(jadwalid=jadwalid, krsid=krsid, presensiid=presensiid, studentid=studentid, attend='M', valueattend=0)
     else:
         presensiid=getLastPresensiID(kodedosen=lecturercode, jadwalid=jadwalid)
-        for studenid in attend:
-            updateAbsenSiapMahasiswa(presensiid=presensiid, studentid=studenid, attend='H', valueattend=1)
+        for studentid in attend:
+            if studentid is not '' and studentid is not None:
+                updateAbsenSiapMahasiswa(presensiid=presensiid, studentid=studentid, attend='H', valueattend=1)
     return attend
 
 def siapabsensiwithweb(driver, num, namagroup):
