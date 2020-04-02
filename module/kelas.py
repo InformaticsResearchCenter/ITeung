@@ -428,6 +428,7 @@ def siapabsensiwithsql(grp, num):
     attend = resultattendance[0]
     notattend = resultattendance[1]
     print(attend)
+    print(notattend)
     if not isSudahKelas(jadwalid=jadwalid, lecturercode=lecturercode):
         print('issudahkelas')
         lastpertemuan=getLastpertemuan(kodedosen=lecturercode, jadwalid=jadwalid)
@@ -447,7 +448,7 @@ def siapabsensiwithsql(grp, num):
         presensiid=getLastPresensiID(kodedosen=lecturercode, jadwalid=jadwalid)
         for studenid in attend:
             updateAbsenSiapMahasiswa(presensiid=presensiid, studentid=studenid, attend='H', valueattend=1)
-    return attend
+    return str(attend)
 
 def siapabsensiwithweb(driver, num, namagroup):
     try:
