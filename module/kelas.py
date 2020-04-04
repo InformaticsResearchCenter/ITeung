@@ -41,6 +41,19 @@ def dbConnectSiap():
     db = pymysql.connect(config.db_host_siap, config.db_username_siap, config.db_password_siap, config.db_name_siap)
     return db
 
+def switcherJurusan(kode):
+    switcher = {
+        '.13.': 'D3 Teknik Informatika',
+        '.14.': 'D4 Teknik Informatika',
+        '.23.': 'D3 Manajemen Informatika',
+        '.33.': 'D3 Akuntansi',
+        '.34.': 'D4 Akuntansi',
+        '.43.': 'D3 Manajemen Bisnis',
+        '.44.': 'D4 Manajemen Bisnis',
+        '.53.': 'D3 Logistik Bisnis',
+        '.54.': 'D4 Logistik Bisnis',
+    }
+    return switcher.get(kode, "Not Found!")
 
 def kodeKelas(kode):
     switcher = {
@@ -364,19 +377,45 @@ def getHadirNpm(time):
         rows = cur.fetchall()
     return rows
 
+def RuangID(lecturercode, jadwalid):
+    db = dbConnectSiap()
+    sql = "select RuangID from simak_trn_jadwal WHERE TahunID={tahunid} and DosenID='{lecturercode}' and JadwalID={jadwalid}".format(tahunid=config.siap_tahun_id, lecturercode=lecturercode, jadwalid=jadwalid)
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        rows=cur.fetchone()
+        if rows[0].lower()[0] == 'l':
+            return "(Praktek dan Teori)"
+        else:
+            return "(Teori)"
 
-def beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, groupname, data):
+def prodiID(lecturercode, jadwalid):
+    db = dbConnectSiap()
+    sql="select ProdiID from simak_trn_jadwal WHERE TahunID={tahunid} and DosenID='{lecturercode}' and JadwalID={jadwalid}".format(tahunid=config.siap_tahun_id, lecturercode=lecturercode, jadwalid=jadwalid)
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        rows = cur.fetchone()
+        return switcherJurusan(rows[0])
+
+def beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, groupname, data, msg):
     lecturername=getNamaDosen(getKodeDosen(num))
     lecturercode=getKodeDosen(num)
+    materi=msg.lower()
+    materi=materi.split('materi')
     tanggal=datetime.now().strftime("%d-%m-%Y")
     mkkode=groupname.split('-')[0]
     kodekelas=kodeKelas(groupname.split('-')[1])
     jadwalid=getJadwalId(kelas=kodekelas, mkkode=mkkode)
+    praktekteori=RuangID(lecturercode=lecturercode, jadwalid=jadwalid)
+    homebase=prodiID(lecturercode=lecturercode, jadwalid=jadwalid)
     studentgrade=getTingkat(pesertaAbsensi(jadwalid=jadwalid))
     messages = "*(Sudah di input Iteung)*" + \
                "\nNama Dosen: " + str(lecturername) + \
-               "\nMata Kuliah: " +str(coursename) + \
-               "\nKelas: " +str(studentgrade) +''+str(toKelas(kodekelas)) + \
+               "\nMata Kuliah: " +str(coursename)+str(praktekteori)+ \
+               "\nMateri:" +str(materi) + \
+               "\nKelas: " +str(studentgrade)+''+str(toKelas(kodekelas)) + \
+               "\nJurusan: " + str(homebase)+ \
                "\nTanggal: " + str(tanggal) + \
                "\nWaktu Mulai: " + str(starttimeclass) + \
                "\nWaktu Selesai: " + str(endtimeclass) + \
