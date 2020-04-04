@@ -171,26 +171,23 @@ def isMatkul(kodematkul, kodekelas, num):
         else:
             return False
 
-
 def getListMK(kodedosen):
-    listMK = 'Kode MK | Mata Kuliah | Kelas | Hari | Jam | Kelas \n '
+    listMK = 'Jadwal ID | Mata Kuliah | Kelas | Hari | Jam | Ruangan \n '
     db = dbConnectSiap()
-    sql = "select MKKode, Nama, NamaKelas, HariID, JamMulai, JamSelesai, RuangID from simak_trn_jadwal where DosenID = '{0}' and TahunID = '{1}'".format(
+    sql = "select JadwalID, Nama, NamaKelas, HariID, JamMulai, JamSelesai, RuangID from simak_trn_jadwal where DosenID = '{0}' and TahunID = '{1}'".format(
         kodedosen, config.siap_tahun_id)
     with db:
         cur = db.cursor()
         cur.execute(sql)
         records = cur.fetchall()
         for row in records:
-            listMK = listMK + str(row[0]) + ' | ' + str(row[1]) + ' | ' + toKelas(str(row[2])) + ' | ' + toHari(
-                str(row[3])) + ' | ' + str(row[4])[:-3] + '-' + str(row[5])[:-3] + ' | ' + str(row[6]) + ' \n '
+            listMK = listMK + str(row[0]) + ' | ' + str(row[1]) + ' | ' + toKelas(str(row[2])) + ' | ' + toHari(str(row[3])) + ' | ' + str(row[4])[:-3] + '-' + str(row[5])[:-3] + ' | ' + str(row[6]) + ' \n '
     return listMK
 
 
-def getDataMatkul(kodematkul, kodekelas, kodedosen):
+def getDataMatkul(jadwalid):
     db = dbConnectSiap()
-    sql = "select MKKode, Nama, HariID, DATE_FORMAT(JamMulai, '%H:%i:%s'), DATE_FORMAT(JamSelesai, '%H:%i:%s'), NamaKelas from simak_trn_jadwal where DosenID = '{0}' and TahunID = '".format(
-        kodedosen) + config.siap_tahun_id + "' and NamaKelas = '{0}' and MKKode = '{1}'".format(kodekelas, kodematkul)
+    sql = "select MKKode, Nama, HariID, DATE_FORMAT(JamMulai, '%H:%i:%s'), DATE_FORMAT(JamSelesai, '%H:%i:%s'), NamaKelas from simak_trn_jadwal where JadwalID={jadwalid}".format(jadwalid=jadwalid)
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -398,15 +395,17 @@ def prodiID(lecturercode, jadwalid):
         rows = cur.fetchone()
         return switcherJurusan(rows[0])
 
-def beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, groupname, data, msg):
+def beritaAcara(driver, num, groupname, data, msg):
+    coursename = getDataMatkul(groupname.split('-')[0])[1]
+    starttimeclass = getDataMatkul(groupname.split('-')[0])[3]
+    endtimeclass = getDataMatkul(groupname.split('-')[0])[4]
     lecturername=getNamaDosen(getKodeDosen(num))
     lecturercode=getKodeDosen(num)
     materi=msg.lower()
     materi=materi.split('materi')
     tanggal=datetime.now().strftime("%d-%m-%Y")
-    mkkode=groupname.split('-')[0]
     kodekelas=kodeKelas(groupname.split('-')[1])
-    jadwalid=getJadwalId(kelas=kodekelas, mkkode=mkkode)
+    jadwalid=groupname.split('-')[0]
     praktekteori=RuangID(lecturercode=lecturercode, jadwalid=jadwalid)
     homebase=prodiID(lecturercode=lecturercode, jadwalid=jadwalid)
     studentgrade=getTingkat(pesertaAbsensi(jadwalid=jadwalid))
@@ -525,11 +524,22 @@ def isSudahKelas(jadwalid, lecturercode):
         else:
             return False
 
+def getMkkode(jadwalid):
+    db=dbConnectSiap()
+    sql='select MKKode from simak_trn_jadwal WHERE JadwalID={jadwalid}'.format(jadwalid=jadwalid)
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        rows = cur.fetchone()
+        if rows is not None:
+            ret=rows[0]
+        else:
+            ret=''
+    return ret
 
 def siapabsensiwithsql(grp, num):
-    mkkode = grp.split('-')[0]
-    kodekelas = kodeKelas(grp.split('-')[1])
-    jadwalid = getJadwalId(kelas=kodekelas, mkkode=mkkode)
+    jadwalid = grp.split('-')[0]
+    mkkode = getMkkode(jadwalid=jadwalid)
     lecturercode = getKodeDosen(num)
     resultattendance = studentattendance(grp=grp, jadwalid=jadwalid)
     attend = resultattendance[0]
@@ -538,8 +548,8 @@ def siapabsensiwithsql(grp, num):
         lastpertemuan = getLastpertemuan(kodedosen=lecturercode, jadwalid=jadwalid)
         yearmonthdaynow = datetime.now().strftime("%Y-%m-%d")
         yearmonthdaytimenow = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        starttime = getDataMatkul(kodedosen=lecturercode, kodekelas=kodekelas, kodematkul=mkkode)[3]
-        endtime = getDataMatkul(kodedosen=lecturercode, kodekelas=kodekelas, kodematkul=mkkode)[4]
+        starttime = getDataMatkul(jadwalid=jadwalid)[3]
+        endtime = getDataMatkul(jadwalid=jadwalid)[4]
         insertAbsenSiapDosen(jadwalid=jadwalid, pertemuan=int(lastpertemuan) + 1, lecturercode=lecturercode,
                              tanggalinsert=yearmonthdaynow, jammulai=starttime, jamselesai=endtime,
                              jamupdate=yearmonthdaytimenow)
