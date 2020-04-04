@@ -21,7 +21,7 @@ def replymsg(driver, data):
         try:
             msgreply=kelas.beritaAcara(driver=driver, num=num, groupname=grp, data=msgreply, msg=msg)
         except:
-            msgreply='aduh materinya ga ada nich, contoh format yang bener gini ya: iteung kelas daring selesai materi chapter 04'
+            msgreply='aduh materinya ga ada nich, \ncontoh format yang bener gini ya: \niteung kelas daring selesai materi chapter 04'
     except:
         listMK=kelas.getListMK(kelas.getKodeDosen(data[0]))
         guide = 'yahh....nama groupnya jangan diubah dong. hihihi ganti lagi ya.jadi JADWALID-KELAS-NAMAMK,contoh : 17312-A-KECERDASAN BUATAN : \n'
