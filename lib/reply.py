@@ -7,7 +7,7 @@ Created on Sun Mar  1 14:44:01 2020
 import pymysql
 import config
 
-
+from lib import numbers
 
 def dbConnect():
     db=pymysql.connect(config.db_host,config.db_username,config.db_password,config.db_name)
@@ -114,6 +114,7 @@ def getWaitingMessage(module):
     return content.replace("#BOTNAME#", config.bot_name)
 
 def getNumberGroup(num):
+    num = numbers.normalize(num)
     db = dbConnect()
     sql = "SELECT group_id from group_auth where number = '%s'"%(num)
     group_id = ''
