@@ -1,4 +1,4 @@
-from inputjadwal import inputJadwalUjian
+# from inputjadwal import inputJadwalUjian
 from selenium.webdriver import ChromeOptions, Chrome
 from emaildosen import *
 from makefile import *
@@ -15,7 +15,7 @@ prodis = ['D4 Teknik Informatika',
           'D3 Logistik Bisnis',
           'D4 Logistik Bisnis']
 
-filters = {'tahun': '20192',
+filters = {'tahun': '20191',
            'jenis': '1',
            'program': 'REG'}
 
