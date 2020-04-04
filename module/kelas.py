@@ -412,8 +412,8 @@ def beritaAcara(driver, num, coursename, starttimeclass, endtimeclass, groupname
     studentgrade=getTingkat(pesertaAbsensi(jadwalid=jadwalid))
     messages = "*(Sudah di input Iteung)*" + \
                "\nNama Dosen: " + str(lecturername) + \
-               "\nMata Kuliah: " +str(coursename)+str(praktekteori)+ \
-               "\nMateri:" +str(materi) + \
+               "\nMata Kuliah: " +str(coursename)+' '+str(praktekteori)+ \
+               "\nMateri:" +str(materi[1]) + \
                "\nKelas: " +str(studentgrade)+''+str(toKelas(kodekelas)) + \
                "\nJurusan: " + str(homebase)+ \
                "\nTanggal: " + str(tanggal) + \
