@@ -1,7 +1,8 @@
-from lib import wa
+from lib import wa, reply
 from module import kelas
 
 import config
+import os
 
 
 
@@ -20,9 +21,7 @@ def replymsg(driver, data):
     else:
         try:
             if kelas.isMatkul(grp.split('-')[0]):
-                mkkode = grp.split('-')[0]
-                kodekelas = kelas.kodeKelas(grp.split('-')[1])
-                JadwalID = kelas.getJadwalId(kelas=kodekelas, mkkode=mkkode)
+                JadwalID = grp.split('-')[0]
                 abc = 1
                 listStudent='\n\nBerikut Peserta Absensinya:\n'
                 for i in kelas.pesertaAbsensi(JadwalID):
@@ -31,7 +30,7 @@ def replymsg(driver, data):
                     listStudent=listStudent+str(abc)+'. '+npm+' '+nama+'\n'
                     abc+=1
                 coursename = kelas.getDataMatkul(grp.split('-')[0])[1]
-                messages = kelas.getAwaitingMessageKelasStart('kelas_mulai')
+                messages = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
                 messages = messages.replace('#MATKUL#', coursename)
                 messages = messages.replace('#BOTNAME#', config.bot_name)
                 msgreply = messages + listStudent
