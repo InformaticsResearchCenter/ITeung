@@ -15,12 +15,11 @@ def auth(data):
 #close commit #2
 def replymsg(driver, data):
     grp = data[1]
-    num = data[0]
     if kelas.sudahinput(wa.getGroupName(driver)) == True:
         msgreply = "yuhuuuu..... semangat banget sih, kan minggu ini udah kuliah. tunggu minggu depan ya... terima kasih"
     else:
         try:
-            if kelas.isMatkul(grp.split('-')[0], kelas.kodeKelas(grp.split('-')[1]), num):
+            if kelas.isMatkul(grp.split('-')[0]):
                 mkkode = grp.split('-')[0]
                 kodekelas = kelas.kodeKelas(grp.split('-')[1])
                 JadwalID = kelas.getJadwalId(kelas=kodekelas, mkkode=mkkode)

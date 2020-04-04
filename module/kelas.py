@@ -156,12 +156,9 @@ def getHandphoneMahasiswa(npm):
             return rows[0]
 
 
-def isMatkul(kodematkul, kodekelas, num):
-    num = numbers.normalize(num)
+def isMatkul(jadwalid):
     db = dbConnectSiap()
-    sql = "select MKKode, Nama, HariID, JamMulai, JamSelesai, NamaKelas from simak_trn_jadwal where DosenID = '{0}' and TahunID = '".format(
-        getKodeDosen(num)) + config.siap_tahun_id + "' and NamaKelas = '{0}' and MKKode = '{1}'".format(kodekelas,
-                                                                                                        kodematkul)
+    sql = "select MKKode, Nama, HariID, JamMulai, JamSelesai, NamaKelas from simak_trn_jadwal where JadwalID={jadwalid}".format(jadwalid=jadwalid)
     with db:
         cur = db.cursor()
         cur.execute(sql)
