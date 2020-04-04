@@ -23,6 +23,7 @@ def normalizeSql(msg):
     msg = msg.strip()
     return msg
 
+#close commit 11
 def inserttolog(data):
     db = dbConnectIteung()
     try:
