@@ -73,8 +73,8 @@ def replymsg(driver, data):
 def jadwalKuliah(hari, num):
     kelas.dbConnect()
     db = kelas.dbConnectSiap()
-    listMK = 'Kode Dosen | Kode MK | Mata Kuliah | Kelas | Hari | Jam Mulai | Jam Selesai | Kelas\n '
-    sql = "select DosenID, MKKode, Nama, NamaKelas, HariID, JamMulai, JamSelesai, RuangID from simak_trn_jadwal where DosenID = '{0}' and TahunID = '".format(kelas.getKodeDosen(num)) + config.siap_tahun_id + "' and HariID = '{0}'".format(hari)
+    listMK = 'Kode Dosen | Jadwal ID | Mata Kuliah | Kelas | Hari | Jam Mulai | Jam Selesai | Ruangan\n '
+    sql = "select DosenID, JadwalID, Nama, NamaKelas, HariID, JamMulai, JamSelesai, RuangID from simak_trn_jadwal where DosenID = '{0}' and TahunID = '".format(kelas.getKodeDosen(num)) + config.siap_tahun_id + "' and HariID = '{0}'".format(hari)
     with db:
         cur = db.cursor()
         cur.execute(sql)
