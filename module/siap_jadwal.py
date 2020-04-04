@@ -15,3 +15,4 @@ def replymsg(driver, data):
     wa.typeAndSendMessage(driver, wmsg)
     kodedosen=kelas.getKodeDosen(data[0])
     subprocess.Popen(["python", "main_jadwal_uts.py", kodedosen], cwd='module')
+    return ''
