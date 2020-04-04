@@ -17,7 +17,7 @@ def replymsg(driver, data):
         wmsg=reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
         wa.typeAndSendMessage(driver,wmsg)
         msgreply=kelas.siapabsensiwithsql(grp=grp, num=numbers.normalize(num))
-        if msgreply != [] or msgreply != '':
+        if msgreply != []:
             # msgreply=kelas.siapabsensiwithweb(driver=driver, num=num,namagroup=grp)
             try:
                 msgreply=kelas.beritaAcara(driver=driver, num=num, groupname=grp, data=msgreply, msg=msg)
