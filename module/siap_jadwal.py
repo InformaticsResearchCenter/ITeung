@@ -14,4 +14,4 @@ def replymsg(driver, data):
     wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
     wa.typeAndSendMessage(driver, wmsg)
     kodedosen=kelas.getKodeDosen(data[0])
-    subprocess.Popen(["python", "main.py", kodedosen])
+    subprocess.Popen(["python", "main_jadwal_uts.py", kodedosen])
