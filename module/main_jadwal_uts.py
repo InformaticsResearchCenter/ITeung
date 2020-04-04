@@ -1,7 +1,5 @@
-# from inputjadwal import inputJadwalUjian
 from selenium.webdriver import ChromeOptions, Chrome
-from emaildosen import *
-from makefile import *
+from module import siap_jadwal
 
 import sys
 
@@ -23,5 +21,5 @@ dosens = []
 kodedosen=sys.argv[1]
 dosens.append(kodedosen)
 
-makeFileForDosen(driver, dosens, filters)
-sendFileUjianDosen(dosens, filters)
+siap_jadwal.makeFileForDosen(driver, dosens, filters)
+siap_jadwal.sendFileUjianDosen(dosens, filters)
