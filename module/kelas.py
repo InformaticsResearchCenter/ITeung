@@ -196,7 +196,7 @@ def getDataMatkul(jadwalid):
 
 def getDataMahasiswa(studentid):
     db=dbConnectSiap()
-    sql="select MhswID, Nama, Handphone, Email from simak_mst_mahasiswa where MhswID=1184047"
+    sql="select MhswID, Nama, Handphone, Email from simak_mst_mahasiswa where MhswID={studentid}".format(studentid=studentid)
     with db:
         cur = db.cursor()
         cur.execute(sql)
