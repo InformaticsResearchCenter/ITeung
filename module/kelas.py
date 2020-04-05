@@ -194,6 +194,15 @@ def getDataMatkul(jadwalid):
         else:
             return ''
 
+def getDataMahasiswa(studentid):
+    db=dbConnectSiap()
+    sql="select MhswID, Nama, Handphone, Email from simak_mst_mahasiswa where MhswID=1184047"
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        rows = cur.fetchone()
+        return rows
+
 
 def getKodeDosen(num):
     num = numbers.normalize(num)
