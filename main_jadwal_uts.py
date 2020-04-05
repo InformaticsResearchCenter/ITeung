@@ -13,12 +13,12 @@ prodis = ['D4 Teknik Informatika',
           'D3 Logistik Bisnis',
           'D4 Logistik Bisnis']
 
-filters = {'tahun': '20191',
+filters = {'tahun': '20192',
            'jenis': '1',
            'program': 'REG'}
 
 dosens = []
-kodedosen=sys.argv[1]
+kodedosen=str(sys.argv[1])
 dosens.append(kodedosen)
 
 siap_jadwal.makeFileForDosen(driver, dosens, filters)

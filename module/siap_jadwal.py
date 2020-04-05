@@ -22,8 +22,7 @@ def replymsg(driver, data):
     wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
     wa.typeAndSendMessage(driver, wmsg)
     kodedosen=kelas.getKodeDosen(data[0])
-    pythonpath = r'C:\Users\trian\ITeung'
-    subprocess.Popen(["python", "main_jadwal_uts.py", kodedosen], cwd='module', env={'PYTHONPATH': pythonpath})
+    subprocess.Popen(["python", "main_jadwal_uts.py", kodedosen], cwd=r"C:\Users\LENOVO\Desktop\ITeung")
     return ''
 
 def dbConnectSiap():
@@ -121,8 +120,7 @@ def printAbsensiUjian(driver, filters, prodi):
     while True:
         try:
             index += 1
-            matkul_select = tabel_select.find_element_by_xpath(
-                "//tr[" + str(index) + "]/td[8]").text
+            matkul_select = tabel_select.find_element_by_xpath("//tr[" + str(index) + "]/td[8]").text
             time.sleep(1)
             matkul_select = matkul_select.replace(" ", "_")
             matkul_select = matkul_select.replace("-", "_")
@@ -444,7 +442,7 @@ def setUjian(ujian):
 
 def sendEmail(file):
     subject = "Absensi {} Mata Kuliah {} Kelas ".format(file['ujian'], file['matkul'], file['kelas'])
-    body = "Ini baru percobaan pengiriman file absensi oleh iteung ya... :)"
+    body = "Ini pengiriman file absensi UTS oleh iteung ya... \nTerima Kasih sudah menunggu dicek dahulu yaaa nanti kalo ada kesalahan bisa kontak akang/teteh admin yaaa:)"
 
     sender_email = config.email_iteung
     receiver_email = file['tujuan']
