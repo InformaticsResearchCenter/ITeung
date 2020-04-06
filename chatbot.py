@@ -14,6 +14,7 @@ class Chatbot(object):
             self.cekAndSendMessage(driver)
 
     def cekAndSendMessage(self, driver):
+        wa.phoneNotConnected(driver)
         messageindex = config.message_wa_index
         alsandnumindex = config.default_alias_number_index
         for loop in range(wa.messageunread(driver)):

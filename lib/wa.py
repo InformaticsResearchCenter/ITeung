@@ -24,6 +24,14 @@ def loginWA(driver):
     driver.get("https://web.whatsapp.com/")
     waitLogin(driver)
 
+def phoneNotConnected(driver):
+    try:
+        driver.find_element_by_class_name('m6ZEb')
+        ret=True
+    except:
+        ret=False
+    return ret
+
 def waitLogin(driver):
     target = '"_3ZW2E"'
     x_arg = '//div[contains(@class, ' + target + ')]'
