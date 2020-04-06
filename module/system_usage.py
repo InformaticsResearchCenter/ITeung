@@ -38,9 +38,9 @@ def memory_usage():
     return message_memory
 
 def network_usage():
-    network = '\n====MEMORY USAGE====\n'
+    network = '\n====NETWORK USAGE====\n'
     status_network = psutil.net_io_counters()
-    download='Download: '+str(int(status_network.bytes_recv/(1024*1024)))+'Mbps\n'
-    upload='Upload: '+str(int(status_network.bytes_sent/(1024*1024)))+'Mbps\n'
+    download='Download: '+str(int(status_network.bytes_recv/(1000000)))+'Mb\n'
+    upload='Upload: '+str(int(status_network.bytes_sent/(1000000)))+'Mb\n'
     message_network=network+download+upload
     return message_network
