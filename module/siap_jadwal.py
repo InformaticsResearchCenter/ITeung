@@ -321,7 +321,7 @@ def getAllUjian(driver, prodis, filters):
     return list_ujian
 
 
-def genDataFrameUjian(driver, prodi_selected):
+def genDataFrameUjian(driver, prodi_selected, dosen):
     time.sleep(2)
     tabel_select = driver.find_element_by_xpath(
         "//table[@cellpadding='4' and @cellspacing='1']/tbody")
@@ -331,19 +331,18 @@ def genDataFrameUjian(driver, prodi_selected):
     while True:
         try:
             index += 1
-            matkul_select = tabel_select.find_element_by_xpath(
-                "//tr[" + str(index) + "]/td[8]").text
+            dosen_select = tabel_select.find_element_by_xpath("//tr[" + str(index) + "]/td[13]").text
             time.sleep(1)
-            kelas_select = tabel_select.find_element_by_xpath(
-                "//tr[" + str(index) + "]/td[9]").text
-            time.sleep(1)
-            kode_matkul_select = tabel_select.find_element_by_xpath(
-                "//tr[" + str(index) + "]/td[7]").text
-            time.sleep(2)
-            kelas_select = int(kelas_select.strip("0"))
-            data = {'prodi': prodi_selected, 'matkul': matkul_select,
-                    'kelas': kelas_select, 'kode_matkul': kode_matkul_select, 'index': index}
-            dict_data.append(data)
+            if dosen_select in dosen:
+                matkul_select = tabel_select.find_element_by_xpath("//tr[" + str(index) + "]/td[8]").text
+                time.sleep(1)
+                kelas_select = tabel_select.find_element_by_xpath("//tr[" + str(index) + "]/td[9]").text
+                time.sleep(1)
+                kode_matkul_select = tabel_select.find_element_by_xpath("//tr[" + str(index) + "]/td[7]").text
+                time.sleep(2)
+                kelas_select = int(kelas_select.strip("0"))
+                data = {'prodi': prodi_selected, 'matkul': matkul_select,'kelas': kelas_select, 'kode_matkul': kode_matkul_select, 'index': index}
+                dict_data.append(data)
             print('.', end='', flush=True)
         except NoSuchElementException:
             break
@@ -353,8 +352,7 @@ def genDataFrameUjian(driver, prodi_selected):
 
 
 def getProdiFromDropdown(driver, prodi_selected):
-    prodi_ujian = Select(
-        driver.find_element_by_xpath("//select[@name='prodi']"))
+    prodi_ujian = Select(driver.find_element_by_xpath("//select[@name='prodi']"))
     for prodis in prodi_ujian.options:
         prodi = prodis.text[5:].lower()
         prodi_selected = prodi_selected.lower()
@@ -441,8 +439,8 @@ def setUjian(ujian):
 
 
 def sendEmail(file):
-    subject = "Absensi {} Mata Kuliah {} Kelas ".format(file['ujian'], file['matkul'], file['kelas'])
-    body = "Ini pengiriman file absensi UTS oleh iteung ya... \nTerima Kasih sudah menunggu dicek dahulu yaaa nanti kalo ada kesalahan bisa kontak akang/teteh admin yaaa:)"
+    subject = "Absensi {} Mata Kuliah {} Kelas {} Prodi {}".format(file['ujian'], file['matkul'], file['kelas'], file['prodi'])
+    body = "Ini file absensi Ujitan UTS Semester Genap oleh iteung ya..., mohon untuk dicek kembali filenya jika ada yang salah mohon untuk diinformasikan ke admin iteung yaa....:) \nAbsensi {} Mata Kuliah {} Kelas {} Prodi {}".format(file['ujian'], file['matkul'], file['kelas'], file['prodi'])
 
     sender_email = config.email_iteung
     receiver_email = file['tujuan']
@@ -481,7 +479,7 @@ def sendEmail(file):
 
     os.rename(file['nama_baru'], file['nama_lama'])
     os.chdir(r'../../')
-
+    return True
 
 def sendFileUjian(list_prodi_ujian, filters):
     for prodi_selected in list_prodi_ujian:

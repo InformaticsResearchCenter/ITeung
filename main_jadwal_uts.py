@@ -2,6 +2,7 @@ from selenium.webdriver import ChromeOptions, Chrome
 from module import siap_jadwal
 
 import sys
+import config
 
 opts = ChromeOptions()
 opts.add_argument("--headless")
@@ -13,9 +14,9 @@ prodis = ['D4 Teknik Informatika',
           'D3 Logistik Bisnis',
           'D4 Logistik Bisnis']
 
-filters = {'tahun': '20192',
-           'jenis': '1',
-           'program': 'REG'}
+filters = {'tahun': config.siap_tahun_id,
+           'jenis': config.jenis_ujian,
+           'program': config.jalur_program}
 
 dosens = []
 kodedosen=str(sys.argv[1])
