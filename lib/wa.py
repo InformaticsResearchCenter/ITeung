@@ -38,6 +38,7 @@ def restartMemu(ret):
         os.system(r'C:\Users\LENOVO\Desktop\ITeung\stopmemu.bat')
         sleep(.5)
         os.system(r'C:\Users\LENOVO\Desktop\ITeung\startmemu.bat')
+        sleep(10)
     return ret
 
 def waitLogin(driver):
