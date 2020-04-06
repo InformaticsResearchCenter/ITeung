@@ -171,8 +171,7 @@ def isMatkul(jadwalid):
 def getListMK(kodedosen):
     listMK = 'Jadwal ID | Mata Kuliah | Kelas | Hari | Jam | Ruangan \n '
     db = dbConnectSiap()
-    sql = "select JadwalID, Nama, NamaKelas, HariID, JamMulai, JamSelesai, RuangID from simak_trn_jadwal where DosenID = '{0}' and TahunID = '{1}'".format(
-        kodedosen, config.siap_tahun_id)
+    sql = "select JadwalID, Nama, NamaKelas, HariID, JamMulai, JamSelesai, RuangID from simak_trn_jadwal where DosenID = '{0}' and TahunID = '{1}'".format(kodedosen, config.siap_tahun_id)
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -493,27 +492,30 @@ def updateAbsenSiapMahasiswa(presensiid, studentid, attend, valueattend):
 
 def studentattendance(grp, jadwalid):
     studentabsent = pesertaAbsensi(jadwalid=jadwalid)
-    datastudentabsenfromsiap = []
-    for data in studentabsent:
-        datastudentabsenfromsiap.append(data[-1])
-    npmdata = []
-    studentnumberphone = getnumonly(groupname=grp)
-    for phonenumber in studentnumberphone:
-        npm = getNpmandNameMahasiswa(numbers.normalize(phonenumber[0]))
-        if npm is not None:
-            npmdata.append(npm[0])
-    attend = []
-    for npm in npmdata:
-        if npm in datastudentabsenfromsiap:
-            index = datastudentabsenfromsiap.index(npm)
-            attend.append(npm)
-            datastudentabsenfromsiap.pop(index)
-    notattend = []
-    for notattendstudentid in datastudentabsenfromsiap:
-        notattend.append(notattendstudentid)
-    resultattend = []
-    resultattend.append(attend)
-    resultattend.append(notattend)
+    if studentabsent != []:
+        datastudentabsenfromsiap = []
+        for data in studentabsent:
+            datastudentabsenfromsiap.append(data[-1])
+        npmdata = []
+        studentnumberphone = getnumonly(groupname=grp)
+        for phonenumber in studentnumberphone:
+            npm = getNpmandNameMahasiswa(numbers.normalize(phonenumber[0]))
+            if npm is not None:
+                npmdata.append(npm[0])
+        attend = []
+        for npm in npmdata:
+            if npm in datastudentabsenfromsiap:
+                index = datastudentabsenfromsiap.index(npm)
+                attend.append(npm)
+                datastudentabsenfromsiap.pop(index)
+        notattend = []
+        for notattendstudentid in datastudentabsenfromsiap:
+            notattend.append(notattendstudentid)
+        resultattend = []
+        resultattend.append(attend)
+        resultattend.append(notattend)
+    else:
+        resultattend=''
     return resultattend
 
 
@@ -548,30 +550,33 @@ def siapabsensiwithsql(grp, num):
     mkkode = getMkkode(jadwalid=jadwalid)
     lecturercode = getKodeDosen(num)
     resultattendance = studentattendance(grp=grp, jadwalid=jadwalid)
-    attend = resultattendance[0]
-    notattend = resultattendance[1]
-    if not isSudahKelas(jadwalid=jadwalid, lecturercode=lecturercode):
-        lastpertemuan = getLastpertemuan(kodedosen=lecturercode, jadwalid=jadwalid)
-        yearmonthdaynow = datetime.now().strftime("%Y-%m-%d")
-        yearmonthdaytimenow = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        starttime = getDataMatkul(jadwalid=jadwalid)[3]
-        endtime = getDataMatkul(jadwalid=jadwalid)[4]
-        insertAbsenSiapDosen(jadwalid=jadwalid, pertemuan=int(lastpertemuan) + 1, lecturercode=lecturercode,
-                             tanggalinsert=yearmonthdaynow, jammulai=starttime, jamselesai=endtime,
-                             jamupdate=yearmonthdaytimenow)
-        presensiid = getLastPresensiID(kodedosen=lecturercode, jadwalid=jadwalid)
-        for studentid in attend:
-            krsid = getDataKrs(studentid=studentid, mkkode=mkkode)
-            insertAbsenSiapMahasiswa(jadwalid=jadwalid, krsid=krsid, presensiid=presensiid, studentid=studentid,
-                                     attend='H', valueattend=1)
-        for studentid in notattend:
-            krsid = getDataKrs(studentid=studentid, mkkode=mkkode)
-            insertAbsenSiapMahasiswa(jadwalid=jadwalid, krsid=krsid, presensiid=presensiid, studentid=studentid,
-                                     attend='M', valueattend=0)
+    if resultattendance != '':
+        attend = resultattendance[0]
+        notattend = resultattendance[1]
+        if not isSudahKelas(jadwalid=jadwalid, lecturercode=lecturercode):
+            lastpertemuan = getLastpertemuan(kodedosen=lecturercode, jadwalid=jadwalid)
+            yearmonthdaynow = datetime.now().strftime("%Y-%m-%d")
+            yearmonthdaytimenow = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            starttime = getDataMatkul(jadwalid=jadwalid)[3]
+            endtime = getDataMatkul(jadwalid=jadwalid)[4]
+            insertAbsenSiapDosen(jadwalid=jadwalid, pertemuan=int(lastpertemuan) + 1, lecturercode=lecturercode,
+                                 tanggalinsert=yearmonthdaynow, jammulai=starttime, jamselesai=endtime,
+                                 jamupdate=yearmonthdaytimenow)
+            presensiid = getLastPresensiID(kodedosen=lecturercode, jadwalid=jadwalid)
+            for studentid in attend:
+                krsid = getDataKrs(studentid=studentid, mkkode=mkkode)
+                insertAbsenSiapMahasiswa(jadwalid=jadwalid, krsid=krsid, presensiid=presensiid, studentid=studentid,
+                                         attend='H', valueattend=1)
+            for studentid in notattend:
+                krsid = getDataKrs(studentid=studentid, mkkode=mkkode)
+                insertAbsenSiapMahasiswa(jadwalid=jadwalid, krsid=krsid, presensiid=presensiid, studentid=studentid,
+                                         attend='M', valueattend=0)
+        else:
+            presensiid = getLastPresensiID(kodedosen=lecturercode, jadwalid=jadwalid)
+            for studentid in attend:
+                updateAbsenSiapMahasiswa(presensiid=presensiid, studentid=studentid, attend='H', valueattend=1)
     else:
-        presensiid = getLastPresensiID(kodedosen=lecturercode, jadwalid=jadwalid)
-        for studentid in attend:
-            updateAbsenSiapMahasiswa(presensiid=presensiid, studentid=studentid, attend='H', valueattend=1)
+        attend=''
     return attend
 
 
