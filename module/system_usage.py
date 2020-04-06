@@ -1,4 +1,5 @@
 import psutil
+import pyspeedtest
 from lib import reply
 
 def auth(data):
@@ -40,7 +41,14 @@ def memory_usage():
 def network_usage():
     network = '\n====NETWORK USAGE====\n'
     status_network = psutil.net_io_counters()
-    download='Download: '+str(int(status_network.bytes_recv/(1000000)))+'Mb\n'
-    upload='Upload: '+str(int(status_network.bytes_sent/(1000000)))+'Mb\n'
+    download='Download: '+str(int(status_network.bytes_recv/(1000000)))+'MB\n'
+    upload='Upload: '+str(int(status_network.bytes_sent/(1000000)))+'MB\n'
     message_network=network+download+upload
     return message_network
+
+def networkPing():
+    ping='\n====NETWORK PING====\n'
+    whatsapp='WhatsApp: '+str(int(pyspeedtest.SpeedTest('web.whatsapp.com').ping()))+'ms\n'
+    siap='System Akademik SIAP: '+str(int(pyspeedtest.SpeedTest('siap.poltekpos.ac.id').ping()))+'ms\n'
+    message_ping=ping+whatsapp+siap
+    return message_ping
