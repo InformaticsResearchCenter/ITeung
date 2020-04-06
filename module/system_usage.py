@@ -10,7 +10,7 @@ def auth(data):
     return ret
 
 def replymsg(driver, data):
-    msgreply=cpu_usage()+disk_usage()+memory_usage()+network_usage()
+    msgreply=cpu_usage()+disk_usage()+memory_usage()+network_usage()+network_ping()
     return msgreply
 
 def cpu_usage():
@@ -46,7 +46,7 @@ def network_usage():
     message_network=network+download+upload
     return message_network
 
-def networkPing():
+def network_ping():
     ping='\n====NETWORK PING====\n'
     whatsapp='WhatsApp: '+str(int(pyspeedtest.SpeedTest('web.whatsapp.com').ping()))+'ms\n'
     siap='System Akademik SIAP: '+str(int(pyspeedtest.SpeedTest('siap.poltekpos.ac.id').ping()))+'ms\n'
