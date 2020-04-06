@@ -27,7 +27,7 @@ def loginWA(driver):
 
 def detectphoneNotConnected(driver):
     try:
-        driver.find_element_by_class_name('m6ZEb')
+        driver.find_element_by_class_name('U0cj3')
         ret=True
     except:
         ret=False
