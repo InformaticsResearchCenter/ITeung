@@ -492,7 +492,7 @@ def updateAbsenSiapMahasiswa(presensiid, studentid, attend, valueattend):
 
 def studentattendance(grp, jadwalid):
     studentabsent = pesertaAbsensi(jadwalid=jadwalid)
-    if studentabsent != []:
+    if studentabsent != ():
         datastudentabsenfromsiap = []
         for data in studentabsent:
             datastudentabsenfromsiap.append(data[-1])
