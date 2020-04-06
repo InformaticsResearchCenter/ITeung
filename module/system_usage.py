@@ -9,7 +9,7 @@ def auth(data):
     return ret
 
 def replymsg(driver, data):
-    msgreply=cpu_usage()+disk_usage()+memory_usage()
+    msgreply=cpu_usage()+disk_usage()+memory_usage()+network_usage()
     return msgreply
 
 def cpu_usage():
@@ -36,3 +36,11 @@ def memory_usage():
     free_memory='Free Memory: '+str(int(status_memory.free/(1024*1024*1024)))+'GB\n'
     message_memory=memory+total_memory+used_memory+free_memory
     return message_memory
+
+def network_usage():
+    network = '\n====MEMORY USAGE====\n'
+    status_network = psutil.net_io_counters()
+    download='Download: '+str(int(status_network.bytes_recv/(1024*1024)))+'Mbps\n'
+    upload='Upload: '+str(int(status_network.bytes_sent/(1024*1024)))+'Mbps\n'
+    message_network=network+download+upload
+    return message_network
