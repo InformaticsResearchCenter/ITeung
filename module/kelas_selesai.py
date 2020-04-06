@@ -25,7 +25,7 @@ def replymsg(driver, data):
                 except:
                     msgreply='aduh materinya ga ada nich, \ncontoh format yang bener gini ya: \niteung kelas daring selesai materi chapter 04'
             else:
-                msgreply='aduh mahasiswanya belum ada yang update nomer hp SIAP nich, \nKalo mau ke absen cocokin dulu dong nomer hp yang ada di SIAP dengan yang kamu pakai di WhatsApp \nIngat ya gunakan format international, contoh: 6282217401448\n *ATAU*\n '
+                msgreply='aduh mahasiswanya belum ada yang update nomer hp SIAP nich, \nKalo mau ke absen cocokin dulu dong nomer hp yang ada di SIAP dengan yang kamu pakai di WhatsApp \nIngat ya gunakan format international, contoh: 6282217401448 '
         else:
             msgreply="adohhhh wadohdoh peserta absensinya kosong nih, coba ganti ke jadwal id yang satunya lagi eheeeee.... :-3"
     except:
