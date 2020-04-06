@@ -11,6 +11,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from time import sleep
+import os
 
 
 def setProfile(profile_folder):
@@ -24,12 +25,19 @@ def loginWA(driver):
     driver.get("https://web.whatsapp.com/")
     waitLogin(driver)
 
-def phoneNotConnected(driver):
+def detectphoneNotConnected(driver):
     try:
         driver.find_element_by_class_name('m6ZEb')
         ret=True
     except:
         ret=False
+    return ret
+
+def restartMemu(ret):
+    if ret:
+        os.system(r'C:\Users\LENOVO\Desktop\ITeung\stopmemu.bat')
+        sleep(.5)
+        os.system(r'C:\Users\LENOVO\Desktop\ITeung\startmemu.bat')
     return ret
 
 def waitLogin(driver):
