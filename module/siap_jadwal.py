@@ -1,5 +1,5 @@
 from module import kelas
-from lib import wa,reply
+from lib import wa, reply
 from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
@@ -9,21 +9,37 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
 
-import os, subprocess, string, ssl, smtplib, config, time, unicodedata, re, urllib.request, sys, pandas as pd, pymysql
+import os
+import subprocess
+import string
+import ssl
+import smtplib
+import config
+import time
+import unicodedata
+import re
+import urllib.request
+import sys
+import pandas as pd
+import pymysql
+
 
 def auth(data):
     if kelas.getKodeDosen(data[0]) == '':
-        ret=False
+        ret = False
     else:
-        ret=True
+        ret = True
     return ret
+
 
 def replymsg(driver, data):
     wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
     wa.typeAndSendMessage(driver, wmsg)
-    kodedosen=kelas.getKodeDosen(data[0])
-    subprocess.Popen(["python", "main_jadwal_uts.py", kodedosen], cwd=r"C:\Users\LENOVO\Desktop\ITeung")
+    kodedosen = kelas.getKodeDosen(data[0])
+    subprocess.Popen(["python", "main_jadwal_uts.py", kodedosen],
+                     cwd=r"C:\Users\LENOVO\Desktop\ITeung")
     return ''
+
 
 def dbConnectSiap():
     db = pymysql.connect(config.db_host_siap,
@@ -36,22 +52,22 @@ def dbConnectSiap():
 def getEmailDosen(matkul, kelas, tahun):
     db = dbConnectSiap()
     sql = """
-        select d.Email,j.JadwalID,j.TahunID,j.NamaKelas,CASE
-        WHEN j.ProdiID ='.13.' THEN 'D3 Teknik Informatika'
-        WHEN j.ProdiID ='.14.' THEN 'D4 Teknik Informatika'
-        WHEN j.ProdiID ='.23.' THEN 'D3 Manajemen Informatika'
-        WHEN j.ProdiID ='.33.' THEN 'D3 Akuntansi'
-        WHEN j.ProdiID ='.34.' THEN 'D4 Akuntansi Keuangan'
-        WHEN j.ProdiID ='.43.' THEN 'D3 Manajemen Pemasaran'
-        WHEN j.ProdiID ='.44.' THEN 'D4 Manajemen Perusahaan'
-        WHEN j.ProdiID ='.53.' THEN 'D3 Logistik Bisnis'
-        WHEN j.ProdiID ='.54.' THEN 'D4 Logistik Bisnis'
-        END AS namaprodi,j.MKKode,j.DosenID,d.Nama,j.Nama,j.HariID,
-        j.JamMulai,j.JamSelesai,j.DosenID 
-        from simak_trn_jadwal as j join simak_mst_dosen as d
-        where  j.dosenid=d.login and j.MKKode = '""" + matkul + """' 
-        and j.NamaKelas = '""" + kelas + """' and TahunID = '""" + tahun + """';
-    """
+            select d.Email,j.JadwalID,j.TahunID,j.NamaKelas,CASE
+            WHEN j.ProdiID ='.13.' THEN 'D3 Teknik Informatika'
+            WHEN j.ProdiID ='.14.' THEN 'D4 Teknik Informatika'
+            WHEN j.ProdiID ='.23.' THEN 'D3 Manajemen Informatika'
+            WHEN j.ProdiID ='.33.' THEN 'D3 Akuntansi'
+            WHEN j.ProdiID ='.34.' THEN 'D4 Akuntansi Keuangan'
+            WHEN j.ProdiID ='.43.' THEN 'D3 Manajemen Pemasaran'
+            WHEN j.ProdiID ='.44.' THEN 'D4 Manajemen Perusahaan'
+            WHEN j.ProdiID ='.53.' THEN 'D3 Logistik Bisnis'
+            WHEN j.ProdiID ='.54.' THEN 'D4 Logistik Bisnis'
+            END AS namaprodi,j.MKKode,j.DosenID,d.Nama,j.Nama,j.HariID,
+            j.JamMulai,j.JamSelesai,j.DosenID 
+            from simak_trn_jadwal as j join simak_mst_dosen as d
+            where  j.dosenid=d.login and j.MKKode = '""" + matkul + """' 
+            and j.NamaKelas = '""" + kelas + """' and TahunID = '""" + tahun + """';
+        """
 
     with db:
         cur = db.cursor()
@@ -68,33 +84,31 @@ def getEmailDosen(matkul, kelas, tahun):
 def getMatkulDosen(dosen, tahun):
     db = dbConnectSiap()
     sql = """
-        select j.JadwalID,j.TahunID,j.NamaKelas,CASE
-        WHEN j.ProdiID ='.13.' THEN 'D3 Teknik Informatika'
-        WHEN j.ProdiID ='.14.' THEN 'D4 Teknik Informatika'
-        WHEN j.ProdiID ='.23.' THEN 'D3 Manajemen Informatika'
-        WHEN j.ProdiID ='.33.' THEN 'D3 Akuntansi'
-        WHEN j.ProdiID ='.34.' THEN 'D4 Akuntansi Keuangan'
-        WHEN j.ProdiID ='.43.' THEN 'D3 Manajemen Pemasaran'
-        WHEN j.ProdiID ='.44.' THEN 'D4 Manajemen Perusahaan'
-        WHEN j.ProdiID ='.53.' THEN 'D3 Logistik Bisnis'
-        WHEN j.ProdiID ='.54.' THEN 'D4 Logistik Bisnis'
-        END AS namaprodi,j.MKKode,j.Nama,j.HariID,
-        j.JamMulai,j.JamSelesai,j.DosenID 
-        from simak_trn_jadwal as j join simak_mst_dosen as d
-        where  j.dosenid=d.login and j.DosenID = '""" + dosen + """' 
-        and TahunID = '""" + tahun + """';
-    """
+            select j.JadwalID,j.TahunID,j.NamaKelas,CASE
+            WHEN j.ProdiID ='.13.' THEN 'D3 Teknik Informatika'
+            WHEN j.ProdiID ='.14.' THEN 'D4 Teknik Informatika'
+            WHEN j.ProdiID ='.23.' THEN 'D3 Manajemen Informatika'
+            WHEN j.ProdiID ='.33.' THEN 'D3 Akuntansi'
+            WHEN j.ProdiID ='.34.' THEN 'D4 Akuntansi Keuangan'
+            WHEN j.ProdiID ='.43.' THEN 'D3 Manajemen Pemasaran'
+            WHEN j.ProdiID ='.44.' THEN 'D4 Manajemen Perusahaan'
+            WHEN j.ProdiID ='.53.' THEN 'D3 Logistik Bisnis'
+            WHEN j.ProdiID ='.54.' THEN 'D4 Logistik Bisnis'
+            END AS namaprodi,j.MKKode,j.Nama,j.HariID,
+            j.JamMulai,j.JamSelesai,j.DosenID 
+            from simak_trn_jadwal as j join simak_mst_dosen as d
+            where  j.dosenid=d.login and j.DosenID = '""" + dosen + """' 
+            and TahunID = '""" + tahun + """';
+        """
     with db:
         matkul = []
-
         cur = db.cursor()
         cur.execute(sql)
         rows = cur.fetchall()
-
         for row in rows:
             matkul.append([row[2], row[3], row[4], row[5]])
-
     return pd.DataFrame(matkul, columns=['kelas', 'prodi', 'matkul', 'nama_matkul'])
+
 
 def makeFile(driver, list_prodi_ujian, filters):
     launchJadwalUjianMenu(driver)
@@ -120,7 +134,8 @@ def printAbsensiUjian(driver, filters, prodi):
     while True:
         try:
             index += 1
-            matkul_select = tabel_select.find_element_by_xpath("//tr[" + str(index) + "]/td[8]").text
+            matkul_select = tabel_select.find_element_by_xpath(
+                "//tr[" + str(index) + "]/td[8]").text
             time.sleep(1)
             matkul_select = matkul_select.replace(" ", "_")
             matkul_select = matkul_select.replace("-", "_")
@@ -132,7 +147,8 @@ def printAbsensiUjian(driver, filters, prodi):
             kode_matkul_select = tabel_select.find_element_by_xpath(
                 "//tr[" + str(index) + "]/td[7]").text
             time.sleep(2)
-            email_select = getEmailDosen(kode_matkul_select, kelas_select, filters['tahun'])
+            email_select = getEmailDosen(
+                kode_matkul_select, kelas_select, filters['tahun'])
             kelas_select = int(kelas_select.strip("0"))
             kelas_select = convertKelas(kelas_select)
             filename = ''
@@ -171,22 +187,27 @@ def printAbsensiUjian(driver, filters, prodi):
         except NoSuchElementException:
             break
 
-
 #########################
+
 
 def makeFileForDosen(driver, dosens, filters):
     launchJadwalUjianMenu(driver)
     prodis = []
+    nama_dosens = []
     for dosen in dosens:
         matkul = getMatkulDosen(dosen, filters['tahun'])
         prodis.extend(matkul['prodi'].tolist())
+        nama_dosens.extend(matkul['nama_dosen'].tolist())
 
     prodis = list(set(prodis))
-
-    all_ujian = getAllUjian(driver, prodis, filters)
+    nama_dosens = list(set(nama_dosens))
+    all_ujian = getAllUjian(driver, prodis, nama_dosens, filters)
+    print(all_ujian)
     print("\nSelesai mengambil semua ujian")
     for dosen in dosens:
         matkul = getMatkulDosen(dosen, filters['tahun'])
+        matkul.sort_values(by=['prodi'], inplace=True)
+        print(matkul)
         getFileForDosen(driver, all_ujian, matkul, filters)
     driver.quit()
 
@@ -195,18 +216,22 @@ def getFileForDosen(driver, all_ujian, matkul, filters):
     total = len(matkul)
     gagal = 0
     berhasil = 0
-
     for index, row in matkul.iterrows():
         ujian = all_ujian.loc[(all_ujian['matkul'] == row['nama_matkul']) & (all_ujian['prodi'] == row['prodi'])
                               & (all_ujian['kelas'] == int(row['kelas'].strip("0")))]
-        if (ujian.empty):
-            print("Jadwal " + row['nama_matkul'] + " kelas " +
-                  row['kelas'] + " tidak ada di SIAP")
+        if(ujian.empty):
+            print("Jadwal "+row['nama_matkul']+" kelas " +
+                  row['kelas']+" tidak ada di SIAP")
             gagal += 1
         else:
             index_ujian = ujian.iloc[0]['index']
             prodi_ujian = ujian.iloc[0]['prodi']
-            matkul = {"prodi": prodi_ujian, "index": str(index_ujian)}
+            matkul = {
+                "prodi": prodi_ujian,
+                "index": str(index_ujian),
+                "kelas": ujian.iloc[0]['kelas'],
+                "matkul": ujian.iloc[0]['matkul']
+            }
             printAbsensiUjianForDosen(driver, matkul, filters)
 
 
@@ -227,59 +252,62 @@ def printAbsensiUjianForDosen(driver, matkul, filters):
     tabel_select = driver.find_element_by_xpath(
         "//table[@cellpadding='4' and @cellspacing='1']/tbody")
     time.sleep(2)
-
-    matkul_select = tabel_select.find_element_by_xpath(
-        "//tr[" + matkul['index'] + "]/td[8]").text
-    time.sleep(1)
-    kelas_select = tabel_select.find_element_by_xpath(
-        "//tr[" + matkul['index'] + "]/td[9]").text
-    time.sleep(1)
-    kode_matkul_select = tabel_select.find_element_by_xpath(
-        "//tr[" + matkul['index'] + "]/td[7]").text
-    time.sleep(2)
-
-    email_select = getEmailDosen(kode_matkul_select, kelas_select, filters['tahun'])
-    kelas_select = int(kelas_select.strip("0"))
-    kelas_select = convertKelas(kelas_select)
-    matkul_select = matkul_select.replace(" ", "_")
-    matkul_select = matkul_select.replace("-", "_")
-
-    filename = ''
-    if email_select != None:
-        filename = "{}-{}-{}-{}-{}-{}".format(filters['tahun'], setUjian(
-            filters['jenis']), filters['program'], matkul_select, kelas_select, email_select)
-    else:
-        filename = "{}-{}-{}-{}-{}-NULL".format(filters['tahun'], setUjian(
-            filters['jenis']), filters['program'], matkul_select, kelas_select)
-
-    checkDir(matkul['prodi'])
-
-    if os.path.exists('absensi/' + prodi + '/' + filename + '.pdf'):
-        os.remove('absensi/' + prodi + '/' + filename + '.pdf')
     try:
-        edit_select = tabel_select.find_element_by_xpath(
+        dhu_select = tabel_select.find_element_by_xpath(
             "//tr[" + matkul['index'] + "]/td[16]/a")
+        print('Jadwal {} kelas {} diproses'.format(
+            matkul['matkul'], matkul['kelas']))
+        time.sleep(2)
+        matkul_select = tabel_select.find_element_by_xpath(
+            "//tr[" + matkul['index'] + "]/td[8]").text
         time.sleep(1)
-        edit_select.send_keys(Keys.ENTER)
+        kelas_select = tabel_select.find_element_by_xpath(
+            "//tr[" + matkul['index'] + "]/td[9]").text
+        time.sleep(1)
+        kode_matkul_select = tabel_select.find_element_by_xpath(
+            "//tr[" + matkul['index'] + "]/td[7]").text
+
+        email_select = getEmailDosen(
+            kode_matkul_select, kelas_select, filters['tahun'])
+        kelas_select = int(kelas_select.strip("0"))
+        kelas_select = convertKelas(kelas_select)
+        matkul_select = matkul_select.replace(" ", "_").replace("-", "_")
+        matkul_select = matkul_select.replace("(", "").replace(")", "")
+        filename = ''
+        # Test with your email
+        # email_select = 'divakrishnam@yahoo.com'
+        if email_select != None:
+            filename = "{}-{}-{}-{}-{}-{}".format(filters['tahun'], setUjian(
+                filters['jenis']), filters['program'], matkul_select, kelas_select, email_select)
+        else:
+            filename = "{}-{}-{}-{}-{}-NULL".format(filters['tahun'], setUjian(
+                filters['jenis']), filters['program'], matkul_select, kelas_select)
+
+        checkDir(matkul['prodi'])
+
+        if os.path.exists('absensi/'+prodi+'/'+filename+'.pdf'):
+            os.remove('absensi/'+prodi+'/'+filename+'.pdf')
+
+        dhu_select.send_keys(Keys.ENTER)
         time.sleep(2)
         driver.switch_to.window(driver.window_handles[1])
         time.sleep(2)
         url_select = driver.find_element_by_link_text(
             "Cetak Laporan").get_attribute('href')
         urllib.request.urlretrieve(
-            url_select, 'absensi/' + prodi + '/' + filename + '.txt')
+            url_select, 'absensi/'+prodi+'/'+filename+'.txt')
         time.sleep(2)
 
         makePDFOfAbsensiUjian(filename, prodi)
-        time.sleep(2)
-        if os.path.exists('absensi/' + prodi + '/' + filename + '.txt'):
-            os.remove('absensi/' + prodi + '/' + filename + '.txt')
+        if os.path.exists('absensi/'+prodi+'/'+filename+'.txt'):
+            os.remove('absensi/'+prodi+'/'+filename+'.txt')
         driver.close()
         driver.switch_to.window(driver.window_handles[0])
         time.sleep(2)
-        print('File ' + filename + '.pdf berhasil dibuat')
+        print('File '+filename+'.pdf berhasil dibuat')
     except NoSuchElementException:
-        print('Jadwal {} kelas {} belum diatur'.format(matkul_select, kelas_select))
+        print('Jadwal {} kelas {} belum diatur'.format(
+            matkul['matkul'], matkul['kelas']))
 
 
 def launchJadwalUjianMenu(driver):
@@ -306,7 +334,7 @@ def chooseUjian(driver, filters):
     program_ujian.select_by_value(filters['program'])
 
 
-def getAllUjian(driver, prodis, filters):
+def getAllUjian(driver, prodis, dosens, filters):
     chooseUjian(driver, filters)
     list_ujian = pd.DataFrame()
     for prodi_selected in prodis:
@@ -315,7 +343,7 @@ def getAllUjian(driver, prodis, filters):
                 "//input[@name='Tampilkan']")
             tampil_ujian.send_keys(Keys.ENTER)
 
-            result_generate = genDataFrameUjian(driver, prodi_selected)
+            result_generate = genDataFrameUjian(driver, prodi_selected, dosens)
             list_ujian = pd.concat([result_generate, list_ujian])
 
     return list_ujian
@@ -331,17 +359,22 @@ def genDataFrameUjian(driver, prodi_selected, dosen):
     while True:
         try:
             index += 1
-            dosen_select = tabel_select.find_element_by_xpath("//tr[" + str(index) + "]/td[13]").text
+            dosen_select = tabel_select.find_element_by_xpath(
+                "//tr[" + str(index) + "]/td[13]").text
             time.sleep(1)
             if dosen_select in dosen:
-                matkul_select = tabel_select.find_element_by_xpath("//tr[" + str(index) + "]/td[8]").text
+                matkul_select = tabel_select.find_element_by_xpath(
+                    "//tr[" + str(index) + "]/td[8]").text
                 time.sleep(1)
-                kelas_select = tabel_select.find_element_by_xpath("//tr[" + str(index) + "]/td[9]").text
+                kelas_select = tabel_select.find_element_by_xpath(
+                    "//tr[" + str(index) + "]/td[9]").text
                 time.sleep(1)
-                kode_matkul_select = tabel_select.find_element_by_xpath("//tr[" + str(index) + "]/td[7]").text
+                kode_matkul_select = tabel_select.find_element_by_xpath(
+                    "//tr[" + str(index) + "]/td[7]").text
                 time.sleep(2)
                 kelas_select = int(kelas_select.strip("0"))
-                data = {'prodi': prodi_selected, 'matkul': matkul_select,'kelas': kelas_select, 'kode_matkul': kode_matkul_select, 'index': index}
+                data = {'prodi': prodi_selected, 'matkul': matkul_select,
+                        'kelas': kelas_select, 'kode_matkul': kode_matkul_select, 'index': index}
                 dict_data.append(data)
             print('.', end='', flush=True)
         except NoSuchElementException:
@@ -352,7 +385,8 @@ def genDataFrameUjian(driver, prodi_selected, dosen):
 
 
 def getProdiFromDropdown(driver, prodi_selected):
-    prodi_ujian = Select(driver.find_element_by_xpath("//select[@name='prodi']"))
+    prodi_ujian = Select(
+        driver.find_element_by_xpath("//select[@name='prodi']"))
     for prodis in prodi_ujian.options:
         prodi = prodis.text[5:].lower()
         prodi_selected = prodi_selected.lower()
@@ -366,25 +400,20 @@ def getProdiFromDropdown(driver, prodi_selected):
 
 def makePDFOfAbsensiUjian(filename, prodi):
     pdf = setPdfFormat()
-
     # Read file txt
     path = 'absensi/{}/{}.txt'.format(prodi, filename)
     file = open(path)
     all_lines = file.readlines()
-
     # Get length lines file txt
     length_lines = len(all_lines)
-
     # Make first page
     if length_lines < 61:
         makeCellPdf(pdf, all_lines, 1, length_lines)
     else:
         makeCellPdf(pdf, all_lines, 1, 61)
-
     # Make second page if exist
     if length_lines > 61:
         makeCellPdf(pdf, all_lines, 63, length_lines)
-
     pdf.output('absensi/{}/{}.pdf'.format(prodi, filename))
 
 
@@ -439,8 +468,10 @@ def setUjian(ujian):
 
 
 def sendEmail(file):
-    subject = "Absensi {} Mata Kuliah {} Kelas {} Prodi {}".format(file['ujian'], file['matkul'], file['kelas'], file['prodi'])
-    body = "Ini file absensi Ujitan UTS Semester Genap oleh iteung ya..., mohon untuk dicek kembali filenya jika ada yang salah mohon untuk diinformasikan ke admin iteung yaa....:) \nAbsensi {} Mata Kuliah {} Kelas {} Prodi {}".format(file['ujian'], file['matkul'], file['kelas'], file['prodi'])
+    subject = "Absensi {} Mata Kuliah {} Kelas {} Prodi {}".format(
+        file['ujian'], file['matkul'], file['kelas'], file['prodi'])
+    body = "Ini file absensi Ujitan UTS Semester Genap oleh iteung ya..., mohon untuk dicek kembali filenya jika ada yang salah mohon untuk diinformasikan ke admin iteung yaa....:) \nAbsensi {} Mata Kuliah {} Kelas {} Prodi {}".format(
+        file['ujian'], file['matkul'], file['kelas'], file['prodi'])
 
     sender_email = config.email_iteung
     receiver_email = file['tujuan']
@@ -481,12 +512,12 @@ def sendEmail(file):
     os.chdir(r'../../')
     return True
 
+
 def sendFileUjian(list_prodi_ujian, filters):
     for prodi_selected in list_prodi_ujian:
-        directory = 'absensi/' + prodi_selected
+        directory = 'absensi/'+prodi_selected
         for filename in os.listdir(directory):
-            if filename.endswith(".pdf") and filename.startswith(
-                    filters['tahun'] + '-' + setUjian(filters['jenis']) + '-' + filters['program']):
+            if filename.endswith(".pdf") and filename.startswith(filters['tahun']+'-'+setUjian(filters['jenis'])+'-'+filters['program']):
                 nama_baru = filename[:-4].split("-")
                 email_dosen = nama_baru[5]
                 if email_dosen == 'NULL':
@@ -494,46 +525,53 @@ def sendFileUjian(list_prodi_ujian, filters):
                 else:
                     file = {'nama_lama': filename,
                             'prodi': prodi_selected,
-                            'nama_baru': nama_baru[0] + '-' + nama_baru[1] + '-' + nama_baru[2] + '-' + nama_baru[
-                                3] + '-' + nama_baru[4] + '.pdf',
+                            'nama_baru': nama_baru[0]+'-'+nama_baru[1]+'-'+nama_baru[2]+'-'+nama_baru[3]+'-'+nama_baru[4]+'.pdf',
                             'tujuan': email_dosen,
                             'ujian': nama_baru[1],
                             'matkul': nama_baru[3],
-                            'kelas': nama_baru[4]}
+                            'kelas': nama_baru[4],
+                            'prodi': prodi_selected}
                     sendEmail(file)
-                    print('File ' + filename + ' berhasil dikirim ke ' + email_dosen)
+                    print('File '+filename+' berhasil dikirim ke '+email_dosen)
+
+###############################
 
 
 def sendFileUjianDosen(dosens, filters):
     for dosen in dosens:
         matkul = getMatkulDosen(dosen, filters['tahun'])
         for prodi_selected in matkul['prodi'].unique():
-            directory = 'absensi/' + prodi_selected
+            directory = 'absensi/'+prodi_selected
             for ind in matkul.index:
                 for filename in os.listdir(directory):
-                    if filename.endswith(".pdf") and filename.startswith(
-                            filters['tahun'] + '-' + setUjian(filters['jenis']) + '-' + filters['program']):
+                    if filename.endswith(".pdf") and filename.startswith(filters['tahun']+'-'+setUjian(filters['jenis'])+'-'+filters['program']):
                         nama_baru = filename[:-4].split("-")
                         email_dosen = nama_baru[5]
-                        matkul_select = matkul['nama_matkul'][ind].replace(" ", "_")
+                        matkul_select = matkul['nama_matkul'][ind].replace(
+                            " ", "_")
                         matkul_select = matkul_select.replace("-", "_")
+                        matkul_select = matkul_select.replace("(", "")
+                        matkul_select = matkul_select.replace(")", "")
 
-                        if nama_baru[3] == matkul_select and nama_baru[4] == convertKelas(
-                                int(matkul['kelas'][ind].strip("0"))):
+                        if nama_baru[3] == matkul_select and nama_baru[4] == convertKelas(int(matkul['kelas'][ind].strip("0"))):
 
                             if email_dosen == 'NULL':
                                 continue
                             else:
                                 file = {'nama_lama': filename,
                                         'prodi': prodi_selected,
-                                        'nama_baru': nama_baru[0] + '-' + nama_baru[1] + '-' + nama_baru[2] + '-' +
-                                                     nama_baru[3] + '-' + nama_baru[4] + '.pdf',
+                                        'nama_baru': nama_baru[0]+'-'+nama_baru[1]+'-'+nama_baru[2]+'-'+nama_baru[3]+'-'+nama_baru[4]+'.pdf',
                                         'tujuan': email_dosen,
                                         'ujian': nama_baru[1],
                                         'matkul': nama_baru[3],
-                                        'kelas': nama_baru[4]}
-                                sendEmail(file)
-                                print('File ' + filename + ' berhasil dikirim ke ' + email_dosen)
+                                        'kelas': nama_baru[4],
+                                        'prodi': prodi_selected}
+                                if sendEmail(file):
+                                    print('File '+filename +
+                                          ' berhasil dikirim ke '+email_dosen)
+                                else:
+                                    print('File '+filename +
+                                          ' gagal dikirim ke '+email_dosen)
 
 
 def setUjian(ujian):
