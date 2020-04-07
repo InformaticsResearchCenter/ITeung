@@ -21,10 +21,15 @@ def replymsg(driver, data):
     else:
         try:
             if kelas.isMatkul(grp.split('-')[0]):
-                JadwalID = grp.split('-')[0]
+                jadwalid = grp.split('-')[0]
+                jadwalserial = kelas.getJadwalSerial(jadwalid=jadwalid)
+                if jadwalserial == '0':
+                    jadwalid = jadwalid
+                else:
+                    jadwalid = jadwalserial
                 abc = 1
                 listStudent='\n\nBerikut Peserta Absensinya:\n'
-                for i in kelas.pesertaAbsensi(JadwalID):
+                for i in kelas.pesertaAbsensi(jadwalid=jadwalid):
                     npm=i[-1]
                     nama=kelas.getStudentNameOnly(npm)
                     listStudent=listStudent+str(abc)+'. '+npm+' '+nama+'\n'
