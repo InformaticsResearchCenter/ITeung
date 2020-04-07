@@ -56,8 +56,8 @@ def network_speedtest():
 
 def network_usage():
     network='\n====NETWORK USAGE====\n'
-    network_packet_download=str(int(psutil.net_io_counters().bytes_recv/(1024*1024*1024)))+' GB\n'
-    network_packet_upload=str(int(psutil.net_io_counters().bytes_recv/(1024*1024*1024)))+' GB\n'
+    network_packet_download='Download: '+str(round(float(psutil.net_io_counters().bytes_recv/(1024*1024*1024)), 3))+' GB\n'
+    network_packet_upload='Upload: '+str(round(float(psutil.net_io_counters().bytes_recv/(1024*1024*1024)), 3))+' GB\n'
     message_network=network+network_packet_download+network_packet_upload
     return message_network
 
