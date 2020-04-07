@@ -1,4 +1,4 @@
-import psutil, pyspeedtest, speedtest
+import psutil, pyspeedtest, speedtest, GPUtil
 from lib import reply
 
 def auth(data):
@@ -9,7 +9,7 @@ def auth(data):
     return ret
 
 def replymsg(driver, data):
-    msgreply=cpu_usage()+disk_usage()+memory_usage()+network_usage()+network_ping()
+    msgreply=cpu_usage()+disk_usage()+memory_usage()+network_speedtest()+network_usage()+network_ping()+gpu_usage()
     return msgreply
 
 def cpu_usage():
@@ -37,16 +37,28 @@ def memory_usage():
     message_memory=memory+total_memory+used_memory+free_memory
     return message_memory
 
-def network_usage():
+def network_speedtest():
     network = '\n====NETWORK SPEEDTEST====\n'
     speed = speedtest.Speedtest()
     speed.get_best_server()
     speed.download()
     speed.upload()
     res = speed.results.dict()
-    download = str(round(float(res['download'] / 1000000), 3)) + ' Mbit/s'
-    upload = str(round(float(res['upload'] / 1000000), 3)) + ' Mbit/s'
-    message_network=network+download+upload
+    download = 'Download: '+str(round(float(res['download'] / 1000000), 3)) + ' Mbit/s\n'
+    upload = 'Upload: '+str(round(float(res['upload'] / 1000000), 3)) + ' Mbit/s\n'
+    url = 'URL: '+str(res['server']['url'])+'\n'
+    loc = 'Location: '+str(res['server']['name'])+'\n'
+    country = 'Country: '+str(res['server']['country'])+'\n'
+    host = 'Host: '+str(res['server']['host'])+'\n'
+    latency = 'Latency: '+str(res['server']['latency'])+'\n'
+    message_network=network+download+upload+latency+url+host+loc+country
+    return message_network
+
+def network_usage():
+    network='\n====NETWORK USAGE====\n'
+    network_packet_download=str(int(psutil.net_io_counters().bytes_recv/(1024/1024/1024)))+' GB\n'
+    network_packet_upload=str(int(psutil.net_io_counters().bytes_recv/(1024/1024/1024)))+' GB\n'
+    message_network=network+network_packet_download+network_packet_upload
     return message_network
 
 def network_ping():
@@ -55,3 +67,9 @@ def network_ping():
     siap='System Akademik SIAP: '+str(int(pyspeedtest.SpeedTest('siap.poltekpos.ac.id').ping()))+'ms\n'
     message_ping=ping+whatsapp+siap
     return message_ping
+
+def gpu_usage():
+    gpu='\n====GPU USAGE====\n'
+    gpu_usage=str(GPUtil.showUtilization())
+    message_gpu=gpu+gpu_usage
+    return message_gpu
