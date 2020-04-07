@@ -1,4 +1,4 @@
-import psutil, pyspeedtest, speedtest, GPUtil
+import psutil, pyspeedtest, speedtest, nvgpu
 from lib import reply
 
 def auth(data):
@@ -56,8 +56,8 @@ def network_speedtest():
 
 def network_usage():
     network='\n====NETWORK USAGE====\n'
-    network_packet_download=str(int(psutil.net_io_counters().bytes_recv/(1024/1024/1024)))+' GB\n'
-    network_packet_upload=str(int(psutil.net_io_counters().bytes_recv/(1024/1024/1024)))+' GB\n'
+    network_packet_download=str(int(psutil.net_io_counters().bytes_recv/(1024*1024*1024)))+' GB\n'
+    network_packet_upload=str(int(psutil.net_io_counters().bytes_recv/(1024*1024*1024)))+' GB\n'
     message_network=network+network_packet_download+network_packet_upload
     return message_network
 
@@ -70,6 +70,9 @@ def network_ping():
 
 def gpu_usage():
     gpu='\n====GPU USAGE====\n'
-    gpu_usage=str(GPUtil.showUtilization())
-    message_gpu=gpu+gpu_usage
+    type = 'Type: ' + str(nvgpu.gpu_info()[0]['type']) + '\n'
+    memuse = 'Memory Used: ' + str(nvgpu.gpu_info()[0]['mem_used']) + '\n'
+    memtot = 'Memory Total: ' + str(nvgpu.gpu_info()[0]['mem_total']) + '\n'
+    mempercentage = 'Memory Percentage: ' + str(round(float(nvgpu.gpu_info()[0]['mem_used_percent']), 3)) + '%\n'
+    message_gpu=gpu+type+memuse+memtot+mempercentage
     return message_gpu
