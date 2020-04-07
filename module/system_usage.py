@@ -73,6 +73,6 @@ def gpu_usage():
     type = 'Type: ' + str(nvgpu.gpu_info()[0]['type']) + '\n'
     memuse = 'Memory Used: ' + str(nvgpu.gpu_info()[0]['mem_used']) + '\n'
     memtot = 'Memory Total: ' + str(nvgpu.gpu_info()[0]['mem_total']) + '\n'
-    mempercentage = 'Memory Percentage: ' + str(round(float(nvgpu.gpu_info()[0]['mem_used_percent']), 3)) + '%\n'
+    mempercentage = 'Memory Percentage: ' + str(int(nvgpu.gpu_info()[0]['mem_used_percent'])) + '%\n'
     message_gpu=gpu+type+memuse+memtot+mempercentage
     return message_gpu
