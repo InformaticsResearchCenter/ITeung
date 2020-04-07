@@ -283,6 +283,18 @@ def getHadirAlias(time):
         rows = cur.fetchall()
     return rows
 
+def getJadwalSerial(jadwalid):
+    db=dbConnectSiap()
+    sql="select JadwalSer from simak_trn_jadwal where JadwalID={jadwalid}".format(jadwalid=jadwalid)
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        rows = cur.fetchone()
+        if rows is not None:
+            ret=str(rows[0])
+        else:
+            ret=''
+    return ret
 
 def pesertaAbsensi(jadwalid):
     db = dbConnectSiap()
@@ -491,6 +503,11 @@ def updateAbsenSiapMahasiswa(presensiid, studentid, attend, valueattend):
 
 
 def studentattendance(grp, jadwalid):
+    jadwalserial=getJadwalSerial(jadwalid=jadwalid)
+    if jadwalserial == '0':
+        jadwalid=jadwalid
+    else:
+        jadwalid=jadwalserial
     studentabsent = pesertaAbsensi(jadwalid=jadwalid)
     if studentabsent != ():
         datastudentabsenfromsiap = []
