@@ -1,5 +1,4 @@
-import psutil
-import pyspeedtest
+import psutil, pyspeedtest, speedtest
 from lib import reply
 
 def auth(data):
@@ -39,10 +38,14 @@ def memory_usage():
     return message_memory
 
 def network_usage():
-    network = '\n====NETWORK USAGE====\n'
-    status_network = psutil.net_io_counters()
-    download='Download: '+str(int(status_network.bytes_recv/(1000000)))+'MB\n'
-    upload='Upload: '+str(int(status_network.bytes_sent/(1000000)))+'MB\n'
+    network = '\n====NETWORK SPEEDTEST====\n'
+    speed = speedtest.Speedtest()
+    speed.get_best_server()
+    speed.download()
+    speed.upload()
+    res = speed.results.dict()
+    download = str(round(float(res['download'] / 1000000), 3)) + ' Mbit/s'
+    upload = str(round(float(res['upload'] / 1000000), 3)) + ' Mbit/s'
     message_network=network+download+upload
     return message_network
 
