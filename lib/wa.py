@@ -79,8 +79,16 @@ def messageunread(driver):
     except:
         return 1
 
+def messageReply(driver, default_alias_number_index):
+    classvalue=driver.find_elements_by_xpath('/html/body/div[1]/div/div/div[4]/div/div[3]/div/div/div[3]/div')[-1].get_attribute('class')
+    if '_1T1d2' in classvalue:
+        default_alias_number_index-=1
+    else:
+        default_alias_number_index-=0
+
 def getData(driver, message_wa_index, default_alias_number_index):
     data = []
+    default_alias_number_index=messageReply(driver, default_alias_number_index)
     data.append(getSenderNumber(driver, default_alias_number_index))
     data.append(getGroupName(driver))
     data.append(getSenderAlias(driver, default_alias_number_index))
