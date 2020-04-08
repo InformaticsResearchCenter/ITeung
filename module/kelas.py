@@ -492,6 +492,18 @@ def insertAbsenSiapMahasiswa(jadwalid, krsid, presensiid, studentid, attend, val
         cur = db.cursor()
         cur.execute(sql)
 
+def getKehadiran(jadwalid):
+    db=dbConnectSiap()
+    sql="SELECT Kehadiran from simak_trn_jadwal WHERE JadwalID={jadwalid}".format(jadwalid=jadwalid)
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        rows=cur.fetchone()
+        if rows is not None:
+            ret=int(rows[0])
+        else:
+            ret=''
+    return ret
 
 def updateAbsenSiapMahasiswa(presensiid, studentid, attend, valueattend):
     db = dbConnectSiap()
