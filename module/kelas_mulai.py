@@ -16,8 +16,8 @@ def auth(data):
 #close commit #2
 def replymsg(driver, data):
     grp = data[1]
-    kehadiran=kelas.getKehadiran(grp.split('-')[0])
     try:
+        kehadiran = kelas.getKehadiran(grp.split('-')[0])
         if kehadiran != config.kehadiran and kehadiran < config.kehadiran:
             if kelas.isMatkul(grp.split('-')[0]):
                 jadwalid = grp.split('-')[0]

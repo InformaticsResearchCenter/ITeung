@@ -13,8 +13,8 @@ def replymsg(driver, data):
     grp = data[1]
     num = data[0]
     msg = data[3]
-    kehadiran=kelas.getKehadiran(grp.split('-')[0])
     try:
+        kehadiran = kelas.getKehadiran(grp.split('-')[0])
         if kehadiran != config.kehadiran and kehadiran < config.kehadiran:
             wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
             wa.typeAndSendMessage(driver, wmsg)
