@@ -505,6 +505,13 @@ def getKehadiran(jadwalid):
             ret=''
     return ret
 
+def updateKehadiran(jadwalid, pertemuan):
+    db=dbConnectSiap()
+    sql="UPDATE simak_trn_jadwal SET Kehadiran={pertemuan} WHERE JadwalID={jadwalid}".format(pertemuan=pertemuan, jadwalid=jadwalid)
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+
 def updateAbsenSiapMahasiswa(presensiid, studentid, attend, valueattend):
     db = dbConnectSiap()
     sql = "UPDATE simak_trn_presensi_mahasiswa SET JenisPresensiID='{attend}', Nilai={valueattend} WHERE MhswID={studentid} and PresensiID={presensiid}".format(
@@ -588,6 +595,7 @@ def siapabsensiwithsql(grp, num):
             yearmonthdaytimenow = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             starttime = getDataMatkul(jadwalid=jadwalid)[3]
             endtime = getDataMatkul(jadwalid=jadwalid)[4]
+            updateKehadiran(jadwalid=jadwalid, pertemuan=int(lastpertemuan)+1)
             insertAbsenSiapDosen(jadwalid=jadwalid, pertemuan=int(lastpertemuan) + 1, lecturercode=lecturercode,
                                  tanggalinsert=yearmonthdaynow, jammulai=starttime, jamselesai=endtime,
                                  jamupdate=yearmonthdaytimenow)
