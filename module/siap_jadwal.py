@@ -494,7 +494,13 @@ def sendEmail(file):
     message.attach(MIMEText(body, "plain"))
 
     os.chdir(r'absensi/{}'.format(file['prodi']))
-    os.rename(file['nama_lama'], file['nama_baru'])
+    
+    try:
+        os.rename(file['nama_lama'], file['nama_baru'])
+    except WindowsError:
+        os.remove(file['nama_baru'])
+        os.rename(file['nama_lama'], file['nama_baru'])
+    
     filename = file['nama_baru']
 
     with open(filename, "rb") as attachment:
@@ -516,7 +522,12 @@ def sendEmail(file):
         server.login(sender_email, password)
         server.sendmail(sender_email, receiver_email, text)
 
-    os.rename(file['nama_baru'], file['nama_lama'])
+    try:
+        os.rename(file['nama_baru'], file['nama_lama'])
+    except WindowsError:
+        os.remove(file['nama_lama'])
+        os.rename(file['nama_baru'], file['nama_lama'])
+        
     os.chdir(r'../../')
     return True
 
