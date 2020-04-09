@@ -10,6 +10,7 @@ def auth(data):
     return ret
 
 def replymsg(driver, data):
+    #fix commit #27
     wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
     wa.typeAndSendMessage(driver, wmsg)
     num=data[0]
