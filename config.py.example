@@ -15,6 +15,7 @@ db_username='root'
 db_password=''
 db_name='iteung'
 
+file_type = ".xlsx"
 
 #twilio
 account_sid = "12ewe"
