@@ -22,7 +22,9 @@ import urllib.request
 import sys
 import pandas as pd
 import pymysql
-
+import openpyxl
+from openpyxl.styles import Alignment
+from openpyxl.styles import Font
 
 def auth(data):
     if kelas.getKodeDosen(data[0]) == '':
@@ -161,8 +163,8 @@ def printAbsensiUjian(driver, filters, prodi):
                 filename = "{}-{}-{}-{}-{}-NULL".format(filters['tahun'], setUjian(
                     filters['jenis']), filters['program'], matkul_select, kelas_select)
             checkDir(prodi)
-            if os.path.exists('absensi/' + prodi + '/' + filename + '.pdf'):
-                os.remove('absensi/' + prodi + '/' + filename + '.pdf')
+            if os.path.exists('absensi/' + prodi + '/' + filename+config.file_type):
+                os.remove('absensi/' + prodi + '/' + filename +config.file_type)
             try:
                 edit_select = tabel_select.find_element_by_xpath(
                     "//tr[" + str(index) + "]/td[16]/a")
@@ -183,7 +185,7 @@ def printAbsensiUjian(driver, filters, prodi):
                 driver.close()
                 driver.switch_to.window(driver.window_handles[0])
                 time.sleep(2)
-                print('File ' + filename + '.pdf berhasil dibuat')
+                print('File ' + filename + config.file_type+ ' berhasil dibuat')
             except NoSuchElementException:
                 continue
         except NoSuchElementException:
@@ -287,8 +289,8 @@ def printAbsensiUjianForDosen(driver, matkul, filters):
 
         checkDir(matkul['prodi'])
 
-        if os.path.exists('absensi/'+prodi+'/'+filename+'.pdf'):
-            os.remove('absensi/'+prodi+'/'+filename+'.pdf')
+        if os.path.exists('absensi/'+prodi+'/'+filename+config.file_type):
+            os.remove('absensi/'+prodi+'/'+filename+config.file_type)
 
         dhu_select.send_keys(Keys.ENTER)
         time.sleep(2)
@@ -300,13 +302,17 @@ def printAbsensiUjianForDosen(driver, matkul, filters):
             url_select, 'absensi/'+prodi+'/'+filename+'.txt')
         time.sleep(2)
 
-        makePDFOfAbsensiUjian(filename, prodi)
+        if config.file_type == '.xlsx':
+            makeExcelOfAbsensiUjian(filename, prodi)
+        elif config.file_type == '.pdf':
+            makePDFOfAbsensiUjian(filename, prodi)
+            
         if os.path.exists('absensi/'+prodi+'/'+filename+'.txt'):
             os.remove('absensi/'+prodi+'/'+filename+'.txt')
         driver.close()
         driver.switch_to.window(driver.window_handles[0])
         time.sleep(2)
-        print('File '+filename+'.pdf berhasil dibuat')
+        print('File '+filename+config.file_type+' berhasil dibuat')
     except NoSuchElementException:
         print('Jadwal {} kelas {} belum diatur'.format(
             matkul['matkul'], matkul['kelas']))
@@ -519,7 +525,7 @@ def sendFileUjian(list_prodi_ujian, filters):
     for prodi_selected in list_prodi_ujian:
         directory = 'absensi/'+prodi_selected
         for filename in os.listdir(directory):
-            if filename.endswith(".pdf") and filename.startswith(filters['tahun']+'-'+setUjian(filters['jenis'])+'-'+filters['program']):
+            if filename.endswith(config.file_type) and filename.startswith(filters['tahun']+'-'+setUjian(filters['jenis'])+'-'+filters['program']):
                 nama_baru = filename[:-4].split("-")
                 email_dosen = nama_baru[5]
                 if email_dosen == 'NULL':
@@ -527,7 +533,7 @@ def sendFileUjian(list_prodi_ujian, filters):
                 else:
                     file = {'nama_lama': filename,
                             'prodi': prodi_selected,
-                            'nama_baru': nama_baru[0]+'-'+nama_baru[1]+'-'+nama_baru[2]+'-'+nama_baru[3]+'-'+nama_baru[4]+'.pdf',
+                            'nama_baru': nama_baru[0]+'-'+nama_baru[1]+'-'+nama_baru[2]+'-'+nama_baru[3]+'-'+nama_baru[4]+config.file_type,
                             'tujuan': email_dosen,
                             'ujian': nama_baru[1],
                             'matkul': nama_baru[3],
@@ -546,7 +552,7 @@ def sendFileUjianDosen(dosens, filters):
             directory = 'absensi/'+prodi_selected
             for ind in matkul.index:
                 for filename in os.listdir(directory):
-                    if filename.endswith(".pdf") and filename.startswith(filters['tahun']+'-'+setUjian(filters['jenis'])+'-'+filters['program']):
+                    if filename.endswith(config.file_type) and filename.startswith(filters['tahun']+'-'+setUjian(filters['jenis'])+'-'+filters['program']):
                         nama_baru = filename[:-4].split("-")
                         email_dosen = nama_baru[5]
                         matkul_select = matkul['nama_matkul'][ind].replace(
@@ -562,7 +568,7 @@ def sendFileUjianDosen(dosens, filters):
                             else:
                                 file = {'nama_lama': filename,
                                         'prodi': prodi_selected,
-                                        'nama_baru': nama_baru[0]+'-'+nama_baru[1]+'-'+nama_baru[2]+'-'+nama_baru[3]+'-'+nama_baru[4]+'.pdf',
+                                        'nama_baru': nama_baru[0]+'-'+nama_baru[1]+'-'+nama_baru[2]+'-'+nama_baru[3]+'-'+nama_baru[4]+config.file_type,
                                         'tujuan': email_dosen,
                                         'ujian': nama_baru[1],
                                         'matkul': nama_baru[3],
@@ -574,6 +580,173 @@ def sendFileUjianDosen(dosens, filters):
                                 else:
                                     print('File '+filename +
                                           ' gagal dikirim ke '+email_dosen)
+
+
+
+def readFile(filename):
+    file = open(filename, 'r+')
+    char_re = removeSpecialChar()
+    row_list = file.readlines()
+    length_row = len(row_list)
+
+    head_list = []
+    subhead_list = []
+    body_list = []
+
+    index_row = 1
+    for row in row_list:
+        row = char_re.sub('', row)
+        if index_row <= 4 and row != '':
+            head_list.append(row.split('\n'))
+        elif index_row <= 8 and row != '':
+            subhead_list.append(row.split('\n'))
+        elif index_row <= length_row-1 and index_row > 8:
+            if index_row <= 60:
+                body_list.append(row.split('\n'))
+            elif index_row >= 72:
+                body_list.append(row.split('\n'))
+        index_row += 1
+    return {'head': head_list, 'subhead': subhead_list, 'body': body_list}
+
+
+def makeExcelOfAbsensiUjian(filename, prodi):
+    lists = readFile('absensi/{}/{}.txt'.format(prodi, filename))
+    wb = openpyxl.Workbook()
+    sheet = wb.active
+    sheet.column_dimensions['A'].width = 5
+    sheet.column_dimensions['B'].width = 13
+    sheet.column_dimensions['C'].width = 50
+    sheet.column_dimensions['F'].width = 20
+    genSubHead(lists['subhead'], sheet)
+    genBody(lists['body'], sheet)
+    genHead(lists['head'], sheet)
+    wb.save('absensi/{}/{}.xlsx'.format(prodi, filename))
+
+
+def genHead(head_list, sheet):
+    index_head = 0
+    index_cell = 2
+    for head in head_list:
+        sheet.merge_cells('A{}:F{}'.format(index_cell, index_cell))
+        value = head_list[index_head][0]
+        cell = sheet.cell(row=index_cell, column=1)
+        cell.value = value
+        cell.alignment = Alignment(horizontal='center')
+        cell.font = Font(size=16, bold=True)
+        index_cell += 1
+        index_head += 1
+
+
+def genSubHead(subhead_list, sheet):
+    index_subhead = 0
+    for subhead in subhead_list:
+        for text in subhead:
+            if index_subhead == 0:
+                text = re.sub(' +', ' ', text)
+                text = text.split(':')
+                sheet.merge_cells('A5:B5')
+                cell = sheet.cell(row=5, column=1)
+                cell.value = 'Kode / Mata Kuliah'
+                cell.font = Font(bold=True)
+                sheet["C5"].value = ': '+text[1][:-8]
+                sheet.merge_cells('D5:E5')
+                cell = sheet.cell(row=5, column=4)
+                cell.value = 'Tanggal'
+                cell.font = Font(bold=True)
+                sheet["F5"].value = ': '+text[2]
+                break
+            elif index_subhead == 1:
+                text = re.sub(' +', ' ', text)
+                text = text.split(':', 2)
+                sheet.merge_cells('A6:B6')
+                cell = sheet.cell(row=6, column=1)
+                cell.value = 'Kelas'
+                cell.font = Font(bold=True)
+                sheet["C6"].value = ': '+text[1][:-16]
+                sheet.merge_cells('D6:E6')
+                cell = sheet.cell(row=6, column=4)
+                cell.value = 'Jadwal / Ruang'
+                cell.font = Font(bold=True)
+                sheet["F6"].value = ': '+text[2]
+                break
+            elif index_subhead == 2:
+                text = re.sub(' +', ' ', text)
+                text = text.split(':', 2)
+                sheet.merge_cells('A7:B7')
+                cell = sheet.cell(row=7, column=1)
+                cell.value = 'Pengajar'
+                cell.font = Font(bold=True)
+                sheet["C7"].value = ': '+text[1][:-8]
+                sheet.merge_cells('D7:E7')
+                cell = sheet.cell(row=7, column=4)
+                cell.value = 'Peserta'
+                cell.font = Font(bold=True)
+                sheet["F7"].value = ': '+text[2]
+                break
+        index_subhead += 1
+
+
+def genBody(body_list, sheet):
+    index_cell = 9
+    divider = '--'
+    for body in body_list:
+        for text in body:
+            if index_cell == 9:
+                cell = sheet["A"+str(index_cell)]
+                cell.value = 'No.'
+                cell.font = Font(bold=True)
+                cell = sheet["B"+str(index_cell)]
+                cell.value = 'NPM'
+                cell.font = Font(bold=True)
+                cell = sheet["C"+str(index_cell)]
+                cell.value = 'Nama'
+                cell.font = Font(bold=True)
+                cell = sheet["D"+str(index_cell)]
+                cell.value = 'Hadir'
+                cell.font = Font(bold=True)
+                cell = sheet["E"+str(index_cell)]
+                cell.value = 'Nilai UTS'
+                cell.font = Font(bold=True)
+                cell = sheet["F"+str(index_cell)]
+                cell.value = 'Tanda Tangan'
+                cell.font = Font(bold=True)
+                index_cell += 1
+                break
+            elif divider not in text and index_cell > 9:
+                text = re.sub(' +', ' ', text)
+                if index_cell <= 18:
+                    text_list = text.split(' ', 3)
+                    del text_list[0]
+                else:
+                    text_list = text.split(' ', 2)
+                cell = sheet["A"+str(index_cell)]
+                cell.value = text_list[0]
+                cell.alignment = Alignment(horizontal='right')
+                sheet["B"+str(index_cell)].value = text_list[1]
+                if re.search('[a-zA-Z]', text_list[2][-8:-4]):
+                    nama = text_list[2][:-7]
+                    kehadiran = text_list[2][-7:-4]
+                else:
+                    nama = text_list[2][:-8]
+                    kehadiran = text_list[2][-8:-4]
+                sheet["C"+str(index_cell)].value = nama.strip()
+                cell = sheet["D"+str(index_cell)]
+                cell.value = kehadiran.strip()
+                cell.alignment = Alignment(horizontal='right')
+                sheet["E"+str(index_cell)].value = ''
+                sheet["F"+str(index_cell)].value = ''
+                index_cell += 1
+                break
+
+    index_cell += 1
+    cell = sheet["C"+str(index_cell)]
+    cell.value = 'Tanda Tangan Pengajar :'
+    cell.font = Font(bold=True)
+    sheet["D"+str(index_cell)].value = ''
+    cell = sheet["E"+str(index_cell)]
+    cell.value = 'Tanggal :'
+    cell.font = Font(bold=True)
+    sheet["F"+str(index_cell)].value = ''
 
 
 def setUjian(ujian):
