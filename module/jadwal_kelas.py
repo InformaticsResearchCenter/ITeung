@@ -62,7 +62,7 @@ def replymsg(driver, data):
     wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
     wa.typeAndSendMessage(driver, wmsg)
     msg = data[3]
-    msg = normalizeday(msg)
+    msg = normalizeday("{msg}").format(msg=msg)
     num = data[0]
     day = dataHari(msg)
     hariId = kodeHari(day)
