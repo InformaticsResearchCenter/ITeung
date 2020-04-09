@@ -526,7 +526,7 @@ def sendFileUjian(list_prodi_ujian, filters):
         directory = 'absensi/'+prodi_selected
         for filename in os.listdir(directory):
             if filename.endswith(config.file_type) and filename.startswith(filters['tahun']+'-'+setUjian(filters['jenis'])+'-'+filters['program']):
-                nama_baru = filename[:len(config.file_type)].split("-")
+                nama_baru = filename[:-len(config.file_type)].split("-")
                 email_dosen = nama_baru[5]
                 if email_dosen == 'NULL':
                     continue
