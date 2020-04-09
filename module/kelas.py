@@ -144,6 +144,19 @@ def getStudentIDOnly(npm):
         rows = cur.fetchone()
     return rows[0]
 
+def isParent(num):
+    db=dbConnectSiap()
+    num=numbers.normalize(num)
+    sql="select * from simak_mst_mahasiswa where HandphoneOrtu='{parentnumberphone}'".format(parentnumberphone=num)
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        rows = cur.fetchone()
+        if rows is not None:
+            ret=True
+        else:
+            ret=False
+    return ret
 
 def getHandphoneMahasiswa(npm):
     db = dbConnectSiap()
@@ -193,6 +206,17 @@ def getDataMatkul(jadwalid):
         else:
             return ''
 
+def getKehadiranMahasiswa(jadwalid, studentid):
+    db=dbConnectSiap()
+    sql="select COUNT(MhswID) from simak_trn_presensi_mahasiswa where JadwalID={jadwalid} and MhswID={studentid} and JenisPresensiID='{attentdancetype}'".format(jadwalid=jadwalid, studentid=studentid, attentdancetype='H')
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        rows = cur.fetchone()
+        if rows is not None:
+            return rows[0]
+        else:
+            return ''
 def getDataMahasiswa(studentid):
     db=dbConnectSiap()
     sql="select MhswID, Nama, Handphone, Email from simak_mst_mahasiswa where MhswID={studentid}".format(studentid=studentid)
@@ -202,6 +226,18 @@ def getDataMahasiswa(studentid):
         rows = cur.fetchone()
         return rows
 
+def getAllDataMahasiswa(studentid):
+    db = dbConnectSiap()
+    sql = "select * from simak_mst_mahasiswa where MhswID={studentid}".format(studentid=studentid)
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        rows = cur.fetchone()
+        if rows is not None:
+            ret=rows
+        else:
+            ret=''
+    return ret
 
 def getKodeDosen(num):
     num = numbers.normalize(num)
@@ -520,6 +556,33 @@ def updateAbsenSiapMahasiswa(presensiid, studentid, attend, valueattend):
         cur = db.cursor()
         cur.execute(sql)
 
+def getStudentIdFromParentPhoneNumber(num):
+    num=numbers.normalize(num)
+    db=dbConnectSiap()
+    sql="select MhswID from simak_mst_mahasiswa where HandphoneOrtu='{parentnumberphone}'".format(parentnumberphone=num)
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        rows=cur.fetchone()
+        if rows is not None:
+            ret=rows[0]
+        else:
+            ret=''
+    return ret
+
+
+def getStudentScores(studentid):
+    db=dbConnectSiap()
+    sql="select k.MhswID,m.Nama,k.JadwalID , mt.Nama as 'nama matkul',k.GradeNilai from simak_trn_krs as k,simak_mst_matakuliah as mt,simak_mst_mahasiswa as m where k.MKID=mt.MKID and k.MhswID=m.MhswID and k.TahunID={tahunid} and k.MhswID={npm}".format(tahunid=config.siap_tahun_id, npm=studentid)
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        rows=cur.fetchall()
+        if rows is not None:
+            ret=rows
+        else:
+            ret=''
+    return ret
 
 def studentattendance(grp, jadwalid):
     jadwalserial=getJadwalSerial(jadwalid=jadwalid)
