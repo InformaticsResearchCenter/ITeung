@@ -36,6 +36,7 @@ class Chatbot(object):
                     self.numcheck=num
                     self.alscheck=als
                 msg = message.normalize(msg)
+                print(msg)
                 msgs = list(msg.split(" "))
                 if msg.find(config.bot_name) >= 0:
                     if len(msgs) == 1:
