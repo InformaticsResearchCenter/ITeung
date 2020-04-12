@@ -15,4 +15,4 @@ locale.setlocale(locale.LC_TIME, config.locale)
 def getCurrentDay():
     now=datetime.datetime.now()
     a=now.strftime('%A')
-    return a.lower()
+    return str(a.lower())
