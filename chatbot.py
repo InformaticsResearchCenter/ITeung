@@ -30,13 +30,13 @@ class Chatbot(object):
                 num = data[0]
                 messageindex-=10
                 alsandnumindex-=1
+                msg = message.normalize(msg)
+                print(msg)
                 if self.msgcheck != msg or (self.numcheck != num and self.alscheck != als):
                     log.save(data)
                     self.msgcheck=msg
                     self.numcheck=num
                     self.alscheck=als
-                msg = message.normalize(msg)
-                print(msg)
                 msgs = list(msg.split(" "))
                 if msg.find(config.bot_name) >= 0:
                     if len(msgs) == 1:
