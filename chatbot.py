@@ -1,4 +1,4 @@
-from lib import wa, reply, message, auth, log
+from lib import wa, reply, message, log
 from importlib import import_module
 import config
 
