@@ -6,9 +6,10 @@ Created on Mon Apr 13 06:00:51 2020
 """
 import datetime
 import locale
+import config
 
 
-locale.setlocale(locale.LC_TIME, 'id_ID.UTF-8')
+locale.setlocale(locale.LC_TIME, config.locale)
 
 
 def getCurrentDay():
