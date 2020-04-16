@@ -27,6 +27,7 @@ import threading
 from openpyxl.styles import Alignment
 from openpyxl.styles import Font
 
+
 def auth(data):
     if kelas.getKodeDosen(data[0]) == '':
         ret = False
@@ -37,13 +38,15 @@ def auth(data):
 
 def replymsg(driver, data):
     if kelas.cekSiap():
-        wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
+        wmsg = reply.getWaitingMessage(
+            os.path.basename(__file__).split('.')[0])
         wa.typeAndSendMessage(driver, wmsg)
         kodedosen = kelas.getKodeDosen(data[0])
         subprocess.Popen(["python", "main_jadwal_uts.py", kodedosen],
                          cwd=r"C:\Users\LENOVO\Desktop\ITeung")
     else:
-        wa.typeAndSendMessage(driver, 'Mohon maaf server Akademik SIAP sedang dalam kondisi DOWN, mohon untuk menginformasikan ke ADMIN dan tunggu hingga beberapa menit kemudian, lalu ulangi kembali, terima kasih....')
+        wa.typeAndSendMessage(
+            driver, 'Mohon maaf server Akademik SIAP sedang dalam kondisi DOWN, mohon untuk menginformasikan ke ADMIN dan tunggu hingga beberapa menit kemudian, lalu ulangi kembali, terima kasih....')
     return ''
 
 
@@ -65,29 +68,31 @@ def getHeaderAbsensi(jadwalID):
         cur = db.cursor()
         cur.execute(sql)
         row = cur.fetchone()
-        header = {
-            'kode_matkul': row[0]+' / '+row[1],
-            'kelas': convertKelas(int(row[2].strip("0"))),
-            'pengajar': row[3],
-            'tanggal': row[4],
-            'jadwal_ruang': row[5]+' - '+row[6]+' / '+row[7],
-            'peserta': str(row[8])
-        }
-
-    return header
+        if row is not None:
+            header = {
+                'kode_matkul': row[0]+' / '+row[1],
+                'kelas': convertKelas(int(row[2].strip("0"))),
+                'pengajar': row[3],
+                'tanggal': row[4],
+                'jadwal_ruang': row[5]+' - '+row[6]+' / '+row[7],
+                'peserta': str(row[8])
+            }
+            return header
+        else:
+            return False
 
 
 def getMahasiswaAbsensi(jadwalID):
     db = dbConnectSiap()
     sql = """
-        select krs.MhswID, left(mhs.Nama,100) as Nama, 
-		(select sum(jp.Nilai) 
+        select krs.MhswID, left(mhs.Nama,100) as Nama,
+		IFNULL((select sum(jp.Nilai)
         from simak_trn_presensi_mahasiswa prm, simak_ref_jenis_presensi jp
-        where prm.JadwalID=krs.JadwalID and prm.MhswID=krs.MhswID and prm.JenisPresensiID=jp.JenisPresensiID) as TotHadir from simak_trn_krs krs, simak_mst_mahasiswa mhs, simak_trn_jadwal j 
-        where krs.StatusKRSID='A' and krs.JadwalID='"""+jadwalID+"""' and 
-        krs.JadwalID=j.JadwalID and krs.NA='N' and 
-        krs.MhswID=mhs.MhswID 
-        group by krs.MhswID 
+        where prm.JadwalID=krs.JadwalID and prm.MhswID=krs.MhswID and prm.JenisPresensiID=jp.JenisPresensiID), 0 ) as TotHadir from simak_trn_krs krs, simak_mst_mahasiswa mhs, simak_trn_jadwal j
+        where krs.StatusKRSID='A' and krs.JadwalID='"""+jadwalID+"""' and
+        krs.JadwalID=j.JadwalID and krs.NA='N' and
+        krs.MhswID=mhs.MhswID
+        group by krs.MhswID
         order by krs.MhswID ASC;
     """
     with db:
@@ -96,12 +101,14 @@ def getMahasiswaAbsensi(jadwalID):
         cur = db.cursor()
         cur.execute(sql)
         rows = cur.fetchall()
+        if rows is not None:
+            for row in rows:
+                hadir = str(round((row[2]/7) * 100))+'%'
+                mahasiswa.append([row[0], row[1], hadir])
 
-        for row in rows:
-            hadir = str(round((row[2]/7) * 100))+'%'
-            mahasiswa.append([row[0], row[1], hadir])
-
-    return mahasiswa
+            return mahasiswa
+        else:
+            return False
 
 
 def getJadwalData(dosenID, tahun, program):
@@ -117,7 +124,7 @@ def getJadwalData(dosenID, tahun, program):
         WHEN j.NamaKelas =7 THEN 'G'
         WHEN j.NamaKelas =8 THEN 'H'
         WHEN j.NamaKelas =9 THEN 'I'
-        END AS namakelas, d.Email, CASE 
+        END AS namakelas, d.Email, CASE
         WHEN j.ProdiID ='.13.' THEN 'D3 Teknik Informatika'
         WHEN j.ProdiID ='.14.' THEN 'D4 Teknik Informatika'
         WHEN j.ProdiID ='.23.' THEN 'D3 Manajemen Informatika'
@@ -128,7 +135,7 @@ def getJadwalData(dosenID, tahun, program):
         WHEN j.ProdiID ='.53.' THEN 'D3 Logistik Bisnis'
         WHEN j.ProdiID ='.54.' THEN 'D4 Logistik Bisnis'
         END AS namaprodi
-        from simak_trn_jadwal j, simak_mst_dosen d, simak_mst_matakuliah m,  simak_mst_tahun t, simak_mst_prodi pr 
+        from simak_trn_jadwal j, simak_mst_dosen d, simak_mst_matakuliah m,  simak_mst_tahun t, simak_mst_prodi pr
         where j.MKID=m.MKID and j.DosenID=d.Login and j.DosenID='"""+dosenID+"""' and j.TahunID='"""+tahun+"""' and t.ProgramID='"""+program+"""' and m.ProdiID = pr.ProdiID group by j.JadwalID;
     """
     with db:
@@ -138,10 +145,12 @@ def getJadwalData(dosenID, tahun, program):
         cur.execute(sql)
         rows = cur.fetchall()
 
-        for row in rows:
-            jadwal.append(list(row))
-
-    return pd.DataFrame(jadwal, columns=['jadwal_id', 'matkul', 'kelas', 'email', 'prodi'])
+        if rows is not None:
+            for row in rows:
+                jadwal.append(list(row))
+            return pd.DataFrame(jadwal, columns=['jadwal_id', 'matkul', 'kelas', 'email', 'prodi'])
+        else:
+            return False
 
 
 def makeExcelAndSend(param):
@@ -188,18 +197,23 @@ def makeExcelAndSend(param):
 def makeExcel(param):
     head_data = getHeaderAbsensi(param['jadwal_id'])
     body_data = getMahasiswaAbsensi(param['jadwal_id'])
-    title_data = ['DAFTAR HADIR DAN NILAI '+param['jenis'],
-                  param['prodi']+' Semester '+param['semester']]
-    wb = openpyxl.Workbook()
-    sheet = wb.active
-    sheet.column_dimensions['A'].width = 5
-    sheet.column_dimensions['B'].width = 13
-    sheet.column_dimensions['C'].width = 50
-    sheet.column_dimensions['F'].width = 20
-    generateHead(title_data, head_data, sheet)
-    generateBody(body_data, sheet)
-    wb.save('absensi/{}/{}.xlsx'.format(param['prodi'], param['nama_file']))
-    print('File %s.xlsx berhasil dibuat' % param['nama_file'])
+    if head_data and body_data:
+        print(head_data)
+        title_data = ['DAFTAR HADIR DAN NILAI '+param['jenis'],
+                      param['prodi']+' Semester '+param['semester']]
+        wb = openpyxl.Workbook()
+        sheet = wb.active
+        sheet.column_dimensions['A'].width = 5
+        sheet.column_dimensions['B'].width = 13
+        sheet.column_dimensions['C'].width = 50
+        sheet.column_dimensions['F'].width = 20
+        generateHead(title_data, head_data, sheet)
+        generateBody(body_data, sheet)
+        wb.save(
+            'absensi/{}/{}.xlsx'.format(param['prodi'], param['nama_file']))
+        print('File %s.xlsx berhasil dibuat' % param['nama_file'])
+    else:
+        pass
 
 
 def generateHead(title_data, head_data, sheet):
@@ -298,66 +312,71 @@ def generateBody(body_data, sheet):
 
 
 def sendEmail(file):
-    subject = "Absensi {} Mata Kuliah {} Kelas {} Prodi {}".format(
-        file['jenis'], file['matkul'], file['kelas'], file['prodi'])
-    body = "Ini file absensi Ujitan UTS Semester Genap oleh iteung ya..., mohon untuk dicek kembali filenya jika ada yang salah mohon untuk diinformasikan ke admin iteung yaa....:) \nAbsensi {} Mata Kuliah {} Kelas {} Prodi {}".format(
-        file['jenis'], file['matkul'], file['kelas'], file['prodi'])
+    try:
+        subject = "Absensi {} Mata Kuliah {} Kelas {} Prodi {}".format(
+            file['jenis'], file['matkul'], file['kelas'], file['prodi'])
+        body = "Ini file absensi Ujitan UTS Semester Genap oleh iteung ya..., mohon untuk dicek kembali filenya jika ada yang salah mohon untuk diinformasikan ke admin iteung yaa....:) \nAbsensi {} Mata Kuliah {} Kelas {} Prodi {}".format(
+            file['jenis'], file['matkul'], file['kelas'], file['prodi'])
 
-    sender_email = config.email_iteung
-    receiver_email = file['tujuan']
-    password = config.pass_iteung
+        sender_email = config.email_iteung
+        receiver_email = file['tujuan']
+        # receiver_email = 'divakrishnam@yahoo.com'
+        password = config.pass_iteung
 
-    message = MIMEMultipart()
-    message["From"] = sender_email
-    message["To"] = receiver_email
-    message["Subject"] = subject
-    message["Bcc"] = receiver_email
+        message = MIMEMultipart()
+        message["From"] = sender_email
+        message["To"] = receiver_email
+        message["Subject"] = subject
+        message["Bcc"] = receiver_email
 
-    message.attach(MIMEText(body, "plain"))
+        message.attach(MIMEText(body, "plain"))
 
-    absensifile = file['nama_file']
+        absensifile = file['nama_file']
 
-    with open('absensi\\'+file['prodi']+'\\'+absensifile, "rb") as attachment:
-        part = MIMEBase("application", "octet-stream")
-        part.set_payload(attachment.read())
+        with open('absensi\\'+file['prodi']+'\\'+absensifile, "rb") as attachment:
+            part = MIMEBase("application", "octet-stream")
+            part.set_payload(attachment.read())
 
-    encoders.encode_base64(part)
+        encoders.encode_base64(part)
 
-    part.add_header(
-        "Content-Disposition",
-        "attachment; filename= %s " % absensifile,
-    )
+        part.add_header(
+            "Content-Disposition",
+            "attachment; filename= %s " % absensifile,
+        )
 
-    message.attach(part)
+        message.attach(part)
 
-    #Berita acara
+        # Berita acara
 
-    beritafile = 'BERITA_ACARA_UJIAN.docx'
+        beritafile = 'BERITA_ACARA_UJIAN.docx'
 
-    with open('absensi\\'+beritafile, "rb") as attachment:
-        part = MIMEBase("application", "octet-stream")
-        part.set_payload(attachment.read())
+        with open('absensi\\'+beritafile, "rb") as attachment:
+            part = MIMEBase("application", "octet-stream")
+            part.set_payload(attachment.read())
 
-    encoders.encode_base64(part)
+        encoders.encode_base64(part)
 
-    part.add_header(
-        "Content-Disposition",
-        "attachment; filename= %s " % beritafile,
-    )
+        part.add_header(
+            "Content-Disposition",
+            "attachment; filename= %s " % beritafile,
+        )
 
-    message.attach(part)
+        message.attach(part)
 
-    text = message.as_string()
+        text = message.as_string()
 
-    context = ssl.create_default_context()
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
-        server.login(sender_email, password)
-        server.sendmail(sender_email, receiver_email, text)
+        context = ssl.create_default_context()
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
+            server.login(sender_email, password)
+            server.sendmail(sender_email, receiver_email, text)
 
-    print('File %s berhasil dikirim ke %s' % (absensifile, file['tujuan']))
+        print('File %s berhasil dikirim ke %s' % (absensifile, file['tujuan']))
 
+    except FileNotFoundError:
+        pass
 
 # Fungsi tambahan
+
 
 def convertKelas(kelas):
     list_kelas = list(string.ascii_lowercase)
