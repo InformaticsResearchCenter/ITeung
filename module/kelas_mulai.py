@@ -19,7 +19,7 @@ def replymsg(driver, data):
         grp = data[1]
         try:
             kehadiran = kelas.getKehadiran(grp.split('-')[0])
-            if kehadiran != config.kehadiran and kehadiran < config.kehadiran:
+            if (kehadiran != config.kehadiran and kehadiran < config.kehadiran) or (kelas.isSudahKelas(jadwalid=grp.split('-')[0], lecturercode=kelas.getKodeDosen(num=num))):
                 if kelas.isMatkul(grp.split('-')[0]):
                     jadwalid = grp.split('-')[0]
                     jadwalserial = kelas.getJadwalSerial(jadwalid=jadwalid)
