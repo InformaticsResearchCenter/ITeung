@@ -21,7 +21,7 @@ class Chatbot(object):
             try:
                 wa.openMessage(driver)
                 data = wa.getData(driver, message_wa_index=messageindex, default_alias_number_index=alsandnumindex)
-                messageindex-=10
+                messageindex-=11
                 alsandnumindex-=1
                 isgrp= data[4]
                 msg = data[3]
