@@ -644,6 +644,25 @@ def getMkkode(jadwalid):
             ret=''
     return ret
 
+def getJumlahPertemuanMahasiswa(jadwalid, studentid, absentvalue):
+    db=dbConnectSiap()
+    sql="select COUNT(*) from simak_trn_presensi_mahasiswa where JadwalID={jadwalid} and MhswID={studentid} and JenisPresensiID='{absentvalue}'".format(jadwalid=jadwalid, studentid=studentid, absentvalue=absentvalue)
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        rows=cur.fetchone()
+        if rows is not None:
+            ret=rows[0]
+    return ret
+
+def updatePresensiKRS(presensi, jadwalid, studentid):
+    db=dbConnectSiap()
+    timenow = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    sql="UPDATE simak_trn_krs SET _Presensi={presensi}, TanggalEdit='{timeedit}' WHERE JadwalID={jadwalid} and MhswID={studentid}".format(presensi=presensi, timeedit=timenow, jadwalid=jadwalid, studentid=studentid)
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+
 def siapabsensiwithsql(grp, num):
     jadwalid = grp.split('-')[0]
     mkkode = getMkkode(jadwalid=jadwalid)
@@ -667,6 +686,9 @@ def siapabsensiwithsql(grp, num):
                 krsid = getDataKrs(studentid=studentid, mkkode=mkkode)
                 insertAbsenSiapMahasiswa(jadwalid=jadwalid, krsid=krsid, presensiid=presensiid, studentid=studentid,
                                          attend='H', valueattend=1)
+                attendancestudent=getJumlahPertemuanMahasiswa(jadwalid=jadwalid, studentid=studentid, absentvalue='H')
+                if attendancestudent is not None:
+                    updatePresensiKRS(presensi=attendancestudent, jadwalid=jadwalid, studentid=studentid)
             for studentid in notattend:
                 krsid = getDataKrs(studentid=studentid, mkkode=mkkode)
                 insertAbsenSiapMahasiswa(jadwalid=jadwalid, krsid=krsid, presensiid=presensiid, studentid=studentid,
@@ -675,6 +697,9 @@ def siapabsensiwithsql(grp, num):
             presensiid = getLastPresensiID(kodedosen=lecturercode, jadwalid=jadwalid)
             for studentid in attend:
                 updateAbsenSiapMahasiswa(presensiid=presensiid, studentid=studentid, attend='H', valueattend=1)
+                attendancestudent = getJumlahPertemuanMahasiswa(jadwalid=jadwalid, studentid=studentid, absentvalue='H')
+                if attendancestudent is not None:
+                    updatePresensiKRS(presensi=attendancestudent, jadwalid=jadwalid, studentid=studentid)
     else:
         attend=''
     return attend
