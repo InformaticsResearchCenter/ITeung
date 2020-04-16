@@ -23,6 +23,7 @@ import sys
 import pandas as pd
 import pymysql
 import openpyxl
+import threading
 from openpyxl.styles import Alignment
 from openpyxl.styles import Font
 
@@ -173,7 +174,7 @@ def makeExcelAndSend(param):
             'matkul': jadwal.loc[i, 'matkul'],
             'kelas': jadwal.loc[i, 'kelas'],
             'prodi': jadwal.loc[i, 'prodi'],
-            'tujuan': 'divakrishnam@yahoo.com',  # jadwal.loc[i, 'email'],
+            'tujuan': jadwal.loc[i, 'email'],
             'nama_file': nama_file+'.xlsx'
         })
         t.start()

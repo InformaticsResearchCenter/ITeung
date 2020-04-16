@@ -1,13 +1,13 @@
-from selenium.webdriver import ChromeOptions, Chrome
+# from selenium.webdriver import ChromeOptions, Chrome
 from module import siap_jadwal
 
 import sys
 import config
 
-opts = ChromeOptions()
-opts.add_argument("--headless")
-opts.add_experimental_option("detach", True)
-driver = Chrome(options=opts)
+# opts = ChromeOptions()
+# opts.add_argument("--headless")
+# opts.add_experimental_option("detach", True)
+# driver = Chrome(options=opts)
 
 # prodis = ['D4 Teknik Informatika',
 #           'D4 Manajemen Perusahaan',
