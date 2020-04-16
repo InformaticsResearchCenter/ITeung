@@ -16,7 +16,8 @@ def auth(data):
 #close commit #2
 def replymsg(driver, data):
     if kelas.cekSiap():
-        grp = data[1]
+        grp=data[1]
+        num=data[0]
         try:
             kehadiran = kelas.getKehadiran(grp.split('-')[0])
             if (kehadiran != config.kehadiran and kehadiran < config.kehadiran) or (kelas.isSudahKelas(jadwalid=grp.split('-')[0], lecturercode=kelas.getKodeDosen(num=num))):
