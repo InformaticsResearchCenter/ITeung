@@ -9,18 +9,25 @@ opts.add_argument("--headless")
 opts.add_experimental_option("detach", True)
 driver = Chrome(options=opts)
 
-prodis = ['D4 Teknik Informatika',
-          'D4 Manajemen Perusahaan',
-          'D3 Logistik Bisnis',
-          'D4 Logistik Bisnis']
+# prodis = ['D4 Teknik Informatika',
+#           'D4 Manajemen Perusahaan',
+#           'D3 Logistik Bisnis',
+#           'D4 Logistik Bisnis']
 
-filters = {'tahun': config.siap_tahun_id,
-           'jenis': config.jenis_ujian,
-           'program': config.jalur_program}
+# filters = {'tahun': config.siap_tahun_id,
+#            'jenis': config.jenis_ujian,
+#            'program': config.jalur_program}
 
-dosens = []
+# dosens = []
 kodedosen=str(sys.argv[1])
-dosens.append(kodedosen)
+# dosens.append(kodedosen)
 
-siap_jadwal.makeFileForDosen(driver, dosens, filters)
-siap_jadwal.sendFileUjianDosen(dosens, filters)
+param = {
+    'dosen': kodedosen,
+    'tahun': config.siap_tahun_id,
+    'jenis': config.jenis_ujian,
+    'program': config.jalur_program
+}
+siap_jadwal.makeExcelAndSend(param)
+# siap_jadwal.makeFileForDosen(driver, dosens, filters)
+# siap_jadwal.sendFileUjianDosen(dosens, filters)
