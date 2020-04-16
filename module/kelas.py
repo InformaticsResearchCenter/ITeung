@@ -665,7 +665,7 @@ def updatePresensiKRS(presensi, jadwalid, studentid):
         cur.execute(sql)
 
 def cekSiap():
-    req=requests.get('http://siap.poltekpos.ac.id/')
+    req=requests.get(config.websiap)
     if req.status_code == 200:
         ret=True
     else:
