@@ -11,9 +11,12 @@ def auth(data):
     return ret
 
 def replymsg(driver, data):
-    wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
-    wa.typeAndSendMessage(driver, wmsg)
-    msgreply=message(data)
+    if kelas.cekSiap():
+        wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
+        wa.typeAndSendMessage(driver, wmsg)
+        msgreply=message(data)
+    else:
+        msgreply='Mohon maaf server Akademik SIAP sedang dalam kondisi DOWN, mohon untuk menginformasikan ke ADMIN dan tunggu hingga beberapa menit kemudian, lalu ulangi kembali, terima kasih....'
     return msgreply
 
 def message(data):

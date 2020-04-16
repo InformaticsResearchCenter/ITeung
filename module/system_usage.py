@@ -1,5 +1,6 @@
 import psutil, pyspeedtest, speedtest, nvgpu
 from lib import reply
+from module import kelas
 
 def auth(data):
     if reply.getNumberGroup(data[0]) == 1:
@@ -64,7 +65,10 @@ def network_usage():
 def network_ping():
     ping='\n====NETWORK PING====\n'
     whatsapp='WhatsApp: '+str(int(pyspeedtest.SpeedTest('web.whatsapp.com').ping()))+'ms\n'
-    siap='System Akademik SIAP: '+str(int(pyspeedtest.SpeedTest('siap.poltekpos.ac.id').ping()))+'ms\n'
+    if kelas.cekSiap():
+        siap='System Akademik SIAP: '+str(int(pyspeedtest.SpeedTest('siap.poltekpos.ac.id').ping()))+'ms\n'
+    else:
+        siap='System Akademik SIAP: DOWN\n'
     message_ping=ping+whatsapp+siap
     return message_ping
 

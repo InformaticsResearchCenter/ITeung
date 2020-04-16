@@ -58,16 +58,19 @@ def normalizeday(msg):
     return msg
 
 def replymsg(driver, data):
-    wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
-    wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
-    wa.typeAndSendMessage(driver, wmsg)
-    msg = data[3]
-    msg = normalizeday("{msg}").format(msg=msg)
-    num = data[0]
-    day = dataHari(msg)
-    hariId = kodeHari(day)
-    msgreply = jadwalKuliah(hariId, num)
-    msgreply = "Ini ya jadwal kuliah yang bapak/ibu minta \n"+msgreply
+    if kelas.cekSiap():
+        wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
+        wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
+        wa.typeAndSendMessage(driver, wmsg)
+        msg = data[3]
+        msg = normalizeday("{msg}").format(msg=msg)
+        num = data[0]
+        day = dataHari(msg)
+        hariId = kodeHari(day)
+        msgreply = jadwalKuliah(hariId, num)
+        msgreply = "Ini ya jadwal kuliah yang bapak/ibu minta \n"+msgreply
+    else:
+        msgreply='Mohon maaf server Akademik SIAP sedang dalam kondisi DOWN, mohon untuk menginformasikan ke ADMIN dan tunggu hingga beberapa menit kemudian, lalu ulangi kembali, terima kasih....'
     return msgreply
 
 def jadwalKuliah(hari, num):

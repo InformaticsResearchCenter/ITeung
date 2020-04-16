@@ -4,6 +4,7 @@ from time import sleep
 
 import config
 import pymysql
+import requests
 
 
 # def replymsg(driver, data):
@@ -662,6 +663,14 @@ def updatePresensiKRS(presensi, jadwalid, studentid):
     with db:
         cur=db.cursor()
         cur.execute(sql)
+
+def cekSiap():
+    req=requests.get('http://siap.poltekpos.ac.id/')
+    if req.status_code == 200:
+        ret=True
+    else:
+        ret=False
+    return ret
 
 def siapabsensiwithsql(grp, num):
     jadwalid = grp.split('-')[0]

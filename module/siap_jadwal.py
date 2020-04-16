@@ -35,11 +35,14 @@ def auth(data):
 
 
 def replymsg(driver, data):
-    wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
-    wa.typeAndSendMessage(driver, wmsg)
-    kodedosen = kelas.getKodeDosen(data[0])
-    subprocess.Popen(["python", "main_jadwal_uts.py", kodedosen],
-                     cwd=r"C:\Users\LENOVO\Desktop\ITeung")
+    if kelas.cekSiap():
+        wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
+        wa.typeAndSendMessage(driver, wmsg)
+        kodedosen = kelas.getKodeDosen(data[0])
+        subprocess.Popen(["python", "main_jadwal_uts.py", kodedosen],
+                         cwd=r"C:\Users\LENOVO\Desktop\ITeung")
+    else:
+        wa.typeAndSendMessage(driver, 'Mohon maaf server Akademik SIAP sedang dalam kondisi DOWN, mohon untuk menginformasikan ke ADMIN dan tunggu hingga beberapa menit kemudian, lalu ulangi kembali, terima kasih....')
     return ''
 
 
