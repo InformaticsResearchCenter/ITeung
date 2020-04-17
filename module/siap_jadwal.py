@@ -42,14 +42,22 @@ def replymsg(driver, data):
             os.path.basename(__file__).split('.')[0])
         wa.typeAndSendMessage(driver, wmsg)
         kodedosen = kelas.getKodeDosen(data[0])
-        subprocess.Popen(["python", "main_jadwal_uts.py", kodedosen],
-                         cwd=r"C:\Users\LENOVO\Desktop\ITeung")
+        subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],kodedosen],
+                         cwd=config.cwd)
     else:
         wa.typeAndSendMessage(
             driver, 'Mohon maaf server Akademik SIAP sedang dalam kondisi DOWN, mohon untuk menginformasikan ke ADMIN dan tunggu hingga beberapa menit kemudian, lalu ulangi kembali, terima kasih....')
     return ''
 
-
+def run(kodedosen):
+    param = {
+        'dosen': kodedosen,
+        'tahun': config.siap_tahun_id,
+        'jenis': config.jenis_ujian,
+        'program': config.jalur_program
+    }
+    makeExcelAndSend(param)
+    
 def dbConnectSiap():
     db = pymysql.connect(config.db_host_siap,
                          config.db_username_siap,
