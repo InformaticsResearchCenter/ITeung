@@ -30,7 +30,8 @@ class Chatbot(object):
                 num = data[0]
                 messageindex-=10
                 alsandnumindex-=1
-                msg = message.normalize(msg)
+                msg=message.normalize(msg)
+                msg=message.normalizeWithRegex(msg)
                 print(msg)
                 if self.msgcheck != msg or (self.numcheck != num and self.alscheck != als):
                     log.save(data)
