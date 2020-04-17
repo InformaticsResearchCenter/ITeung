@@ -25,6 +25,7 @@ def normalize(message):
     msg=msg.replace('/',' ')
     msg=msg.replace('[',' ')
     msg=msg.replace(']',' ')
+    msg=msg.replace('\\',' ')
     msg=msg.replace('hari ini','hari '+times.getCurrentDay())
     msg=msg.replace('sekarang','hari '+times.getCurrentDay())
     msg=msg.replace(config.bot_shortname,config.bot_name)
