@@ -176,17 +176,20 @@ def makeExcelAndSend(param):
             'semester': convertTahun(param['tahun'])
         }
 
-        t = threading.Thread(target=makeExcel, args=(data,))
-        send.append({
-            'thread': t,
-            'jenis': convertJenis(param['jenis']),
-            'matkul': jadwal.loc[i, 'matkul'],
-            'kelas': jadwal.loc[i, 'kelas'],
-            'prodi': jadwal.loc[i, 'prodi'],
-            'tujuan': jadwal.loc[i, 'email'],
-            'nama_file': nama_file+'.xlsx'
-        })
-        t.start()
+        if not any(d['nama_file'] == nama_file+'.xlsx' for d in send):
+            t = threading.Thread(target=makeExcel, args=(data,))
+            send.append({
+                'thread': t,
+                'jenis': convertJenis(param['jenis']),
+                'matkul': jadwal.loc[i, 'matkul'],
+                'kelas': jadwal.loc[i, 'kelas'],
+                'prodi': jadwal.loc[i, 'prodi'],
+                'tujuan': jadwal.loc[i, 'email'],
+                'nama_file': nama_file+'.xlsx'
+            })
+            t.start()
+        else:
+            continue
 
     for data in send:
         data['thread'].join()
@@ -197,8 +200,8 @@ def makeExcelAndSend(param):
 def makeExcel(param):
     head_data = getHeaderAbsensi(param['jadwal_id'])
     body_data = getMahasiswaAbsensi(param['jadwal_id'])
+
     if head_data and body_data:
-        print(head_data)
         title_data = ['DAFTAR HADIR DAN NILAI '+param['jenis'],
                       param['prodi']+' Semester '+param['semester']]
         wb = openpyxl.Workbook()
@@ -266,38 +269,37 @@ def generateHead(title_data, head_data, sheet):
 
 def generateBody(body_data, sheet):
     index_cell = 9
-    for body in body_data:
-        if index_cell == 9:
-            cell = sheet["A"+str(index_cell)]
-            cell.value = 'No.'
-            cell.font = Font(bold=True)
-            cell = sheet["B"+str(index_cell)]
-            cell.value = 'NPM'
-            cell.font = Font(bold=True)
-            cell = sheet["C"+str(index_cell)]
-            cell.value = 'Nama'
-            cell.font = Font(bold=True)
-            cell = sheet["D"+str(index_cell)]
-            cell.value = 'Hadir'
-            cell.font = Font(bold=True)
-            cell = sheet["E"+str(index_cell)]
-            cell.value = 'Nilai UTS'
-            cell.font = Font(bold=True)
-            cell = sheet["F"+str(index_cell)]
-            cell.value = 'Tanda Tangan'
-            cell.font = Font(bold=True)
+    cell = sheet["A"+str(index_cell)]
+    cell.value = 'No.'
+    cell.font = Font(bold=True)
+    cell = sheet["B"+str(index_cell)]
+    cell.value = 'NPM'
+    cell.font = Font(bold=True)
+    cell = sheet["C"+str(index_cell)]
+    cell.value = 'Nama'
+    cell.font = Font(bold=True)
+    cell = sheet["D"+str(index_cell)]
+    cell.value = 'Hadir'
+    cell.font = Font(bold=True)
+    cell = sheet["E"+str(index_cell)]
+    cell.value = 'Nilai UTS'
+    cell.font = Font(bold=True)
+    cell = sheet["F"+str(index_cell)]
+    cell.value = 'Tanda Tangan'
+    cell.font = Font(bold=True)
+    index_cell += 1
 
-        else:
-            cell = sheet["A"+str(index_cell)]
-            cell.value = index_cell-9
-            cell.alignment = Alignment(horizontal='right')
-            sheet["B"+str(index_cell)].value = body[0]
-            sheet["C"+str(index_cell)].value = body[1]
-            cell = sheet["D"+str(index_cell)]
-            cell.value = body[2]
-            cell.alignment = Alignment(horizontal='right')
-            sheet["E"+str(index_cell)].value = ''
-            sheet["F"+str(index_cell)].value = ''
+    for body in body_data:
+        cell = sheet["A"+str(index_cell)]
+        cell.value = index_cell-9
+        cell.alignment = Alignment(horizontal='right')
+        sheet["B"+str(index_cell)].value = body[0]
+        sheet["C"+str(index_cell)].value = body[1]
+        cell = sheet["D"+str(index_cell)]
+        cell.value = body[2]
+        cell.alignment = Alignment(horizontal='right')
+        sheet["E"+str(index_cell)].value = ''
+        sheet["F"+str(index_cell)].value = ''
         index_cell += 1
 
     index_cell += 1
