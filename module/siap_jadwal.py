@@ -38,10 +38,10 @@ def auth(data):
 
 def replymsg(driver, data):
     if kelas.cekSiap():
-        wmsg = reply.getWaitingMessage(
-            os.path.basename(__file__).split('.')[0])
-        wa.typeAndSendMessage(driver, wmsg)
         kodedosen = kelas.getKodeDosen(data[0])
+        wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
+        wmsg = wmsg.replace('#EMAIL#', getEmailDosen(kodedosen))
+        wa.typeAndSendMessage(driver, wmsg)
         subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],kodedosen],
                          cwd=config.cwd)
     else:
@@ -89,6 +89,17 @@ def getHeaderAbsensi(jadwalID):
         else:
             return False
 
+def getEmailDosen(dosenid):
+    db=dbConnectSiap()
+    sql="select Email from simak_mst_dosen where Login='{lecturercode}'".format(lecturercode=dosenid)
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        rows=cur.fetchone()
+        if rows is not None:
+            return rows[0]
+        else:
+            return ''
 
 def getMahasiswaAbsensi(jadwalID):
     db = dbConnectSiap()
