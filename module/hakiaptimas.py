@@ -4,7 +4,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from pyunpack import Archive
 from time import sleep
-from lib import reply
+from lib import reply, wa
 import config
 import csv
 import os
@@ -19,6 +19,9 @@ def auth(data):
     return ret
 
 def replymsg(driver, data):
+    wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
+    wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
+    wa.typeAndSendMessage(driver, wmsg)
     try:
         filename=downloadFile(driver)
         moveFiles(filename)
