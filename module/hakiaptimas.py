@@ -43,10 +43,12 @@ def replymsg(driver, data):
                 APTimas(driver=driver, data=datacsv, folder=folder)
                 driver.close()
                 driver.switch_to_window(driver.window_handles[0])
+                removeFileandDir(filename=filename, path='.\\' + folder)
                 msgreply="Billing Code: "+str(billingcode)+'\nBiaya: '+str(biaya)
             except Exception as e:
                 driver.close()
                 driver.switch_to_window(driver.window_handles[0])
+                removeFileandDir(filename=filename, path='.\\' + folder)
                 msgreply='Proses Pembuatan Haki Error Mohon diulangi, Error: _#ERROR#_'
                 msgreply=msgreply.replace('#ERROR#', str(e))
         except:
