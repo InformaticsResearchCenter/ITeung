@@ -236,24 +236,31 @@ def uploadFileHaki(driver, folder):
     driver.find_element_by_xpath(
         '/html/body/div/div[3]/div/div/div[2]/div/main/div/div[1]/div/div/div[2]/form/div[5]/div[2]/div/div[2]/div/div/singleupload/span[1]/input[1]').send_keys(
         getFilePath(folder=folder, filename='umkm.pdf'))
+    sleep(1)
     driver.find_element_by_xpath(
         '/html/body/div/div[3]/div/div/div[2]/div/main/div/div[1]/div/div/div[2]/form/div[5]/div[2]/div/div[3]/div/div/singleupload/span[1]/input[1]').send_keys(
         getFilePath(folder=folder, filename='akta.pdf'))
+    sleep(1)
     driver.find_element_by_xpath(
         '/html/body/div/div[3]/div/div/div[2]/div/main/div/div[1]/div/div/div[2]/form/div[5]/div[2]/div/div[4]/div/div/singleupload/span[1]/input[1]').send_keys(
         getFilePath(folder=folder, filename='ktp.pdf'))
+    sleep(1)
     driver.find_element_by_xpath(
         '/html/body/div/div[3]/div/div/div[2]/div/main/div/div[1]/div/div/div[2]/form/div[5]/div[2]/div/div[5]/div/div/singleupload/span[1]/input[1]').send_keys(
         getFilePath(folder=folder, filename='npwp.pdf'))
+    sleep(1)
     driver.find_element_by_xpath(
         '/html/body/div/div[3]/div/div/div[2]/div/main/div/div[1]/div/div/div[2]/form/div[5]/div[2]/div/div[6]/div/div/singleupload/span[1]/input[1]').send_keys(
         getFilePath(folder=folder, filename='pernyataan.pdf'))
+    sleep(1)
     driver.find_element_by_xpath(
         '/html/body/div/div[3]/div/div/div[2]/div/main/div/div[1]/div/div/div[2]/form/div[5]/div[2]/div/div[7]/div/div/multipleupload/span[1]/input[1]').send_keys(
         getFilePath(folder=folder, filename='ciptaan.pdf'))
+    sleep(1)
     driver.find_element_by_xpath(
         '/html/body/div/div[3]/div/div/div[2]/div/main/div/div[1]/div/div/div[2]/form/div[5]/div[2]/div/div[8]/div/div/singleupload/span[1]/input[1]').send_keys(
         getFilePath(folder=folder, filename='pengalihan.pdf'))
+    sleep(1)
     driver.find_element_by_xpath('/html/body/div/div[3]/div/div/div[2]/div/main/div/div[1]/div/div/div[2]/form/div[6]/div[1]/input').click()
 
 def uploadFileAptimas(driver, folder):
@@ -277,7 +284,7 @@ def setujuHaki(driver):
 
 def billingCodeHaki(driver):
     targetbillingcode='/html/body/div/div[3]/div/div/div[2]/div/main/div[1]/div/div/div/div[2]/form/div/div/div[1]/div/div[2]/div/div[14]/div/div/span'
-    targetbiaya='/html/body/div/div[3]/div/div/div[2]/div/main/div[1]/div/div/div/div[2]/form/div/div/div[1]/div/div[2]/div/div[14]/div/div/span'
+    targetbiaya='/html/body/div/div[3]/div/div/div[2]/div/main/div[1]/div/div/div/div[2]/form/div/div/div[1]/div/div[2]/div/div[11]/div/div/span'
     wait = WebDriverWait(driver, 600)
     wait.until(EC.presence_of_element_located((By.XPATH, targetbillingcode)))
     return driver.find_element_by_xpath(targetbillingcode).text, driver.find_element_by_xpath(targetbiaya).text
