@@ -3,10 +3,11 @@ from lib import reply
 from module import kelas
 
 def auth(data):
-    if reply.getNumberGroup(data[0]) == 1:
-        ret=True
+    groupid=reply.getNumberGroup(data[0]).split('-')
+    if '1' in groupid:
+        ret = True
     else:
-        ret=False
+        ret = False
     return ret
 
 def replymsg(driver, data):
