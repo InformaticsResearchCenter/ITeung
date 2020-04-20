@@ -195,7 +195,7 @@ def makeExcelAndSend(param):
             'semester': convertTahun(param['tahun'])
         }
 
-        if not any(d['nama_file'] == nama_file+'.xlsx' for d in send):
+        if not any(d['nama_file'] == nama_file+'.xlsx' and d['prodi'] == jadwal.loc[i, 'prodi'] for d in send):
             t = threading.Thread(target=makeExcel, args=(data,))
             send.append({
                 'thread': t,
