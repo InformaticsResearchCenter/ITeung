@@ -40,8 +40,6 @@ def replymsg(driver, data):
         wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
         wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
         wa.typeAndSendMessage(driver, wmsg)
-        msg = data[3]
-        msg = normalizeday("{msg}").format(msg=msg)
         num = data[0]
         msgreply = getJadwalData(num)
         msgreply = "Ini jadwal ujian yang Bapak/Ibu minta\n"+msgreply
