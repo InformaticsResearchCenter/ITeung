@@ -6,28 +6,6 @@ import os
 from lib import wa
 from datetime import datetime
 
-def normalizeday(msg):
-    msg = msg.lower()
-    msg = msg.replace(',', ' ')
-    msg = msg.replace('.', ' ')
-    msg = msg.replace("'", '')
-    msg = msg.replace('?', ' ')
-    msg = msg.replace('!', ' ')
-    msg = msg.replace('(', ' ')
-    msg = msg.replace(')', ' ')
-    msg = msg.replace(':', ' ')
-    msg = msg.replace(';', ' ')
-    msg = msg.replace('*', ' ')
-    msg = msg.replace('&', ' ')
-    msg = msg.replace('^', ' ')
-    msg = msg.replace('%', ' ')
-    msg = msg.replace('/', ' ')
-    msg = msg.replace('[', ' ')
-    msg = msg.replace(']', ' ')
-    msg = msg.replace(config.bot_shortname, config.bot_name)
-    msg = msg.strip()
-    return msg
-
 def auth(data):
     if kelas.getKodeDosen(data[0]) == '':
         ret = False
@@ -38,7 +16,6 @@ def auth(data):
 def replymsg(driver, data):
     if kelas.cekSiap():
         wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
-        wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
         wa.typeAndSendMessage(driver, wmsg)
         num = data[0]
         msgreply = getJadwalData(num)
