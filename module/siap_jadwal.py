@@ -195,7 +195,7 @@ def makeExcelAndSend(param):
             'semester': convertTahun(param['tahun'])
         }
 
-        if not any(d['nama_file'] == nama_file+'.xlsx' and d['prodi'] == jadwal.loc[i, 'prodi'] for d in send):
+        if not any(d['jadwal_id'] == jadwal.loc[i, 'jadwal_id'] for d in send):
             t = threading.Thread(target=makeExcel, args=(data,))
             send.append({
                 'thread': t,
@@ -204,7 +204,8 @@ def makeExcelAndSend(param):
                 'kelas': jadwal.loc[i, 'kelas'],
                 'prodi': jadwal.loc[i, 'prodi'],
                 'tujuan': jadwal.loc[i, 'email'],
-                'nama_file': nama_file+'.xlsx'
+                'nama_file': nama_file+'.xlsx',
+                'jadwal_id': jadwal.loc[i, 'jadwal_id']
             })
             t.start()
         else:
