@@ -11,9 +11,8 @@ def dbConnectIteung():
 def getDatetimeNow():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-def save(data):
-    if "teung kelas mulai" not in data[3]:
-        inserttolog(data)
+def save(num, msg, als, grp, isgrp):
+    inserttolog(num, msg, als, grp, isgrp)
 
 def logSaveIteungStart(data):
     return inserttolog(data)
