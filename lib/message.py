@@ -8,8 +8,7 @@ import config, re
 from lib import times
 
 def normalize(message):
-    msg=message.encode('cp1252', 'ignore').decode('utf8')
-    msg=msg.lower()
+    msg=message.lower()
     msg=msg.replace(',',' ')
     msg=msg.replace('\n',' ')
     msg=msg.replace('.',' ')
@@ -32,6 +31,7 @@ def normalize(message):
     msg=msg.replace('sekarang','hari '+times.getCurrentDay())
     msg=msg.replace(config.bot_shortname,config.bot_name)
     msg=removeBackslash(msg)
+    msg=msg.encode('cp1252', 'ignore').decode('utf8')
     msg=msg.strip()
     return msg
 
