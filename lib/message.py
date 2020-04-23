@@ -4,12 +4,11 @@ Created on Sat Mar 14 12:32:40 2020
 
 @author: rolly
 """
-import config, re, ftfy
+import config, re
 from lib import times
 
 def normalize(message):
-    # msg=message.encode('latin1').decode('utf8')
-    msg=ftfy.fix_text(message)
+    msg=message.encode('cp1252', 'ignore').decode('utf8')
     msg=msg.lower()
     msg=msg.replace(',',' ')
     msg=msg.replace('\n',' ')
