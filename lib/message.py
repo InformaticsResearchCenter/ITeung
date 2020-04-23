@@ -4,16 +4,15 @@ Created on Sat Mar 14 12:32:40 2020
 
 @author: rolly
 """
-import config, re
-from ftfy import fix_encoding
+import config, re, ftfy
 from lib import times
 
 def normalize(message):
     # msg=message.encode('latin1').decode('utf8')
-    msg=fix_encoding(message)
+    msg=ftfy.fix_text(message)
     msg=msg.lower()
     msg=msg.replace(',',' ')
-    # msg=msg.replace('\n','')
+    msg=msg.replace('\n',' ')
     msg=msg.replace('.',' ')
     msg=msg.replace("'",'')
     msg=msg.replace('?',' ')
