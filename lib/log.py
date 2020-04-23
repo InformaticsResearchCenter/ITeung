@@ -19,6 +19,7 @@ def logSaveIteungStart(data):
 
 def normalizeSql(msg):
     msg = msg.replace("'", "")
+    msg = msg.replace("\\", "")
     msg = msg.strip()
     return msg
 
