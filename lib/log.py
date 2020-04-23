@@ -18,7 +18,7 @@ def logSaveIteungStart(data):
     return inserttolog(data)
 
 def normalizeSql(msg):
-    msg = msg.encode('cp1252', 'ignore').decode('utf8')
+    msg = msg.encode('cp1252', 'ignore').decode('utf8', 'ignore')
     msg = msg.replace("'", "")
     msg = msg.replace("\\", "")
     msg = msg.strip()
