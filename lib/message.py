@@ -46,5 +46,7 @@ def newlineNormalize(msg):
 
 def removeBackslash(message):
     if message[-1] == '\\':
-        message=message[:-1]
-    return message
+        msg=message[:-1]
+    else:
+        msg=message
+    return msg
