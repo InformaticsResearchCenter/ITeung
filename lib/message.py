@@ -9,9 +9,8 @@ from ftfy import fix_encoding
 from lib import times
 
 def normalize(message):
-    msg=message.encode('latin1').decode('utf8')
-    #or use this to encode
-    #msg=fix_encoding(message)
+    # msg=message.encode('latin1').decode('utf8')
+    msg=fix_encoding(message)
     msg=msg.lower()
     msg=msg.replace(',',' ')
     # msg=msg.replace('\n','')
