@@ -19,7 +19,7 @@ def replymsg(driver, data):
         wa.typeAndSendMessage(driver, wmsg)
         num = data[0]
         msgreply = getJadwalData(num)
-        msgreply = "Ini jadwal ujian yang Bapak/Ibu minta\n"+msgreply
+        msgreply = "Ini jadwal ujian yang Bapak/Ibu minta\n\n"+msgreply
     else:
         msgreply='Mohon maaf server Akademik SIAP sedang dalam kondisi DOWN, mohon untuk menginformasikan ke ADMIN dan tunggu hingga beberapa menit kemudian, lalu ulangi kembali, terima kasih....'
     return msgreply
@@ -56,7 +56,7 @@ def getJadwalData(nohp):
         simak_mst_matakuliah m,  simak_mst_tahun t, simak_mst_prodi pr
         where j.MKID=m.MKID and j.DosenID=d.Login and j.DosenID='"""+kelas.getKodeDosen(nohp)+"""' 
         and j.TahunID='"""+config.siap_tahun_id+"""' and t.ProgramID='"""+config.jalur_program+"""' 
-        and m.ProdiID = pr.ProdiID and j.RuangID=r.RuangID group by j.JadwalID;
+        and m.ProdiID = pr.ProdiID and j.RuangID=r.RuangID and j.UTSTanggal != 0 group by j.JadwalID ;
     """
     jadwal = ''
     jadwalToday = '*Jadwal Ujian Hari Ini*'.upper() + \
@@ -92,4 +92,4 @@ def getJadwalData(nohp):
         if len(jadwalNextDay) == 101:
             jadwalNextDay += '_Tidak ada jadwal ujian yang akan datang_'
 
-    return jadwal + jadwalToday+'\n\n' + jadwalNextDay+'\n' + jadwalPrevDay
+    return jadwal + jadwalToday+'\n' + jadwalNextDay+'\n' + jadwalPrevDay
