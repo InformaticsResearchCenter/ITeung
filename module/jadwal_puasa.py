@@ -28,7 +28,7 @@ def replymsg(driver, data):
         isha = apidata['timings']['Isha']
         imsak = apidata['timings']['Imsak']
         midnight = apidata['timings']['Midnight']
-        msgreply='Berdasarkan dari Lokasi yang kamu kirim berikut Jadwal Ibadah yang diminta...\n\n*JADWAL PUASA*\n\n*Tanggal*: _{now}_\n\nFajr: {fajr}\nSunrise: {sunrise}\nDhuhr: {dhuhr}\nAsr: {asr}\nSunset: {sunset}\nMaghrib: {maghrib}\nIsha: {isha}\nImsak: {imsak}\nMidnight: {midnight}'.format(fajr=fajr, sunrise=sunrise, dhuhr=dhuhr, asr=asr, sunset=sunset, maghrib=maghrib, isha=isha, imsak=imsak, midnight=midnight, now=now.strftime('%d-%m-%Y'))
+        msgreply='Berdasarkan dari Lokasi yang kamu kirim berikut Jadwal Ibadah yang diminta...\n\n*JADWAL PUASA*\n\n*Tanggal*: _{now}_\n\nFajr: {fajr}\nSunrise: {sunrise}\nDhuhr: {dhuhr}\nAsr: {asr}\nSunset: {sunset}\nMaghrib: {maghrib}\nIsha: {isha}\nImsak: {imsak}\nMidnight: {midnight}\n\nSelamat menjalankan ibadah puasa bagi yang menjalankan yaaa Teman-Teman.... <3<3'.format(fajr=fajr, sunrise=sunrise, dhuhr=dhuhr, asr=asr, sunset=sunset, maghrib=maghrib, isha=isha, imsak=imsak, midnight=midnight, now=now.strftime('%d-%m-%Y'))
     else:
         msgreply='duh mana lokasinya, #BOTNAME# ga bisa nentuin kamu ada dimana.... nanti #BOTNAME# salah kasih informasi lagi...'
     return msgreply
