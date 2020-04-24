@@ -11,9 +11,15 @@ def replymsg(driver, data):
         wmsg=reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
         wmsg=wmsg.replace('#BOTNAME#', config.bot_name)
         wa.typeAndSendMessage(driver, wmsg)
-        datalinksplit=linkdata.split('@')
-        datalatitudelongitudesplit = datalinksplit[1].split(',')
-        latitude, longitude=datalatitudelongitudesplit[0], datalatitudelongitudesplit[1]
+        try:
+            datalinksplit=linkdata.split('@')
+            datalatitudelongitudesplit = datalinksplit[1].split(',')
+            latitude, longitude=datalatitudelongitudesplit[0], datalatitudelongitudesplit[1]
+        except:
+            datalinksplit = abc.split('&')
+            datalinksplitagain = datalinksplit[0].split('=')
+            datalatitudelongitudesplit = datalinksplitagain[1].split('%2C')
+            latitude, longitude=datalatitudelongitudesplit[0], datalatitudelongitudesplit[1]
         now = datetime.datetime.now()
         method='5'
         api='http://api.aladhan.com/v1/calendar?latitude={lati}&longitude={long}&method={method}&month={months}&year={years}'.format(lati=latitude, long=longitude, method=method, months=now.month, years=now.year)
@@ -41,3 +47,9 @@ def locateGmaps(driver):
         ret=False
         cekgmaps=''
     return ret, cekgmaps
+
+abc='https://maps.google.com/maps?q=-6.8758059%2C107.5785173&z=17&hl=en'
+data0=abc.split('&')
+data1=data0[0].split('=')
+data2=data1[1].split('%2C')
+print(data2)
