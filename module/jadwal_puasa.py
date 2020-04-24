@@ -28,14 +28,14 @@ def replymsg(driver, data):
         isha = apidata['timings']['Isha']
         imsak = apidata['timings']['Imsak']
         midnight = apidata['timings']['Midnight']
-        msgreply='Berdasarkan dari Lokasi yang kamu kirim berikut Jadwal Ibadah yang diminta...\n\n*JADWAL PUASA*\n\n*Tanggal: _{now}_*\n\nFajr: {fajr}\nSunrise: {sunrise}\nDhuhr: {dhuhr}\nAsr: {asr}\nSunset: {sunset}\nMaghrib: {maghrib}\nIsha: {isha}\nImsak: {imsak}\nMidnight: {midnight}'.format(fajr=fajr, sunrise=sunrise, dhuhr=dhuhr, asr=asr, sunset=sunset, maghrib=maghrib, isha=isha, imsak=imsak, midnight=midnight, now=now.strftime('%d-%m-%Y'))
+        msgreply='Berdasarkan dari Lokasi yang kamu kirim berikut Jadwal Ibadah yang diminta...\n\n*JADWAL PUASA*\n\n*Tanggal*: _{now}_\n\nFajr: {fajr}\nSunrise: {sunrise}\nDhuhr: {dhuhr}\nAsr: {asr}\nSunset: {sunset}\nMaghrib: {maghrib}\nIsha: {isha}\nImsak: {imsak}\nMidnight: {midnight}'.format(fajr=fajr, sunrise=sunrise, dhuhr=dhuhr, asr=asr, sunset=sunset, maghrib=maghrib, isha=isha, imsak=imsak, midnight=midnight, now=now.strftime('%d-%m-%Y'))
     else:
         msgreply='duh mana lokasinya, #BOTNAME# ga bisa nentuin kamu ada dimana.... nanti #BOTNAME# salah kasih informasi lagi...'
     return msgreply
 
 def locateGmaps(driver):
     try:
-        cekgmaps=driver.find_element_by_class_name('_3hy7L').get_attribute('data-plain-text')
+        cekgmaps=driver.find_elements_by_class_name('_3hy7L')[-1].get_attribute('data-plain-text')
         ret=True
     except:
         ret=False
