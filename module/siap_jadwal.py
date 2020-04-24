@@ -41,6 +41,7 @@ def replymsg(driver, data):
         kodedosen = kelas.getKodeDosen(data[0])
         wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
         wmsg = wmsg.replace('#EMAIL#', getEmailDosen(kodedosen))
+        wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
         wa.typeAndSendMessage(driver, wmsg)
         subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],kodedosen],
                          cwd=config.cwd)

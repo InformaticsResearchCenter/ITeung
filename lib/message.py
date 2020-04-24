@@ -8,8 +8,10 @@ import config, re
 from lib import times
 
 def normalize(message):
-    msg = message.lower()
+    msg=message.encode('cp1252', 'ignore').decode('utf8', 'ignore')
+    msg=msg.lower()
     msg=msg.replace(',',' ')
+    msg=msg.replace('\n',' ')
     msg=msg.replace('.',' ')
     msg=msg.replace("'",'')
     msg=msg.replace('?',' ')
@@ -25,10 +27,11 @@ def normalize(message):
     msg=msg.replace('/',' ')
     msg=msg.replace('[',' ')
     msg=msg.replace(']',' ')
-    msg=msg.replace('\\',' ')
+    msg=msg.replace('\\','')
     msg=msg.replace('hari ini','hari '+times.getCurrentDay())
     msg=msg.replace('sekarang','hari '+times.getCurrentDay())
     msg=msg.replace(config.bot_shortname,config.bot_name)
+    msg=removeBackslash(msg)
     msg=msg.strip()
     return msg
 
@@ -42,4 +45,19 @@ def normalizeWithRegex(message):
 
 def newlineNormalize(msg):
     msg = msg.replace('\\n', '\n')
+    return msg
+
+def removeBackslash(message):
+    try:
+        msg=message
+        backslash=True
+        while backslash:
+            if msg[-1] == '\\':
+                msg=msg[:-1]
+            if msg[-1] == '\\':
+                backslash=True
+            else:
+                backslash=False
+    except:
+        msg=''
     return msg

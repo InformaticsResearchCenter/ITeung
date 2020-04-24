@@ -11,28 +11,29 @@ def dbConnectIteung():
 def getDatetimeNow():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-def save(data):
-    if "teung kelas mulai" not in data[3]:
-        inserttolog(data)
+def save(num, msg, als, grp, isgrp):
+    inserttolog(num, msg, als, grp, isgrp)
 
 def logSaveIteungStart(data):
     return inserttolog(data)
 
 def normalizeSql(msg):
+    msg = msg.encode('cp1252', 'ignore').decode('utf8', 'ignore')
     msg = msg.replace("'", "")
+    msg = msg.replace("\\", "")
     msg = msg.strip()
     return msg
 
 #close commit 11
-def inserttolog(data):
+def inserttolog(num, msg, als, grp, isgrp):
     db = dbConnectIteung()
     try:
-        sql = "INSERT INTO log VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}')".format(getDatetimeNow(), data[0], normalizeSql(data[3]), normalizeSql(data[2]), normalizeSql(data[1]), data[4])
+        sql = "INSERT INTO log VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}')".format(getDatetimeNow(), num, normalizeSql(msg), normalizeSql(als), normalizeSql(grp), isgrp)
         with db:
             cur = db.cursor()
             cur.execute(sql)
     except:
-        sql = "INSERT INTO log VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}')".format(getDatetimeNow(), data[0], normalizeSql(data[3]), normalizeSql('anak alay'), normalizeSql(data[1]), data[4])
+        sql = "INSERT INTO log VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}')".format(getDatetimeNow(), num, normalizeSql(msg), normalizeSql('anak alay'), normalizeSql(grp), isgrp)
         with db:
             cur = db.cursor()
             cur.execute(sql)

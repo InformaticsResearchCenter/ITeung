@@ -33,7 +33,7 @@ class Chatbot(object):
                 msg=message.normalize(msg)
                 print(msg)
                 if self.msgcheck != msg or (self.numcheck != num and self.alscheck != als):
-                    log.save(data)
+                    log.save(num=num, msg=msg, als=als, grp=grp, isgrp=isgrp)
                     self.msgcheck=msg
                     self.numcheck=num
                     self.alscheck=als
