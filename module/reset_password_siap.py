@@ -28,13 +28,14 @@ def passwdGenerate(length=16, chars=string.ascii_uppercase + string.ascii_lowerc
 
 def updatePassword(password, id):
     db = siap.dbConnect()
-    sql = "UPDATE simak_mst_mahasiswa SET `Password` = MD5(MD5('{password}')) WHERE `Login` = '{id}';" \
-          "UPDATE simak_besan_users SET `user_password` = MD5(MD5('{password}')) WHERE `user_name` = '{id}';" \
-          "UPDATE besan_users SET `user_password` = MD5(MD5('{password}')) WHERE `user_name` = '{id}';".format(
-        password=password, id=id)
+    sql1="UPDATE simak_mst_mahasiswa SET `Password` = MD5(MD5('{password}')) WHERE `Login` = '{id}';" .format(password=password, id=id)
+    sql2="UPDATE simak_besan_users SET `user_password` = MD5(MD5('{password}')) WHERE `user_name` = '{id}';".format(password=password, id=id)
+    sql3="UPDATE besan_users SET `user_password` = MD5(MD5('{password}')) WHERE `user_name` = '{id}';".format(password=password, id=id)
     with db:
         cur = db.cursor()
-        cur.execute(sql)
+        cur.execute(sql1)
+        cur.execute(sql2)
+        cur.execute(sql3)
 
 
 def cekNumber(num):
