@@ -8,6 +8,7 @@ from lib import reply
 import os
 from lib import wa
 from module import kelas
+from lib import wa, numbers
 
 def auth(data):
     if kelas.getKodeDosen(data[0]) == '':
@@ -23,6 +24,7 @@ def replymsg(driver, data):
             os.path.basename(__file__).split('.')[0])
         wa.typeAndSendMessage(driver, wmsg)
         num = data[0]
+        num = numbers.normalize(num)
         msg = data[3]
         data = msg.split(' ')
         

@@ -8,6 +8,7 @@ import shutil
 from module import kelas
 from lib import reply, wa
 from datetime import datetime
+from lib import wa, numbers
 
 def auth(data):
     if kelas.getKodeDosen(data[0]) == '':
@@ -23,7 +24,8 @@ def replymsg(driver, data):
         wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
         wa.typeAndSendMessage(driver, wmsg)
         msg = data[3]
-        nomor = data[0]
+        num = data[0]
+        nomor = numbers.normalize(num)
         data = msg.split(' ')
         
         if len(data) == 4:
