@@ -4,10 +4,10 @@ import pymysql
 import openpyxl
 import string
 from datetime import datetime
-from module import kelas
 from lib import reply
 import os
 from lib import wa
+from module import kelas
 
 def auth(data):
     if kelas.getKodeDosen(data[0]) == '':
@@ -28,13 +28,13 @@ def replymsg(driver, data):
         
         try:
             matkul = data[data.index('matkul')+1] if any(char.isdigit() for char in data[data.index('matkul')+1]) else False
-            kelas = data[data.index('kelas')+1].upper() if len(data[data.index('kelas')+1]) < 2 else False
+            kelass = data[data.index('kelas')+1].upper() if len(data[data.index('kelas')+1]) < 2 else False
             jenis = data[3].lower() if data[3].lower() == 'uts' or data[3].lower() == 'uas' else False
-            if matkul and kelas and jenis:
+            if matkul and kelass and jenis:
                 datas = {
                     'tahun': config.siap_tahun_id,
                     'kode_matkul': matkul,
-                    'kelas': convertKelas(kelas),
+                    'kelas': convertKelas(kelass),
                     'jenis': jenis
                 }
                 
