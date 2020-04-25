@@ -21,7 +21,7 @@ def replymsg(driver, data):
     return msgreply
 
 
-def passwdGenerate(length=16, chars=string.ascii_uppercase + string.ascii_lowercase + string.digits):
+def passwdGenerate(length=16, chars=string.ascii_uppercase + string.ascii_lowercase + string.digits + string.punctuation):
     passwd = ''.join(random.choice(chars) for length in range(length))
     return passwd
 
