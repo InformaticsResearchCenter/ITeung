@@ -50,7 +50,7 @@ def replymsg(driver, data):
         nowtime = datetime.datetime.strptime(now, '%H:%M:%S')
         result = str(imsaktime - nowtime).split(':')
         if nowtime > imsaktime:
-            msgreply = 'yah udah kelewat waktu bukanya....'
+            msgreply = 'yah udah kelewat waktu imsaknya....'
         else:
             if result[0] == '0' and result[1] != '00' and result[2] != '00':
                 time = '{menit} Menit {detik} Detik lagi kita buka yaa....'.format(menit=result[1], detik=result[2])
