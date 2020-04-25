@@ -9,6 +9,7 @@ from module import kelas
 from lib import reply, wa
 from datetime import datetime
 from lib import wa, numbers
+from time import sleep
 
 def auth(data):
     if kelas.getKodeDosen(data[0]) == '':
@@ -33,6 +34,7 @@ def replymsg(driver, data):
                 jenis = data[3] if data[3].lower() == 'uts' or data[3].lower() == 'uas' else False
                 if jenis:
                     filename = downloadFile(driver)
+                    sleep(2)
                     moveFiles(filename)
                     msgreply = inputNilaiByExcel(
                         filename, jenis, config.siap_tahun_id, nomor)
