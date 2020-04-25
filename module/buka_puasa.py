@@ -22,11 +22,18 @@ def replymsg(driver, data):
         api = 'http://api.aladhan.com/v1/calendar?latitude={lati}&longitude={long}&method={method}&month={months}&year={years}'.format(lati=latitude, long=longitude, method=method, months=nowdatetime.month, years=nowdatetime.year)
         req = requests.get(api)
         apidata = req.json()['data'][nowdatetime.day - 1]
+        # buka = apidata['timings']['Maghrib'].split(' ')[0]
+        # bukatime = datetime.datetime.strptime(buka, '%H:%M')
+        # now = datetime.datetime.now().strftime('%H:%M:%S')
+        # nowtime = datetime.datetime.strptime(now, '%H:%M:%S')
+        # result = str(bukatime-nowtime).split(':')
+        api = 'http://api.timezonedb.com/v2.1/get-time-zone?key={api_key}&format=json&by=position&lat={lat}&lng={long}'.format(api_key=config.apikeytimezonedb, lat=latitude, long=longitude)
+        req = requests.get(api)
         buka = apidata['timings']['Maghrib'].split(' ')[0]
         bukatime = datetime.datetime.strptime(buka, '%H:%M')
-        now = datetime.datetime.now().strftime('%H:%M:%S')
+        now = req.json()['formatted'].split(' ')[1]
         nowtime = datetime.datetime.strptime(now, '%H:%M:%S')
-        result = str(bukatime-nowtime).split(':')
+        result = str(bukatime - nowtime).split(':')
         if nowtime > bukatime:
             msgreply='yah udah kelewat waktu bukanya....'
         else:
@@ -40,13 +47,19 @@ def replymsg(driver, data):
     else:
         method = '5'
         latitude, longitude = '-6.8737943', '107.5757477'
-        api = 'http://api.aladhan.com/v1/calendar?latitude={lati}&longitude={long}&method={method}&month={months}&year={years}'.format(
-            lati=latitude, long=longitude, method=method, months=nowdatetime.month, years=nowdatetime.year)
+        api = 'http://api.aladhan.com/v1/calendar?latitude={lati}&longitude={long}&method={method}&month={months}&year={years}'.format(lati=latitude, long=longitude, method=method, months=nowdatetime.month, years=nowdatetime.year)
         req = requests.get(api)
         apidata = req.json()['data'][nowdatetime.day - 1]
+        # buka = apidata['timings']['Maghrib'].split(' ')[0]
+        # bukatime = datetime.datetime.strptime(buka, '%H:%M')
+        # now = datetime.datetime.now().strftime('%H:%M:%S')
+        # nowtime = datetime.datetime.strptime(now, '%H:%M:%S')
+        # result = str(bukatime - nowtime).split(':')
+        api = 'http://api.timezonedb.com/v2.1/get-time-zone?key={api_key}&format=json&by=position&lat={lat}&lng={long}'.format(api_key=config.apikeytimezonedb, lat=latitude, long=longitude)
+        req = requests.get(api)
         buka = apidata['timings']['Maghrib'].split(' ')[0]
         bukatime = datetime.datetime.strptime(buka, '%H:%M')
-        now = datetime.datetime.now().strftime('%H:%M:%S')
+        now = req.json()['formatted'].split(' ')[1]
         nowtime = datetime.datetime.strptime(now, '%H:%M:%S')
         result = str(bukatime - nowtime).split(':')
         if nowtime > bukatime:

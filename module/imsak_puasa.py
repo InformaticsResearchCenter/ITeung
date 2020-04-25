@@ -22,11 +22,18 @@ def replymsg(driver, data):
         api = 'http://api.aladhan.com/v1/calendar?latitude={lati}&longitude={long}&method={method}&month={months}&year={years}'.format(lati=latitude, long=longitude, method=method, months=nowdatetime.month, years=nowdatetime.year)
         req = requests.get(api)
         apidata = req.json()['data'][nowdatetime.day - 1]
-        imsak = apidata['timings']['Imsak'].split(' ')[0]
+        # imsak = apidata['timings']['Imsak'].split(' ')[0]
+        # imsaktime = datetime.datetime.strptime(imsak, '%H:%M')
+        # now = datetime.datetime.now().strftime('%H:%M:%S')
+        # nowtime = datetime.datetime.strptime(now, '%H:%M:%S')
+        # result = str(imsaktime-nowtime).split(':')
+        api = 'http://api.timezonedb.com/v2.1/get-time-zone?key={api_key}&format=json&by=position&lat={lat}&lng={long}'.format(api_key=config.apikeytimezonedb, lat=latitude, long=longitude)
+        req = requests.get(api)
+        imsak = apidata['timings']['Maghrib'].split(' ')[0]
         imsaktime = datetime.datetime.strptime(imsak, '%H:%M')
-        now = datetime.datetime.now().strftime('%H:%M:%S')
+        now = req.json()['formatted'].split(' ')[1]
         nowtime = datetime.datetime.strptime(now, '%H:%M:%S')
-        result = str(imsaktime-nowtime).split(':')
+        result = str(imsaktime - nowtime).split(':')
         if nowtime > imsaktime:
             msgreply='yah udah kelewat waktu imsaknya....'
         else:
@@ -44,9 +51,17 @@ def replymsg(driver, data):
             lati=latitude, long=longitude, method=method, months=nowdatetime.month, years=nowdatetime.year)
         req = requests.get(api)
         apidata = req.json()['data'][nowdatetime.day - 1]
-        imsak = apidata['timings']['Imsak'].split(' ')[0]
+        # imsak = apidata['timings']['Imsak'].split(' ')[0]
+        # imsaktime = datetime.datetime.strptime(imsak, '%H:%M')
+        # now = datetime.datetime.now().strftime('%H:%M:%S')
+        # nowtime = datetime.datetime.strptime(now, '%H:%M:%S')
+        # result = str(imsaktime-nowtime).split(':')
+        api = 'http://api.timezonedb.com/v2.1/get-time-zone?key={api_key}&format=json&by=position&lat={lat}&lng={long}'.format(
+            api_key=config.apikeytimezonedb, lat=latitude, long=longitude)
+        req = requests.get(api)
+        imsak = apidata['timings']['Maghrib'].split(' ')[0]
         imsaktime = datetime.datetime.strptime(imsak, '%H:%M')
-        now = datetime.datetime.now().strftime('%H:%M:%S')
+        now = req.json()['formatted'].split(' ')[1]
         nowtime = datetime.datetime.strptime(now, '%H:%M:%S')
         result = str(imsaktime - nowtime).split(':')
         if nowtime > imsaktime:
