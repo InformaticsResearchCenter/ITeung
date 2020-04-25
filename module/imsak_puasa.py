@@ -29,7 +29,7 @@ def replymsg(driver, data):
         # result = str(imsaktime-nowtime).split(':')
         api = 'http://api.timezonedb.com/v2.1/get-time-zone?key={api_key}&format=json&by=position&lat={lat}&lng={long}'.format(api_key=config.apikeytimezonedb, lat=latitude, long=longitude)
         req = requests.get(api)
-        imsak = apidata['timings']['Maghrib'].split(' ')[0]
+        imsak = apidata['timings']['Imsak'].split(' ')[0]
         imsaktime = datetime.datetime.strptime(imsak, '%H:%M')
         now = req.json()['formatted'].split(' ')[1]
         nowtime = datetime.datetime.strptime(now, '%H:%M:%S')
@@ -59,7 +59,7 @@ def replymsg(driver, data):
         api = 'http://api.timezonedb.com/v2.1/get-time-zone?key={api_key}&format=json&by=position&lat={lat}&lng={long}'.format(
             api_key=config.apikeytimezonedb, lat=latitude, long=longitude)
         req = requests.get(api)
-        imsak = apidata['timings']['Maghrib'].split(' ')[0]
+        imsak = apidata['timings']['Imsak'].split(' ')[0]
         imsaktime = datetime.datetime.strptime(imsak, '%H:%M')
         now = req.json()['formatted'].split(' ')[1]
         nowtime = datetime.datetime.strptime(now, '%H:%M:%S')
