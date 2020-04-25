@@ -12,9 +12,10 @@ def replymsg(driver, data):
     wmsg=wmsg.replace('#BOTNAME#', config.bot_name)
     wa.typeAndSendMessage(driver, wmsg)
     loginid = getLoginID(num=data[0])
+    newpasswd=passwdGenerate()
     if loginid is not None:
-        updatePassword(password=passwdGenerate(), id=loginid)
-        msgreply = 'sip sudah #BOTNAME# ganti ini ya *username* sama *password* yang terbaru:\n\nUsername: {id}\nPassword: {passwd}\n\nOke sudah yaaaa, mohon untuk segera diganti ya passwordnya, dadahhh... <3<3'
+        updatePassword(password=newpasswd, id=loginid)
+        msgreply = 'sip sudah #BOTNAME# ganti ini ya *username* sama *password* yang terbaru:\n\nUsername: {id}\nPassword: {passwd}\n\nOke sudah yaaaa, mohon untuk segera diganti ya passwordnya, dadahhh... <3<3'.format(id=loginid, passwd=newpasswd)
     else:
         msgreply = 'aduh #BOTNAME# ga bisa nemuin datanya euyyyy, coba cek nomernya di siap udah sama belum sama di whatsapp, kalo udah diulangi lagi yaa...'
     return msgreply
