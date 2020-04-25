@@ -44,8 +44,13 @@ def replymsg(driver, data):
         else:
             try:
                 jenis = data[3].lower() if data[3].lower() == 'uts' or data[3].lower() == 'uas' else False
-                nilai = data[data.index('uts')+1] if all(char.isdigit() for char in data[data.index('uts')+1]) and (
-                    int(data[data.index('uts')+1]) <= 100 and int(data[data.index('uts')+1]) >= 0) else False
+                if jenis == 'uts':
+                    nilai = data[data.index('uts')+1] if all(char.isdigit() for char in data[data.index('uts')+1]) and (
+                        int(data[data.index('uts')+1]) <= 100 and int(data[data.index('uts')+1]) >= 0) else False
+                elif jenis == 'uas':
+                    nilai = data[data.index('uas')+1] if all(char.isdigit() for char in data[data.index('uas')+1]) and (
+                        int(data[data.index('uas')+1]) <= 100 and int(data[data.index('uas')+1]) >= 0) else False
+                    
                 npm = data[data.index('npm')+1] if all(char.isdigit() for char in data[data.index('npm')+1]) else False
                 matkul = data[data.index('matkul')+1] if any(char.isdigit() for char in data[data.index('matkul')+1]) else False
                 if jenis and nilai and npm and matkul:
