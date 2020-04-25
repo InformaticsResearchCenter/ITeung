@@ -68,6 +68,7 @@ def kodeKelas(kode):
         'H': '08',
         'I': '09',
         'J': '10',
+        'RPL': '20'
     }
     return switcher.get(kode, "Not Found!")
 
@@ -84,6 +85,7 @@ def toKelas(kode):
         '08': 'H',
         '09': 'I',
         '10': 'J',
+        '20': 'RPL'
     }
     return switcher.get(kode, "Not Found!")
 
