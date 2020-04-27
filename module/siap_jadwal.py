@@ -124,9 +124,9 @@ def getMahasiswaAbsensi(jadwalID):
         if rows is not None:
             for row in rows:
                 if row[2] > 14:
-                    hadir = str(round(((row[2]-14)/7) * 100))+'%'
+                    hadir = str(round(((row[2]/3)/7) * 100))+'%'
                 elif row[2] > 7:
-                    hadir = str(round(((row[2]-7)/7) * 100))+'%'
+                    hadir = str(round(((row[2]/2)/7) * 100))+'%'
                 else:
                     hadir = str(round((row[2]/7) * 100))+'%'
                 mahasiswa.append([row[0], row[1], hadir])

@@ -29,7 +29,7 @@ def getJadwalData(nohp):
     db = kelas.dbConnectSiap()
 
     sql = """
-        select j.Nama, CASE
+        select j.JadwalID, j.Nama, CASE
         WHEN j.ProdiID ='.13.' THEN 'D3 Teknik Informatika'
         WHEN j.ProdiID ='.14.' THEN 'D4 Teknik Informatika'
         WHEN j.ProdiID ='.23.' THEN 'D3 Manajemen Informatika'
@@ -60,11 +60,11 @@ def getJadwalData(nohp):
     """
     jadwal = ''
     jadwalToday = '*Jadwal Ujian Hari Ini*'.upper() + \
-        '\nTanggal | Mata Kuliah | Prodi | Kelas | Jumlah | Jam Ujian | Ruangan\n'
+        '\nJadwalID | Tanggal | Mata Kuliah | Prodi | Kelas | Jumlah | Jam Ujian | Ruangan \n'
     jadwalPrevDay = '*Jadwal Ujian Yang Telah Dilaksanakan*'.upper() + \
-        '\nTanggal | Mata Kuliah | Prodi | Kelas | Jumlah | Jam Ujian | Ruangan\n'
+        '\nJadwalID | Tanggal | Mata Kuliah | Prodi | Kelas | Jumlah | Jam Ujian | Ruangan\n'
     jadwalNextDay = '*Jadwal Ujian Yang Akan Datang*'.upper() + \
-        '\nTanggal | Mata Kuliah | Prodi | Kelas | Jumlah | Jam Ujian | Ruangan\n'
+        '\nJadwalID | Tanggal | Mata Kuliah | Prodi | Kelas | Jumlah | Jam Ujian | Ruangan\n'
 
     with db:
         cur = db.cursor()
@@ -72,18 +72,18 @@ def getJadwalData(nohp):
         rows = cur.fetchall()
 
         for row in rows:
-            if row[3] != 0:
-                date = datetime.strptime(row[4], '%d-%m-%Y').date()
+            if row[4] != 0:
+                date = datetime.strptime(row[5], '%d-%m-%Y').date()
                 today = datetime.today().date()
                 if date == today:
-                    jadwalToday += '*%s* | %s | %s | %s | %s | %s | %s \n' % (
-                        row[4], row[0].title(), row[1], row[2], row[3], row[5]+'-'+row[6], row[7])
+                    jadwalToday += '*%s* | %s | %s | %s | %s | %s | %s | %s \n' % (
+                        row[5], row[0], row[1].title(), row[2], row[3], row[5]+'-'+row[6], row[7], row[8])
                 elif date > today:
-                    jadwalNextDay += '*%s* | %s | %s | %s | %s | %s | %s \n' % (
-                        row[4], row[0].title(), row[1], row[2], row[3], row[5]+'-'+row[6], row[7])
+                    jadwalNextDay += '*%s* | %s | %s | %s | %s | %s | %s | %s \n' % (
+                        row[5], row[0], row[1].title(), row[2], row[3], row[5]+'-'+row[6], row[7], row[8])
                 elif date < today:
-                    jadwalPrevDay += '*%s* | %s | %s | %s | %s | %s | %s \n' % (
-                        row[4], row[0].title(), row[1], row[2], row[3], row[5]+'-'+row[6], row[7])
+                    jadwalPrevDay += '*%s* | %s | %s | %s | %s | %s | %s | %s \n' % (
+                        row[5], row[0], row[1].title(), row[2], row[3], row[5]+'-'+row[6], row[7], row[8])
 
         if len(jadwalToday) == 93:
             jadwalToday += '_Tidak ada jadwal ujian hari ini_'
