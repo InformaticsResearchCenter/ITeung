@@ -123,7 +123,12 @@ def getMahasiswaAbsensi(jadwalID):
         rows = cur.fetchall()
         if rows is not None:
             for row in rows:
-                hadir = str(round((row[2]/7) * 100))+'%'
+                if row[2] > 14:
+                    hadir = str(round(((row[2]/3)/7) * 100))+'%'
+                elif row[2] > 7:
+                    hadir = str(round(((row[2]/2)/7) * 100))+'%'
+                else:
+                    hadir = str(round((row[2]/7) * 100))+'%'
                 mahasiswa.append([row[0], row[1], hadir])
 
             return mahasiswa

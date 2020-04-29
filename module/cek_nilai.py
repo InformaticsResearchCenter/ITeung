@@ -29,20 +29,42 @@ def replymsg(driver, data):
         data = msg.split(' ')
         
         try:
-            matkul = data[data.index('matkul')+1] if any(char.isdigit() for char in data[data.index('matkul')+1]) else False
-            kelass = data[data.index('kelas')+1].upper() if len(data[data.index('kelas')+1]) < 2 else False
-            jenis = data[3].lower() if data[3].lower() == 'uts' or data[3].lower() == 'uas' else False
-            if matkul and kelass and jenis:
-                datas = {
-                    'tahun': config.siap_tahun_id,
-                    'kode_matkul': matkul,
-                    'kelas': convertKelas(kelass),
-                    'jenis': jenis
-                }
-                
-                msgreply = mainCekNilai(num, datas)
-                
-                msgreply = "Ini nilai ujian yang Bapak/Ibu minta\n\n"+msgreply
+            if 'matkul' in data and 'jadwal' not in data:
+                matkul = data[data.index('matkul')+1] if any(char.isdigit() for char in data[data.index('matkul')+1]) else False
+                kelass = data[data.index('kelas')+1].upper() if len(data[data.index('kelas')+1]) < 2 else False
+                jenis = data[3].lower() if data[3].lower() == 'uts' or data[3].lower() == 'uas' else False
+                if matkul and kelass and jenis:
+                    datas = {
+                        'tahun': config.siap_tahun_id,
+                        'kode_matkul': matkul,
+                        'kelas': convertKelas(kelass),
+                        'jenis': jenis,
+                        'jadwal': 0
+                    }
+                    
+                    msgreply = mainCekNilai(num, datas)
+                    
+                    msgreply = "Ini nilai ujian yang Bapak/Ibu minta\n\n"+msgreply
+                else:
+                    msgreply = 'Salah keyword beb...................'
+            elif 'jadwal' in data and 'matkul' not in data:
+                jadwal = data[data.index('jadwal')+1] if any(char.isdigit()
+                                                             for char in data[data.index('jadwal')+1]) else False
+                jenis = data[3].lower() if data[3].lower() == 'uts' or data[3].lower() == 'uas' else False
+                if jadwal and jenis:
+                    datas = {
+                        'tahun': config.siap_tahun_id,
+                        'kode_matkul': 0,
+                        'kelas': 0,
+                        'jenis': jenis,
+                        'jadwal': jadwal
+                    }
+
+                    msgreply = mainCekNilai(num, datas)
+
+                    msgreply = "Ini nilai ujian yang Bapak/Ibu minta\n\n"+msgreply
+                else:
+                    msgreply = 'Salah keyword beb...............................'
             else:
                 msgreply = 'Salah keyword beb......'
         except:
@@ -59,11 +81,16 @@ def dbConnectSiap():
     return db
 
 
-def checkDosen(nomor, tahun, matkul):
+def checkDosen(nomor, tahun, matkul=0, jadwal=0):
     db = dbConnectSiap()
-    query = """
-        select distinct(Nama) from simak_trn_jadwal where DosenID = (select Login from simak_mst_dosen where Handphone = '"""+nomor+"""') and TahunID = '"""+tahun+"""' and MKKode = '"""+matkul+"""'
-    """
+    if matkul != 0:
+        query = """
+            select distinct(Nama) from simak_trn_jadwal where DosenID = (select Login from simak_mst_dosen where Handphone = '"""+nomor+"""') and TahunID = '"""+tahun+"""' and MKKode = '"""+matkul+"""'
+        """
+    elif jadwal != 0:
+        query = """
+            select distinct(Nama) from simak_trn_jadwal where DosenID = (select Login from simak_mst_dosen where Handphone = '""" + nomor + """') and TahunID = '""" + tahun + """' and JadwalID = '""" + jadwal + """'
+        """
     with db:
         cur = db.cursor()
         cur.execute(query)
@@ -75,11 +102,16 @@ def checkDosen(nomor, tahun, matkul):
             return False
 
 
-def checkNilaiUTS(kode_matkul, tahun, kelas, matkul):
+def checkNilaiUTS(tahun, matkul, kode_matkul=0, jadwal=0, kelas=0):
     db = dbConnectSiap()
-    query = """
-        select krs.MhswID, mhs.Nama, krs.UTS from simak_trn_krs krs, simak_mst_mahasiswa mhs, simak_trn_jadwal j where krs.StatusKRSID='A' and krs.MKKode='"""+kode_matkul+"""' and krs.TahunID='"""+tahun+"""' and krs.Kelas='"""+kelas+"""' and krs.JadwalID=j.JadwalID and krs.NA='N' and krs.MhswID=mhs.MhswID group by krs.MhswID order by krs.MhswID ASC
-    """
+    if kode_matkul != 0:
+        query = """
+            select krs.MhswID, mhs.Nama, krs.UTS from simak_trn_krs krs, simak_mst_mahasiswa mhs, simak_trn_jadwal j where krs.StatusKRSID='A' and krs.MKKode='"""+kode_matkul+"""' and krs.TahunID='"""+tahun+"""' and krs.Kelas='"""+kelas+"""' and krs.JadwalID=j.JadwalID and krs.NA='N' and krs.MhswID=mhs.MhswID group by krs.MhswID order by krs.MhswID ASC
+        """
+    elif jadwal != 0:
+        query = """
+            select krs.MhswID, mhs.Nama, krs.UTS from simak_trn_krs krs, simak_mst_mahasiswa mhs, simak_trn_jadwal j where krs.StatusKRSID='A' and krs.JadwalID='"""+jadwal+"""' and krs.TahunID='"""+tahun+"""' and krs.NA='N' and krs.MhswID=mhs.MhswID group by krs.MhswID order by krs.MhswID ASC
+        """
     with db:
         nilais = '*Nilai UTS '.upper()+matkul+'*' + '\nNPM | Nama | UTS\n'
 
@@ -93,7 +125,7 @@ def checkNilaiUTS(kode_matkul, tahun, kelas, matkul):
     return nilais
 
 
-def checkNilaiUAS(kode_matkul, tahun, kelas, matkul):
+def checkNilaiUAS(tahun, matkul, kode_matkul=0, jadwal=0, kelas=0):
     db = dbConnectSiap()
     query = """
         select krs.MhswID, mhs.Nama, krs.UAS from simak_trn_krs krs, simak_mst_mahasiswa mhs, simak_trn_jadwal j where krs.StatusKRSID='A' and krs.MKKode='"""+kode_matkul+"""' and krs.TahunID='"""+tahun+"""' and krs.Kelas='"""+kelas+"""' and krs.JadwalID=j.JadwalID and krs.NA='N' and krs.MhswID=mhs.MhswID group by krs.MhswID order by krs.MhswID ASC
@@ -124,18 +156,33 @@ def convertKelas(kelas):
 
 
 def mainCekNilai(nomor, data):
-    matkul = checkDosen(nomor, data['tahun'], data["kode_matkul"])
-    if matkul:
-        if data['jenis'] == 'uts':
-            msg = checkNilaiUTS(data['kode_matkul'],
-                                data['tahun'], data['kelas'], matkul)
-        elif data['jenis'] == 'uas':
-            msg = checkNilaiUAS(data['kode_matkul'],
-                                data['tahun'], data['kelas'], matkul)
+    if data['kode_matkul'] != 0:
+        matkul = checkDosen(nomor, data['tahun'], matkul=data["kode_matkul"])
+        if matkul:
+            if data['jenis'] == 'uts':
+                msg = checkNilaiUTS(
+                    data['tahun'], matkul, kode_matkul=data['kode_matkul'], kelas=data['kelas'])
+            elif data['jenis'] == 'uas':
+                msg = checkNilaiUAS(
+                    data['tahun'], matkul, kode_matkul=data['kode_matkul'], kelas=data['kelas'])
+            else:
+                msg = 'Ujian apa nih bosque'
         else:
-            msg = 'Ujian apa nih beb...'
-    else:
-        msg = 'Ohh tidak bisa..'
-    return msg
+            msg = 'ohh tidak bisa'
+        return msg
+    elif data['jadwal'] != 0:
+        matkul = checkDosen(nomor, data['tahun'], jadwal=data["jadwal"])
+        if matkul:
+            if data['jenis'] == 'uts':
+                msg = checkNilaiUTS(
+                    data['tahun'], matkul, jadwal=data['jadwal'])
+            elif data['jenis'] == 'uas':
+                msg = checkNilaiUAS(
+                    data['tahun'], matkul, jadwal=data['jadwal'])
+            else:
+                msg = 'Ujian apa nih bosque'
+        else:
+            msg = 'ohh tidak bisa'
+        return msg
 
 
