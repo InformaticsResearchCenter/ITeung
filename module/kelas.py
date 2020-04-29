@@ -684,6 +684,8 @@ def siapabsensiwithsql(grp, num):
         notattend = resultattendance[1]
         if not isSudahKelas(jadwalid=jadwalid, lecturercode=lecturercode):
             lastpertemuan = getLastpertemuan(kodedosen=lecturercode, jadwalid=jadwalid)
+            if lastpertemuan is None:
+                lastpertemuan=0
             yearmonthdaynow = datetime.now().strftime("%Y-%m-%d")
             yearmonthdaytimenow = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             starttime = getDataMatkul(jadwalid=jadwalid)[3]
