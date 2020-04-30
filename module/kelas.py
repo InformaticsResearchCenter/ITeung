@@ -364,7 +364,10 @@ def getLastpertemuan(kodedosen, jadwalid):
         cur = db.cursor()
         cur.execute(sql)
         rows = cur.fetchone()
-        return rows[0]
+        if rows is not None:
+            return rows[0]
+        else:
+            return ''
 
 
 def getJamMulai(kodedosen, kodekelas):
@@ -684,7 +687,7 @@ def siapabsensiwithsql(grp, num):
         notattend = resultattendance[1]
         if not isSudahKelas(jadwalid=jadwalid, lecturercode=lecturercode):
             lastpertemuan = getLastpertemuan(kodedosen=lecturercode, jadwalid=jadwalid)
-            if lastpertemuan is None:
+            if lastpertemuan == '':
                 lastpertemuan=0
             yearmonthdaynow = datetime.now().strftime("%Y-%m-%d")
             yearmonthdaytimenow = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
