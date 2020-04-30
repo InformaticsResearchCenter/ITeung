@@ -33,6 +33,16 @@ def detectphoneNotConnected(driver):
         ret=False
     return ret
 
+def retryNowClick(driver):
+    retry = True
+    wait = WebDriverWait(driver, 600)
+    wait.until(EC.invisibility_of_element_located((By.CLASS_NAME, 'Pg7Si')))
+    while retry:
+        try:
+            driver.find_element_by_class_name('PNlAR').click
+        except:
+            retry=False
+
 def restartMemu(ret):
     if ret:
         os.system(r'C:\Users\LENOVO\Desktop\ITeung\stopmemu.bat')
@@ -45,6 +55,7 @@ def waitLogin(driver):
     target = '"_3ZW2E"'
     x_arg = '//div[contains(@class, ' + target + ')]'
     wait = WebDriverWait(driver, 600)
+    retryNowClick(driver)
     wait.until(EC.presence_of_element_located((By.XPATH, x_arg)))
 
 def typeAndSendMessage(driver, message):
