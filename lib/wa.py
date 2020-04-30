@@ -100,7 +100,7 @@ def messageReply(driver, default_alias_number_index):
 
 def getData(driver, message_wa_index, default_alias_number_index):
     data = []
-    default_alias_number_index=messageReply(driver, default_alias_number_index)
+    # default_alias_number_index=messageReply(driver, default_alias_number_index)
     data.append(getSenderNumber(driver, default_alias_number_index))
     data.append(getGroupName(driver))
     data.append(getSenderAlias(driver, default_alias_number_index))
