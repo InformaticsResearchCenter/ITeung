@@ -33,6 +33,7 @@ def detectphoneNotConnected(driver):
         ret=False
     return ret
 
+#fix 32
 def retryNowClick(driver):
     retry = True
     wait = WebDriverWait(driver, 600)
