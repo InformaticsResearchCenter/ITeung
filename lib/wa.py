@@ -11,7 +11,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from time import sleep
-import os
+import os, clipboard
 
 
 def setProfile(profile_folder):
@@ -84,6 +84,12 @@ def openMessage(driver):
     except:
         print('no notification')
     sleep(0.5)
+
+def copyToClipboard(message):
+    copyToClipboard(message)
+
+def pasteMessage(driver):
+    ActionChains(driver).key_down(Keys.CONTROL).send_keys("V").key_up(Keys.CONTROL).perform()
 
 def messageunread(driver):
     try:
