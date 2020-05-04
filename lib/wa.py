@@ -33,6 +33,17 @@ def detectphoneNotConnected(driver):
         ret=False
     return ret
 
+#fix 32
+def retryNowClick(driver):
+    retry = True
+    wait = WebDriverWait(driver, 600)
+    wait.until(EC.invisibility_of_element_located((By.CLASS_NAME, 'Pg7Si')))
+    while retry:
+        try:
+            driver.find_element_by_class_name('PNlAR').click
+        except:
+            retry=False
+
 def restartMemu(ret):
     if ret:
         os.system(r'C:\Users\LENOVO\Desktop\ITeung\stopmemu.bat')
@@ -45,6 +56,7 @@ def waitLogin(driver):
     target = '"_3ZW2E"'
     x_arg = '//div[contains(@class, ' + target + ')]'
     wait = WebDriverWait(driver, 600)
+    retryNowClick(driver)
     wait.until(EC.presence_of_element_located((By.XPATH, x_arg)))
 
 def typeAndSendMessage(driver, message):
@@ -88,7 +100,7 @@ def messageReply(driver, default_alias_number_index):
 
 def getData(driver, message_wa_index, default_alias_number_index):
     data = []
-    default_alias_number_index=messageReply(driver, default_alias_number_index)
+    # default_alias_number_index=messageReply(driver, default_alias_number_index)
     data.append(getSenderNumber(driver, default_alias_number_index))
     data.append(getGroupName(driver))
     data.append(getSenderAlias(driver, default_alias_number_index))
