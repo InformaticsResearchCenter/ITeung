@@ -479,17 +479,20 @@ def beritaAcara(driver, num, groupname, data, msg):
                "\nWaktu Selesai: " + str(endtimeclass) + \
                "\nPertemuan ke: " + str(getLastpertemuan(kodedosen=lecturercode, jadwalid=jadwalid))
     messages = messages.split("\n")
+    messages_top=""
     for msg in messages:
-        wa.typeMessage(driver, msg)
-        wa.lineBreakWhatsapp(driver)
+        messages_top+=msg+"\n"
+    messages_bot=""
     number = 1
     studentidlist = data
     for studentid in studentidlist:
         if studentid != '' and studentid != None:
             studentname = getStudentNameOnly(studentid)
-            wa.typeMessage(driver, str(number) + ". " + studentid + " " + studentname)
-            wa.lineBreakWhatsapp(driver)
+            messages_bot+=str(number) + ". " + studentid + " " + studentname + "\n"
             number = int(number) + 1
+    message=messages_top+messages_bot
+    wa.copyToClipboard(message)
+    wa.pasteMessage(driver)
     wa.sendMessage(driver)
     msgreply = "Oke teman-teman Matakuliah " + coursename + " sudah selesai dan telah berhasil diinputkan absensinya, mohon jaga kesehatan teman-teman yaaaa.... selalu cuci tangan teman-teman, dadaaaahhhhhh <3"
     return msgreply
