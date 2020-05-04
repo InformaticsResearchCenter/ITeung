@@ -494,6 +494,7 @@ def beritaAcara(driver, num, groupname, data, msg):
     wa.copyToClipboard(message)
     wa.pasteMessage(driver)
     wa.sendMessage(driver)
+    #commit
     msgreply = "Oke teman-teman Matakuliah " + coursename + " sudah selesai dan telah berhasil diinputkan absensinya, mohon jaga kesehatan teman-teman yaaaa.... selalu cuci tangan teman-teman, dadaaaahhhhhh <3"
     return msgreply
 
