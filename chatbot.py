@@ -59,7 +59,10 @@ class Chatbot(object):
                 msgreply = msgreply.replace("#BOTNAME#", config.bot_name)
                 try:
                     msgreply = message.newlineNormalize(msgreply)
-                    wa.typeAndSendMessage(driver, msgreply)
+                    # wa.typeAndSendMessage(driver, msgreply)
+                    wa.copyToClipboard(msgreply)
+                    wa.pasteMessage(driver)
+                    wa.sendMessage(driver)
                     del msgreply
                 except:
                     print("field reply not found!!")
