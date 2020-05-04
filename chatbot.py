@@ -63,6 +63,7 @@ class Chatbot(object):
                         # msgreply = message.newlineNormalize(msgreply)
                         # wa.typeAndSendMessage(driver, msgreply)
                         wa.pasteMessage(driver)
+                        wa.sendMessage(driver)
                         del msgreply
                     except:
                         print("field reply not found!!")
