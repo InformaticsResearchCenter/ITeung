@@ -54,12 +54,15 @@ class Chatbot(object):
             except Exception as e:
                 msgreply = reply.getErrorMessage()
                 msgreply = msgreply.replace("#ERROR#", str(e))
+                wa.copyToClipboard(msgreply)
             if 'msgreply' in locals():
                 if msgreply[:2] != 'm:':
                     msgreply = msgreply.replace("#BOTNAME#", config.bot_name)
+                    wa.copyToClipboard(msgreply)
                     try:
-                        msgreply = message.newlineNormalize(msgreply)
-                        wa.typeAndSendMessage(driver, msgreply)
+                        # msgreply = message.newlineNormalize(msgreply)
+                        # wa.typeAndSendMessage(driver, msgreply)
+                        wa.pasteMessage(driver)
                         del msgreply
                     except:
                         print("field reply not found!!")
