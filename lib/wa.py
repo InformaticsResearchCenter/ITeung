@@ -84,6 +84,7 @@ def openMessage(driver):
         print('no notification')
 
 def copyToClipboard(message):
+    #commit
     clipboard.copy(message)
 
 def pasteMessage(driver):
