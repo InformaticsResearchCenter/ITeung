@@ -84,7 +84,7 @@ def openMessage(driver):
         print('no notification')
 
 def copyToClipboard(message):
-    copyToClipboard(message)
+    clipboard.copy(message)
 
 def pasteMessage(driver):
     ActionChains(driver).key_down(Keys.CONTROL).send_keys("V").key_up(Keys.CONTROL).perform()
