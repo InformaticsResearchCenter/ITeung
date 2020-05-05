@@ -77,13 +77,11 @@ def lineBreakWhatsapp(driver):
 
 def openMessage(driver):
     try:
-        chat = driver.find_elements_by_class_name("OUeyt")[0]
-        chat.click()
-        chat.click()
-        chat.click()
+        newnotifelement = driver.find_elements_by_class_name("OUeyt")[0]
+        action=ActionChains(driver)
+        action.move_to_element_with_offset(to_element=newnotifelement, xoffset=-10, yoffset=0).click().perform()
     except:
         print('no notification')
-    sleep(0.5)
 
 def copyToClipboard(message):
     copyToClipboard(message)
