@@ -79,7 +79,7 @@ def openMessage(driver):
     try:
         newnotifelement = driver.find_elements_by_class_name("OUeyt")[0]
         action=ActionChains(driver)
-        action.move_to_element_with_offset(to_element=newnotifelement, xoffset=-10, yoffset=0).click().perform()
+        action.move_to_element_with_offset(to_element=newnotifelement, xoffset=-20, yoffset=0).double_click().perform()
     except:
         print('no notification')
 
