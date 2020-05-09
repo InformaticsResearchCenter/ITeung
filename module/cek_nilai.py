@@ -27,7 +27,7 @@ def replymsg(driver, data):
         num = numbers.normalize(num)
         msg = data[3]
         data = msg.split(' ')
-        
+        #error ketika uas
         try:
             if 'matkul' in data and 'jadwal' not in data:
                 matkul = data[data.index('matkul')+1] if any(char.isdigit() for char in data[data.index('matkul')+1]) else False
@@ -48,7 +48,7 @@ def replymsg(driver, data):
                 else:
                     msgreply = 'Salah keyword beb...................'
             elif 'jadwal' in data and 'matkul' not in data:
-                jadwal = data[data.index('jadwal')+1] if any(char.isdigit()
+                jadwal = data[data.index('jadwal')+1] if all(char.isdigit()
                                                              for char in data[data.index('jadwal')+1]) else False
                 jenis = data[3].lower() if data[3].lower() == 'uts' or data[3].lower() == 'uas' else False
                 if jadwal and jenis:
@@ -68,7 +68,7 @@ def replymsg(driver, data):
             else:
                 msgreply = 'Salah keyword beb......'
         except:
-            msgreply = 'Salah keyword beb.....'
+            msgreply = 'Salah keyword beb....., atau salah masukin jadwal uas atau uts'
     else:
         msgreply = 'Mohon maaf server Akademik SIAP sedang dalam kondisi DOWN, mohon untuk menginformasikan ke ADMIN dan tunggu hingga beberapa menit kemudian, lalu ulangi kembali, terima kasih....'
     return msgreply
@@ -83,11 +83,11 @@ def dbConnectSiap():
 
 def checkDosen(nomor, tahun, matkul=0, jadwal=0):
     db = dbConnectSiap()
-    if matkul != 0:
+    if matkul != 0 and jadwal == 0:
         query = """
-            select distinct(Nama) from simak_trn_jadwal where DosenID = (select Login from simak_mst_dosen where Handphone = '"""+nomor+"""') and TahunID = '"""+tahun+"""' and MKKode = '"""+matkul+"""'
+            select distinct(Nama) from simak_trn_jadwal where DosenID = (select Login from simak_mst_dosen where Handphone = '"""+nomor+"""') and TahunID = '"""+tahun+"""' and MKKode = '"""+matkul.upper()+"""'
         """
-    elif jadwal != 0:
+    elif jadwal != 0 and matkul == 0:
         query = """
             select distinct(Nama) from simak_trn_jadwal where DosenID = (select Login from simak_mst_dosen where Handphone = '""" + nomor + """') and TahunID = '""" + tahun + """' and JadwalID = '""" + jadwal + """'
         """
@@ -168,7 +168,7 @@ def mainCekNilai(nomor, data):
             else:
                 msg = 'Ujian apa nih bosque'
         else:
-            msg = 'ohh tidak bisa'
+            msg = 'ohh tidak bisa, gak punya akses anda, atau salah matkul'
         return msg
     elif data['jadwal'] != 0:
         matkul = checkDosen(nomor, data['tahun'], jadwal=data["jadwal"])
@@ -182,7 +182,7 @@ def mainCekNilai(nomor, data):
             else:
                 msg = 'Ujian apa nih bosque'
         else:
-            msg = 'ohh tidak bisa'
+            msg = 'ohh tidak bisa, gak punya akses anda, atau salah jadwal'
         return msg
 
 

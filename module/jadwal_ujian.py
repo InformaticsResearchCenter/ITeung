@@ -84,12 +84,12 @@ def getJadwalData(nohp):
                 elif date < today:
                     jadwalPrevDay += '*%s* | %s | %s | %s | %s | %s | %s | %s \n' % (
                         row[5], row[0], row[1].title(), row[2], row[3], row[5]+'-'+row[6], row[7], row[8])
-
-        if len(jadwalToday) == 93:
-            jadwalToday += '_Tidak ada jadwal ujian hari ini_'
-        if len(jadwalPrevDay) == 108:
-            jadwalPrevDay += '_Tidak ada jadwal ujian yang telah dilaksanakan_'
-        if len(jadwalNextDay) == 101:
-            jadwalNextDay += '_Tidak ada jadwal ujian yang akan datang_'
+        #check length lagi
+        if len(jadwalToday) == 104:
+            jadwalToday += '_Tidak ada jadwal ujian hari ini_ \n'
+        if len(jadwalPrevDay) == 119:
+            jadwalPrevDay += '_Tidak ada jadwal ujian yang telah dilaksanakan_ \n'
+        if len(jadwalNextDay) == 112:
+            jadwalNextDay += '_Tidak ada jadwal ujian yang akan datang_ \n'
 
     return jadwal + jadwalToday+'\n' + jadwalNextDay+'\n' + jadwalPrevDay
