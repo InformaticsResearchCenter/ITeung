@@ -11,12 +11,14 @@ from datetime import datetime
 from lib import wa, numbers
 from time import sleep
 
+
 def auth(data):
     if kelas.getKodeDosen(data[0]) == '':
         ret = False
     else:
         ret = True
     return ret
+
 
 def replymsg(driver, data):
     if kelas.cekSiap():
@@ -28,10 +30,11 @@ def replymsg(driver, data):
         num = data[0]
         nomor = numbers.normalize(num)
         data = msg.split(' ')
-        
+
         if len(data) == 4:
             try:
-                jenis = data[3] if data[3].lower() == 'uts' or data[3].lower() == 'uas' else False
+                jenis = data[3] if data[3].lower(
+                ) == 'uts' or data[3].lower() == 'uas' else False
                 if jenis:
                     filename = downloadFile(driver)
                     sleep(2)
@@ -45,15 +48,17 @@ def replymsg(driver, data):
                 msgreply = 'Gak ada filenya....'
         else:
             try:
-                jenis = data[3].lower() if data[3].lower() == 'uts' or data[3].lower() == 'uas' else False
+                jenis = data[3].lower() if data[3].lower(
+                ) == 'uts' or data[3].lower() == 'uas' else False
                 if jenis == 'uts':
                     nilai = data[data.index('uts')+1] if all(char.isdigit() for char in data[data.index('uts')+1]) and (
                         int(data[data.index('uts')+1]) <= 100 and int(data[data.index('uts')+1]) >= 0) else False
                 elif jenis == 'uas':
                     nilai = data[data.index('uas')+1] if all(char.isdigit() for char in data[data.index('uas')+1]) and (
                         int(data[data.index('uas')+1]) <= 100 and int(data[data.index('uas')+1]) >= 0) else False
-                    
-                npm = data[data.index('npm')+1] if all(char.isdigit() for char in data[data.index('npm')+1]) else False
+
+                npm = data[data.index('npm')+1] if all(char.isdigit()
+                                                       for char in data[data.index('npm')+1]) else False
                 if 'matkul' in data and 'jadwal' not in data:
                     matkul = data[data.index('matkul')+1] if any(char.isdigit()
                                                                  for char in data[data.index('matkul')+1]) else False
@@ -96,6 +101,7 @@ def downloadFile(driver):
     filename = driver.find_elements_by_class_name('_3UPcK')[-1].text
     driver.find_elements_by_class_name('_17viz')[-1].click()
     return filename
+
 
 def moveFiles(filename):
     move = True
@@ -275,10 +281,14 @@ def inputByExcel(file, jenis, tahun, func, nomor):
             nilais = sheet['E10': 'E'+str(9+length)]
             cells = dict(zip(npms, nilais))
             for k, v in cells.items():
+                if k[0].value is not None:
+                    npm = k[0].value
+                else:
+                    break
                 data = {
                     'tahun': tahun,
                     'kode_matkul': kode_matkul,
-                    'npm': k[0].value,
+                    'npm':  npm,
                     'nilai': str(v[0].value) if v[0].value is not None else '0',
                 }
                 if jenis == 'uts':
