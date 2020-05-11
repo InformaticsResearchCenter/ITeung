@@ -57,6 +57,7 @@ class Chatbot(object):
                     msgreply = message.newlineNormalize(msgreply)
                     # wa.typeAndSendMessage(driver, msgreply)
                     wa.copyToClipboard(msgreply)
+                    wa.clickChatBox(driver)
                     wa.pasteMessage(driver)
                     wa.sendMessage(driver)
                     del msgreply
