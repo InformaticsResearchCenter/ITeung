@@ -44,8 +44,10 @@ def replymsg(driver, data):
                     removeFile(filename)
                 else:
                     msgreply = 'Salah keyword bosque..'
-            except:
+            except FileNotFoundError:
                 msgreply = 'Gak ada filenya....'
+            except:
+                msgreply = 'Ada masalah di kodingannya...'
         else:
             try:
                 jenis = data[3].lower() if data[3].lower(
@@ -193,13 +195,13 @@ def inputNilaiUTS(data):
     db = dbConnectSiap()
     if data['kode_matkul'] != 0:
         query = """
-            update simak_trn_krs set uts='"""+data['nilai']+"""' where MhswID='"""+data['npm']+"""' 
-            and MKKode='"""+data['kode_matkul']+"""' and TahunID='"""+data['tahun']+"""';
+            update simak_trn_krs set uts='"""+str(data['nilai'])+"""' where MhswID='"""+str(data['npm'])+"""' 
+            and MKKode='"""+str(data['kode_matkul'])+"""' and TahunID='"""+str(data['tahun'])+"""';
         """
     elif data['jadwal'] != 0:
         query = """
-            update simak_trn_krs set uts='"""+data['nilai']+"""' where MhswID='"""+data['npm']+"""' 
-            and JadwalID='"""+data['jadwal']+"""' and TahunID='"""+data['tahun']+"""';
+            update simak_trn_krs set uts='"""+str(data['nilai'])+"""' where MhswID='"""+str(data['npm'])+"""' 
+            and JadwalID='"""+str(data['jadwal'])+"""' and TahunID='"""+str(data['tahun'])+"""';
         """
 
     with db:
@@ -216,13 +218,13 @@ def inputNilaiUAS(data):
     db = dbConnectSiap()
     if data['kode_matkul'] != 0:
         query = """
-            update simak_trn_krs set uas='"""+data['nilai']+"""' where MhswID='"""+data['npm']+"""' 
-            and MKKode='"""+data['kode_matkul']+"""' and TahunID='"""+data['tahun']+"""';
+            update simak_trn_krs set uas='"""+str(data['nilai'])+"""' where MhswID='"""+str(data['npm'])+"""' 
+            and MKKode='"""+str(data['kode_matkul'])+"""' and TahunID='"""+str(data['tahun'])+"""';
         """
     elif data['jadwal'] != 0:
         query = """
             update simak_trn_krs set uas='"""+data['nilai']+"""' where MhswID='"""+data['npm']+"""' 
-            and JadwalID='"""+data['jadwal']+"""' and TahunID='"""+data['tahun']+"""';
+            and JadwalID='"""+str(data['jadwal'])+"""' and TahunID='"""+str(data['tahun'])+"""';
         """
     with db:
         cur = db.cursor()
@@ -309,14 +311,14 @@ def inputByExcel(file, jenis, tahun, func, nomor):
 def inputNilaiByExcel(file, jenis, tahun, nomor):
 
     today = datetime.today().date()
-    if jenis == 'uts':
+    if jenis.lower() == 'uts':
         uts = getTanggalUTS(tahun)
         if uts[0] <= today and uts[1] >= today and uts:
             msg = inputByExcel(file, jenis, tahun, inputNilaiUTS, nomor)
         else:
             msg = 'Gak bisa lagi bosque'
 
-    elif jenis == 'uas':
+    elif jenis.lower() == 'uas':
         uas = getTanggalUAS(tahun)
         if uas[0] <= today and uas[1] >= today and uas:
             msg = inputByExcel(file, jenis, tahun, inputNilaiUAS, nomor)
@@ -332,14 +334,14 @@ def inputNilaiByMesssage(data, jenis, nomor):
 
     if checkDosen(nomor, data['tahun'], matkul=data['kode_matkul'], jadwal=data['jadwal']):
         today = datetime.today().date()
-        if jenis == 'uts':
+        if jenis.lower() == 'uts':
             uts = getTanggalUTS(data['tahun'])
             if uts[0] <= today and uts[1] >= today and uts:
                 msg = inputNilaiUTS(data)
             else:
                 msg = 'Gak bisa lagi bosque'
 
-        elif jenis == 'uas':
+        elif jenis.lower() == 'uas':
             uas = getTanggalUAS(data['tahun'])
             if uas[0] <= today and uas[1] >= today and uas:
                 msg = inputNilaiUAS(data)
