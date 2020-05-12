@@ -44,8 +44,10 @@ def replymsg(driver, data):
                     removeFile(filename)
                 else:
                     msgreply = 'Salah keyword bosque..'
-            except:
+            except FileNotFoundError:
                 msgreply = 'Gak ada filenya....'
+            except:
+                msgreply = 'Ada masalah di kodingannya...'
         else:
             try:
                 jenis = data[3].lower() if data[3].lower(
@@ -193,13 +195,13 @@ def inputNilaiUTS(data):
     db = dbConnectSiap()
     if data['kode_matkul'] != 0:
         query = """
-            update simak_trn_krs set uts='"""+data['nilai']+"""' where MhswID='"""+data['npm']+"""' 
-            and MKKode='"""+data['kode_matkul']+"""' and TahunID='"""+data['tahun']+"""';
+            update simak_trn_krs set uts='"""+str(data['nilai'])+"""' where MhswID='"""+str(data['npm'])+"""' 
+            and MKKode='"""+str(data['kode_matkul'])+"""' and TahunID='"""+str(data['tahun'])+"""';
         """
     elif data['jadwal'] != 0:
         query = """
-            update simak_trn_krs set uts='"""+data['nilai']+"""' where MhswID='"""+data['npm']+"""' 
-            and JadwalID='"""+data['jadwal']+"""' and TahunID='"""+data['tahun']+"""';
+            update simak_trn_krs set uts='"""+str(data['nilai'])+"""' where MhswID='"""+str(data['npm'])+"""' 
+            and JadwalID='"""+str(data['jadwal'])+"""' and TahunID='"""+str(data['tahun'])+"""';
         """
 
     with db:
@@ -216,13 +218,13 @@ def inputNilaiUAS(data):
     db = dbConnectSiap()
     if data['kode_matkul'] != 0:
         query = """
-            update simak_trn_krs set uas='"""+data['nilai']+"""' where MhswID='"""+data['npm']+"""' 
-            and MKKode='"""+data['kode_matkul']+"""' and TahunID='"""+data['tahun']+"""';
+            update simak_trn_krs set uas='"""+str(data['nilai'])+"""' where MhswID='"""+str(data['npm'])+"""' 
+            and MKKode='"""+str(data['kode_matkul'])+"""' and TahunID='"""+str(data['tahun'])+"""';
         """
     elif data['jadwal'] != 0:
         query = """
             update simak_trn_krs set uas='"""+data['nilai']+"""' where MhswID='"""+data['npm']+"""' 
-            and JadwalID='"""+data['jadwal']+"""' and TahunID='"""+data['tahun']+"""';
+            and JadwalID='"""+str(data['jadwal'])+"""' and TahunID='"""+str(data['tahun'])+"""';
         """
     with db:
         cur = db.cursor()
