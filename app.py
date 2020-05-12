@@ -30,13 +30,11 @@ def sms_reply():
 
 @app.route('/<name>')
 def senddatajavascript(name):
-    jadwalid=name.split('-')[0]
     kelas=name.split('-')[1]
-    namakelas=name.split('-')[2]
     if len(kelas) != 1:
         return 'Bad URL: {kelas}'.format(kelas=kelas)
     else:
-        return index.html_presensi
+        return index.html_presensi.replace('#GROUP#', name)
 
 @app.route('/data/proses/phonenumber/to/database', methods=['POST'])
 def prosesdata():
@@ -47,7 +45,3 @@ def prosesdata():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-
-# In[]
-#msgreply=iteung.get('6281312000300','teung') 

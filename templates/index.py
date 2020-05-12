@@ -29,7 +29,8 @@ html_presensi = '''
 
       function send_data(data) {
         var jsondata = {
-            phonenumber: data
+            phonenumber: data,
+            groupname: #GROUP#
         };
         fetch(`${window.origin}/data/proses/phonenumber/to/database`, {
             method: "POST",
