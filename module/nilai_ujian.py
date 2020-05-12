@@ -311,14 +311,14 @@ def inputByExcel(file, jenis, tahun, func, nomor):
 def inputNilaiByExcel(file, jenis, tahun, nomor):
 
     today = datetime.today().date()
-    if jenis == 'uts':
+    if jenis.lower() == 'uts':
         uts = getTanggalUTS(tahun)
         if uts[0] <= today and uts[1] >= today and uts:
             msg = inputByExcel(file, jenis, tahun, inputNilaiUTS, nomor)
         else:
             msg = 'Gak bisa lagi bosque'
 
-    elif jenis == 'uas':
+    elif jenis.lower() == 'uas':
         uas = getTanggalUAS(tahun)
         if uas[0] <= today and uas[1] >= today and uas:
             msg = inputByExcel(file, jenis, tahun, inputNilaiUAS, nomor)
@@ -334,14 +334,14 @@ def inputNilaiByMesssage(data, jenis, nomor):
 
     if checkDosen(nomor, data['tahun'], matkul=data['kode_matkul'], jadwal=data['jadwal']):
         today = datetime.today().date()
-        if jenis == 'uts':
+        if jenis.lower() == 'uts':
             uts = getTanggalUTS(data['tahun'])
             if uts[0] <= today and uts[1] >= today and uts:
                 msg = inputNilaiUTS(data)
             else:
                 msg = 'Gak bisa lagi bosque'
 
-        elif jenis == 'uas':
+        elif jenis.lower() == 'uas':
             uas = getTanggalUAS(data['tahun'])
             if uas[0] <= today and uas[1] >= today and uas:
                 msg = inputNilaiUAS(data)
