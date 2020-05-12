@@ -6,7 +6,7 @@ Created on Sat Mar 14 09:27:37 2020
 """
 
 from lib import iteung
-from flask import Flask, request
+from flask import Flask, request, render_template, make_response, jsonify
 from twilio.twiml.messaging_response import MessagingResponse
 
 app = Flask(__name__)
@@ -22,6 +22,18 @@ def sms_reply():
 
     resp.message(msgreply)
     return str(resp)
+
+@app.route('/presensi/luring')
+def senddatajavascript():
+    return render_template('index.html')
+
+@app.route('/data/proses/phonenumber/to/database', methods=['POST'])
+def prosesdata():
+    req = request.get_json()
+    phonenumber = req['phonenumber']
+    print(phonenumber)
+    res = make_response(jsonify({'message': 'JSON data received'}), 200)
+    return res
 
 if __name__ == "__main__":
     app.run(debug=True)
