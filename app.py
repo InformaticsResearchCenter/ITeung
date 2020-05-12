@@ -6,7 +6,7 @@ Created on Sat Mar 14 09:27:37 2020
 """
 
 from lib import iteung
-from flask import Flask, request, render_template, make_response, jsonify
+from flask import Flask, request, render_template, make_response, jsonify, send_from_directory
 from twilio.twiml.messaging_response import MessagingResponse
 
 app = Flask(__name__, static_url_path='')
@@ -27,9 +27,10 @@ def sms_reply():
     resp.message(msgreply)
     return str(resp)
 
-@app.route('/presensi/luring')
-def senddatajavascript():
-    return app.send_static_file('index.html')
+@app.route('/presensi/<path:path>')
+def senddatajavascript(path):
+    print(path)
+    return send_from_directory('presensi', path)
 
 @app.route('/data/proses/phonenumber/to/database', methods=['POST'])
 def prosesdata():
