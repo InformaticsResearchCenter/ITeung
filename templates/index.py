@@ -2,6 +2,7 @@ html_presensi = '''
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
+    <link rel="icon" href="http://3.bp.blogspot.com/-jyRi0Hrr89M/XoP5XEPh7HI/AAAAAAAABlo/JHQ1aj9ZP3gcTVQqIHYiRm_ilV6JgNJ3QCK4BGAYYCw/s1600/WhatsApp%2BImage%2B2018-05-09%2Bat%2B16.15.36.jpeg" type="image/gif" sizes="16x16">
     <meta charset="utf-8">
     <meta name="google-signin-client_id" content="403092275269-8ubnhiaih6ngk6t3vf3bidlak6f92ten.apps.googleusercontent.com">
     <script src="https://apis.google.com/js/client:platform.js?onload=renderButton" async defer></script>
