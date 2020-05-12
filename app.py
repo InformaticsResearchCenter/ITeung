@@ -6,7 +6,6 @@ Created on Sat Mar 14 09:27:37 2020
 """
 
 from lib import iteung
-from module import kelas
 from flask import Flask, request, render_template, make_response, jsonify
 from twilio.twiml.messaging_response import MessagingResponse
 
