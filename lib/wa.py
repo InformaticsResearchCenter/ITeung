@@ -75,11 +75,17 @@ def sendMessage(driver):
 def lineBreakWhatsapp(driver):
     return ActionChains(driver).key_down(Keys.SHIFT).send_keys(Keys.ENTER).key_up(Keys.SHIFT).perform()
 
+def clickChatBox(driver):
+    driver.find_elements_by_xpath('//*[@id="main"]/footer/div[1]/div[2]/div/div[2]')[0].click()
+
 def openMessage(driver):
     try:
         newnotifelement = driver.find_elements_by_class_name("OUeyt")[0]
-        action=ActionChains(driver)
-        action.move_to_element_with_offset(to_element=newnotifelement, xoffset=-20, yoffset=0).double_click().perform()
+        # action=ActionChains(driver)
+        # action.move_to_element_with_offset(to_element=newnotifelement, xoffset=-20, yoffset=0).double_click().perform()
+        newnotifelement.click()
+        newnotifelement.click()
+        newnotifelement.click()
     except:
         print('no notification')
 
