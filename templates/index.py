@@ -19,14 +19,14 @@ html_presensi = '''
       <video id="preview" style="display: none;"></video>
       <embed src="beep.wav" autostart="false" width="0" height="0" id="sound" enablejavascript="true">
       <div id='groupname' style="display: none;">#GROUP#</div>
-      <div class="btn-group btn-group-toggle mb-5" data-toggle="buttons">
+      <div class="btn-group btn-group-toggle mb-5" data-toggle="buttons" id='changecamera' style='display: none;'>
           <label class="btn btn-primary active">
             <input type="radio" name="options" value="1" autocomplete="off" checked> Front Camera
           </label>
           <label class="btn btn-secondary">
             <input type="radio" name="options" value="2" autocomplete="off"> Back Camera
           </label>
-        </div>
+      </div>
     </center>
     <script>
       function renderButton() {
@@ -104,6 +104,7 @@ html_presensi = '''
                   document.getElementById("gSignIn").style.display = "none";
                   document.getElementsByClassName("userContent")[0].style.display = "block";
                   document.getElementById("preview").style.display = "block";
+                  document.getElementById("changecamera").style.display = "block";
                   scannerQR();
               });
           });
