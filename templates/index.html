@@ -48,7 +48,7 @@
           });
         scanner.addListener('scan', function(content){
           console.log(content);
-          PlaySound();
+<!--          PlaySound();-->
           send_data(content);
         });
         Instascan.Camera.getCameras().then(function(cameras){
@@ -90,10 +90,10 @@
         auth2.disconnect();
       }
 
-      function PlaySound() {
-        var sound = new Audio('beep.wav');
-        sound.play()
-      }
+<!--      function PlaySound() {-->
+<!--        var sound = new Audio('beep.wav');-->
+<!--        sound.play()-->
+<!--      }-->
     </script>
   </body>
 </html>
