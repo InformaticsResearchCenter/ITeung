@@ -115,8 +115,8 @@ html_presensi = '''
         auth2.signOut().then(function () {
             document.getElementsByClassName("userContent")[0].innerHTML = '';
             document.getElementsByClassName("userContent")[0].style.display = "none";
-            document.getElementByClassId("preview").style.display = "none";
-            document.getElementByClassId("changecamera").style.display = "none";
+            document.getElementByClassId("preview").style.visibility = "hidden";
+            document.getElementByClassId("changecamera").style.visibility = "hidden";
             document.getElementById("gSignIn").style.display = "block";
         });
 
