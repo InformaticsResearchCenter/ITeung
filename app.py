@@ -9,6 +9,8 @@ from lib import iteung
 from flask import Flask, request, render_template, make_response, jsonify, send_from_directory
 from twilio.twiml.messaging_response import MessagingResponse
 from templates import index
+from lib import log
+from module import kelas
 
 app = Flask(__name__, static_url_path='')
 
@@ -22,9 +24,7 @@ def sms_reply():
     wanum = request.values.get('From', None)
     num=wanum.split('+')[1]
     msgreply=iteung.get(num,msg)
-
     resp = MessagingResponse()
-
     resp.message(msgreply)
     return str(resp)
 
@@ -39,7 +39,7 @@ def senddatajavascript(name):
 @app.route('/data/proses/phonenumber/to/database', methods=['POST'])
 def prosesdata():
     req = request.get_json()
-    phonenumber = req['phonenumber']
+    log.save(req['phonenumber'], 'hadir', kelas.getNpmandNameMahasiswa(req['phonenumber'])[1], req['groupname'], True)
     res = make_response(jsonify({'message': 'JSON data received'}), 200)
     return res
 
