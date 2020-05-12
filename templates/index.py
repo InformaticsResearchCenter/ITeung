@@ -6,6 +6,10 @@ html_presensi = '''
     <meta name="google-signin-client_id" content="403092275269-8ubnhiaih6ngk6t3vf3bidlak6f92ten.apps.googleusercontent.com">
     <script src="https://apis.google.com/js/client:platform.js?onload=renderButton" async defer></script>
     <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <title>Absensi with ITeung</title>
   </head>
   <body>
@@ -15,6 +19,14 @@ html_presensi = '''
       <video id="preview" style="display: none;"></video>
       <embed src="beep.wav" autostart="false" width="0" height="0" id="sound" enablejavascript="true">
       <div id='groupname' style="display: none;">#GROUP#</div>
+      <div class="btn-group btn-group-toggle mb-5" data-toggle="buttons">
+          <label class="btn btn-primary active">
+            <input type="radio" name="options" value="1" autocomplete="off" checked> Front Camera
+          </label>
+          <label class="btn btn-secondary">
+            <input type="radio" name="options" value="2" autocomplete="off"> Back Camera
+          </label>
+        </div>
     </center>
     <script>
       function renderButton() {
@@ -57,6 +69,21 @@ html_presensi = '''
         Instascan.Camera.getCameras().then(function(cameras){
           if (cameras.length > 0) {
             scanner.start(cameras[0])
+            $('[name="options"]').on('change',function(){
+                if($(this).val()==1){
+                    if(cameras[0]!=""){
+                        scanner.start(cameras[0]);
+                    }else{
+                        alert('No Front camera found!');
+                    }
+                }else if($(this).val()==2){
+                    if(cameras[1]!=""){
+                        scanner.start(cameras[1]);
+                    }else{
+                        alert('No Back camera found!');
+                    }
+                }
+            });
           } else {
             console.log('No camera Found!');
           }
