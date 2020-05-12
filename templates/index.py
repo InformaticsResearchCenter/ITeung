@@ -1,3 +1,4 @@
+html_presensi = '''
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
@@ -97,3 +98,5 @@
     </script>
   </body>
 </html>
+
+'''
