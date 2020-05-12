@@ -6,10 +6,11 @@ Created on Sat Mar 14 09:27:37 2020
 """
 
 from lib import iteung
+from module import kelas
 from flask import Flask, request, render_template, make_response, jsonify
 from twilio.twiml.messaging_response import MessagingResponse
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='')
 
 @app.route("/")
 def home():
@@ -29,13 +30,12 @@ def sms_reply():
 
 @app.route('/presensi/luring')
 def senddatajavascript():
-    return render_template('index.html')
+    return app.send_static_file('index.html')
 
 @app.route('/data/proses/phonenumber/to/database', methods=['POST'])
 def prosesdata():
     req = request.get_json()
     phonenumber = req['phonenumber']
-    print(phonenumber)
     res = make_response(jsonify({'message': 'JSON data received'}), 200)
     return res
 
