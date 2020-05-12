@@ -11,6 +11,10 @@ from twilio.twiml.messaging_response import MessagingResponse
 
 app = Flask(__name__)
 
+@app.route("/")
+def home():
+    return 'hello crot...'
+
 @app.route("/wa", methods=['GET', 'POST'])
 def sms_reply():
     msg = request.values.get('Body', None)
