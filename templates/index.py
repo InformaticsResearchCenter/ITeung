@@ -45,7 +45,7 @@ html_presensi = '''
             phonenumber: data,
             groupname: document.getElementById('groupname').value
         };
-        fetch(`${window.origin}/data/proses/phonenumber/to/database`, {
+        fetch(`${window.origin}/data/proses`, {
             method: "POST",
             credentials: "include",
             body: JSON.stringify(jsondata),

@@ -30,13 +30,14 @@ def sms_reply():
 
 @app.route('/<name>')
 def senddatajavascript(name):
+    print(name)
     kelas=name.split('-')[1]
     if len(kelas) != 1:
         return 'Bad URL: {kelas}'.format(kelas=kelas)
     else:
         return index.html_presensi.replace('#GROUP#', name)
 
-@app.route('/data/proses/phonenumber/to/database', methods=['POST'])
+@app.route('/data/proses', methods=['POST'])
 def prosesdata():
     req = request.get_json()
     phonenumber=req['phonenumber']
