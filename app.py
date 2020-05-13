@@ -31,7 +31,9 @@ def sms_reply():
 @app.route('/<name>')
 def senddatajavascript(name):
     print(name)
-    kelas=name.split('-')[1]
+    kelas=name.split('-')
+    print(kelas)
+    print(kelas[1])
     if len(kelas) != 1:
         return 'Bad URL: {kelas}'.format(kelas=kelas)
     else:
