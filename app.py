@@ -35,13 +35,14 @@ def senddatajavascript(name):
 def prosesdata():
     req = request.get_json()
     phonenumber=req['phonenumber']
-    message='hadir'
-    alias=kelas.getNpmandNameMahasiswa(phonenumber)[1]
     groupname=req['groupname']
-    isgroup='true'
-    print(phonenumber+" "+message+" "+alias+" "+groupname+" "+isgroup)
-    log.save(phonenumber, message, alias, groupname, isgroup)
-    res = make_response(jsonify({'message': 'JSON data received'}), 200)
+    if groupname != 'beep.wav':
+        message = 'hadir'
+        alias = kelas.getNpmandNameMahasiswa(phonenumber)[1]
+        isgroup='true'
+        print(phonenumber+" "+message+" "+alias+" "+groupname+" "+isgroup)
+        log.save(phonenumber, message, alias, groupname, isgroup)
+        res = make_response(jsonify({'message': 'JSON data received'}), 200)
     return res
 
 if __name__ == "__main__":
