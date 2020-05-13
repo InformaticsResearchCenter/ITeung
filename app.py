@@ -43,6 +43,8 @@ def prosesdata():
         print(phonenumber+" "+message+" "+alias+" "+groupname+" "+isgroup)
         log.save(phonenumber, message, alias, groupname, isgroup)
         res = make_response(jsonify({'message': 'JSON data received'}), 200)
+    else:
+        res = make_response(jsonify({'message': 'failed'}), 400)
     return res
 
 if __name__ == "__main__":
