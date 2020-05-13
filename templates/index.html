@@ -41,7 +41,7 @@
       function send_data(data) {
         var jsondata = {
             phonenumber: data,
-            groupname: {{groupname}}
+            groupname: '{{groupname}}'
         };
         console.log(jsondata);
         fetch(`${window.origin}/data/proses`, {
