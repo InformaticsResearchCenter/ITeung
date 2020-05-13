@@ -8,7 +8,6 @@ Created on Sat Mar 14 09:27:37 2020
 from lib import iteung
 from flask import Flask, request, render_template, make_response, jsonify, send_from_directory
 from twilio.twiml.messaging_response import MessagingResponse
-from templates import index
 from lib import log
 from module import kelas
 
