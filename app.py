@@ -39,7 +39,13 @@ def senddatajavascript(name):
 @app.route('/data/proses/phonenumber/to/database', methods=['POST'])
 def prosesdata():
     req = request.get_json()
-    log.save(req['phonenumber'], 'hadir', kelas.getNpmandNameMahasiswa(req['phonenumber'])[1], req['groupname'], "true")
+    phonenumber=req['phonenumber']
+    message='hadir'
+    alias=kelas.getNpmandNameMahasiswa(phonenumber)[1]
+    groupname=req['groupname']
+    isgroup='true'
+    print(phonenumber+" "+message+" "+alias+" "+groupname+" "+isgroup)
+    log.save(phonenumber, message, alias, groupname, isgroup)
     res = make_response(jsonify({'message': 'JSON data received'}), 200)
     return res
 
