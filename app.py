@@ -8,7 +8,6 @@ Created on Sat Mar 14 09:27:37 2020
 from lib import iteung
 from flask import Flask, request, render_template, make_response, jsonify, send_from_directory
 from twilio.twiml.messaging_response import MessagingResponse
-from templates import index
 from lib import log
 from module import kelas
 
@@ -30,19 +29,22 @@ def sms_reply():
 
 @app.route('/<name>')
 def senddatajavascript(name):
-    return index.html_presensi.replace('#GROUP#', name)
+    return render_template('index.html', groupname=name)
 
 @app.route('/data/proses', methods=['POST'])
 def prosesdata():
     req = request.get_json()
     phonenumber=req['phonenumber']
-    message='hadir'
-    alias=kelas.getNpmandNameMahasiswa(phonenumber)[1]
     groupname=req['groupname']
-    isgroup='true'
-    print(phonenumber+" "+message+" "+alias+" "+groupname+" "+isgroup)
-    log.save(phonenumber, message, alias, groupname, isgroup)
-    res = make_response(jsonify({'message': 'JSON data received'}), 200)
+    if groupname != 'beep.wav':
+        message = 'hadir'
+        alias = kelas.getNpmandNameMahasiswa(phonenumber)[1]
+        isgroup='true'
+        print(phonenumber+" "+message+" "+alias+" "+groupname+" "+isgroup)
+        log.save(phonenumber, message, alias, groupname, isgroup)
+        res = make_response(jsonify({'message': 'JSON data received'}), 200)
+    else:
+        res = make_response(jsonify({'message': 'failed'}), 400)
     return res
 
 if __name__ == "__main__":

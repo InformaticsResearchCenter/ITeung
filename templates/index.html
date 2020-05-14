@@ -1,4 +1,3 @@
-html_presensi = '''
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
@@ -18,7 +17,6 @@ html_presensi = '''
       <div class="userContent" style="display: none;"></div>
       <video id="preview" style="display: none;"></video>
       <embed src="beep.wav" autostart="false" width="0" height="0" id="sound" enablejavascript="true">
-      <div id='groupname' style="display: none;">#GROUP#</div>
       <div class="btn-group btn-group-toggle mb-5" data-toggle="buttons" id='changecamera' style='display: none;'>
           <label class="btn btn-primary active">
             <input type="radio" name="options" value="1" autocomplete="off" checked> Front Camera
@@ -43,8 +41,9 @@ html_presensi = '''
       function send_data(data) {
         var jsondata = {
             phonenumber: data,
-            groupname: document.getElementById('groupname').value
+            groupname: '{{groupname}}'
         };
+        console.log(jsondata);
         fetch(`${window.origin}/data/proses`, {
             method: "POST",
             credentials: "include",
@@ -63,7 +62,7 @@ html_presensi = '''
           });
         scanner.addListener('scan', function(content){
           console.log(content);
-<!--          PlaySound();-->
+          PlaySound();
           send_data(content);
         });
         Instascan.Camera.getCameras().then(function(cameras){
@@ -123,12 +122,10 @@ html_presensi = '''
         auth2.disconnect();
       }
 
-<!--      function PlaySound() {-->
-<!--        var sound = new Audio('beep.wav');-->
-<!--        sound.play()-->
-<!--      }-->
+      function PlaySound() {
+        var sound = new Audio('https://www.soundjay.com/button/beep-07.mp3');
+        sound.play()
+      }
     </script>
   </body>
 </html>
-
-'''
