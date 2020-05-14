@@ -27,7 +27,6 @@ def uploadFile(driver):
     driver.find_element_by_xpath("/html/body/div[1]/div/div/div[4]/div/header/div[3]/div/div[2]/span/div/div/ul/li[1]/button/input").send_keys(config.cwd+'\\qrcode.PNG')
     waitUpload(driver)
     driver.find_element_by_css_selector("span[data-icon='send-light").click()
-    removeFile()
 
 def waitUpload(driver):
     x_arg = "span[data-icon='send-light"
