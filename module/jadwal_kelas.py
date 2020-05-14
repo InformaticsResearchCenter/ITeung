@@ -66,9 +66,13 @@ def replymsg(driver, data):
         msg = normalizeday(msg)
         num = data[0]
         day = dataHari(msg)
-        hariId = kodeHari(day)
-        msgreply = jadwalKuliah(hariId, num)
-        msgreply = "Ini ya jadwal kuliah yang bapak/ibu minta \n"+msgreply
+        if day != '':
+            hariId = kodeHari(day)
+            msgreply = jadwalKuliah(hariId, num)
+            msgreply = "Ini ya jadwal kuliah yang bapak/ibu minta \n"+msgreply
+        else:
+            listMK=kelas.getListMK(kelas.getKodeDosen(data[0]))
+            msgreply = "Ini ya jadwal kuliah yang bapak/ibu minta \n" + listMK
     else:
         msgreply='Mohon maaf server Akademik SIAP sedang dalam kondisi DOWN, mohon untuk menginformasikan ke ADMIN dan tunggu hingga beberapa menit kemudian, lalu ulangi kembali, terima kasih....'
     return msgreply

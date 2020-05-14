@@ -4,16 +4,13 @@ from module import kelas
 import config
 import os
 
-
-
 def auth(data):
     if kelas.getKodeDosen(data[0]) == '':
         ret=False
     else:
         ret=True
     return ret
-    
-#close commit #2
+
 def replymsg(driver, data):
     if kelas.cekSiap():
         grp=data[1]
