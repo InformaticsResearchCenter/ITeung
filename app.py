@@ -34,17 +34,14 @@ def senddatajavascript(name):
 @app.route('/data/proses', methods=['POST'])
 def prosesdata():
     req = request.get_json()
-    phonenumber=req['phonenumber']
-    groupname=req['groupname']
-    if groupname != 'beep.wav':
-        message = 'hadir'
-        alias = kelas.getNpmandNameMahasiswa(phonenumber)[1]
-        isgroup='true'
-        print(phonenumber+" "+message+" "+alias+" "+groupname+" "+isgroup)
-        log.save(phonenumber, message, alias, groupname, isgroup)
-        res = make_response(jsonify({'message': 'JSON data received'}), 200)
-    else:
-        res = make_response(jsonify({'message': 'failed'}), 400)
+    number=req['number']
+    url=req['url']
+    groupname = url.split('/')[-1].replace('%20', ' ')
+    message = 'hadir'
+    alias = kelas.getNpmandNameMahasiswa(number)[1]
+    isgroup='true'
+    log.save(number, message, alias, groupname, isgroup)
+    res = make_response(jsonify({'message': 'JSON data received'}), 200)
     return res
 
 if __name__ == "__main__":
