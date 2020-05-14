@@ -4,7 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from time import sleep
-import os, qrcode
+import os, qrcode, config
 
 def auth(data):
     if kelas.getNpmandNameMahasiswa(data[0]) == None:
@@ -23,8 +23,8 @@ def replymsg(driver, data):
 
 def uploadFile(driver):
     driver.find_element_by_css_selector("span[data-icon='clip']").click()
-    sleep(1)
-    driver.find_element_by_css_selector("input[type='file']").send_keys('./qrcode.PNG')
+    sleep(2)
+    driver.find_element_by_xpath("/html/body/div[1]/div/div/div[4]/div/header/div[3]/div/div[2]/span/div/div/ul/li[1]/button/input").send_keys(config.cwd+'\\qrcode.PNG')
     waitUpload(driver)
     driver.find_element_by_css_selector("span[data-icon='send-light").click()
     removeFile()
