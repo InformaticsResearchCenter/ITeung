@@ -39,7 +39,7 @@ def replymsg(driver, data):
                     messages = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
                     messages = messages.replace('#MATKUL#', coursename)
                     messages = messages.replace('#BOTNAME#', config.bot_name)
-                    link = '\n\nLink Kelas Luring (offline):\n'+config.link_kelas_luring+grp.replace(' ', '%20')+'\n\n'
+                    link = '\n\nLink Kelas Luring (offline):\n'+config.link_kelas_luring+grp.replace(' ', '%20')
                     msgreply = messages + link + listStudent
                 else:
                     listMK=kelas.getListMK(kelas.getKodeDosen(data[0]))
