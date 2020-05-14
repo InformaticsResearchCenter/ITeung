@@ -35,7 +35,7 @@ def waitUpload(driver):
     wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, x_arg)))
 
 def removeFile():
-    os.remove('./qrcode.PNG')
+    os.remove(config.cwd+'\\qrcode.PNG')
 
 def makeQrcode(num):
     img = qrcode.make(data=num)
