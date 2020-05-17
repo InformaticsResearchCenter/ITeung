@@ -22,8 +22,8 @@ def replymsg(driver, data):
     wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
     wmsg = wmsg.replace('#EMAIL#', siap_jadwal.getEmailDosen(kodedosen))
     wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
-    wa.typeAndSendMessage(driver, wmsg)
     subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0], data], cwd=config.cwd)
+    return wmsg
 
 def run(data):
     makePDFandSend(data)
