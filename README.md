@@ -67,6 +67,7 @@ def replymsg(driver,data):
 If you want your module run in sub proses this is the example :
 
 ```py
+import subprocess
 import config
 import os
 from lib import wa,reply
