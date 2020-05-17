@@ -196,6 +196,14 @@ def getListMK(kodedosen):
             listMK = listMK + str(row[0]) + ' | ' + str(row[1]) + ' | ' + toKelas(str(row[2])) + ' | ' + toHari(str(row[3])) + ' | ' + str(row[4])[:-3] + '-' + str(row[5])[:-3] + ' | ' + str(row[6]) + ' | ' +str(row[7]) +'\n '
     return listMK
 
+def getMkDetails(jadwalid):
+    db=dbConnectSiap()
+    sql="select ProdiID, MKKode, Nama, JamMulai, JamSelesai, RuangID, NamaKelas from simak_trn_jadwal where JadwalID={jadwalid}".format(jadwalid=jadwalid)
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        row=cur.fetchone()
+    return row
 
 def getDataMatkul(jadwalid):
     db = dbConnectSiap()
