@@ -29,7 +29,7 @@ def run(data):
     makePDFandSend(data)
 
 def checkDir():
-    path = '../bkd'
+    path = 'bkd'
     if not os.path.exists(path):
         t = threading.Thread(target=os.makedirs, args=(path,))
         t.start()
