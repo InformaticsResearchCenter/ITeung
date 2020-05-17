@@ -220,7 +220,7 @@ def makePDFHeader():
 
 
 def makePDFFooter(matkuldetails, lecturercode, pdf):
-    pdf.output('BKD/'+matkuldetails[1] + '-' + matkuldetails[2] + '-' + getLecturerMail(lecturercode) + '.pdf', 'F')
+    pdf.output('../bkd/'+matkuldetails[1] + '-' + matkuldetails[2] + '-' + getLecturerMail(lecturercode) + '.pdf', 'F')
 
 def getFilePath(email, folder):
     resultpath=[]
@@ -411,4 +411,4 @@ def makePDFandSend(data):
             print('pertemuan kurang dari 7')
     mail(getLecturerMail(lecturercode), 'Halooooo, #BOTNAME# ngirim file nich....'.replace('#BOTNAME#', config.bot_name),
          'ini ya file Absensi BKD yang Bapak/Ibu minta silahkan di cek... ehee....',
-         getFilePath(getLecturerMail(lecturercode), 'bkd'))
+         getFilePath(getLecturerMail(lecturercode), '../bkd'))
