@@ -29,12 +29,10 @@ def run(data):
     makePDFandSend(data)
 
 def checkDir():
-    path = 'bkd'
-    if not os.path.exists(path):
-        t = threading.Thread(target=os.makedirs, args=(path,))
-        t.start()
-        t.join()
-        print('Direktori bkd telah dibuat')
+    try:
+        os.mkdir('bkd/')
+    except:
+        print('sudah ada..')
 
 def getMkKode(lecturercode):
     db = kelas.dbConnectSiap()
@@ -411,4 +409,4 @@ def makePDFandSend(data):
             print('pertemuan kurang dari 7')
     mail(getLecturerMail(lecturercode), 'Halooooo, #BOTNAME# ngirim file nich....'.replace('#BOTNAME#', config.bot_name),
          'ini ya file Absensi BKD yang Bapak/Ibu minta silahkan di cek... ehee....',
-         getFilePath(getLecturerMail(lecturercode), '../bkd'))
+         getFilePath(getLecturerMail(lecturercode), 'bkd'))
