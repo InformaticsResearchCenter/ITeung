@@ -20,7 +20,7 @@ def replymsg(driver, data):
                 wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
                 wa.typeAndSendMessage(driver, wmsg)
                 materi = msg.lower()
-                materi = materi.split('materi')
+                materi = materi.split('materi')[-1]
                 msgreply = kelas.siapabsensiwithsql(grp=grp, num=numbers.normalize(num), materi=materi)
                 if msgreply != '':
                     if msgreply != []:
