@@ -19,7 +19,9 @@ def replymsg(driver, data):
             if (kehadiran != config.kehadiran and kehadiran < config.kehadiran) or (kelas.isSudahKelas(jadwalid=grp.split('-')[0], lecturercode=kelas.getKodeDosen(num=num))):
                 wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
                 wa.typeAndSendMessage(driver, wmsg)
-                msgreply = kelas.siapabsensiwithsql(grp=grp, num=numbers.normalize(num))
+                materi = msg.lower()
+                materi = materi.split('materi')
+                msgreply = kelas.siapabsensiwithsql(grp=grp, num=numbers.normalize(num), materi=materi)
                 if msgreply != '':
                     if msgreply != []:
                         # msgreply=kelas.siapabsensiwithweb(driver=driver, num=num,namagroup=grp)

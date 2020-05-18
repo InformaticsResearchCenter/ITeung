@@ -527,11 +527,11 @@ def getTingkat(data):
     return tingkat
 
 
-def insertAbsenSiapDosen(jadwalid, pertemuan, lecturercode, tanggalinsert, jammulai, jamselesai, jamupdate):
+def insertAbsenSiapDosen(jadwalid, pertemuan, lecturercode, tanggalinsert, jammulai, jamselesai, jamupdate, materi):
     db = dbConnectSiap()
-    sql = "INSERT INTO `simak_trn_presensi_dosen`(`PresensiID`, `HonorDosenID`, `TahunID`, `JadwalID`, `Pertemuan`, `DosenID`, `Tanggal`, `JamMulai`, `JamSelesai`, `Durasi`, `Durasi_terlambat`, `Hitung`, `BAPID`, `Catatan`, `TunjanganSKS`, `TunjanganTransport`, `TunjanganTetap`, `NA`, `LoginBuat`, `TanggalBuat`, `LoginEdit`, `RuangID`, `TanggalEdit`, `status_bap`, `Jam_TapMasuk`, `Jam_TapKeluar`, `MP`) VALUES (DEFAULT, 0, '{tahunid}', {jadwalid}, {pertemuan}, '{kodedosen}', '{tanggalinsert}', '{jammulai}', '{jamselesai}', NULL, NULL, 'N', NULL, '', 0, 0, 0, 'N', 'ITeung', '{jamupdate}', NULL, '', '0000-00-00 00:00:00', 'BELUM', NULL, NULL, NULL)".format(
+    sql = "INSERT INTO `simak_trn_presensi_dosen`(`PresensiID`, `HonorDosenID`, `TahunID`, `JadwalID`, `Pertemuan`, `DosenID`, `Tanggal`, `JamMulai`, `JamSelesai`, `Durasi`, `Durasi_terlambat`, `Hitung`, `BAPID`, `Catatan`, `TunjanganSKS`, `TunjanganTransport`, `TunjanganTetap`, `NA`, `LoginBuat`, `TanggalBuat`, `LoginEdit`, `RuangID`, `TanggalEdit`, `status_bap`, `Jam_TapMasuk`, `Jam_TapKeluar`, `MP`) VALUES (DEFAULT, 0, '{tahunid}', {jadwalid}, {pertemuan}, '{kodedosen}', '{tanggalinsert}', '{jammulai}', '{jamselesai}', NULL, NULL, 'N', NULL, '', 0, 0, 0, 'N', 'ITeung', '{jamupdate}', NULL, '', '0000-00-00 00:00:00', 'BELUM', NULL, NULL, {materi})".format(
         tahunid=config.siap_tahun_id, jadwalid=jadwalid, pertemuan=pertemuan, kodedosen=lecturercode,
-        tanggalinsert=tanggalinsert, jammulai=jammulai, jamselesai=jamselesai, jamupdate=jamupdate)
+        tanggalinsert=tanggalinsert, jammulai=jammulai, jamselesai=jamselesai, jamupdate=jamupdate, materi=materi)
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -689,7 +689,7 @@ def cekSiap():
         ret=False
     return ret
 
-def siapabsensiwithsql(grp, num):
+def siapabsensiwithsql(grp, num, materi):
     jadwalid = grp.split('-')[0]
     mkkode = getMkkode(jadwalid=jadwalid)
     lecturercode = getKodeDosen(num)
@@ -708,7 +708,7 @@ def siapabsensiwithsql(grp, num):
             updateKehadiran(jadwalid=jadwalid, pertemuan=int(lastpertemuan)+1)
             insertAbsenSiapDosen(jadwalid=jadwalid, pertemuan=int(lastpertemuan) + 1, lecturercode=lecturercode,
                                  tanggalinsert=yearmonthdaynow, jammulai=starttime, jamselesai=endtime,
-                                 jamupdate=yearmonthdaytimenow)
+                                 jamupdate=yearmonthdaytimenow, materi=materi)
             presensiid = getLastPresensiID(kodedosen=lecturercode, jadwalid=jadwalid)
             for studentid in attend:
                 krsid = getDataKrs(studentid=studentid, mkkode=mkkode)
