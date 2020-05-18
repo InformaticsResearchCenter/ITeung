@@ -529,7 +529,7 @@ def getTingkat(data):
 
 def insertAbsenSiapDosen(jadwalid, pertemuan, lecturercode, tanggalinsert, jammulai, jamselesai, jamupdate, materi):
     db = dbConnectSiap()
-    sql = "INSERT INTO `simak_trn_presensi_dosen`(`PresensiID`, `HonorDosenID`, `TahunID`, `JadwalID`, `Pertemuan`, `DosenID`, `Tanggal`, `JamMulai`, `JamSelesai`, `Durasi`, `Durasi_terlambat`, `Hitung`, `BAPID`, `Catatan`, `TunjanganSKS`, `TunjanganTransport`, `TunjanganTetap`, `NA`, `LoginBuat`, `TanggalBuat`, `LoginEdit`, `RuangID`, `TanggalEdit`, `status_bap`, `Jam_TapMasuk`, `Jam_TapKeluar`, `MP`) VALUES (DEFAULT, 0, '{tahunid}', {jadwalid}, {pertemuan}, '{kodedosen}', '{tanggalinsert}', '{jammulai}', '{jamselesai}', NULL, NULL, 'N', NULL, '', 0, 0, 0, 'N', 'ITeung', '{jamupdate}', NULL, '', '0000-00-00 00:00:00', 'BELUM', NULL, NULL, {materi})".format(
+    sql = "INSERT INTO `simak_trn_presensi_dosen`(`PresensiID`, `HonorDosenID`, `TahunID`, `JadwalID`, `Pertemuan`, `DosenID`, `Tanggal`, `JamMulai`, `JamSelesai`, `Durasi`, `Durasi_terlambat`, `Hitung`, `BAPID`, `Catatan`, `TunjanganSKS`, `TunjanganTransport`, `TunjanganTetap`, `NA`, `LoginBuat`, `TanggalBuat`, `LoginEdit`, `RuangID`, `TanggalEdit`, `status_bap`, `Jam_TapMasuk`, `Jam_TapKeluar`, `MP`) VALUES (DEFAULT, 0, '{tahunid}', {jadwalid}, {pertemuan}, '{kodedosen}', '{tanggalinsert}', '{jammulai}', '{jamselesai}', NULL, NULL, 'N', NULL, '', 0, 0, 0, 'N', 'ITeung', '{jamupdate}', NULL, '', '0000-00-00 00:00:00', 'BELUM', NULL, NULL, '{materi}')".format(
         tahunid=config.siap_tahun_id, jadwalid=jadwalid, pertemuan=pertemuan, kodedosen=lecturercode,
         tanggalinsert=tanggalinsert, jammulai=jammulai, jamselesai=jamselesai, jamupdate=jamupdate, materi=materi)
     with db:
