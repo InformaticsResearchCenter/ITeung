@@ -111,10 +111,9 @@ def getTahunID():
         row=cur.fetchone()
     return row[0]
 
-def getnumonly(groupname):
+def getnumonly(groupname, tipe):
     db = dbConnect()
-    sql = "select distinct number from log where DATE_FORMAT(timestamps, '%Y-%m-%d') = CURDATE() and groupname = '{0}'".format(
-        groupname)
+    sql = "select distinct number from log where DATE_FORMAT(timestamps, '%Y-%m-%d') = CURDATE() and groupname = '{0}' and tipe='{1}'".format(groupname, tipe)
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -610,7 +609,7 @@ def getStudentScores(studentid):
             ret=''
     return ret
 
-def studentattendance(grp, jadwalid):
+def studentattendance(grp, jadwalid, tipe):
     jadwalserial=getJadwalSerial(jadwalid=jadwalid)
     if jadwalserial == '0':
         jadwalid=jadwalid
@@ -622,7 +621,7 @@ def studentattendance(grp, jadwalid):
         for data in studentabsent:
             datastudentabsenfromsiap.append(data[-1])
         npmdata = []
-        studentnumberphone = getnumonly(groupname=grp)
+        studentnumberphone = getnumonly(groupname=grp, tipe=tipe)
         for phonenumber in studentnumberphone:
             npm = getNpmandNameMahasiswa(numbers.normalize(phonenumber[0]))
             if npm is not None:
@@ -697,11 +696,11 @@ def cekSiap():
         ret=False
     return ret
 
-def siapabsensiwithsql(grp, num, materi):
+def siapabsensiwithsql(grp, num, materi, tipe):
     jadwalid = grp.split('-')[0]
     mkkode = getMkkode(jadwalid=jadwalid)
     lecturercode = getKodeDosen(num)
-    resultattendance = studentattendance(grp=grp, jadwalid=jadwalid)
+    resultattendance = studentattendance(grp=grp, jadwalid=jadwalid, tipe=tipe)
     if resultattendance != '':
         attend = resultattendance[0]
         notattend = resultattendance[1]
@@ -873,11 +872,11 @@ def AddMahasiswa(driver):
             len(jumTabel)) + "]/td[8]/a").click()
 
 
-def Mahasiswa(driver, groupname):
+def Mahasiswa(driver, groupname, tipe):
     dataPhoneNumber = []
     jumMahasiswa = int(driver.find_elements_by_class_name("inp1")[-1].text)
     index = 1
-    numberphone = getnumonly(groupname)
+    numberphone = getnumonly(groupname, tipe)
     data = []
     for number in numberphone:
         if getNpmandNameMahasiswa(number[0]) is not None:
