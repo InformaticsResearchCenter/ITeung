@@ -1,5 +1,5 @@
 from module import kelas
-from lib import wa,reply,numbers
+from lib import wa, reply, numbers, message
 import os, config
 
 def auth(data):
@@ -10,10 +10,19 @@ def auth(data):
     return ret
 
 def replymsg(driver, data):
+    msgreply=kelasSelesai(driver,  data)
+    return msgreply
+
+def kelasSelesai(driver, data):
     if kelas.cekSiap():
         grp = data[1]
         num = data[0]
         msg = data[3]
+        msg = message.normalize(msg)
+        if 'luring' in msg:
+            tipe = 'luring'
+        else:
+            tipe = 'daring'
         try:
             kehadiran = kelas.getKehadiran(grp.split('-')[0])
             if (kehadiran != config.kehadiran and kehadiran < config.kehadiran) or (kelas.isSudahKelas(jadwalid=grp.split('-')[0], lecturercode=kelas.getKodeDosen(num=num))):
@@ -21,7 +30,7 @@ def replymsg(driver, data):
                 wa.typeAndSendMessage(driver, wmsg)
                 materi = msg.lower()
                 materi = materi.split('materi')[-1]
-                msgreply = kelas.siapabsensiwithsql(grp=grp, num=numbers.normalize(num), materi=materi, tipe='daring')
+                msgreply = kelas.siapabsensiwithsql(grp=grp, num=numbers.normalize(num), materi=materi, tipe=tipe)
                 if msgreply != '':
                     if msgreply != []:
                         # msgreply=kelas.siapabsensiwithweb(driver=driver, num=num,namagroup=grp)
