@@ -13,6 +13,7 @@ def auth(data):
 def replymsg(driver, data):
     num=data[0]
     wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
+    wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
     wa.typeAndSendMessage(driver, wmsg)
     vadata = getVaData(kelas.getStudentIdFromParentPhoneNumber(num))
     virtualaccount = vadata[0]
