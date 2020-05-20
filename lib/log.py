@@ -26,7 +26,7 @@ def inserttolog(num, msg, als, grp, isgrp, tipe):
             cur = db.cursor()
             cur.execute(sql)
     except:
-        sql = "INSERT INTO log VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}')".format(getDatetimeNow(), num, normalizeSql(msg), normalizeSql('anak alay'), normalizeSql(grp), isgrp)
+        sql = "INSERT INTO log VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}')".format(getDatetimeNow(), num, normalizeSql(msg), normalizeSql('anak alay'), normalizeSql(grp), isgrp, tipe)
         with db:
             cur = db.cursor()
             cur.execute(sql)
