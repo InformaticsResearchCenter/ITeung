@@ -102,6 +102,14 @@ def toHari(kode):
     }
     return switcher.get(kode, "Not Found!")
 
+def getTahunID():
+    db=dbConnectSiap()
+    sql="SELECT TahunID FROM simpati.simak_mst_tahun where NA = 'N' group by TahunID order by TahunID DESC limit 1"
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        row=cur.fetchone()
+    return row[0]
 
 def getnumonly(groupname):
     db = dbConnect()
@@ -187,7 +195,7 @@ def isMatkul(jadwalid):
 def getListMK(kodedosen):
     listMK = 'Jadwal ID | Mata Kuliah | Kelas | Hari | Jam | Ruangan | Pertemuan\n '
     db = dbConnectSiap()
-    sql = "select JadwalID, Nama, NamaKelas, HariID, JamMulai, JamSelesai, RuangID, Kehadiran from simak_trn_jadwal where DosenID = '{0}' and TahunID = '{1}'".format(kodedosen, config.siap_tahun_id)
+    sql = "select JadwalID, Nama, NamaKelas, HariID, JamMulai, JamSelesai, RuangID, Kehadiran from simak_trn_jadwal where DosenID = '{0}' and TahunID = '{1}'".format(kodedosen, getTahunID())
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -345,7 +353,7 @@ def getJadwalSerial(jadwalid):
 
 def pesertaAbsensi(jadwalid):
     db = dbConnectSiap()
-    sql = "select j.JadwalID, j.TahunID, j.MKKode, j.Nama, j.DosenID, krs.MhswID from simak_trn_jadwal as j join simak_trn_krs as krs where j.jadwalid = krs.jadwalid and j.tahunid=" + config.siap_tahun_id + " and j.JadwalID = '{0}'".format(
+    sql = "select j.JadwalID, j.TahunID, j.MKKode, j.Nama, j.DosenID, krs.MhswID from simak_trn_jadwal as j join simak_trn_krs as krs where j.jadwalid = krs.jadwalid and j.tahunid=" + getTahunID() + " and j.JadwalID = '{0}'".format(
         jadwalid)
     with db:
         cur = db.cursor()
@@ -357,7 +365,7 @@ def pesertaAbsensi(jadwalid):
 def getJadwalId(kelas, mkkode):
     db = dbConnectSiap()
     sql = "select JadwalID from simak_trn_jadwal where TahunID={0} and NamaKelas='{1}' and MKKode='{2}'".format(
-        config.siap_tahun_id, kelas, mkkode)
+        getTahunID(), kelas, mkkode)
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -367,7 +375,7 @@ def getJadwalId(kelas, mkkode):
 
 def getLastpertemuan(kodedosen, jadwalid):
     db = dbConnectSiap()
-    sql = "select Pertemuan from simak_trn_presensi_dosen where DosenID = '{0}' and TahunID = {1} and JadwalID = {2} GROUP BY Pertemuan DESC LIMIT 1".format(kodedosen, config.siap_tahun_id, jadwalid)
+    sql = "select Pertemuan from simak_trn_presensi_dosen where DosenID = '{0}' and TahunID = {1} and JadwalID = {2} GROUP BY Pertemuan DESC LIMIT 1".format(kodedosen, getTahunID(), jadwalid)
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -381,7 +389,7 @@ def getLastpertemuan(kodedosen, jadwalid):
 def getJamMulai(kodedosen, kodekelas):
     db = dbConnectSiap()
     sql = "select JamMulai from simak_trn_presensi_dosen where DosenID = '{0}' and TahunID = '{1}' and JadwalID = '{2}' order by Pertemuan DESC LIMIT 1".format(
-        kodedosen, config.siap_tahun_id, kodekelas)
+        kodedosen, getTahunID(), kodekelas)
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -392,7 +400,7 @@ def getJamMulai(kodedosen, kodekelas):
 def getJamSelesai(kodedosen, kodekelas):
     db = dbConnectSiap()
     sql = "select JamSelesai from simak_trn_presensi_dosen where DosenID = '{0}' and TahunID = '{1}' and JadwalID = '{2}' order by Pertemuan DESC LIMIT 1".format(
-        kodedosen, config.siap_tahun_id, kodekelas)
+        kodedosen, getTahunID(), kodekelas)
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -403,7 +411,7 @@ def getJamSelesai(kodedosen, kodekelas):
 def getLastPresensiID(kodedosen, jadwalid):
     db = dbConnectSiap()
     sql = "select PresensiID from simak_trn_presensi_dosen where TahunID={tahunid} and DosenID='{kodedosen}' and JadwalID={jadwalid} ORDER BY Pertemuan DESC LIMIT 1".format(
-        tahunid=config.siap_tahun_id, kodedosen=kodedosen, jadwalid=jadwalid)
+        tahunid=getTahunID(), kodedosen=kodedosen, jadwalid=jadwalid)
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -424,7 +432,7 @@ def getListNpm(num):
 def getDataKrs(studentid, mkkode):
     db = dbConnectSiap()
     sql = "select KRSID from simak_trn_krs where MhswID = '{studentid}' and TahunID = '{tahunid}' and MKKode = '{mkkode}'".format(
-        studentid=studentid, tahunid=config.siap_tahun_id, mkkode=mkkode)
+        studentid=studentid, tahunid=getTahunID(), mkkode=mkkode)
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -443,7 +451,7 @@ def getHadirNpm(time):
 
 def RuangID(lecturercode, jadwalid):
     db = dbConnectSiap()
-    sql = "select RuangID from simak_trn_jadwal WHERE TahunID={tahunid} and DosenID='{lecturercode}' and JadwalID={jadwalid}".format(tahunid=config.siap_tahun_id, lecturercode=lecturercode, jadwalid=jadwalid)
+    sql = "select RuangID from simak_trn_jadwal WHERE TahunID={tahunid} and DosenID='{lecturercode}' and JadwalID={jadwalid}".format(tahunid=getTahunID(), lecturercode=lecturercode, jadwalid=jadwalid)
     with db:
         cur=db.cursor()
         cur.execute(sql)
@@ -455,7 +463,7 @@ def RuangID(lecturercode, jadwalid):
 
 def prodiID(lecturercode, jadwalid):
     db = dbConnectSiap()
-    sql="select ProdiID from simak_trn_jadwal WHERE TahunID={tahunid} and DosenID='{lecturercode}' and JadwalID={jadwalid}".format(tahunid=config.siap_tahun_id, lecturercode=lecturercode, jadwalid=jadwalid)
+    sql="select ProdiID from simak_trn_jadwal WHERE TahunID={tahunid} and DosenID='{lecturercode}' and JadwalID={jadwalid}".format(tahunid=getTahunID(), lecturercode=lecturercode, jadwalid=jadwalid)
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -520,7 +528,7 @@ def getTingkat(data):
         npm = getStudentIDOnly(studentid)
         print('npm: ' + str(npm))
         thn2 = npm[1:3]
-        selisih = int(config.siap_tahun_id[2:4]) - int(thn2)
+        selisih = int(getTahunID()[2:4]) - int(thn2)
         tingkat = str(selisih + 1)
     else:
         tingkat = ''
@@ -530,7 +538,7 @@ def getTingkat(data):
 def insertAbsenSiapDosen(jadwalid, pertemuan, lecturercode, tanggalinsert, jammulai, jamselesai, jamupdate, materi):
     db = dbConnectSiap()
     sql = "INSERT INTO `simak_trn_presensi_dosen`(`PresensiID`, `HonorDosenID`, `TahunID`, `JadwalID`, `Pertemuan`, `DosenID`, `Tanggal`, `JamMulai`, `JamSelesai`, `Durasi`, `Durasi_terlambat`, `Hitung`, `BAPID`, `Catatan`, `TunjanganSKS`, `TunjanganTransport`, `TunjanganTetap`, `NA`, `LoginBuat`, `TanggalBuat`, `LoginEdit`, `RuangID`, `TanggalEdit`, `status_bap`, `Jam_TapMasuk`, `Jam_TapKeluar`, `MP`) VALUES (DEFAULT, 0, '{tahunid}', {jadwalid}, {pertemuan}, '{kodedosen}', '{tanggalinsert}', '{jammulai}', '{jamselesai}', NULL, NULL, 'N', NULL, '', 0, 0, 0, 'N', 'ITeung', '{jamupdate}', NULL, '', '0000-00-00 00:00:00', 'BELUM', NULL, NULL, '{materi}')".format(
-        tahunid=config.siap_tahun_id, jadwalid=jadwalid, pertemuan=pertemuan, kodedosen=lecturercode,
+        tahunid=getTahunID(), jadwalid=jadwalid, pertemuan=pertemuan, kodedosen=lecturercode,
         tanggalinsert=tanggalinsert, jammulai=jammulai, jamselesai=jamselesai, jamupdate=jamupdate, materi=materi)
     with db:
         cur = db.cursor()
@@ -591,7 +599,7 @@ def getStudentIdFromParentPhoneNumber(num):
 
 def getStudentScores(studentid):
     db=dbConnectSiap()
-    sql="select k.MhswID,m.Nama,k.JadwalID , mt.Nama as 'nama matkul',k.GradeNilai from simak_trn_krs as k,simak_mst_matakuliah as mt,simak_mst_mahasiswa as m where k.MKID=mt.MKID and k.MhswID=m.MhswID and k.TahunID={tahunid} and k.MhswID={npm}".format(tahunid=config.siap_tahun_id, npm=studentid)
+    sql="select k.MhswID,m.Nama,k.JadwalID , mt.Nama as 'nama matkul',k.GradeNilai from simak_trn_krs as k,simak_mst_matakuliah as mt,simak_mst_mahasiswa as m where k.MKID=mt.MKID and k.MhswID=m.MhswID and k.TahunID={tahunid} and k.MhswID={npm}".format(tahunid=getTahunID(), npm=studentid)
     with db:
         cur = db.cursor()
         cur.execute(sql)
