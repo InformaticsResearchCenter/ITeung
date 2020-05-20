@@ -21,7 +21,7 @@ def replymsg(driver, data):
                 wa.typeAndSendMessage(driver, wmsg)
                 materi = msg.lower()
                 materi = materi.split('materi')[-1]
-                msgreply = kelas.siapabsensiwithsql(grp=grp, num=numbers.normalize(num), materi=materi, tipe='daring')
+                msgreply = kelas.siapabsensiwithsql(grp=grp, num=numbers.normalize(num), materi=materi, tipe='luring')
                 if msgreply != '':
                     if msgreply != []:
                         # msgreply=kelas.siapabsensiwithweb(driver=driver, num=num,namagroup=grp)

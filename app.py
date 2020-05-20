@@ -40,7 +40,8 @@ def prosesdata():
     message = 'hadir'
     alias = kelas.getNpmandNameMahasiswa(number)[1]
     isgroup='true'
-    log.save(number, message, alias, groupname, isgroup)
+    tipe='luring'
+    log.save(number, message, alias, groupname, isgroup, tipe)
     res = make_response(jsonify({'message': 'JSON data received'}), 200)
     return res
 
