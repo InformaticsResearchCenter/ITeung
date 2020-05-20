@@ -55,7 +55,8 @@ def kelasMulai(data):
                 msgreply = 'yahhhhh kehadirannya ngga #BOTNAME# temuin coba di cek lagi jadwal idnya yaaa....'
             else:
                 msgreply = 'Mohon maaf Untuk kuliah daring ini sudah memenuhi kuota pertemuan pada jadwal kali ini...'
-        except:
+        except Exception as e:
+            print(str(e))
             listMK=kelas.getListMK(kelas.getKodeDosen(data[0]))
             guide = 'Di setting dulu ya nama groupnya jadi JADWALID-KELAS-NAMA contoh : 17312-A-KECERDASAN BUAT, ini daftarnya : \n'
             msgreply = guide+listMK
