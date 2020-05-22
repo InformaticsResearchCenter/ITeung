@@ -20,6 +20,7 @@ def replymsg(driver, data):
     makeQrcode(num)
     uploadFile(driver)
     removeFile()
+    return ''
 
 def uploadFile(driver):
     driver.find_element_by_css_selector("span[data-icon='clip']").click()
