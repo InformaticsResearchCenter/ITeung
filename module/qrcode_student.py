@@ -29,7 +29,7 @@ def uploadFile(driver):
     driver.find_element_by_css_selector("span[data-icon='send-light").click()
 
 def waitUpload(driver):
-    x_arg = "span[data-icon='send-light"
+    x_arg = "span[data-icon='send']"
     wait = WebDriverWait(driver, 600)
     wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, x_arg)))
 
