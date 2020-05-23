@@ -55,7 +55,7 @@ def getJadwalData(nohp):
         from simak_trn_jadwal j, simak_mst_ruangan r, simak_mst_dosen d, 
         simak_mst_matakuliah m,  simak_mst_tahun t, simak_mst_prodi pr
         where j.MKID=m.MKID and j.DosenID=d.Login and j.DosenID='"""+kelas.getKodeDosen(nohp)+"""' 
-        and j.TahunID='"""+config.siap_tahun_id+"""' and t.ProgramID='"""+config.jalur_program+"""' 
+        and j.TahunID='"""+kelas.getTahunID()+"""' and t.ProgramID='"""+config.jalur_program+"""' 
         and m.ProdiID = pr.ProdiID and j.RuangID=r.RuangID and j.UTSTanggal != 0 group by j.JadwalID ;
     """
     jadwal = ''

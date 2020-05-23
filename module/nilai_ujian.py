@@ -40,7 +40,7 @@ def replymsg(driver, data):
                     sleep(2)
                     moveFiles(filename)
                     msgreply = inputNilaiByExcel(
-                        filename, jenis, config.siap_tahun_id, nomor)
+                        filename, jenis, kelas.getTahunID(), nomor)
                     removeFile(filename)
                 else:
                     msgreply = 'Salah keyword bosque..'
@@ -52,10 +52,10 @@ def replymsg(driver, data):
             try:
                 jenis = data[3].lower() if data[3].lower(
                 ) == 'uts' or data[3].lower() == 'uas' else False
-                if jenis == 'uts':
+                if jenis.lower() == 'uts':
                     nilai = data[data.index('uts')+1] if all(char.isdigit() for char in data[data.index('uts')+1]) and (
                         int(data[data.index('uts')+1]) <= 100 and int(data[data.index('uts')+1]) >= 0) else False
-                elif jenis == 'uas':
+                elif jenis.lower() == 'uas':
                     nilai = data[data.index('uas')+1] if all(char.isdigit() for char in data[data.index('uas')+1]) and (
                         int(data[data.index('uas')+1]) <= 100 and int(data[data.index('uas')+1]) >= 0) else False
 
@@ -66,7 +66,7 @@ def replymsg(driver, data):
                                                                  for char in data[data.index('matkul')+1]) else False
                     if jenis and nilai and npm and matkul:
                         data = {
-                            'tahun': config.siap_tahun_id,
+                            'tahun': kelas.getTahunID(),
                             'kode_matkul': matkul,
                             'npm': npm,
                             'nilai': nilai,
@@ -80,7 +80,7 @@ def replymsg(driver, data):
                                                                  for char in data[data.index('jadwal')+1]) else False
                     if jenis and nilai and npm and jadwal:
                         data = {
-                            'tahun': config.siap_tahun_id,
+                            'tahun': kelas.getTahunID(),
                             'kode_matkul': 0,
                             'npm': npm,
                             'nilai': nilai,
@@ -268,62 +268,106 @@ def getTanggalUAS(tahun):
             return False
 
 
+def getTanggalNilai(tahun, prodi):
+    db = dbConnectSiap()
+    query = """
+        SELECT TglNilai, TahunID, ProdiID FROM simpati.simak_mst_tahun where NA = 'N' and ProgramID = 'REG' and TahunID = '"""+tahun+"""' and ProdiID = '"""+prodi+"""' order by TglNilai ASC limit 1
+    """
+
+    with db:
+        cur = db.cursor()
+        cur.execute(query)
+        row = cur.fetchone()
+        if row is not None:
+            row = datetime.strptime(row, '%Y-%m-%d')
+            return row
+        else:
+            return False
+        
+
+def getProdi(matkul):
+    db = dbConnectSiap()
+    query = """
+       SELECT ProdiID FROM simpati.simak_mst_matakuliah where MKKode='"""+matkul+"""' order by TglBuat DESC limit 1
+    """
+
+    with db:
+        cur = db.cursor()
+        cur.execute(query)
+        row = cur.fetchone()
+        if row is not None:
+            return row
+        else:
+            return False
+
+
 def inputByExcel(file, jenis, tahun, func, nomor):
     book = openpyxl.load_workbook(file)
     sheet = book.active
     kode_matkul = sheet["C5"].value.replace(
         ":", "").replace("/", "").split()[0]
+    prodi = getProdi(kode_matkul)
+    tgl = getTanggalNilai(tahun, prodi)
+    today = datetime.today()
 
-    if checkDosen(nomor, tahun, matkul=kode_matkul):
-        kelas = convertKelas(sheet["C6"].value.replace(":", "").strip())
-        mahasiswas = getMahasiswa(kode_matkul, tahun, kelas)
-        if mahasiswas:
-            length = len(mahasiswas)
-            npms = sheet['B10': 'B'+str(9+length)]
-            nilais = sheet['E10': 'E'+str(9+length)]
-            cells = dict(zip(npms, nilais))
-            for k, v in cells.items():
-                if k[0].value is not None:
-                    npm = k[0].value
-                else:
-                    break
-                data = {
-                    'tahun': tahun,
-                    'kode_matkul': kode_matkul,
-                    'npm':  npm,
-                    'nilai': str(v[0].value) if v[0].value is not None else '0',
-                }
-                if jenis == 'uts':
-                    func(data)
-                elif jenis == 'uas':
-                    func(data)
-                else:
-                    continue
-            msg = 'Udh masuk bosque'
+    if tgl <= today:
+        if checkDosen(nomor, tahun, matkul=kode_matkul):
+            kelas = convertKelas(sheet["C6"].value.replace(":", "").strip())
+            mahasiswas = getMahasiswa(kode_matkul, tahun, kelas)
+            if mahasiswas:
+                length = len(mahasiswas)
+                npms = sheet['B10': 'B'+str(9+length)]
+                nilais = sheet['E10': 'E'+str(9+length)]
+                cells = dict(zip(npms, nilais))
+                for k, v in cells.items():
+                    if k[0].value is not None:
+                        npm = k[0].value
+                    else:
+                        break
+                    data = {
+                        'tahun': tahun,
+                        'kode_matkul': kode_matkul,
+                        'npm':  npm,
+                        'nilai': str(v[0].value) if v[0].value is not None else '0',
+                    }
+                    if jenis.lower() == 'uts':
+                        func(data)
+                    elif jenis.lower() == 'uas':
+                        func(data)
+                    else:
+                        continue
+                msg = 'Udh masuk bosque'
+            else:
+                msg = 'Kesalahan pada file bosque'
         else:
-            msg = 'Kesalahan pada file bosque'
+            msg = 'Ohh tidak bisa bosque'
     else:
-        msg = 'Ohh tidak bisa bosque'
+        msg = "Mana sempat, sudah telat"
 
     return msg
 
 
 def inputNilaiByExcel(file, jenis, tahun, nomor):
 
-    today = datetime.today().date()
+    today = datetime.today()
     if jenis.lower() == 'uts':
-        uts = getTanggalUTS(tahun)
-        if uts[0] <= today and uts[1] >= today and uts:
-            msg = inputByExcel(file, jenis, tahun, inputNilaiUTS, nomor)
-        else:
-            msg = 'Gak bisa lagi bosque'
+        # uts = getTanggalUTS(tahun)
+
+        # if uts[0] <= today and uts[1] >= today and uts:
+        #     msg = inputByExcel(file, jenis, tahun, inputNilaiUTS, nomor)
+        # else:
+        #     msg = 'Gak bisa lagi bosque'
+
+        msg = inputByExcel(file, jenis, tahun, inputNilaiUTS, nomor)
 
     elif jenis.lower() == 'uas':
-        uas = getTanggalUAS(tahun)
-        if uas[0] <= today and uas[1] >= today and uas:
-            msg = inputByExcel(file, jenis, tahun, inputNilaiUAS, nomor)
-        else:
-            msg = 'Gak bisa lagi bosque'
+        # uas = getTanggalUAS(tahun)
+        # if uas[0] <= today and uas[1] >= today and uas:
+        #     msg = inputByExcel(file, jenis, tahun, inputNilaiUAS, nomor)
+        # else:
+        #     msg = 'Gak bisa lagi bosque'
+
+        msg = inputByExcel(file, jenis, tahun, inputNilaiUTS, nomor)
     else:
         msg = 'Ujian apa nih bosque'
 
@@ -333,17 +377,23 @@ def inputNilaiByExcel(file, jenis, tahun, nomor):
 def inputNilaiByMesssage(data, jenis, nomor):
 
     if checkDosen(nomor, data['tahun'], matkul=data['kode_matkul'], jadwal=data['jadwal']):
-        today = datetime.today().date()
+        
+        prodi = getProdi(data['kode_matkul'])
+        tgl = getTanggalNilai(data['tahun'], prodi)
+        today = datetime.today()
+        
         if jenis.lower() == 'uts':
             uts = getTanggalUTS(data['tahun'])
-            if uts[0] <= today and uts[1] >= today and uts:
+            if tgl <= today:
+            # if uts[0] <= today and uts[1] >= today and uts:
                 msg = inputNilaiUTS(data)
             else:
                 msg = 'Gak bisa lagi bosque'
 
         elif jenis.lower() == 'uas':
             uas = getTanggalUAS(data['tahun'])
-            if uas[0] <= today and uas[1] >= today and uas:
+            if tgl <= today:
+            # if uas[0] <= today and uas[1] >= today and uas:
                 msg = inputNilaiUAS(data)
             else:
                 msg = 'Gak bisa lagi bosque'

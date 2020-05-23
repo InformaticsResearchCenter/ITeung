@@ -35,7 +35,7 @@ def replymsg(driver, data):
                 jenis = data[3].lower() if data[3].lower() == 'uts' or data[3].lower() == 'uas' else False
                 if matkul and kelass and jenis:
                     datas = {
-                        'tahun': config.siap_tahun_id,
+                        'tahun': kelas.getTahunID(),
                         'kode_matkul': matkul,
                         'kelas': convertKelas(kelass),
                         'jenis': jenis,
@@ -53,7 +53,7 @@ def replymsg(driver, data):
                 jenis = data[3].lower() if data[3].lower() == 'uts' or data[3].lower() == 'uas' else False
                 if jadwal and jenis:
                     datas = {
-                        'tahun': config.siap_tahun_id,
+                        'tahun': kelas.getTahunID(),
                         'kode_matkul': 0,
                         'kelas': 0,
                         'jenis': jenis,
@@ -120,7 +120,7 @@ def checkNilaiUTS(tahun, matkul, kode_matkul=0, jadwal=0, kelas=0):
         rows = cur.fetchall()
         if rows is not None:
             for row in rows:
-                nilais += '* % s * | % s | %s\n' % (row[0], row[1], row[2])
+                nilais += '*%s* | % s | %s\n' % (row[0], row[1], row[2])
 
     return nilais
 
