@@ -66,23 +66,10 @@ class Chatbot(object):
 
         try:
             if self.msgcheck != msg or (self.numcheck != num and self.alscheck != als):
-                log.save(num=num, msg=msg, als=als, grp=grp, isgrp=isgrp)
+                log.save(num=num, msg=msg, als=als, grp=grp, isgrp=isgrp, tipe='daring')
                 self.msgcheck = msg
                 self.numcheck = num
                 self.alscheck = als
         except Exception as e:
             msgreply = reply.getErrorMessage()
             msgreply = msgreply.replace("#ERROR#", str(e))
-
-        if 'msgreply' in locals():
-            if msgreply[:2] != 'm:':
-                msgreply = msgreply.replace("#BOTNAME#", config.bot_name)
-                try:
-                    msgreply = message.newlineNormalize(msgreply)
-                    # wa.typeAndSendMessage(driver, msgreply)
-                    wa.copyToClipboard(msgreply)
-                    wa.pasteMessage(driver)
-                    wa.sendMessage(driver)
-                    del msgreply
-                except:
-                    print("field reply not found!!")
