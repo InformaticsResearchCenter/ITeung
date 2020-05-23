@@ -279,11 +279,10 @@ def getTanggalNilai(tahun, prodi):
         cur.execute(query)
         row = cur.fetchone()
         if row is not None:
-            row = datetime.strptime(row, '%Y-%m-%d')
-            return row
+            return row[0]
         else:
             return False
-        
+
 
 def getProdi(matkul):
     db = dbConnectSiap()
@@ -296,7 +295,7 @@ def getProdi(matkul):
         cur.execute(query)
         row = cur.fetchone()
         if row is not None:
-            return row
+            return row[0]
         else:
             return False
 
@@ -308,9 +307,9 @@ def inputByExcel(file, jenis, tahun, func, nomor):
         ":", "").replace("/", "").split()[0]
     prodi = getProdi(kode_matkul)
     tgl = getTanggalNilai(tahun, prodi)
-    today = datetime.today()
-
-    if tgl <= today:
+    today = datetime.today().date()
+    # print(tgl, today)
+    if tgl >= today:
         if checkDosen(nomor, tahun, matkul=kode_matkul):
             kelas = convertKelas(sheet["C6"].value.replace(":", "").strip())
             mahasiswas = getMahasiswa(kode_matkul, tahun, kelas)
@@ -349,7 +348,7 @@ def inputByExcel(file, jenis, tahun, func, nomor):
 
 def inputNilaiByExcel(file, jenis, tahun, nomor):
 
-    today = datetime.today()
+    today = datetime.today().date()
     if jenis.lower() == 'uts':
         # uts = getTanggalUTS(tahun)
 
@@ -377,23 +376,23 @@ def inputNilaiByExcel(file, jenis, tahun, nomor):
 def inputNilaiByMesssage(data, jenis, nomor):
 
     if checkDosen(nomor, data['tahun'], matkul=data['kode_matkul'], jadwal=data['jadwal']):
-        
+
         prodi = getProdi(data['kode_matkul'])
         tgl = getTanggalNilai(data['tahun'], prodi)
-        today = datetime.today()
-        
+        today = datetime.today().date()
+
         if jenis.lower() == 'uts':
             uts = getTanggalUTS(data['tahun'])
-            if tgl <= today:
-            # if uts[0] <= today and uts[1] >= today and uts:
+            if tgl >= today:
+                # if uts[0] <= today and uts[1] >= today and uts:
                 msg = inputNilaiUTS(data)
             else:
                 msg = 'Gak bisa lagi bosque'
 
         elif jenis.lower() == 'uas':
             uas = getTanggalUAS(data['tahun'])
-            if tgl <= today:
-            # if uas[0] <= today and uas[1] >= today and uas:
+            if tgl >= today:
+                # if uas[0] <= today and uas[1] >= today and uas:
                 msg = inputNilaiUAS(data)
             else:
                 msg = 'Gak bisa lagi bosque'
