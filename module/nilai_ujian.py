@@ -287,7 +287,7 @@ def getTanggalNilai(tahun, prodi):
 def getProdi(matkul):
     db = dbConnectSiap()
     query = """
-       SELECT ProdiID FROM simpati.simak_mst_matakuliah where MKKode='"""+matkul+"""' order by TglBuat DESC limit 1
+        SELECT ProdiID FROM simpati.simak_trn_jadwal where MKKode='"""+matkul+"""' order by TahunID DESC limit 1
     """
 
     with db:
@@ -295,7 +295,7 @@ def getProdi(matkul):
         cur.execute(query)
         row = cur.fetchone()
         if row is not None:
-            return row[0]
+            return row[0].replace(".", "")
         else:
             return False
 
