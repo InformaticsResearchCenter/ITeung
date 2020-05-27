@@ -5,7 +5,6 @@ Created on Sat Mar 14 12:32:40 2020
 @author: rolly
 """
 import config, re
-from lib import times
 
 def normalize(message):
     msg=message.encode('cp1252', 'ignore').decode('utf8', 'ignore')
@@ -28,8 +27,6 @@ def normalize(message):
     msg=msg.replace('[',' ')
     msg=msg.replace(']',' ')
     msg=msg.replace('\\','')
-    msg=msg.replace('hari ini','hari '+times.getCurrentDay())
-    msg=msg.replace('sekarang','hari '+times.getCurrentDay())
     msg=msg.replace(config.bot_shortname,config.bot_name)
     msg=removeBackslash(msg)
     msg=msg.strip()
