@@ -5,8 +5,12 @@ from lib import wa, reply
 import os, config
 
 def auth(data):
-    if isKaprodi(getHomeBase(data[0])):
-        ret = True
+    prodiid=getHomeBase(data[0])
+    if prodiid is not None:
+        if isKaprodi(prodiid):
+            ret = True
+        else:
+            ret = False
     else:
         ret = False
     return ret
