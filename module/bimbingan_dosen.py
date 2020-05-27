@@ -24,15 +24,20 @@ def replymsg(driver, data):
         if pertemuan==False:
             msgreply='yahhh pertemuannya udah kelewat batasss, yang sabar yaaaaaa..... :('
         else:
+            studentid = msg.split('bimbingan ')[1].split(' ')[1]
             tipe=msg.split('bimbingan ')[1].split(' ')[0]
-            studentid=msg.split('bimbingan ')[1].split(' ')[1]
             topik=msg.split('topik ')[1].split(' nilai')[0]
             nilai=msg.split('nilai ')[1]
             if int(nilai) > 100:
                 msgreply='buset nilainya kaga salah itu bos?? gede benerr......'
             else:
-                insertBimbingan(studentid=studentid, lecturerid=kelas.getKodeDosen(num), tipe=tipe, topik=topik, nilai=nilai, pertemuan=pertemuan, )
-                msgreply='oke sudah di input yaaa....'
+                if isSudahInputBimbingan(studentid, pertemuan):
+                    updateNilaiBimbingan(studentid=studentid, nilai=nilai, topik=topik, pertemuan=pertemuan)
+                    msgreply='oke sudah iteung update yaaa nilainya.....'
+                    ##update
+                else:
+                    insertBimbingan(studentid=studentid, lecturerid=kelas.getKodeDosen(num), tipe=tipe, topik=topik, nilai=nilai, pertemuan=pertemuan, )
+                    msgreply='oke sudah di input yaaa....'
     return msgreply
 
 def countPertemuan(startdate):
@@ -71,6 +76,31 @@ def insertBimbingan(studentid, lecturerid, tipe, pertemuan, nilai, topik):
         topik=topik,
         tanggal=datetime.now(),
         pertemuan=pertemuan
+    )
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+
+def isSudahInputBimbingan(studentid, pertemuan):
+    db=kelas.dbConnectSiap()
+    sql="select * from simak_croot_bimbingan where `MhswID`={studentid} and `Pertemuan_`={pertemuan}".format(studentid=studentid, pertemuan=pertemuan)
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        row=cur.fetchone()
+        if row is not None:
+            return False
+        else:
+            return True
+
+def updateNilaiBimbingan(studentid, pertemuan, nilai, topik):
+    db=kelas.dbConnectSiap()
+    sql="UPDATE `simpati`.`simak_croot_bimbingan` SET `Nilai` = {nilai}, `Topik` = '{topik}', `Tanggal` = '{datenow}' WHERE `MhswID` = {studentid} and `Pertemuan_`={pertemuanke}".format(
+        nilai=nilai,
+        topik=topik,
+        datenow=datetime.now(),
+        studentid=studentid,
+        pertemuanke=pertemuan
     )
     with db:
         cur=db.cursor()
