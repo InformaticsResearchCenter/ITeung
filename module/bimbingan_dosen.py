@@ -28,8 +28,11 @@ def replymsg(driver, data):
             studentid=msg.split('bimbingan ')[1].split(' ')[1]
             topik=msg.split('topik ')[1].split(' nilai')[0]
             nilai=msg.split('nilai ')[1]
-            insertBimbingan(studentid=studentid, lecturerid=kelas.getKodeDosen(num), tipe=tipe, topik=topik, nilai=nilai, pertemuan=pertemuan, )
-            msgreply='oke sudah di input yaaa....'
+            if int(nilai) > 100:
+                msgreply='buset nilainya kaga salah itu bos?? gede benerr......'
+            else:
+                insertBimbingan(studentid=studentid, lecturerid=kelas.getKodeDosen(num), tipe=tipe, topik=topik, nilai=nilai, pertemuan=pertemuan, )
+                msgreply='oke sudah di input yaaa....'
     return msgreply
 
 def countPertemuan(startdate):
