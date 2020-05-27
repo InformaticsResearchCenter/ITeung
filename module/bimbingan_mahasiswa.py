@@ -1,5 +1,7 @@
 from lib import wa, reply, message
 from module import kelas
+from Crypto.Cipher import AES
+from datetime import datetime
 import os, config
 
 def auth(data):
@@ -19,11 +21,17 @@ def replymsg(driver, data):
     topik=msg.split('topik ')[1].split(' nilai')[0].replace(' ', '%20')
     # pertemuan=msg.split('pertemuan ')[1].split(' nilai')[0]
     nilai=msg.split('nilai ')[1]
-    msgreply='https://api.whatsapp.com/send?phone={nomoriteung}&text=iteung%20input%20bimbingan%20{tipebimbingan}%20{npm}%0Atopik%20{topikbimbingan}%0Anilai%20{nilai}'.format(
+    datenow = datetime.date(datetime.now()).strftime('%d-%m-%Y')
+    hari = datetime.now().strftime('%A')[:6]
+    obj = AES.new(config.key, AES.MODE_CBC, config.iv)
+    cp = obj.encrypt(datenow + hari)
+    passcode=cp.hex()
+    msgreply='https://api.whatsapp.com/send?phone={nomoriteung}&text=iteung%20input%20bimbingan%20{tipebimbingan}%20{npm}%0Atopik%20{topikbimbingan}%0Anilai%20{nilai}%0Apasscode%20{passcode}'.format(
         nomoriteung=config.nomor_iteung,
         tipebimbingan=tipe_bimbingan,
         npm=studentid,
         topikbimbingan=topik,
-        nilai=nilai
+        nilai=nilai,
+        passcode=passcode
     )
     return msgreply

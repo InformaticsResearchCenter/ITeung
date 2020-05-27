@@ -1,6 +1,7 @@
 from lib import wa, reply, message, numbers
 from module import kelas
 from datetime import datetime, timedelta
+from Crypto.Cipher import AES
 import os, config
 
 def auth(data):
@@ -27,17 +28,25 @@ def replymsg(driver, data):
             studentid = msg.split('bimbingan ')[1].split(' ')[1]
             tipe=msg.split('bimbingan ')[1].split(' ')[0]
             topik=msg.split('topik ')[1].split(' nilai')[0]
-            nilai=msg.split('nilai ')[1]
-            if int(nilai) > 100:
-                msgreply='buset nilainya kaga salah itu bos?? gede benerr......'
-            else:
-                if isSudahInputBimbingan(studentid, pertemuan):
-                    updateNilaiBimbingan(studentid=studentid, nilai=nilai, topik=topik, pertemuan=pertemuan)
-                    msgreply='oke sudah iteung update yaaa nilainya.....'
-                    ##update
+            nilai=msg.split('nilai ')[1].split(' passcode')[0]
+            passcode=msg.split('passcode ')[1]
+            obj = AES.new(config.key, AES.MODE_CBC, config.iv)
+            dec = bytes.fromhex(passcode)
+            resultpasscode=obj.decrypt(dec).decode('utf-8')
+            datenow = datetime.date(datetime.now()).strftime('%d-%m-%Y')
+            hari = datetime.now().strftime('%A')[:6]
+            if resultpasscode == datenow+hari:
+                if int(nilai) > 100:
+                    msgreply='buset nilainya kaga salah itu bos?? gede benerr......'
                 else:
-                    insertBimbingan(studentid=studentid, lecturerid=kelas.getKodeDosen(num), tipe=tipe, topik=topik, nilai=nilai, pertemuan=pertemuan, )
-                    msgreply='oke sudah di input yaaa....'
+                    if isSudahInputBimbingan(studentid, pertemuan):
+                        updateNilaiBimbingan(studentid=studentid, nilai=nilai, topik=topik, pertemuan=pertemuan)
+                        msgreply='oke sudah iteung update yaaa nilainya.....'
+                    else:
+                        insertBimbingan(studentid=studentid, lecturerid=kelas.getKodeDosen(num), tipe=tipe, topik=topik, nilai=nilai, pertemuan=pertemuan, )
+                        msgreply='oke sudah di input yaaa....'
+            else:
+                msgreply='passcodenya salah bosqueeeeee'
     return msgreply
 
 def countPertemuan(startdate):
@@ -83,7 +92,7 @@ def insertBimbingan(studentid, lecturerid, tipe, pertemuan, nilai, topik):
 
 def isSudahInputBimbingan(studentid, pertemuan):
     db=kelas.dbConnectSiap()
-    sql="select * from simak_croot_bimbingan where `MhswID`={studentid} and `Pertemuan_`={pertemuan}".format(studentid=studentid, pertemuan=pertemuan)
+    sql="select * from simak_croot_bimbingan where `MhswID`={studentid} and `Pertemuan_`={pertemuan} and `Tanggal`".format(studentid=studentid, pertemuan=pertemuan)
     with db:
         cur=db.cursor()
         cur.execute(sql)
