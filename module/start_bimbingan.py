@@ -12,9 +12,9 @@ def auth(data):
 def replymsg(driver, data):
     prodiid=getHomeBase(data[0])
     datestring=data[3].split(' ')[-1]
-    day=datestring.split('-')[0]
-    month=datestring.split('-')[1]
-    year=datestring.split('-')[2]
+    day=int(datestring.split('-')[0])
+    month=int(datestring.split('-')[1])
+    year=int(datestring.split('-')[2])
     date=datetime.date(datetime(year, month, day))
     updateDateBimbingan(prodiid, date)
     msgreply='sudah di update cuyyyyy'
