@@ -53,7 +53,7 @@ def replymsg(driver, data):
 def run(kodedosen):
     param = {
         'dosen': kodedosen,
-        'tahun': config.siap_tahun_id,
+        'tahun': kelas.getTahunID(),
         'jenis': config.jenis_ujian,
         'program': config.jalur_program
     }
