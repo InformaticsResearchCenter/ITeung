@@ -45,7 +45,7 @@ def isKaprodi(prodiid):
 
 def updateDateBimbingan(prodiid, dateupdate):
     db=kelas.dbConnectSiap()
-    sql="UPDATE simak_mst_prodi SET `Start` = {dateupdate} WHERE `ProdiID` = '{prodiid}'".format(dateupdate=dateupdate, prodiid=prodiid)
+    sql="UPDATE simak_mst_prodi SET `Start` = '{dateupdate}' WHERE `ProdiID` = '{prodiid}'".format(dateupdate=dateupdate, prodiid=prodiid)
     with db:
         cur=db.cursor()
         cur.execute(sql)
