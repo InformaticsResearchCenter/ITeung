@@ -37,7 +37,11 @@ def getHomeBase(num):
         cur=db.cursor()
         cur.execute(sql)
         row=cur.fetchone()
-    return row[0]
+        if row is not None:
+            ret=row[0]
+        else:
+            ret=None
+    return ret
 
 def isKaprodi(prodiid):
     db=kelas.dbConnectSiap()
