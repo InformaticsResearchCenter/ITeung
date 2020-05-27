@@ -16,7 +16,7 @@ def replymsg(driver, data):
     num=data[0]
     msg=data[3]
     msg=message.normalize(msg)
-    startdate=getStartDate(num)
+    startdate=datetime.date(getStartDate(num))
     if startdate=='NULL' or startdate=='':
         msgreply='wahhh kayaknya jadwal start bimbingannya belum diset sama kaprodi kamu deehhhh, coba minta di setting dulu jadwalnya....'
     else:
