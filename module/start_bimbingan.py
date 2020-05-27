@@ -2,7 +2,7 @@ from lib import numbers
 from module import kelas
 from datetime import datetime
 from lib import wa, reply
-import os
+import os, config
 
 def auth(data):
     if isKaprodi(getHomeBase(data[0])):
@@ -13,6 +13,7 @@ def auth(data):
 
 def replymsg(driver, data):
     wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
+    wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
     wa.typeAndSendMessage(driver, wmsg)
     prodiid=getHomeBase(data[0])
     datestring=data[3].split(' ')[-1]
