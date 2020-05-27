@@ -1,6 +1,8 @@
 from lib import numbers
 from module import kelas
 from datetime import datetime
+from lib import wa, reply
+import os
 
 def auth(data):
     if isKaprodi(getHomeBase(data[0])):
@@ -10,6 +12,8 @@ def auth(data):
     return ret
 
 def replymsg(driver, data):
+    wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
+    wa.typeAndSendMessage(driver, wmsg)
     prodiid=getHomeBase(data[0])
     datestring=data[3].split(' ')[-1]
     day=int(datestring.split('-')[0])
