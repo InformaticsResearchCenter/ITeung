@@ -16,12 +16,12 @@ def replymsg(driver, data):
     wa.typeAndSendMessage(driver, wmsg)
     msg=data[3]
     msg=message.normalize(msg)
-    tipe_bimbingan=msg.split('bimbingan ')[1].split(' topik')[0]
+    tipe_bimbingan=msg.split('bimbingan ')[1].split(' target selesai')[0]
     studentid=kelas.getNpmandNameMahasiswa(data[0])[0]
-    topik=msg.split('topik ')[1].split(' nilai')[0].replace(' ', '%20')
+    # topik=msg.split('topik ')[1].split(' nilai')[0].replace(' ', '%20')
     # pertemuan=msg.split('pertemuan ')[1].split(' nilai')[0]
-    target_selesai = msg.split('target selesai ')[1].split(' target selanjutnya')[0]
-    terget_selanjutnya = msg.split('target selanjutnya ')[1].split(' nilai')[0]
+    target_selesai = msg.split('target selesai ')[1].split(' target selanjutnya')[0].replace(' ', '%20')
+    terget_selanjutnya = msg.split('target selanjutnya ')[1].split(' nilai')[0].replace(' ', '%20')
     nilai=msg.split('nilai ')[1]
     datenow = datetime.date(datetime.now()).strftime('%d%m%Y')
     hari = datetime.now().strftime('%A')
