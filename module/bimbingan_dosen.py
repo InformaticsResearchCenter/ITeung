@@ -99,9 +99,9 @@ def isSudahInputBimbingan(studentid, pertemuan):
         cur.execute(sql)
         row=cur.fetchone()
         if row is not None:
-            return False
-        else:
             return True
+        else:
+            return False
 
 def updateNilaiBimbingan(studentid, pertemuan, nilai, topik):
     db=kelas.dbConnectSiap()
