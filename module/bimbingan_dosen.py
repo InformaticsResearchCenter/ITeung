@@ -40,21 +40,24 @@ def replymsg(driver, data):
             logmsg=''
             for i in getLogMessageStudent(datemulai, dateakhir, kelas.getKodeDosen(num), studentphonenumber):
                 logmsg+=i[0]+';'
-            if resultpasscode == studentid+datenow+hari:
-                if int(nilai) > 100:
-                    msgreply='buset nilainya kaga salah itu bos?? gede benerr......'
-                else:
-                    if isSudahInputBimbingan(studentid, pertemuan):
-                        updateNilaiBimbingan(studentid=studentid, nilai=nilai, topik=topik, pertemuan=pertemuan, logmsg=logmsg)
-                        msgreply='oke sudah iteung update yaaa nilainya.....'
-                    else:
-                        insertBimbingan(studentid=studentid, lecturerid=kelas.getKodeDosen(num), tipe=tipe, topik=topik, nilai=nilai, pertemuan=pertemuan, logmsg=logmsg)
-                        msgreply='oke sudah di input yaaa....'
-                    nama=kelas.getStudentNameOnly(studentid)
-                    for i in getDataBimbingan(studentid):
-                        msgreply+='\n\nNama: {nama}\nNPM: {studentid}\nTipe: {tipe}\nPertemuan: {pertemuanke}\nTopik: {topik}\nNilai: {nilai}\nPenilai: {penilai}'.format(nama=nama, studentid=i[0], tipe=i[1], pertemuanke=i[2], topik=i[3], nilai=i[4], penilai=i[5])
+            if logmsg=='':
+                msgreply='mohon maaf tidak ada diskusi diantara Dosen dan Mahasiswa maka tidak bisa di input...'
             else:
-                msgreply='passcodenya salah bosqueeeeee'
+                if resultpasscode == studentid+datenow+hari:
+                    if int(nilai) > 100:
+                        msgreply='buset nilainya kaga salah itu bos?? gede benerr......'
+                    else:
+                        if isSudahInputBimbingan(studentid, pertemuan):
+                            updateNilaiBimbingan(studentid=studentid, nilai=nilai, topik=topik, pertemuan=pertemuan, logmsg=logmsg)
+                            msgreply='oke sudah iteung update yaaa nilainya.....'
+                        else:
+                            insertBimbingan(studentid=studentid, lecturerid=kelas.getKodeDosen(num), tipe=tipe, topik=topik, nilai=nilai, pertemuan=pertemuan, logmsg=logmsg)
+                            msgreply='oke sudah di input yaaa....'
+                        nama=kelas.getStudentNameOnly(studentid)
+                        for i in getDataBimbingan(studentid):
+                            msgreply+='\n\nNama: {nama}\nNPM: {studentid}\nTipe: {tipe}\nPertemuan: {pertemuanke}\nTopik: {topik}\nNilai: {nilai}\nPenilai: {penilai}'.format(nama=nama, studentid=i[0], tipe=i[1], pertemuanke=i[2], topik=i[3], nilai=i[4], penilai=i[5])
+                else:
+                    msgreply='passcodenya salah bosqueeeeee'
     return msgreply
 
 def countPertemuan(startdate):
