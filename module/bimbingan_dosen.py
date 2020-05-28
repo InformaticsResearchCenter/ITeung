@@ -66,8 +66,9 @@ def countPertemuan(startdate):
     for i in range(10):
         if nowdate >= startdate and nowdate < startdate+timedelta(countday):
             pertemuan=i+1
-            startdate=startdate
+            startdate=startdate.strftime('%Y-%m-%d')
             enddate=startdate+timedelta(countday)
+            enddate=datetime.date(enddate).strftime('%Y-%m-%d')
             break
         else:
             pertemuan=False
