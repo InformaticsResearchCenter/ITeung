@@ -46,8 +46,9 @@ def replymsg(driver, data):
                     else:
                         insertBimbingan(studentid=studentid, lecturerid=kelas.getKodeDosen(num), tipe=tipe, topik=topik, nilai=nilai, pertemuan=pertemuan, )
                         msgreply='oke sudah di input yaaa....'
+                    nama=kelas.getStudentNameOnly(studentid)
                     for i in getDataBimbingan(studentid):
-                        msgreply+='\n\nNPM: {studentid}\nTipe: {tipe}\nPertemuan: {pertemuanke}\nTopik: {topik}\nNilai: {nilai}\nPenilai: {penilai}'.format(studentid=i[0], tipe=i[1], pertemuanke=i[2], topik=i[3], nilai=i[4], penilai=i[5])
+                        msgreply+='\n\nNama: {nama}\nNPM: {studentid}\nTipe: {tipe}\nPertemuan: {pertemuanke}\nTopik: {topik}\nNilai: {nilai}\nPenilai: {penilai}'.format(nama=nama, studentid=i[0], tipe=i[1], pertemuanke=i[2], topik=i[3], nilai=i[4], penilai=i[5])
             else:
                 msgreply='passcodenya salah bosqueeeeee'
     return msgreply
