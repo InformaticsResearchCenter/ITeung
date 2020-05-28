@@ -46,6 +46,8 @@ def replymsg(driver, data):
                     else:
                         insertBimbingan(studentid=studentid, lecturerid=kelas.getKodeDosen(num), tipe=tipe, topik=topik, nilai=nilai, pertemuan=pertemuan, )
                         msgreply='oke sudah di input yaaa....'
+                    for i in getDataBimbingan(studentid):
+                        msgreply+='\n\nNPM: {studentid}\nTipe: {tipe}\nPertemuan: {pertemuanke}\nTopik: {topik}\nNilai: {nilai}\nPenilai: {penilai}'.format(studentid=i[0], tipe=i[1], pertemuanke=i[2], topik=i[3], nilai=i[4], penilai=i[5])
             else:
                 msgreply='passcodenya salah bosqueeeeee'
     return msgreply
@@ -115,3 +117,12 @@ def updateNilaiBimbingan(studentid, pertemuan, nilai, topik):
     with db:
         cur=db.cursor()
         cur.execute(sql)
+
+def getDataBimbingan(studentid):
+    db=kelas.dbConnectSiap()
+    sql="select MhswID, Tipe, Pertemuan_, Topik, Nilai, Penilai, Tanggal from simak_croot_bimbingan where MhswID='{studentid}'".format(studentid=studentid)
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        row=cur.fetchall()
+    return row
