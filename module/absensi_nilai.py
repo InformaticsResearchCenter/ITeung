@@ -29,7 +29,7 @@ def replymsg(driver, data):
                 score=score+v[-2]+': '+v[-1]+'\n'
             absent='\n=====ABSENSI=====\n'
             for v in jadwalid:
-                absent=absent+kelas.getDataMatkul(v)[1]+': '+str(round(int(kelas.getKehadiranMahasiswa(jadwalid=v, studentid=studentid)/config.kehadiran*100)))+'%\n'
+                absent=absent+kelas.getDataMatkul(v)[1]+': '+str(round(int(kelas.getKehadiranMahasiswa(jadwalid=v, studentid=npm)/config.kehadiran*100)))+'%\n'
             msgreply+=npm+nama+score+absent+'\n\n'
     else:
         msgreply='Mohon maaf server Akademik SIAP sedang dalam kondisi DOWN, mohon untuk menginformasikan ke ADMIN dan tunggu hingga beberapa menit kemudian, lalu ulangi kembali, terima kasih....'
