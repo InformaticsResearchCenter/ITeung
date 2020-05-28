@@ -41,7 +41,7 @@ def replymsg(driver, data):
             for i in getLogMessageStudent(datemulai, dateakhir, kelas.getKodeDosen(num), studentphonenumber):
                 logmsg+=i[0]+';'
             if logmsg=='':
-                msgreply='mohon maaf tidak ada diskusi diantara Dosen dan Mahasiswa maka tidak bisa di input...'
+                msgreply='mohon maaf tidak ada diskusi diantara Dosen dan Mahasiswa maka tidak bisa di input... atau dosen dan mahasiswa kurang aktif diskusi'
             else:
                 if resultpasscode == studentid+datenow+hari:
                     if int(nilai) > 100:
