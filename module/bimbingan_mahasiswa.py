@@ -29,11 +29,10 @@ def replymsg(driver, data):
     obj = AES.new(config.key, AES.MODE_CBC, config.iv)
     cp = obj.encrypt(studentid+datenow+hari)
     passcode=cp.hex()
-    msgreply='https://api.whatsapp.com/send?phone={nomoriteung}&text=iteung%20input%20bimbingan%20{tipebimbingan}%20{npm}%0Atopik%20{topikbimbingan}%0Atarget%20selesai%20{targetselesai}%0Atarget%20selanjutnya%20{targetselanjutnya}%0Anilai%20{nilai}%0Apasscode%20{passcode}'.format(
+    msgreply='https://api.whatsapp.com/send?phone={nomoriteung}&text=iteung%20input%20bimbingan%20{tipebimbingan}%20{npm}%0Atarget%20selesai%20{targetselesai}%0Atarget%20selanjutnya%20{targetselanjutnya}%0Anilai%20{nilai}%0Apasscode%20{passcode}'.format(
         nomoriteung=config.nomor_iteung,
         tipebimbingan=tipe_bimbingan,
         npm=studentid,
-        topikbimbingan=topik,
         nilai=nilai,
         passcode=passcode,
         targetselesai=target_selesai,
