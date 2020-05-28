@@ -15,14 +15,17 @@ def replymsg(driver, data):
     wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
     wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
     wa.typeAndSendMessage(driver, wmsg)
-    vadata = getVaData(kelas.getStudentIdFromParentPhoneNumber(num))
-    virtualaccount = vadata[0]
-    jumlahygharusdibayar = vadata[1]
-    jumlahterakhirbayar = vadata[2]
-    jumlahygsudahdibayar = vadata[3]
-    waktuterakhirbayar = vadata[4].strftime('%d-%m-%Y %H:%M:%S')
-    customername=vadata[5]
-    msgreply="Nama: {customername}\nNomor virtual account: {virtualaccount}\nTotal yang harus dibayar: {jumlahygharusdibayar}\nTotal yang sudah dibayar: {jumlahygsudahdibayar}\n\nJumlah terakhir pembayaran: {jumlahterakhirbayar}\nWaktu terakhir pembayaran: {waktuterakhirbayar}".format(waktuterakhirbayar=waktuterakhirbayar, jumlahterakhirbayar=jumlahterakhirbayar, jumlahygsudahdibayar=jumlahygsudahdibayar, jumlahygharusdibayar=jumlahygharusdibayar, virtualaccount=virtualaccount, customername=customername)
+    npmmahasiswa=kelas.getStudentIdFromParentPhoneNumber(num)
+    msgreply=''
+    for i in npmmahasiswa:
+        vadata = getVaData(i[0])
+        virtualaccount = vadata[0]
+        jumlahygharusdibayar = vadata[1]
+        jumlahterakhirbayar = vadata[2]
+        jumlahygsudahdibayar = vadata[3]
+        waktuterakhirbayar = vadata[4].strftime('%d-%m-%Y %H:%M:%S')
+        customername=vadata[5]
+        msgreply+="Nama: {customername}\nNomor virtual account: {virtualaccount}\nTotal yang harus dibayar: {jumlahygharusdibayar}\nTotal yang sudah dibayar: {jumlahygsudahdibayar}\n\nJumlah terakhir pembayaran: {jumlahterakhirbayar}\nWaktu terakhir pembayaran: {waktuterakhirbayar}\n\n".format(waktuterakhirbayar=waktuterakhirbayar, jumlahterakhirbayar=jumlahterakhirbayar, jumlahygsudahdibayar=jumlahygsudahdibayar, jumlahygharusdibayar=jumlahygharusdibayar, virtualaccount=virtualaccount, customername=customername)
     return msgreply
 
 def dbConnectVA():

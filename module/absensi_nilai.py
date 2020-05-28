@@ -20,7 +20,7 @@ def replymsg(driver, data):
             npmmahasiswa=student[0]
             scores=kelas.getStudentScores(studentid=npmmahasiswa)
             studentname=scores[0][1]
-            npm='NPM: '+npm+'\n'
+            npm='NPM: '+npmmahasiswa+'\n'
             nama='Nama: '+studentname+'\n'
             jadwalid=[]
             score='\n=====NILAI=====\n'
