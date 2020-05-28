@@ -588,9 +588,9 @@ def getStudentIdFromParentPhoneNumber(num):
     with db:
         cur = db.cursor()
         cur.execute(sql)
-        rows=cur.fetchone()
+        rows=cur.fetchall()
         if rows is not None:
-            ret=rows[0]
+            ret=rows
         else:
             ret=''
     return ret
