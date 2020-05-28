@@ -1,5 +1,5 @@
 from lib import wa, reply, message, numbers
-from module import kelas
+from module import kelas, bimbingan_mahasiswa
 from datetime import datetime, timedelta
 from Crypto.Cipher import AES
 import os, config
@@ -33,9 +33,10 @@ def replymsg(driver, data):
             obj = AES.new(config.key, AES.MODE_CBC, config.iv)
             dec = bytes.fromhex(passcode)
             resultpasscode=obj.decrypt(dec).decode('utf-8')
-            datenow = datetime.date(datetime.now()).strftime('%d-%m-%Y')
-            hari = datetime.now().strftime('%A')[:6]
-            if resultpasscode == datenow+hari:
+            datenow = datetime.date(datetime.now()).strftime('%d%m%Y')
+            hari = datetime.now().strftime('%A')
+            hari = bimbingan_mahasiswa.hariSwitcher(hari)
+            if resultpasscode == studentid+datenow+hari:
                 if int(nilai) > 100:
                     msgreply='buset nilainya kaga salah itu bos?? gede benerr......'
                 else:
