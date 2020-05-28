@@ -740,6 +740,17 @@ def siapabsensiwithsql(grp, num, materi, tipe):
         attend=''
     return attend
 
+def getStudentPhoneNumberFromNPM(npm):
+    db=dbConnectSiap()
+    sql="select Handphone from simak_mst_mahasiswa where Login='{studentid}'".format(studentid=npm)
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        row=cur.fetchone()
+        if row is not None:
+            return row[0]
+        else:
+            return None
 
 def siapabsensiwithweb(driver, num, namagroup):
     try:
