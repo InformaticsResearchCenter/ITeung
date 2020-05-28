@@ -1,5 +1,5 @@
 from module import kelas, bimbingan_dosen
-from lib import reply, wa
+from lib import reply, wa, numbers
 import os
 def auth(data):
     if kelas.getKodeDosen(data[0]) == '':
@@ -13,5 +13,16 @@ def replymsg(driver, data):
     wa.typeAndSendMessage(driver, wmsg)
     startdate=bimbingan_dosen.getStartDate(data[0])
     pertemuan=bimbingan_dosen.countPertemuan(startdate)
-    msgreply='ini yaa info pertemuannya:\n\nJadwal Mulai Pertemuan: {startdate}\nPertemuan: {pertemuanke}'.format(startdate=startdate, pertemuanke=pertemuan)
+    prodi=getHomebase(data[0])
+    msgreply='ini yaa info pertemuannya:\n\nProdi: {prodi}\nJadwal Mulai Pertemuan: {startdate}\nPertemuan: {pertemuanke}'.format(prodi=prodi, startdate=startdate, pertemuanke=pertemuan)
     return msgreply
+
+def getHomebase(num):
+    num=numbers.normalize(num)
+    db=kelas.dbConnectSiap()
+    sql="select `Nama` from simak_mst_prodi WHERE ProdiID=(select Homebase from simak_mst_dosen WHERE Handphone='{phonenumber}')".format(phonenumber=num)
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        row=cur.fetchone()
+        return row[0]
