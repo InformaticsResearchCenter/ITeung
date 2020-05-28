@@ -67,7 +67,10 @@ def replymsg(driver, data):
                                 msgreply='oke sudah di input yaaa....'
                             nama=kelas.getStudentNameOnly(studentid)
                             for i in getDataBimbingan(studentid):
-                                msgreply+='\n\nNama: {nama}\nNPM: {studentid}\nTipe: {tipe}\nPertemuan: {pertemuanke}\nTopik: {topik}\nNilai: {nilai}\nPenilai: {penilai}'.format(nama=nama, studentid=i[0], tipe=i[1], pertemuanke=i[2], topik=i[3], nilai=i[4], penilai=i[5])
+                                topik=i[3].split(';')
+                                target_selesai=topik[0]
+                                target_selanjutnya=topik[1]
+                                msgreply+='\n\nNama: {nama}\nNPM: {studentid}\nTipe: {tipe}\nPertemuan: {pertemuanke}\nTarget Selesai: {targetselesai}\nTarget Selanjutnya: {targetselanjutnya}\nNilai: {nilai}\nPenilai: {penilai}'.format(nama=nama, studentid=i[0], tipe=i[1], pertemuanke=i[2], targetselesai=target_selesai, targetselanjutnya=target_selanjutnya, nilai=i[4], penilai=i[5])
                     else:
                         msgreply='passcodenya salah bosqueeeeee'
     return msgreply
