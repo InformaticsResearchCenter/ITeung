@@ -66,14 +66,15 @@ def countPertemuan(startdate):
     for i in range(10):
         if nowdate >= startdate and nowdate < startdate+timedelta(countday):
             pertemuan=i+1
-            startdate=startdate
-            enddate=startdate+timedelta(countday)
-            enddate=datetime.date(enddate)
+            mulaidate=startdate
+            akhirdate=startdate+timedelta(countday)
+            print(mulaidate)
+            print(akhirdate)
             break
         else:
             pertemuan=False
         startdate+=timedelta(countday)
-    return pertemuan, startdate, enddate
+    return pertemuan, mulaidate, akhirdate
 
 def getStartDate(num):
     num=numbers.normalize(num)
