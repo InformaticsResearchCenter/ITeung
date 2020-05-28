@@ -70,7 +70,20 @@ def replymsg(driver, data):
                                 topik=i[3].split(';')
                                 target_selesai=topik[0]
                                 target_selanjutnya=topik[1]
-                                msgreply+='\n\nNama: {nama}\nNPM: {studentid}\nTipe: {tipe}\nPertemuan: {pertemuanke}\nSudah Dikerjakan: {targetselesai}\nPekerjaan Selanjutnya: {targetselanjutnya}\nNilai: {nilai}\nPenilai: {penilai}'.format(nama=nama, studentid=i[0], tipe=i[1], pertemuanke=i[2], targetselesai=target_selesai, targetselanjutnya=target_selanjutnya, nilai=i[4], penilai=i[5])
+                                log='\n'
+                                for i in i[-1].split(';'):
+                                    log+=i+'\n'
+                                msgreply+='\n\nNama: {nama}\nNPM: {studentid}\nTipe: {tipe}\nPertemuan: {pertemuanke}\nSudah Dikerjakan: {targetselesai}\nPekerjaan Selanjutnya: {targetselanjutnya}\nNilai: {nilai}\nPenilai: {penilai}\nLog: {log}'.format(
+                                    nama=nama,
+                                    studentid=i[0],
+                                    tipe=i[1],
+                                    pertemuanke=i[2],
+                                    targetselesai=target_selesai,
+                                    targetselanjutnya=target_selanjutnya,
+                                    nilai=i[4],
+                                    penilai=i[5],
+                                    log=log
+                                )
                     else:
                         msgreply='passcodenya salah bosqueeeeee'
     return msgreply
@@ -151,7 +164,7 @@ def updateNilaiBimbingan(studentid, pertemuan, nilai, topik, logmsg):
 
 def getDataBimbingan(studentid):
     db=kelas.dbConnectSiap()
-    sql="select MhswID, Tipe, Pertemuan_, Topik, Nilai, Penilai, Tanggal from simak_croot_bimbingan where MhswID='{studentid}'".format(studentid=studentid)
+    sql="select MhswID, Tipe, Pertemuan_, Topik, Nilai, Penilai, Tanggal, Log from simak_croot_bimbingan where MhswID='{studentid}'".format(studentid=studentid)
     with db:
         cur=db.cursor()
         cur.execute(sql)
