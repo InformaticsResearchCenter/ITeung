@@ -37,9 +37,11 @@ def replymsg(driver, data):
             hari = datetime.now().strftime('%A')
             hari = bimbingan_mahasiswa.hariSwitcher(hari)
             studentphonenumber=kelas.getStudentPhoneNumberFromNPM(studentid)
+            studentphonenumber=normalizePhoneNumberToWhatsappVersion(studentphonenumber)
             logmsg=''
             for i in getLogMessageStudent(datemulai, dateakhir, kelas.getKodeDosen(num), studentphonenumber):
-                logmsg+=i[0]+';'
+                if i[0] != '':
+                    logmsg+=i[0]+';'
             if logmsg=='':
                 msgreply='mohon maaf tidak ada diskusi diantara Dosen dan Mahasiswa maka tidak bisa di input... atau dosen dan mahasiswa kurang aktif diskusi'
             else:
