@@ -74,8 +74,8 @@ def replymsg(driver, data):
                                 datalog=datalog.split(';')
                                 print(datalog)
                                 log=''
-                                for i in datalog:
-                                    log+=i+'\n'
+                                for j in datalog:
+                                    log+=j+'\n'
                                 msgreply+='\n\nNama: {nama}\nNPM: {studentid}\nTipe: {tipe}\nPertemuan: {pertemuanke}\nSudah Dikerjakan: {targetselesai}\nPekerjaan Selanjutnya: {targetselanjutnya}\nNilai: {nilai}\nPenilai: {penilai}\nLog: {log}'.format(
                                     nama=nama,
                                     studentid=i[0],
