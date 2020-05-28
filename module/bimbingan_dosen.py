@@ -70,8 +70,11 @@ def replymsg(driver, data):
                                 topik=i[3].split(';')
                                 target_selesai=topik[0]
                                 target_selanjutnya=topik[1]
-                                log='\n'
-                                for i in i[-1].split(';'):
+                                datalog=i[7]
+                                datalog=datalog.split(';')
+                                print(datalog)
+                                log=''
+                                for i in datalog:
                                     log+=i+'\n'
                                 msgreply+='\n\nNama: {nama}\nNPM: {studentid}\nTipe: {tipe}\nPertemuan: {pertemuanke}\nSudah Dikerjakan: {targetselesai}\nPekerjaan Selanjutnya: {targetselanjutnya}\nNilai: {nilai}\nPenilai: {penilai}\nLog: {log}'.format(
                                     nama=nama,
