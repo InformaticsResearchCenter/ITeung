@@ -17,10 +17,11 @@ def replymsg(driver, data):
     num=data[0]
     msg=data[3]
     msg=message.normalize(msg)
-    startdate=datetime.date(getStartDate(num))
-    if startdate=='NULL' or startdate=='':
+    datefromdatabasehomebase=getStartDate(num)
+    if datefromdatabasehomebase is None:
         msgreply='wahhh kayaknya jadwal start bimbingannya belum diset sama kaprodi kamu deehhhh, coba minta di setting dulu jadwalnya....'
     else:
+        startdate = datetime.date(datefromdatabasehomebase)
         pertemuan, datemulai, dateakhir=countPertemuan(startdate)
         if pertemuan==False:
             msgreply='yahhh pertemuannya udah kelewat batasss, yang sabar yaaaaaa..... :('
@@ -88,6 +89,8 @@ def getStartDate(num):
         row=cur.fetchone()
         if row is not None:
             ret=row[0]
+        else:
+            ret=None
     return ret
 
 def insertBimbingan(studentid, lecturerid, tipe, pertemuan, nilai, topik, logmsg):
