@@ -1,5 +1,6 @@
 from module import kelas, bimbingan_dosen
 from lib import reply, wa, numbers
+from datetime import datetime
 import os
 def auth(data):
     if kelas.getKodeDosen(data[0]) == '':
@@ -11,7 +12,7 @@ def auth(data):
 def replymsg(driver, data):
     wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
     wa.typeAndSendMessage(driver, wmsg)
-    startdate=bimbingan_dosen.getStartDate(data[0])
+    startdate=datetime.date(bimbingan_dosen.getStartDate(data[0]))
     pertemuan=bimbingan_dosen.countPertemuan(startdate)
     prodi=getHomebase(data[0])
     msgreply='ini yaa info pertemuannya:\n\nProdi: {prodi}\nJadwal Mulai Pertemuan: {startdate}\nPertemuan: {pertemuanke}'.format(prodi=prodi, startdate=startdate, pertemuanke=pertemuan)
