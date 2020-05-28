@@ -16,28 +16,35 @@ def replymsg(driver, data):
     wa.typeAndSendMessage(driver, wmsg)
     msg=data[3]
     msg=message.normalize(msg)
-    tipe_bimbingan=msg.split('bimbingan ')[1].split(' target selesai')[0]
-    studentid=kelas.getNpmandNameMahasiswa(data[0])[0]
-    # topik=msg.split('topik ')[1].split(' nilai')[0].replace(' ', '%20')
-    # pertemuan=msg.split('pertemuan ')[1].split(' nilai')[0]
-    target_selesai = msg.split('target selesai ')[1].split(' target selanjutnya')[0].replace(' ', '%20')
-    terget_selanjutnya = msg.split('target selanjutnya ')[1].split(' nilai')[0].replace(' ', '%20')
-    nilai=msg.split('nilai ')[1]
-    datenow = datetime.date(datetime.now()).strftime('%d%m%Y')
-    hari = datetime.now().strftime('%A')
-    hari = hariSwitcher(hari)
-    obj = AES.new(config.key, AES.MODE_CBC, config.iv)
-    cp = obj.encrypt(studentid+datenow+hari)
-    passcode=cp.hex()
-    msgreply='https://api.whatsapp.com/send?phone={nomoriteung}&text=iteung%20input%20bimbingan%20{tipebimbingan}%20{npm}%0Atarget%20selesai%20{targetselesai}%0Atarget%20selanjutnya%20{targetselanjutnya}%0Anilai%20{nilai}%0Apasscode%20{passcode}'.format(
-        nomoriteung=config.nomor_iteung,
-        tipebimbingan=tipe_bimbingan,
-        npm=studentid,
-        nilai=nilai,
-        passcode=passcode,
-        targetselesai=target_selesai,
-        targetselanjutnya=terget_selanjutnya
-    )
+    successsplit=''
+    try:
+        tipe_bimbingan=msg.split('bimbingan ')[1].split(' target selesai')[0]
+        studentid=kelas.getNpmandNameMahasiswa(data[0])[0]
+        # topik=msg.split('topik ')[1].split(' nilai')[0].replace(' ', '%20')
+        # pertemuan=msg.split('pertemuan ')[1].split(' nilai')[0]
+        target_selesai = msg.split('target selesai ')[1].split(' target selanjutnya')[0].replace(' ', '%20')
+        terget_selanjutnya = msg.split('target selanjutnya ')[1].split(' nilai')[0].replace(' ', '%20')
+        nilai=msg.split('nilai ')[1]
+    except:
+        successsplit='error'
+    if successsplit == 'error':
+        msgreply='wahh salah keyword bosqqq'
+    else:
+        datenow = datetime.date(datetime.now()).strftime('%d%m%Y')
+        hari = datetime.now().strftime('%A')
+        hari = hariSwitcher(hari)
+        obj = AES.new(config.key, AES.MODE_CBC, config.iv)
+        cp = obj.encrypt(studentid+datenow+hari)
+        passcode=cp.hex()
+        msgreply='https://api.whatsapp.com/send?phone={nomoriteung}&text=iteung%20input%20bimbingan%20{tipebimbingan}%20{npm}%0Atarget%20selesai%20{targetselesai}%0Atarget%20selanjutnya%20{targetselanjutnya}%0Anilai%20{nilai}%0Apasscode%20{passcode}'.format(
+            nomoriteung=config.nomor_iteung,
+            tipebimbingan=tipe_bimbingan,
+            npm=studentid,
+            nilai=nilai,
+            passcode=passcode,
+            targetselesai=target_selesai,
+            targetselanjutnya=terget_selanjutnya
+        )
     return msgreply
 
 def hariSwitcher(hari):

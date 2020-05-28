@@ -26,43 +26,50 @@ def replymsg(driver, data):
         if pertemuan==False:
             msgreply='yahhh pertemuannya udah kelewat batasss, yang sabar yaaaaaa..... :('
         else:
-            studentid = msg.split('bimbingan ')[1].split(' ')[1]
-            tipe=msg.split('bimbingan ')[1].split(' ')[0]
-            target_selesai=msg.split('target selesai ')[1].split(' target selanjutnya')[0]
-            terget_selanjutnya=msg.split('target selanjutnya ')[1].split(' nilai')[0]
-            topik=target_selesai+';'+terget_selanjutnya
-            nilai=msg.split('nilai ')[1].split(' passcode')[0]
-            passcode=msg.split('passcode ')[1]
-            obj = AES.new(config.key, AES.MODE_CBC, config.iv)
-            dec = bytes.fromhex(passcode)
-            resultpasscode=obj.decrypt(dec).decode('utf-8')
-            datenow = datetime.date(datetime.now()).strftime('%d%m%Y')
-            hari = datetime.now().strftime('%A')
-            hari = bimbingan_mahasiswa.hariSwitcher(hari)
-            studentphonenumber=kelas.getStudentPhoneNumberFromNPM(studentid)
-            studentphonenumber=normalizePhoneNumberToWhatsappVersion(studentphonenumber)
-            logmsg=''
-            for i in getLogMessageStudent(datemulai, dateakhir, kelas.getKodeDosen(num), studentphonenumber):
-                if i[0] != '':
-                    logmsg+=i[0]+';'
-            if logmsg=='':
-                msgreply='mohon maaf tidak ada diskusi diantara Dosen dan Mahasiswa maka tidak bisa di input... atau dosen dan mahasiswa kurang aktif diskusi'
+            successsplit=''
+            try:
+                studentid = msg.split('bimbingan ')[1].split(' ')[1]
+                tipe=msg.split('bimbingan ')[1].split(' ')[0]
+                target_selesai=msg.split('target selesai ')[1].split(' target selanjutnya')[0]
+                terget_selanjutnya=msg.split('target selanjutnya ')[1].split(' nilai')[0]
+                topik=target_selesai+';'+terget_selanjutnya
+                nilai=msg.split('nilai ')[1].split(' passcode')[0]
+                passcode=msg.split('passcode ')[1]
+            except:
+                successsplit='error'
+            if successsplit == 'error':
+                msgreply='wahhhh salah nih keywordnya coba diperbaikin deh....'
             else:
-                if resultpasscode == studentid+datenow+hari:
-                    if int(nilai) > 100:
-                        msgreply='buset nilainya kaga salah itu bos?? gede benerr......'
-                    else:
-                        if isSudahInputBimbingan(studentid, pertemuan):
-                            updateNilaiBimbingan(studentid=studentid, nilai=nilai, topik=topik, pertemuan=pertemuan, logmsg=logmsg)
-                            msgreply='oke sudah iteung update yaaa nilainya.....'
-                        else:
-                            insertBimbingan(studentid=studentid, lecturerid=kelas.getKodeDosen(num), tipe=tipe, topik=topik, nilai=nilai, pertemuan=pertemuan, logmsg=logmsg)
-                            msgreply='oke sudah di input yaaa....'
-                        nama=kelas.getStudentNameOnly(studentid)
-                        for i in getDataBimbingan(studentid):
-                            msgreply+='\n\nNama: {nama}\nNPM: {studentid}\nTipe: {tipe}\nPertemuan: {pertemuanke}\nTopik: {topik}\nNilai: {nilai}\nPenilai: {penilai}'.format(nama=nama, studentid=i[0], tipe=i[1], pertemuanke=i[2], topik=i[3], nilai=i[4], penilai=i[5])
+                obj = AES.new(config.key, AES.MODE_CBC, config.iv)
+                dec = bytes.fromhex(passcode)
+                resultpasscode=obj.decrypt(dec).decode('utf-8')
+                datenow = datetime.date(datetime.now()).strftime('%d%m%Y')
+                hari = datetime.now().strftime('%A')
+                hari = bimbingan_mahasiswa.hariSwitcher(hari)
+                studentphonenumber=kelas.getStudentPhoneNumberFromNPM(studentid)
+                studentphonenumber=normalizePhoneNumberToWhatsappVersion(studentphonenumber)
+                logmsg=''
+                for i in getLogMessageStudent(datemulai, dateakhir, kelas.getKodeDosen(num), studentphonenumber):
+                    if i[0] != '':
+                        logmsg+=i[0]+';'
+                if logmsg=='':
+                    msgreply='mohon maaf tidak ada diskusi diantara Dosen dan Mahasiswa maka tidak bisa di input... atau dosen dan mahasiswa kurang aktif diskusi'
                 else:
-                    msgreply='passcodenya salah bosqueeeeee'
+                    if resultpasscode == studentid+datenow+hari:
+                        if int(nilai) > 100:
+                            msgreply='buset nilainya kaga salah itu bos?? gede benerr......'
+                        else:
+                            if isSudahInputBimbingan(studentid, pertemuan):
+                                updateNilaiBimbingan(studentid=studentid, nilai=nilai, topik=topik, pertemuan=pertemuan, logmsg=logmsg)
+                                msgreply='oke sudah iteung update yaaa nilainya.....'
+                            else:
+                                insertBimbingan(studentid=studentid, lecturerid=kelas.getKodeDosen(num), tipe=tipe, topik=topik, nilai=nilai, pertemuan=pertemuan, logmsg=logmsg)
+                                msgreply='oke sudah di input yaaa....'
+                            nama=kelas.getStudentNameOnly(studentid)
+                            for i in getDataBimbingan(studentid):
+                                msgreply+='\n\nNama: {nama}\nNPM: {studentid}\nTipe: {tipe}\nPertemuan: {pertemuanke}\nTopik: {topik}\nNilai: {nilai}\nPenilai: {penilai}'.format(nama=nama, studentid=i[0], tipe=i[1], pertemuanke=i[2], topik=i[3], nilai=i[4], penilai=i[5])
+                    else:
+                        msgreply='passcodenya salah bosqueeeeee'
     return msgreply
 
 def countPertemuan(startdate):
