@@ -21,7 +21,7 @@ def replymsg(driver, data):
     if startdate=='NULL' or startdate=='':
         msgreply='wahhh kayaknya jadwal start bimbingannya belum diset sama kaprodi kamu deehhhh, coba minta di setting dulu jadwalnya....'
     else:
-        pertemuan=countPertemuan(startdate)
+        pertemuan, datemulai, dateakhir=countPertemuan(startdate)
         if pertemuan==False:
             msgreply='yahhh pertemuannya udah kelewat batasss, yang sabar yaaaaaa..... :('
         else:
@@ -36,15 +36,19 @@ def replymsg(driver, data):
             datenow = datetime.date(datetime.now()).strftime('%d%m%Y')
             hari = datetime.now().strftime('%A')
             hari = bimbingan_mahasiswa.hariSwitcher(hari)
+            studentphonenumber=kelas.getStudentPhoneNumberFromNPM(studentid)
+            logmsg=''
+            for i in getLogMessageStudent(datemulai, dateakhir, kelas.getKodeDosen(num), studentphonenumber):
+                logmsg+=i[0]+';'
             if resultpasscode == studentid+datenow+hari:
                 if int(nilai) > 100:
                     msgreply='buset nilainya kaga salah itu bos?? gede benerr......'
                 else:
                     if isSudahInputBimbingan(studentid, pertemuan):
-                        updateNilaiBimbingan(studentid=studentid, nilai=nilai, topik=topik, pertemuan=pertemuan)
+                        updateNilaiBimbingan(studentid=studentid, nilai=nilai, topik=topik, pertemuan=pertemuan, logmsg=logmsg)
                         msgreply='oke sudah iteung update yaaa nilainya.....'
                     else:
-                        insertBimbingan(studentid=studentid, lecturerid=kelas.getKodeDosen(num), tipe=tipe, topik=topik, nilai=nilai, pertemuan=pertemuan, )
+                        insertBimbingan(studentid=studentid, lecturerid=kelas.getKodeDosen(num), tipe=tipe, topik=topik, nilai=nilai, pertemuan=pertemuan, logmsg=logmsg)
                         msgreply='oke sudah di input yaaa....'
                     nama=kelas.getStudentNameOnly(studentid)
                     for i in getDataBimbingan(studentid):
@@ -59,11 +63,13 @@ def countPertemuan(startdate):
     for i in range(10):
         if nowdate >= startdate and nowdate < startdate+timedelta(countday):
             pertemuan=i+1
+            startdate=startdate
+            enddate=startdate+timedelta(countday)
             break
         else:
             pertemuan=False
         startdate+=timedelta(countday)
-    return pertemuan
+    return pertemuan, startdate, enddate
 
 def getStartDate(num):
     num=numbers.normalize(num)
@@ -77,9 +83,9 @@ def getStartDate(num):
             ret=row[0]
     return ret
 
-def insertBimbingan(studentid, lecturerid, tipe, pertemuan, nilai, topik):
+def insertBimbingan(studentid, lecturerid, tipe, pertemuan, nilai, topik, logmsg):
     db=kelas.dbConnectSiap()
-    sql="INSERT INTO `simpati`.`simak_croot_bimbingan`(`kodepertemuan`, `MhswID`, `DosenID`, `TahunID`, `Tipe`, `Pertemuan_`, `Nilai`, `Topik`, `Tanggal`, `Penilai`) VALUES (DEFAULT, '{studentid}', '{lecturerid}', '{tahunid}', '{tipe}', {pertemuan}, {nilai}, '{topik}', '{tanggal}', '{penilai}')".format(
+    sql="INSERT INTO `simpati`.`simak_croot_bimbingan`(`kodepertemuan`, `MhswID`, `DosenID`, `TahunID`, `Tipe`, `Pertemuan_`, `Nilai`, `Topik`, `Tanggal`, `Penilai`, `Log`) VALUES (DEFAULT, '{studentid}', '{lecturerid}', '{tahunid}', '{tipe}', {pertemuan}, {nilai}, '{topik}', '{tanggal}', '{penilai}', '{logmsg}')".format(
         studentid=studentid,
         lecturerid=lecturerid,
         penilai=lecturerid,
@@ -88,7 +94,8 @@ def insertBimbingan(studentid, lecturerid, tipe, pertemuan, nilai, topik):
         nilai=nilai,
         topik=topik,
         tanggal=datetime.now(),
-        pertemuan=pertemuan
+        pertemuan=pertemuan,
+        logmsg=logmsg
     )
     with db:
         cur=db.cursor()
@@ -106,14 +113,15 @@ def isSudahInputBimbingan(studentid, pertemuan):
         else:
             return False
 
-def updateNilaiBimbingan(studentid, pertemuan, nilai, topik):
+def updateNilaiBimbingan(studentid, pertemuan, nilai, topik, logmsg):
     db=kelas.dbConnectSiap()
-    sql="UPDATE `simpati`.`simak_croot_bimbingan` SET `Nilai` = {nilai}, `Topik` = '{topik}', `Tanggal` = '{datenow}' WHERE `MhswID` = {studentid} and `Pertemuan_`={pertemuanke}".format(
+    sql="UPDATE `simpati`.`simak_croot_bimbingan` SET `Nilai` = {nilai}, `Topik` = '{topik}', `Tanggal` = '{datenow}', `Log` = '{logmsg}' WHERE `MhswID` = {studentid} and `Pertemuan_`={pertemuanke}".format(
         nilai=nilai,
         topik=topik,
         datenow=datetime.now(),
         studentid=studentid,
-        pertemuanke=pertemuan
+        pertemuanke=pertemuan,
+        logmsg=logmsg
     )
     with db:
         cur=db.cursor()
@@ -127,3 +135,28 @@ def getDataBimbingan(studentid):
         cur.execute(sql)
         row=cur.fetchall()
     return row
+
+def getLogMessageStudent(startdate, enddate, dosenid, phonenumber):
+    db=kelas.dbConnect()
+    sql="SELECT message FROM log WHERE timestamps >= '{startdate}' AND timestamps <= '{enddate}' AND number = '{phonenumber}' AND groupname='BIMBINGAN-{dosenid}'".format(
+        startdate=startdate,
+        enddate=enddate,
+        phonenumber=phonenumber,
+        dosenid=dosenid
+    )
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        row=cur.fetchall()
+        if row is not None:
+            return row
+        else:
+            return None
+
+def normalizePhoneNumberToWhatsappVersion(num):
+    abc=num
+    firstnumbersplit=2
+    secondnumbersplit=5
+    thirdnumbersplit=9
+    fixnumber='+'+abc[:2]+' '+abc[firstnumbersplit:secondnumbersplit]+'-'+abc[secondnumbersplit:thirdnumbersplit]+'-'+abc[thirdnumbersplit:]
+    return fixnumber
