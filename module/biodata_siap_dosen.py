@@ -21,7 +21,7 @@ def replymsg(driver, data):
 def getDataDosen(num):
     db=kelas.dbConnectSiap()
     num=numbers.normalize(num)
-    sql="select Login, Nama, Handphone, Email form simak_mst_dosen where Handphone='{num}'".format(num=num)
+    sql="select Login, Nama, Handphone, Email from simak_mst_dosen where Handphone='{num}'".format(num=num)
     with db:
         cur=db.cursor()
         cur.execute(sql)
