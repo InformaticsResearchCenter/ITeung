@@ -28,7 +28,9 @@ def replymsg(driver, data):
         else:
             studentid = msg.split('bimbingan ')[1].split(' ')[1]
             tipe=msg.split('bimbingan ')[1].split(' ')[0]
-            topik=msg.split('topik ')[1].split(' nilai')[0]
+            target_selesai=msg.split('target selesai ')[1].split(' target selanjutnya')[0]
+            terget_selanjutnya=msg.split('target selanjutnya ')[1].split(' nilai')[0]
+            topik=target_selesai+';'+terget_selanjutnya
             nilai=msg.split('nilai ')[1].split(' passcode')[0]
             passcode=msg.split('passcode ')[1]
             obj = AES.new(config.key, AES.MODE_CBC, config.iv)

@@ -20,6 +20,8 @@ def replymsg(driver, data):
     studentid=kelas.getNpmandNameMahasiswa(data[0])[0]
     topik=msg.split('topik ')[1].split(' nilai')[0].replace(' ', '%20')
     # pertemuan=msg.split('pertemuan ')[1].split(' nilai')[0]
+    target_selesai = msg.split('target selesai ')[1].split(' target selanjutnya')[0]
+    terget_selanjutnya = msg.split('target selanjutnya ')[1].split(' nilai')[0]
     nilai=msg.split('nilai ')[1]
     datenow = datetime.date(datetime.now()).strftime('%d%m%Y')
     hari = datetime.now().strftime('%A')
@@ -27,13 +29,15 @@ def replymsg(driver, data):
     obj = AES.new(config.key, AES.MODE_CBC, config.iv)
     cp = obj.encrypt(studentid+datenow+hari)
     passcode=cp.hex()
-    msgreply='https://api.whatsapp.com/send?phone={nomoriteung}&text=iteung%20input%20bimbingan%20{tipebimbingan}%20{npm}%0Atopik%20{topikbimbingan}%0Anilai%20{nilai}%0Apasscode%20{passcode}'.format(
+    msgreply='https://api.whatsapp.com/send?phone={nomoriteung}&text=iteung%20input%20bimbingan%20{tipebimbingan}%20{npm}%0Atopik%20{topikbimbingan}%0Atarget%20selesai%20{targetselesai}%0Atarget%20selanjutnya%20{targetselanjutnya}%0Anilai%20{nilai}%0Apasscode%20{passcode}'.format(
         nomoriteung=config.nomor_iteung,
         tipebimbingan=tipe_bimbingan,
         npm=studentid,
         topikbimbingan=topik,
         nilai=nilai,
-        passcode=passcode
+        passcode=passcode,
+        targetselesai=target_selesai,
+        targetselanjutnya=terget_selanjutnya
     )
     return msgreply
 
