@@ -30,8 +30,8 @@ def replymsg(driver, data):
             try:
                 studentid = msg.split('bimbingan ')[1].split(' ')[1]
                 tipe=msg.split('bimbingan ')[1].split(' ')[0]
-                target_selesai=msg.split('target selesai ')[1].split(' target selanjutnya')[0]
-                terget_selanjutnya=msg.split('target selanjutnya ')[1].split(' nilai')[0]
+                target_selesai=msg.split('sudah dikerjakan ')[1].split(' pekerjaan selanjutnya')[0]
+                terget_selanjutnya=msg.split('pekerjaan selanjutnya ')[1].split(' nilai')[0]
                 topik=target_selesai+';'+terget_selanjutnya
                 nilai=msg.split('nilai ')[1].split(' passcode')[0]
                 passcode=msg.split('passcode ')[1]
@@ -70,7 +70,7 @@ def replymsg(driver, data):
                                 topik=i[3].split(';')
                                 target_selesai=topik[0]
                                 target_selanjutnya=topik[1]
-                                msgreply+='\n\nNama: {nama}\nNPM: {studentid}\nTipe: {tipe}\nPertemuan: {pertemuanke}\nTarget Selesai: {targetselesai}\nTarget Selanjutnya: {targetselanjutnya}\nNilai: {nilai}\nPenilai: {penilai}'.format(nama=nama, studentid=i[0], tipe=i[1], pertemuanke=i[2], targetselesai=target_selesai, targetselanjutnya=target_selanjutnya, nilai=i[4], penilai=i[5])
+                                msgreply+='\n\nNama: {nama}\nNPM: {studentid}\nTipe: {tipe}\nPertemuan: {pertemuanke}\nSudah Dikerjakan: {targetselesai}\nPekerjaan Selanjutnya: {targetselanjutnya}\nNilai: {nilai}\nPenilai: {penilai}'.format(nama=nama, studentid=i[0], tipe=i[1], pertemuanke=i[2], targetselesai=target_selesai, targetselanjutnya=target_selanjutnya, nilai=i[4], penilai=i[5])
                     else:
                         msgreply='passcodenya salah bosqueeeeee'
     return msgreply
