@@ -72,10 +72,6 @@ def replymsg(driver, data):
                                 target_selanjutnya=topik[1]
                                 datalog=i[7]
                                 datalog=datalog.split(';')
-                                print(datalog)
-                                log=''
-                                for j in datalog:
-                                    log+=j+'\n'
                                 msgreply+='\n\nNama: {nama}\nNPM: {studentid}\nTipe: {tipe}\nPertemuan: {pertemuanke}\nSudah Dikerjakan: {targetselesai}\nPekerjaan Selanjutnya: {targetselanjutnya}\nNilai: {nilai}\nPenilai: {penilai}\nLog: {log}'.format(
                                     nama=nama,
                                     studentid=i[0],
@@ -85,7 +81,7 @@ def replymsg(driver, data):
                                     targetselanjutnya=target_selanjutnya,
                                     nilai=i[4],
                                     penilai=i[5],
-                                    log=log
+                                    log=str(len(datalog))
                                 )
                     else:
                         msgreply='passcodenya salah bosqueeeeee'
