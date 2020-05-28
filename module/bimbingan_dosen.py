@@ -72,7 +72,7 @@ def replymsg(driver, data):
                                 target_selanjutnya=topik[1]
                                 datalog=i[7]
                                 datalog=datalog.split(';')
-                                msgreply+='\n\nNama: {nama}\nNPM: {studentid}\nTipe: {tipe}\nPertemuan: {pertemuanke}\nSudah Dikerjakan: {targetselesai}\nPekerjaan Selanjutnya: {targetselanjutnya}\nNilai: {nilai}\nPenilai: {penilai}\nLog: {log}'.format(
+                                msgreply+='\n\nNama: {nama}\nNPM: {studentid}\nTipe: {tipe}\nPertemuan: {pertemuanke}\nSudah Dikerjakan: {targetselesai}\nPekerjaan Selanjutnya: {targetselanjutnya}\nNilai: {nilai}\nPenilai: {penilai}\nJumlah Percakapan: {log}'.format(
                                     nama=nama,
                                     studentid=i[0],
                                     tipe=i[1],
