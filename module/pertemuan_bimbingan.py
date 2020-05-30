@@ -15,7 +15,7 @@ def replymsg(driver, data):
     startdate=datetime.date(bimbingan_dosen.getStartDate(data[0]))
     pertemuan=bimbingan_dosen.countPertemuan(startdate)
     prodi=getHomebase(data[0])
-    msgreply='ini yaa info pertemuannya:\n\nProdi: {prodi}\nJadwal Mulai Pertemuan: {startdate}\nPertemuan: {pertemuanke}'.format(prodi=prodi, startdate=startdate, pertemuanke=pertemuan)
+    msgreply='ini yaa info pertemuannya:\n\nProdi: {prodi}\nJadwal Mulai Pertemuan: {startdate}\nPertemuan: {pertemuanke}'.format(prodi=prodi, startdate=startdate, pertemuanke=pertemuan[0])
     return msgreply
 
 def getHomebase(num):
