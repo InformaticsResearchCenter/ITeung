@@ -14,7 +14,7 @@ def replymsg(driver, data):
     wa.typeAndSendMessage(driver, wmsg)
     studentid=kelas.getNpmandNameMahasiswa(data[0])[0]
     databimbingan=bimbingan_dosen.getDataBimbingan(studentid)
-    if databimbingan == None:
+    if databimbingan == ():
         msgreply='mohon maaf data tidak dapat ditemukan...'
     else:
         msgreply='ini yaaa data bimbingannya ....'
