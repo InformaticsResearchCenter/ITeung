@@ -37,7 +37,7 @@ def replymsg(driver, data):
             obj = AES.new(config.key, AES.MODE_CBC, config.iv)
             cp = obj.encrypt(studentid+datenow+hari)
             passcode=cp.hex()
-            msgreply='https://api.whatsapp.com/send?phone={nomoriteung}&text=iteung%20input%20bimbingan%20{tipebimbingan}%20{npm}%0Asudah%20dikerjakan%20{targetselesai}%0Apekerjaan%20selanjutnya%20{targetselanjutnya}%0Anilai%20{nilai}%0Apasscode%20{passcode}'.format(
+            msgreply='Mohon untuk klik link berikut untuk konfirmasi bimbingan:\n\nhttps://api.whatsapp.com/send?phone={nomoriteung}&text=iteung%20input%20bimbingan%20{tipebimbingan}%20{npm}%0Asudah%20dikerjakan%20{targetselesai}%0Apekerjaan%20selanjutnya%20{targetselanjutnya}%0Anilai%20{nilai}%0Apasscode%20{passcode}'.format(
                 nomoriteung=config.nomor_iteung,
                 tipebimbingan=tipe_bimbingan,
                 npm=studentid,
