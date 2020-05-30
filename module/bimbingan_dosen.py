@@ -66,25 +66,29 @@ def replymsg(driver, data):
                                 insertBimbingan(studentid=studentid, lecturerid=kelas.getKodeDosen(num), tipe=tipe, topik=topik, nilai=nilai, pertemuan=pertemuan, logmsg=logmsg)
                                 msgreply='oke sudah di input yaaa....'
                             nama=kelas.getStudentNameOnly(studentid)
-                            for i in getDataBimbingan(studentid):
-                                topik=i[3].split(';')
-                                target_selesai=topik[0]
-                                target_selanjutnya=topik[1]
-                                datalog=i[7]
-                                datalog=datalog.split(';')
-                                namadosen=kelas.getNamaDosen(i[5])
-                                msgreply+='\n\nNama: {nama}\nNPM: {studentid}\nTipe: {tipe}\nPertemuan: {pertemuanke}\nSudah Dikerjakan: {targetselesai}\nPekerjaan Selanjutnya: {targetselanjutnya}\nNilai: {nilai}\nPenilai: {penilai} / {namadosen}\nJumlah Percakapan: {log}'.format(
-                                    nama=nama,
-                                    studentid=i[0],
-                                    tipe=i[1],
-                                    pertemuanke=i[2],
-                                    targetselesai=target_selesai,
-                                    targetselanjutnya=target_selanjutnya,
-                                    nilai=i[4],
-                                    penilai=i[5],
-                                    log=str(len(datalog)),
-                                    namadosen=namadosen
-                                )
+                            databimbingan=getDataBimbingan(studentid)
+                            if databimbingan == None:
+                                msgreply='maaf data bimbingan tidak dapat ditemukan'
+                            else:
+                                for i in databimbingan:
+                                    topik=i[3].split(';')
+                                    target_selesai=topik[0]
+                                    target_selanjutnya=topik[1]
+                                    datalog=i[7]
+                                    datalog=datalog.split(';')
+                                    namadosen=kelas.getNamaDosen(i[5])
+                                    msgreply+='\n\nNama: {nama}\nNPM: {studentid}\nTipe: {tipe}\nPertemuan: {pertemuanke}\nSudah Dikerjakan: {targetselesai}\nPekerjaan Selanjutnya: {targetselanjutnya}\nNilai: {nilai}\nPenilai: {penilai} / {namadosen}\nJumlah Percakapan: {log}'.format(
+                                        nama=nama,
+                                        studentid=i[0],
+                                        tipe=i[1],
+                                        pertemuanke=i[2],
+                                        targetselesai=target_selesai,
+                                        targetselanjutnya=target_selanjutnya,
+                                        nilai=i[4],
+                                        penilai=i[5],
+                                        log=str(len(datalog)),
+                                        namadosen=namadosen
+                                    )
                     else:
                         msgreply='passcodenya salah bosqueeeeee'
     return msgreply
@@ -170,7 +174,11 @@ def getDataBimbingan(studentid):
         cur=db.cursor()
         cur.execute(sql)
         row=cur.fetchall()
-    return row
+        if row is not None:
+            ret=row
+        else:
+            ret=None
+    return ret
 
 def getLogMessageStudent(startdate, enddate, dosenid, phonenumber):
     db=kelas.dbConnect()
