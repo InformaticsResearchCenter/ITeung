@@ -1,5 +1,3 @@
-from module import kelas
-from lib import wa, reply
 from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
@@ -27,6 +25,12 @@ import threading
 from openpyxl.styles import Alignment
 from openpyxl.styles import Font
 
+from lib import reply
+import os
+from lib import wa
+from module import kelas
+from lib import wa, numbers
+
 
 def auth(data):
     if kelas.getKodeDosen(data[0]) == '':
@@ -38,27 +42,27 @@ def auth(data):
 
 def replymsg(driver, data):
     if kelas.cekSiap():
-        kodedosen = kelas.getKodeDosen(data[0])
-        wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
-        wmsg = wmsg.replace('#EMAIL#', getEmailDosen(kodedosen))
-        wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
+        wmsg = reply.getWaitingMessage(
+            os.path.basename(__file__).split('.')[0])
         wa.typeAndSendMessage(driver, wmsg)
-        subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],kodedosen],
-                         cwd=config.cwd)
+        num = data[0]
+        num = numbers.normalize(num)
+        msg = data[3]
+        data = msg.split(' ')
+        try:
+            param = {
+                'nomor': num,
+                'tahun': kelas.getTahunID(),
+            }
+            makeExcelAndSend(param)
+            msgreply = 'Ditunggu bos.....\nNtar dikirim ke email semua filenya....'
+        except:
+            msgreply = 'Salah keyword beb....., atau salah masukin jadwal uas atau uts'
     else:
-        wa.typeAndSendMessage(
-            driver, 'Mohon maaf server Akademik SIAP sedang dalam kondisi DOWN, mohon untuk menginformasikan ke ADMIN dan tunggu hingga beberapa menit kemudian, lalu ulangi kembali, terima kasih....')
-    return ''
+        msgreply = 'Mohon maaf server Akademik SIAP sedang dalam kondisi DOWN, mohon untuk menginformasikan ke ADMIN dan tunggu hingga beberapa menit kemudian, lalu ulangi kembali, terima kasih....'
+    return msgreply
 
-def run(kodedosen):
-    param = {
-        'dosen': kodedosen,
-        'tahun': kelas.getTahunID(),
-        'jenis': config.jenis_ujian,
-        'program': config.jalur_program
-    }
-    makeExcelAndSend(param)
-    
+
 def dbConnectSiap():
     db = pymysql.connect(config.db_host_siap,
                          config.db_username_siap,
@@ -67,10 +71,26 @@ def dbConnectSiap():
     return db
 
 
-def getHeaderAbsensi(jadwalID):
+def checkDosen(nomor, tahun):
+    db = dbConnectSiap()
+    query = """
+            select distinct(Nama) from simak_trn_jadwal where DosenID = (select Login from simak_mst_dosen where Handphone = '""" + nomor + """') and TahunID = '""" + tahun + """'
+        """
+    with db:
+        cur = db.cursor()
+        cur.execute(query)
+        rows = cur.fetchall()
+        if cur.rowcount > 0:
+            for row in rows:
+                return row[0]
+        else:
+            return False
+
+
+def getHeaderTugas(jadwalID):
     db = dbConnectSiap()
     sql = """
-            select j.MKKode, j.Nama, j.NamaKelas, concat(d.Nama,', ',d.Gelar) as Pengajar, date_format(j.UTSTanggal,'%d-%m-%Y') as Tanggal, time_format(j.UTSJamMulai,'%H:%i') as JamMulai, time_format(j.UTSJamSelesai,'%H:%i') as JamSelesai, r.Nama as Ruang, j.JumlahMhsw from simak_trn_jadwal j, simak_mst_dosen d, simak_mst_matakuliah m, simak_mst_ruangan r, simak_mst_tahun t, simak_mst_prodi pr where j.JadwalID='"""+jadwalID+"""' and j.MKID=m.MKID and j.DosenID=d.Login and j.RuangID=r.RuangID and j.TahunID=t.TahunID and t.ProgramID='REG' and m.ProdiID = pr.ProdiID group by j.JadwalID;
+            select j.JadwalID, j.MKKode, j.Nama, j.NamaKelas, concat(d.Nama, ', ', d.Gelar) as Pengajar, time_format(j.JamMulai, '%H:%i') as JamMulai, time_format(j.JamSelesai, '%H:%i') as JamSelesai, r.Nama as Ruang, j.JumlahMhsw from simak_trn_jadwal j, simak_mst_dosen d, simak_mst_matakuliah m, simak_mst_ruangan r, simak_mst_tahun t, simak_mst_prodi pr where j.JadwalID = '"""+jadwalID+"""' and j.MKID = m.MKID and j.DosenID = d.Login and j.RuangID = r.RuangID and j.TahunID = t.TahunID and t.ProgramID = 'REG' and m.ProdiID = pr.ProdiID group by j.JadwalID;
         """
 
     with db:
@@ -79,10 +99,10 @@ def getHeaderAbsensi(jadwalID):
         row = cur.fetchone()
         if row is not None:
             header = {
-                'kode_matkul': row[0]+' / '+row[1],
-                'kelas': convertKelas(int(row[2].strip("0"))),
-                'pengajar': row[3],
-                'tanggal': row[4],
+                'kode_matkul': row[1]+' / '+row[2],
+                'kelas': convertKelas(int(row[3].strip("0"))),
+                'pengajar': row[4],
+                'jadwal_id': str(row[0]),
                 'jadwal_ruang': row[5]+' - '+row[6]+' / '+row[7],
                 'peserta': str(row[8])
             }
@@ -90,56 +110,30 @@ def getHeaderAbsensi(jadwalID):
         else:
             return False
 
-def getEmailDosen(dosenid):
-    db=dbConnectSiap()
-    sql="select Email from simak_mst_dosen where Login='{lecturercode}'".format(lecturercode=dosenid)
-    with db:
-        cur=db.cursor()
-        cur.execute(sql)
-        rows=cur.fetchone()
-        if rows is not None:
-            return rows[0]
-        else:
-            return ''
 
-def getMahasiswaAbsensi(jadwalID):
+def getBodyTugas(jadwalID):
     db = dbConnectSiap()
-    sql = """
-        select krs.MhswID, left(mhs.Nama,100) as Nama,
-		IFNULL((select sum(jp.Nilai)
-        from simak_trn_presensi_mahasiswa prm, simak_ref_jenis_presensi jp
-        where prm.JadwalID=krs.JadwalID and prm.MhswID=krs.MhswID and prm.JenisPresensiID=jp.JenisPresensiID), 0 ) as TotHadir from simak_trn_krs krs, simak_mst_mahasiswa mhs, simak_trn_jadwal j
-        where krs.StatusKRSID='A' and krs.JadwalID='"""+jadwalID+"""' and
-        krs.JadwalID=j.JadwalID and krs.NA='N' and
-        krs.MhswID=mhs.MhswID
-        group by krs.MhswID
-        order by krs.MhswID ASC;
-    """
+    query = """
+            select krs.MhswID, mhs.Nama, krs.Tugas1, krs.Tugas2, krs.Tugas3, krs.Tugas4, krs.Tugas5 from simak_trn_krs krs, simak_mst_mahasiswa mhs, simak_trn_jadwal j where krs.StatusKRSID='A' and krs.JadwalID='"""+jadwalID+"""' and krs.TahunID=j.TahunID and krs.NA='N' and krs.MhswID=mhs.MhswID group by krs.MhswID order by krs.MhswID ASC
+        """
     with db:
-        mahasiswa = []
-
+        body = []
         cur = db.cursor()
-        cur.execute(sql)
+        cur.execute(query)
         rows = cur.fetchall()
         if rows is not None:
             for row in rows:
-                if row[2] > 14:
-                    hadir = str(round(((row[2]/3)/7) * 100))+'%'
-                elif row[2] > 7:
-                    hadir = str(round(((row[2]/2)/7) * 100))+'%'
-                else:
-                    hadir = str(round((row[2]/7) * 100))+'%'
-                mahasiswa.append([row[0], row[1], hadir])
-
-            return mahasiswa
+                body.append([row[0], row[1], int(row[2]), int(
+                    row[3]), int(row[4]), int(row[5]), int(row[6])])
+            return body
         else:
             return False
 
 
-def getJadwalData(dosenID, tahun, program):
+def getMatkulTugas(nomor, tahun):
     db = dbConnectSiap()
     sql = """
-        select j.JadwalID, j.Nama, CASE
+select j.JadwalID, j.Nama, CASE
         WHEN j.NamaKelas =1 THEN 'A'
         WHEN j.NamaKelas =2 THEN 'B'
         WHEN j.NamaKelas =3 THEN 'C'
@@ -161,7 +155,8 @@ def getJadwalData(dosenID, tahun, program):
         WHEN j.ProdiID ='.54.' THEN 'D4 Logistik Bisnis'
         END AS namaprodi
         from simak_trn_jadwal j, simak_mst_dosen d, simak_mst_matakuliah m,  simak_mst_tahun t, simak_mst_prodi pr
-        where j.MKID=m.MKID and j.DosenID=d.Login and j.DosenID='"""+dosenID+"""' and j.TahunID='"""+tahun+"""' and t.ProgramID='"""+program+"""' and m.ProdiID = pr.ProdiID group by j.JadwalID;
+        where j.MKID=m.MKID and j.DosenID=d.Login and j.DosenID = (select Login from simak_mst_dosen where Handphone = '"""+nomor+"""') 
+        and j.TahunID='"""+tahun+"""' and t.ProgramID='REG' and m.ProdiID = pr.ProdiID group by j.JadwalID;
     """
     with db:
         jadwal = []
@@ -179,17 +174,16 @@ def getJadwalData(dosenID, tahun, program):
 
 
 def makeExcelAndSend(param):
-    jadwal = getJadwalData(
-        param['dosen'], param['tahun'], param['program'])
+    jadwal = getMatkulTugas(
+        param['nomor'], param['tahun'])
 
     for prodi in jadwal['prodi'].unique():
         checkDir(prodi)
 
     send = list()
     for i in range(len(jadwal)):
-        nama_file = 'Jadwal-%s-%s-%s-%s' % (
-            convertJenis(param['jenis']), changeSpecialChar(
-                convertTahun(param['tahun'])),
+        nama_file = 'Penilaian-%s-%s-%s' % (
+            changeSpecialChar(jadwal.loc[i, 'prodi']),
             changeSpecialChar(jadwal.loc[i, 'matkul']),
             jadwal.loc[i, 'kelas'])
 
@@ -197,15 +191,14 @@ def makeExcelAndSend(param):
             'jadwal_id': str(jadwal.loc[i, 'jadwal_id']),
             'prodi': jadwal.loc[i, 'prodi'],
             'nama_file': nama_file,
-            'jenis': shortText(convertJenis(param['jenis'])),
-            'semester': convertTahun(param['tahun'])
+            'semester': convertTahun(param['tahun']),
+            'matkul': changeSpecialChar(jadwal.loc[i, 'matkul'])
         }
 
         if not any(d['jadwal_id'] == jadwal.loc[i, 'jadwal_id'] for d in send):
             t = threading.Thread(target=makeExcel, args=(data,))
             send.append({
                 'thread': t,
-                'jenis': convertJenis(param['jenis']),
                 'matkul': jadwal.loc[i, 'matkul'],
                 'kelas': jadwal.loc[i, 'kelas'],
                 'prodi': jadwal.loc[i, 'prodi'],
@@ -224,22 +217,21 @@ def makeExcelAndSend(param):
 
 
 def makeExcel(param):
-    head_data = getHeaderAbsensi(param['jadwal_id'])
-    body_data = getMahasiswaAbsensi(param['jadwal_id'])
+    head_data = getHeaderTugas(param['jadwal_id'])
+    body_data = getBodyTugas(param['jadwal_id'])
 
     if head_data and body_data:
-        title_data = ['DAFTAR HADIR DAN NILAI '+param['jenis'],
-                      param['prodi']+' Semester '+param['semester']]
+        title_data = ['Penilaian Tugas ' +
+                      param['matkul'].title().replace("_", " ")+" "+param['prodi']+' Semester '+param['semester']]
         wb = openpyxl.Workbook()
         sheet = wb.active
         sheet.column_dimensions['A'].width = 5
         sheet.column_dimensions['B'].width = 13
         sheet.column_dimensions['C'].width = 50
-        sheet.column_dimensions['F'].width = 20
         generateHead(title_data, head_data, sheet)
         generateBody(body_data, sheet)
         wb.save(
-            'absensi/{}/{}.xlsx'.format(param['prodi'], param['nama_file']))
+            'tugas/{}/{}.xlsx'.format(param['prodi'], param['nama_file']))
         print('File %s.xlsx berhasil dibuat' % param['nama_file'])
     else:
         pass
@@ -248,7 +240,7 @@ def makeExcel(param):
 def generateHead(title_data, head_data, sheet):
     index_cell = 2
     for title in title_data:
-        sheet.merge_cells('A{}:F{}'.format(index_cell, index_cell))
+        sheet.merge_cells('A{}:H{}'.format(index_cell, index_cell))
         value = title
         cell = sheet.cell(row=index_cell, column=1)
         cell.value = value
@@ -264,9 +256,11 @@ def generateHead(title_data, head_data, sheet):
 
     sheet.merge_cells('D5:E5')
     cell = sheet.cell(row=5, column=4)
-    cell.value = 'Tanggal'
+    cell.value = 'Jadwal ID'
     cell.font = Font(bold=True)
-    sheet["F5"].value = ': '+head_data['tanggal']
+    sheet.merge_cells('F5:H5')
+    cell = sheet.cell(row=5, column=6)
+    cell.value = ': '+head_data['jadwal_id']
 
     sheet.merge_cells('A6:B6')
     cell = sheet.cell(row=6, column=1)
@@ -278,7 +272,9 @@ def generateHead(title_data, head_data, sheet):
     cell = sheet.cell(row=6, column=4)
     cell.value = 'Jadwal / Ruang'
     cell.font = Font(bold=True)
-    sheet["F6"].value = ': '+head_data['jadwal_ruang']
+    sheet.merge_cells('F6:H6')
+    cell = sheet.cell(row=6, column=6)
+    cell.value = ': '+head_data['jadwal_ruang']
 
     sheet.merge_cells('A7:B7')
     cell = sheet.cell(row=7, column=1)
@@ -290,7 +286,9 @@ def generateHead(title_data, head_data, sheet):
     cell = sheet.cell(row=7, column=4)
     cell.value = 'Peserta'
     cell.font = Font(bold=True)
-    sheet["F7"].value = ': '+head_data['peserta']
+    sheet.merge_cells('F7:H7')
+    cell = sheet.cell(row=7, column=6)
+    cell.value = ': '+head_data['peserta']
 
 
 def generateBody(body_data, sheet):
@@ -305,13 +303,19 @@ def generateBody(body_data, sheet):
     cell.value = 'Nama'
     cell.font = Font(bold=True)
     cell = sheet["D"+str(index_cell)]
-    cell.value = 'Hadir'
+    cell.value = 'Tugas 1'
     cell.font = Font(bold=True)
     cell = sheet["E"+str(index_cell)]
-    cell.value = 'Nilai UTS'
+    cell.value = 'Tugas 2'
     cell.font = Font(bold=True)
     cell = sheet["F"+str(index_cell)]
-    cell.value = 'Tanda Tangan'
+    cell.value = 'Tugas 3'
+    cell.font = Font(bold=True)
+    cell = sheet["G"+str(index_cell)]
+    cell.value = 'Tugas 4'
+    cell.font = Font(bold=True)
+    cell = sheet["H"+str(index_cell)]
+    cell.value = 'Tugas 5'
     cell.font = Font(bold=True)
     index_cell += 1
 
@@ -324,31 +328,32 @@ def generateBody(body_data, sheet):
         cell = sheet["D"+str(index_cell)]
         cell.value = body[2]
         cell.alignment = Alignment(horizontal='right')
-        sheet["E"+str(index_cell)].value = ''
-        sheet["F"+str(index_cell)].value = ''
+        cell = sheet["E"+str(index_cell)]
+        cell.value = body[3]
+        cell.alignment = Alignment(horizontal='right')
+        cell = sheet["F"+str(index_cell)]
+        cell.value = body[4]
+        cell.alignment = Alignment(horizontal='right')
+        cell = sheet["G"+str(index_cell)]
+        cell.value = body[5]
+        cell.alignment = Alignment(horizontal='right')
+        cell = sheet["H"+str(index_cell)]
+        cell.value = body[6]
+        cell.alignment = Alignment(horizontal='right')
         index_cell += 1
-
-    index_cell += 1
-    cell = sheet["C"+str(index_cell)]
-    cell.value = 'Tanda Tangan Pengajar :'
-    cell.font = Font(bold=True)
-    sheet["D"+str(index_cell)].value = ''
-    cell = sheet["E"+str(index_cell)]
-    cell.value = 'Tanggal :'
-    cell.font = Font(bold=True)
-    sheet["F"+str(index_cell)].value = ''
 
 
 def sendEmail(file):
     try:
-        subject = "Absensi {} Mata Kuliah {} Kelas {} Prodi {}".format(
-            file['jenis'], file['matkul'], file['kelas'], file['prodi'])
-        body = "Ini file absensi oleh iteung ya..., mohon untuk dicek kembali filenya jika ada yang salah mohon untuk diinformasikan ke admin iteung yaa....:) \nAbsensi {} Mata Kuliah {} Kelas {} Prodi {}".format(
-            file['jenis'], file['matkul'], file['kelas'], file['prodi'])
+        subject = "Penilaian Tugas Mata Kuliah {} Kelas {} Prodi {}".format(
+            file['matkul'], file['kelas'], file['prodi'])
+        body = "Ini file penilaian oleh iteung ya..., mohon untuk dicek kembali filenya jika ada yang salah mohon untuk diinformasikan ke admin iteung yaa....:) \Penilaian Tugas Mata Kuliah {} Kelas {} Prodi {}".format(
+            file['matkul'], file['kelas'], file['prodi'])
 
         sender_email = config.email_iteung
         receiver_email = file['tujuan']
-        # receiver_email = 'divakrishnam@yahoo.com'
+        # print(receiver_email)
+        receiver_email = 'divakrishnam@yahoo.com'
         password = config.pass_iteung
 
         message = MIMEMultipart()
@@ -361,7 +366,7 @@ def sendEmail(file):
 
         absensifile = file['nama_file']
 
-        with open('absensi\\'+file['prodi']+'\\'+absensifile, "rb") as attachment:
+        with open('tugas\\'+file['prodi']+'\\'+absensifile, "rb") as attachment:
             part = MIMEBase("application", "octet-stream")
             part.set_payload(attachment.read())
 
@@ -370,23 +375,6 @@ def sendEmail(file):
         part.add_header(
             "Content-Disposition",
             "attachment; filename= %s " % absensifile,
-        )
-
-        message.attach(part)
-
-        # Berita acara
-
-        beritafile = 'BERITA_ACARA_UJIAN.docx'
-
-        with open('absensi\\'+beritafile, "rb") as attachment:
-            part = MIMEBase("application", "octet-stream")
-            part.set_payload(attachment.read())
-
-        encoders.encode_base64(part)
-
-        part.add_header(
-            "Content-Disposition",
-            "attachment; filename= %s " % beritafile,
         )
 
         message.attach(part)
@@ -403,7 +391,19 @@ def sendEmail(file):
     except FileNotFoundError:
         pass
 
-# Fungsi tambahan
+
+def changeSpecialChar(text):
+    return text.replace(
+        " ", "_").replace("-", "_").replace("(", "").replace(")", "").replace("+", "_").replace("/", "_")
+
+
+def checkDir(prodi):
+    path = 'tugas/{}'.format(prodi)
+    if not os.path.exists(path):
+        t = threading.Thread(target=os.makedirs, args=(path,))
+        t.start()
+        t.join()
+        print('Direktori {} telah dibuat'.format(prodi))
 
 
 def convertKelas(kelas):
@@ -415,39 +415,6 @@ def convertKelas(kelas):
             return v.upper()
             break
     return 'Kelas tidak terdaftar'
-
-
-def checkDir(prodi):
-    path = 'absensi/{}'.format(prodi)
-    if not os.path.exists(path):
-        t = threading.Thread(target=os.makedirs, args=(path,))
-        t.start()
-        t.join()
-        print('Direktori {} telah dibuat'.format(prodi))
-
-
-def convertJenis(ujian):
-    ujian = int(ujian)
-    if ujian == 1:
-        return 'UTS'
-    elif ujian == 2:
-        return 'UAS'
-    else:
-        return 'XXX'
-
-
-def shortText(text):
-    if 'UTS' == text:
-        return 'UJIAN TENGAH SEMESTER'
-    elif 'UAS' == text:
-        return 'UJIAN AKHIR SEMESTER'
-    else:
-        return text
-
-
-def changeSpecialChar(text):
-    return text.replace(
-        " ", "_").replace("-", "_").replace("(", "").replace(")", "").replace("+", "_").replace("/", "_")
 
 
 def convertTahun(param):
