@@ -29,7 +29,7 @@ def getDataMahasiswaAktif():
         return rows
 
 def insertData(datamahasiswa):
-    MAHASISWAAKTIF=datamahasiswa()
+    MAHASISWAAKTIF=datamahasiswa
     for i in MAHASISWAAKTIF:
         npm=i[0]
         nama=i[1]
