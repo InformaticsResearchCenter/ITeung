@@ -41,7 +41,10 @@ def insertData(datamahasiswa):
             hp='NULL'
         else:
             hp=i[3]
-        setData(npm, nama, email, hp)
+        try:
+            setData(npm, nama, email, hp)
+        except:
+            print('data sudah ada')
 
 def setData(npm, nama, email, handphone):
     db=dbConnectVA()
