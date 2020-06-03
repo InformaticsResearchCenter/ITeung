@@ -53,7 +53,7 @@ def restartMemu(ret):
     return ret
 
 def waitLogin(driver):
-    target = '"_3ZW2E"'
+    target = '"_1QUKR"'
     x_arg = '//div[contains(@class, ' + target + ')]'
     wait = WebDriverWait(driver, 600)
     retryNowClick(driver)
@@ -80,7 +80,7 @@ def clickChatBox(driver):
 
 def openMessage(driver):
     try:
-        newnotifelement = driver.find_elements_by_class_name("OUeyt")[0]
+        newnotifelement = driver.find_elements_by_class_name("_31gEB")[0]
         # action=ActionChains(driver)
         # action.move_to_element_with_offset(to_element=newnotifelement, xoffset=-20, yoffset=0).double_click().perform()
         newnotifelement.click()
@@ -98,7 +98,7 @@ def pasteMessage(driver):
 
 def messageunread(driver):
     try:
-        return int(driver.find_elements_by_class_name("OUeyt")[0].text)
+        return int(driver.find_elements_by_class_name("_31gEB")[0].text)
     except:
         return 1
 
