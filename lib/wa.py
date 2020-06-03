@@ -57,7 +57,7 @@ def waitLogin(driver):
     x_arg = '//div[contains(@class, ' + target + ')]'
     wait = WebDriverWait(driver, 600)
     retryNowClick(driver)
-    wait.until(EC.presence_of_element_located((By.XPATH, x_arg)))
+    wait.until(EC.presence_of_element_located((By.CLASS_NAME, "_1QUKR")))
 
 def typeAndSendMessage(driver, message):
     messages = message.split("\n")
