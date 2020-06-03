@@ -48,7 +48,7 @@ def insertData(datamahasiswa):
 
 def setData(npm, nama, email, handphone):
     db=dbConnectVA()
-    sql="INSERT INTO `db_ypbpi`.`VAMAHASISWA`(`MhswID`, `Nama`, `EmailOrtu`, `HandphoneOrtu`) VALUES ('{npm}', '{nama}', '{email}', '{handphone}')".format(
+    sql='INSERT INTO `db_ypbpi`.`VAMAHASISWA`(`MhswID`, `Nama`, `EmailOrtu`, `HandphoneOrtu`) VALUES ("{npm}", "{nama}", "{email}", "{handphone}")'.format(
         npm=npm,
         nama=nama,
         email=email,
