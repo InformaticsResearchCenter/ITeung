@@ -128,7 +128,7 @@ def isGroup(driver, default_alias_number_index):
     
 def getSenderAlias(driver, default_alias_number_index):
     try:
-        senderAlias = driver.find_elements_by_class_name("_3Ye_R")[default_alias_number_index].text
+        senderAlias = driver.find_elements_by_class_name("NRCvf")[default_alias_number_index].text
     except:
         senderAlias = ''
     return senderAlias
