@@ -142,7 +142,7 @@ def getGroupName(driver):
 
 def getSenderNumber(driver, default_alias_number_index):
     try:
-        senderNumber = driver.find_elements_by_class_name("RZ7GO")[default_alias_number_index].text
+        senderNumber = driver.find_elements_by_class_name("_3UUTc")[default_alias_number_index].text
     except:
         try:
             senderNumber = driver.find_element_by_xpath("/html/body/div[1]/div/div/div[4]/div/header/div[2]/div[1]/div/span").text
