@@ -5,9 +5,9 @@ from lib import wa, reply
 import os, config
 
 def auth(data):
-    prodiid=getHomeBase(data[0])
-    if prodiid is not None:
-        if isKaprodi(prodiid):
+    datakaprodi=getDataForKaprodi(data[0])
+    if datakaprodi is not None:
+        if isKaprodi(datakaprodi):
             ret = True
         else:
             ret = False
@@ -19,7 +19,7 @@ def replymsg(driver, data):
     wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
     wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
     wa.typeAndSendMessage(driver, wmsg)
-    prodiid=getHomeBase(data[0])
+    prodiid=getDataForKaprodi(data[0])
     datestring=data[3].split(' ')[-1]
     day=int(datestring.split('-')[0])
     month=int(datestring.split('-')[1])
@@ -29,23 +29,25 @@ def replymsg(driver, data):
     msgreply='sudah di update cuyyyyy'
     return msgreply
 
-def getHomeBase(num):
+def getDataForKaprodi(num):
     num=numbers.normalize(num)
     db=kelas.dbConnectSiap()
-    sql="select Homebase from simak_mst_dosen where Handphone='{phonenumber}'".format(phonenumber=num)
+    sql="select NIPY, Homebase from simak_mst_dosen where Handphone='{phonenumber}'".format(phonenumber=num)
     with db:
         cur=db.cursor()
         cur.execute(sql)
         row=cur.fetchone()
         if row is not None:
-            ret=row[0]
+            ret=row
         else:
             ret=None
     return ret
 
-def isKaprodi(prodiid):
+def isKaprodi(data):
     db=kelas.dbConnectSiap()
-    sql = "select * from simak_mst_pejabat where ProdiID={prodiid} and JenisJabatanID=5".format(prodiid=prodiid)
+    prodiid=data[1]
+    nipy=data[0]
+    sql = "select * from simak_mst_pejabat where ProdiID={prodiid} and JenisJabatanID=5 and NIPY='{nipy}'".format(prodiid=prodiid, nipy=nipy)
     with db:
         cur = db.cursor()
         cur.execute(sql)
