@@ -71,7 +71,19 @@ def replymsg(driver, data):
                             if databimbingan == None:
                                 msgreply='maaf data bimbingan tidak dapat ditemukan'
                             else:
+                                pembimbing1 = databimbingan[0][-3]
+                                pembimbing2 = None
                                 for i in databimbingan:
+                                    if i[-3] != pembimbing1:
+                                        pembimbing2 = databimbingan.index(i)
+                                        break
+                                if pembimbing2 is None:
+                                    pembimbing2 = False
+                                else:
+                                    pembimbing1 = databimbingan[0:pembimbing2]
+                                    pembimbing2 = databimbingan[pembimbing2:]
+                                msgreply+='\n\n*PEMBIMBING 1*'
+                                for i in pembimbing1:
                                     topik=i[3].split(';')
                                     target_selesai=topik[0]
                                     target_selanjutnya=topik[1]
@@ -90,6 +102,29 @@ def replymsg(driver, data):
                                         log=str(len(datalog)),
                                         namadosen=namadosen
                                     )
+                                if pembimbing2 == False:
+                                    msgreply+='\n\n*PEMBIMBING 2*\n\npembimbing 2 belum input nilai'
+                                else:
+                                    msgreply+='\n\n*PEMBIMBING 2*'
+                                    for i in pembimbing2:
+                                        topik = i[3].split(';')
+                                        target_selesai = topik[0]
+                                        target_selanjutnya = topik[1]
+                                        datalog = i[7]
+                                        datalog = datalog.split(';')
+                                        namadosen = kelas.getNamaDosen(i[5])
+                                        msgreply += '\n\nNama: {nama}\nNPM: {studentid}\nTipe: {tipe}\nPertemuan: {pertemuanke}\nSudah Dikerjakan: {targetselesai}\nPekerjaan Selanjutnya: {targetselanjutnya}\nNilai: {nilai}\nPenilai: {penilai} / {namadosen}\nJumlah Percakapan: {log}'.format(
+                                            nama=nama,
+                                            studentid=i[0],
+                                            tipe=i[1],
+                                            pertemuanke=i[2],
+                                            targetselesai=target_selesai,
+                                            targetselanjutnya=target_selanjutnya,
+                                            nilai=i[4],
+                                            penilai=i[5],
+                                            log=str(len(datalog)),
+                                            namadosen=namadosen
+                                        )
                     else:
                         msgreply='passcodenya salah bosqueeeeee'
     return msgreply
@@ -170,7 +205,7 @@ def updateNilaiBimbingan(studentid, pertemuan, nilai, topik, logmsg):
 
 def getDataBimbingan(studentid):
     db=kelas.dbConnectSiap()
-    sql="select MhswID, Tipe, Pertemuan_, Topik, Nilai, Penilai, Tanggal, Log from simak_croot_bimbingan where MhswID='{studentid}'".format(studentid=studentid)
+    sql="select MhswID, Tipe, Pertemuan_, Topik, Nilai, Penilai, Tanggal, Log from simak_croot_bimbingan where MhswID={studentid} ORDER BY Penilai".format(studentid=studentid)
     with db:
         cur=db.cursor()
         cur.execute(sql)
