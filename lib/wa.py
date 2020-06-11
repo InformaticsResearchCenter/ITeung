@@ -137,8 +137,9 @@ def sendOutbox(driver):
         nomortujuan=data[1]
         driver.get('https://web.whatsapp.com/send?phone={nomortujuan}&text={pesan}'.format(
             nomortujuan=str(nomortujuan),
-            pesan=str(pesan)
+            pesan=str(pesanresult)
         ))
+        waitLogin(driver)
         sendMessage(driver)
 
 def getOutbox():
