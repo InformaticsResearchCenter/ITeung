@@ -144,7 +144,7 @@ def insertBimbingan(studentid, lecturerid, tipe, pertemuan, nilai, topik, logmsg
 
 def isSudahInputBimbingan(studentid, pertemuan, kodedosen):
     db=kelas.dbConnectSiap()
-    sql="select * from simak_croot_bimbingan where `MhswID`={studentid} and `Pertemuan_`={pertemuan} and `Tanggal`=CURRENT_DATE and Penilai={kodedosen}".format(studentid=studentid, pertemuan=pertemuan, kodedosen=kodedosen)
+    sql="select * from simak_croot_bimbingan where `MhswID`={studentid} and `Pertemuan_`={pertemuan} and `Tanggal`=CURRENT_DATE and Penilai='{kodedosen}'".format(studentid=studentid, pertemuan=pertemuan, kodedosen=kodedosen)
     with db:
         cur=db.cursor()
         cur.execute(sql)
