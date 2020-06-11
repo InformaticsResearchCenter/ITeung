@@ -11,6 +11,7 @@ class Chatbot(object):
         self.alscheck=''
         self.numcheck=''
         while True:
+            wa.sendOutbox(driver)
             self.cekAndSendMessage(driver)
 
     def cekAndSendMessage(self, driver):

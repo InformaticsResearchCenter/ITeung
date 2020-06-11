@@ -11,6 +11,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from time import sleep
+from module import kelas
 import os, clipboard
 
 
@@ -125,6 +126,32 @@ def isGroup(driver, default_alias_number_index):
     else:
         group='true'
     return group
+
+def sendOutbox(driver):
+    status, data=getOutbox()
+    if status:
+        pesan=data[-1].split(' ')
+        pesanresult=''
+        for i in pesan:
+            pesanresult+=pesan+'+'
+        nomortujuan=data[1]
+        driver.get('https://web.whatsapp.com/send?phone={nomortujuan}&text={pesan}'.format(
+            nomortujuan=nomortujuan,
+            pesan=pesan
+        ))
+        sendMessage(driver)
+
+def getOutbox():
+    db=kelas.dbConnect()
+    sql='select * from outbox'
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        row=cur.fetchone()
+        if row is not None:
+            return True, row
+        else:
+            return False, None
     
 def getSenderAlias(driver, default_alias_number_index):
     try:
