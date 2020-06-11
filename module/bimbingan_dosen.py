@@ -59,11 +59,12 @@ def replymsg(driver, data):
                         if int(nilai) > 100:
                             msgreply='buset nilainya kaga salah itu bos?? gede benerr......'
                         else:
-                            if isSudahInputBimbingan(studentid, pertemuan):
+                            kodedosen=kelas.getKodeDosen(num)
+                            if isSudahInputBimbingan(studentid, pertemuan, kodedosen):
                                 updateNilaiBimbingan(studentid=studentid, nilai=nilai, topik=topik, pertemuan=pertemuan, logmsg=logmsg)
                                 msgreply='oke sudah iteung update yaaa nilainya.....'
                             else:
-                                insertBimbingan(studentid=studentid, lecturerid=kelas.getKodeDosen(num), tipe=tipe, topik=topik, nilai=nilai, pertemuan=pertemuan, logmsg=logmsg)
+                                insertBimbingan(studentid=studentid, lecturerid=kodedosen, tipe=tipe, topik=topik, nilai=nilai, pertemuan=pertemuan, logmsg=logmsg)
                                 msgreply='oke sudah di input yaaa....'
                             nama=kelas.getStudentNameOnly(studentid)
                             databimbingan=getDataBimbingan(studentid)
@@ -141,9 +142,9 @@ def insertBimbingan(studentid, lecturerid, tipe, pertemuan, nilai, topik, logmsg
         cur=db.cursor()
         cur.execute(sql)
 
-def isSudahInputBimbingan(studentid, pertemuan):
+def isSudahInputBimbingan(studentid, pertemuan, kodedosen):
     db=kelas.dbConnectSiap()
-    sql="select * from simak_croot_bimbingan where `MhswID`={studentid} and `Pertemuan_`={pertemuan} and `Tanggal`".format(studentid=studentid, pertemuan=pertemuan)
+    sql="select * from simak_croot_bimbingan where `MhswID`={studentid} and `Pertemuan_`={pertemuan} and `Tanggal`=CURRENT_DATE and Penilai={kodedosen}".format(studentid=studentid, pertemuan=pertemuan, kodedosen=kodedosen)
     with db:
         cur=db.cursor()
         cur.execute(sql)
