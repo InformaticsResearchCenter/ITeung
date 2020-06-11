@@ -141,6 +141,7 @@ def sendOutbox(driver):
         ))
         waitLogin(driver)
         sendMessage(driver)
+        deleteOutbox(id=data[0])
 
 def getOutbox():
     db=kelas.dbConnect()
@@ -153,6 +154,13 @@ def getOutbox():
             return True, row
         else:
             return False, None
+
+def deleteOutbox(id):
+    db=kelas.dbConnect()
+    sql='DELETE from outbox where id={id}'.format(id=id)
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
     
 def getSenderAlias(driver, default_alias_number_index):
     try:
