@@ -79,7 +79,7 @@ def replymsg(driver, data):
                                         break
                                 if pembimbing2 is None:
                                     pembimbing2 = False
-                                    pembimbing1 = databimbingan[0:pembimbing2]
+                                    pembimbing1 = databimbingan[0:]
                                 else:
                                     pembimbing1 = databimbingan[0:pembimbing2]
                                     pembimbing2 = databimbingan[pembimbing2:]
@@ -104,7 +104,7 @@ def replymsg(driver, data):
                                         namadosen=namadosen
                                     )
                                 if pembimbing2 == False:
-                                    msgreply+='\n\n*PEMBIMBING 2*\n\npembimbing 2 belum input nilai'
+                                    msgreply+='\n\n*PEMBIMBING 2*\npembimbing 2 belum input nilai'
                                 else:
                                     msgreply+='\n\n*PEMBIMBING 2*'
                                     for i in pembimbing2:
