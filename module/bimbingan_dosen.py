@@ -79,6 +79,7 @@ def replymsg(driver, data):
                                         break
                                 if pembimbing2 is None:
                                     pembimbing2 = False
+                                    pembimbing1 = databimbingan[0:pembimbing2]
                                 else:
                                     pembimbing1 = databimbingan[0:pembimbing2]
                                     pembimbing2 = databimbingan[pembimbing2:]
