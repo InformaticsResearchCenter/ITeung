@@ -133,11 +133,11 @@ def sendOutbox(driver):
         pesan=data[-1].split(' ')
         pesanresult=''
         for i in pesan:
-            pesanresult+=pesan+'+'
+            pesanresult+=str(i)+'+'
         nomortujuan=data[1]
         driver.get('https://web.whatsapp.com/send?phone={nomortujuan}&text={pesan}'.format(
-            nomortujuan=nomortujuan,
-            pesan=pesan
+            nomortujuan=str(nomortujuan),
+            pesan=str(pesan)
         ))
         sendMessage(driver)
 
