@@ -128,20 +128,24 @@ def isGroup(driver, default_alias_number_index):
     return group
 
 def sendOutbox(driver):
-    status, data=getOutbox()
-    if status:
-        pesan=data[-1].split(' ')
-        pesanresult=''
-        for i in pesan:
-            pesanresult+=str(i)+'+'
-        nomortujuan=data[1]
-        driver.get('https://web.whatsapp.com/send?phone={nomortujuan}&text={pesan}'.format(
-            nomortujuan=str(nomortujuan),
-            pesan=str(pesanresult)
-        ))
-        waitLogin(driver)
-        sendMessage(driver)
+    status, data = getOutbox()
+    try:
+        if status:
+            pesan=data[-1].split(' ')
+            pesanresult=''
+            for i in pesan:
+                pesanresult+=str(i)+'+'
+            nomortujuan=data[1]
+            driver.get('https://web.whatsapp.com/send?phone={nomortujuan}&text={pesan}'.format(
+                nomortujuan=str(nomortujuan),
+                pesan=str(pesanresult)
+            ))
+            waitLogin(driver)
+            sendMessage(driver)
+            deleteOutbox(id=data[0])
+    except:
         deleteOutbox(id=data[0])
+        driver.get("https://web.whatsapp.com/")
 
 def getOutbox():
     db=kelas.dbConnect()
