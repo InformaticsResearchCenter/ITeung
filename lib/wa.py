@@ -141,10 +141,13 @@ def sendOutbox(driver):
                 pesan=str(pesanresult)
             ))
             waitLogin(driver)
-            sendMessage(driver)
+        try:
+                sendMessage(driver)
+                deleteOutbox(id=data[0])
+        except:
             deleteOutbox(id=data[0])
+            driver.get("https://web.whatsapp.com/")
     except:
-        deleteOutbox(id=data[0])
         driver.get("https://web.whatsapp.com/")
 
 def getOutbox():
