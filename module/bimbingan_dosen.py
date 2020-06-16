@@ -83,7 +83,7 @@ def replymsg(driver, data):
                                 else:
                                     pembimbing1 = databimbingan[0:pembimbing2]
                                     pembimbing2 = databimbingan[pembimbing2:]
-                                msgreply+='\n\n*PEMBIMBING 1*'
+                                msgreply+='\n\n*PENILAIAN DOSEN PEMBIMBING*'
                                 for i in pembimbing1:
                                     topik=i[3].split(';')
                                     target_selesai=topik[0]
@@ -104,9 +104,9 @@ def replymsg(driver, data):
                                         namadosen=namadosen
                                     )
                                 if pembimbing2 == False:
-                                    msgreply+='\n\n*PEMBIMBING 2*\npembimbing 2 belum input nilai'
+                                    msgreply+='\n\n*PENILAIAN DOSEN PEMBIMBING*\npembimbing belum input nilai'
                                 else:
-                                    msgreply+='\n\n*PEMBIMBING 2*'
+                                    msgreply+='\n\n*PENILAIAN DOSEN PEMBIMBING*'
                                     for i in pembimbing2:
                                         topik = i[3].split(';')
                                         target_selesai = topik[0]
