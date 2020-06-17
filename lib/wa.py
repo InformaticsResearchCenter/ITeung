@@ -20,6 +20,9 @@ def setProfile(profile_folder):
     set_dir = '--user-data-dir='+profile_folder
     options.add_argument(set_dir)
     driver = webdriver.Chrome(chrome_options=options)
+
+    #for firefox use this varible driver
+    #driver = webdriver.Firefox(firefox_options=options)
     return driver
 
 def loginWA(driver):
