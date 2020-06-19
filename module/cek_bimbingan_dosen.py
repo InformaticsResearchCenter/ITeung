@@ -47,7 +47,7 @@ def replymsg(driver, data):
 
 def cek_bimbingan(npm, kodedosen, pertemuan):
     db=kelas.dbConnectSiap()
-    sql='select * from simak_croot_bimbingan where MhswID={npm} and DosenID="{dosenid} and Pertemuan_={pertemuanke}"'.format(dosenid=kodedosen, npm=npm, pertemuanke=pertemuan)
+    sql='select * from simak_croot_bimbingan where MhswID={npm} and DosenID="{dosenid}" and Pertemuan_={pertemuanke}'.format(dosenid=kodedosen, npm=npm, pertemuanke=pertemuan)
     with db:
         cur=db.cursor()
         cur.execute(sql)
