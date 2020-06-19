@@ -20,17 +20,20 @@ def replymsg(driver, data):
     for i in getMahasiswaBimbingan(kelas.getTahunID()):
         if i[1]==kodedosen or i[2]==kodedosen:
             npm.append(i[0])
-    datefromdatabasehomebase=bimbingan_dosen.getStartDate(num)
-    startdate = datetime.date(datefromdatabasehomebase)
-    pertemuan, datemulai, dateakhir=bimbingan_dosen.countPertemuan(startdate)
-    msgreply='Nama Dosen: {lecturername}\nProdi: {prodi}\nPertemuan: {pertemuan}'.format(lecturername=kelas.getNamaDosen(kodedosen), prodi=pertemuan_bimbingan.getHomebase(num), pertemuan=str(pertemuan))+'\n\nNPM | Nama | Status Bimbingan\n\n'
-    for i in npm:
-        cek=cek_bimbingan(i, kodedosen, pertemuan)
-        namamahasiswa=kelas.getStudentNameOnly(i)
-        if cek == None:
-            msgreply+='*'+i+'*'+' | '+namamahasiswa+' | '+'*_BELUM BIMBINGAN_*'+'\n'
-        else:
-            msgreply+='*'+i+'*'+' | '+namamahasiswa+' | '+'*_SUDAH BIMBINGAN_*'+'\n'
+    try:
+        datefromdatabasehomebase=bimbingan_dosen.getStartDate(num)
+        startdate = datetime.date(datefromdatabasehomebase)
+        pertemuan, datemulai, dateakhir=bimbingan_dosen.countPertemuan(startdate)
+        msgreply='Nama Dosen: {lecturername}\nProdi: {prodi}\nPertemuan: {pertemuan}'.format(lecturername=kelas.getNamaDosen(kodedosen), prodi=pertemuan_bimbingan.getHomebase(num), pertemuan=str(pertemuan))+'\n\nNPM | Nama | Status Bimbingan\n\n'
+        for i in npm:
+            cek=cek_bimbingan(i, kodedosen, pertemuan)
+            namamahasiswa=kelas.getStudentNameOnly(i)
+            if cek == None:
+                msgreply+='*'+i+'*'+' | '+namamahasiswa+' | '+'*_BELUM BIMBINGAN_*'+'\n'
+            else:
+                msgreply+='*'+i+'*'+' | '+namamahasiswa+' | '+'*_SUDAH BIMBINGAN_*'+'\n'
+    except:
+        msgreply='ihhhhh belum diset nih tanggal awal bimbingannya coba deh Bapak/Ibu dosen komunikasi ya sama KAPRODI untuk set tanggal mulai bimbingannnya, tutorial bisa dibaca di panduan iteung yaaa yang bagian *kaprodi* hatur tengkyuuu....'
     return msgreply
 
 def cek_bimbingan(npm, kodedosen, pertemuan):
