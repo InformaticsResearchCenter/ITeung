@@ -1,5 +1,5 @@
 from module import kelas, bimbingan_dosen, pertemuan_bimbingan
-from lib import reply, wa
+from lib import reply, wa, message
 from datetime import datetime
 
 import os
@@ -15,6 +15,8 @@ def replymsg(driver, data):
     wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
     wa.typeAndSendMessage(driver, wmsg)
     num=data[0]
+    msg=data[3]
+    msg=message.normalize(msg)
     npm=[]
     kodedosen=kelas.getKodeDosen(num)
     for i in getMahasiswaBimbingan(kelas.getTahunID()):
@@ -23,15 +25,22 @@ def replymsg(driver, data):
     try:
         datefromdatabasehomebase=bimbingan_dosen.getStartDate(num)
         startdate = datetime.date(datefromdatabasehomebase)
-        pertemuan, datemulai, dateakhir=bimbingan_dosen.countPertemuan(startdate)
-        msgreply='Nama Dosen: {lecturername}\nProdi: {prodi}\nPertemuan: {pertemuan}'.format(lecturername=kelas.getNamaDosen(kodedosen), prodi=pertemuan_bimbingan.getHomebase(num), pertemuan=str(pertemuan))+'\n\nNPM | Nama | Status Bimbingan\n\n'
-        for i in npm:
-            cek=cek_bimbingan(i, kodedosen, pertemuan)
-            namamahasiswa=kelas.getStudentNameOnly(i)
-            if cek == None:
-                msgreply+='*'+i+'*'+' | '+namamahasiswa+' | '+'*_BELUM BIMBINGAN_*'+'\n'
-            else:
-                msgreply+='*'+i+'*'+' | '+namamahasiswa+' | '+'*_SUDAH BIMBINGAN_*'+'\n'
+        if 'pertemuan' in message:
+            pertemuan=msg.split(' pertemuan ')[1]
+        else:
+            pertemuan, datemulai, dateakhir=bimbingan_dosen.countPertemuan(startdate)
+        try:
+            pertemuan=int(pertemuan)
+            msgreply='Nama Dosen: {lecturername}\nProdi: {prodi}\nPertemuan: {pertemuan}'.format(lecturername=kelas.getNamaDosen(kodedosen), prodi=pertemuan_bimbingan.getHomebase(num), pertemuan=str(pertemuan))+'\n\nNPM | Nama | Status Bimbingan\n\n'
+            for i in npm:
+                cek=cek_bimbingan(i, kodedosen, pertemuan)
+                namamahasiswa=kelas.getStudentNameOnly(i)
+                if cek == None:
+                    msgreply+='*'+i+'*'+' | '+namamahasiswa+' | '+'*_BELUM BIMBINGAN_*'+'\n'
+                else:
+                    msgreply+='*'+i+'*'+' | '+namamahasiswa+' | '+'*_SUDAH BIMBINGAN_*'+'\n'
+        except:
+            msgreply='wahhh salah di pertemuan nih bosqqqqqqqqqqqq coba pertemuannya make angka yak jangan make hurup....'
     except:
         msgreply='ihhhhh belum diset nih tanggal awal bimbingannya coba deh Bapak/Ibu dosen komunikasi ya sama KAPRODI untuk set tanggal mulai bimbingannnya, tutorial bisa dibaca di panduan iteung yaaa yang bagian *kaprodi* hatur tengkyuuu....'
     return msgreply
