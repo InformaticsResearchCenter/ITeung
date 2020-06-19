@@ -16,10 +16,16 @@ import os, clipboard
 
 
 def setProfile(profile_folder):
+    #chrome
     options = webdriver.ChromeOptions()
+    #firefox
+    #options = webdriver.FirefoxOptions()
     set_dir = '--user-data-dir='+profile_folder
     options.add_argument(set_dir)
+    #chrome
     driver = webdriver.Chrome(chrome_options=options)
+    #firefox
+    #driver = webdriver.Firefox(firefox_options=options)
     return driver
 
 def loginWA(driver):
