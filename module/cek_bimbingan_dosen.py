@@ -25,7 +25,7 @@ def replymsg(driver, data):
     try:
         datefromdatabasehomebase=bimbingan_dosen.getStartDate(num)
         startdate = datetime.date(datefromdatabasehomebase)
-        if 'pertemuan' in message:
+        if 'pertemuan' in msg:
             pertemuan=msg.split(' pertemuan ')[1]
         else:
             pertemuan, datemulai, dateakhir=bimbingan_dosen.countPertemuan(startdate)
