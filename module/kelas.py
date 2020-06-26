@@ -476,7 +476,7 @@ def beritaAcara(driver, num, groupname, data, msg):
     lecturername=getNamaDosen(getKodeDosen(num))
     lecturercode=getKodeDosen(num)
     materi=msg.lower()
-    materi=materi.split('materi')
+    materi=materi.split(' materi ')
     tanggal=datetime.now().strftime("%d-%m-%Y")
     kodekelas=kodeKelas(groupname.split('-')[1])
     jadwalid=groupname.split('-')[0]
@@ -486,7 +486,7 @@ def beritaAcara(driver, num, groupname, data, msg):
     messages = "*(Sudah di input Iteung)*" + \
                "\nNama Dosen: " + str(lecturername) + \
                "\nMata Kuliah: " +str(coursename)+' '+str(praktekteori)+ \
-               "\nMateri:" +str(materi[1]) + \
+               "\nMateri: " +str(materi[1]) + \
                "\nKelas: " +str(studentgrade)+''+str(toKelas(kodekelas)) + \
                "\nJurusan: " + str(homebase)+ \
                "\nTanggal: " + str(tanggal) + \
