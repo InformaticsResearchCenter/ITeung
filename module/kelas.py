@@ -696,6 +696,18 @@ def cekSiap():
         ret=False
     return ret
 
+def getMatakuliahInfowithJadwalID(jadwalid):
+    db=dbConnectSiap()
+    sql=f'select * from simak_trn_jadwal where JadwalID={jadwalid}'
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        row=cur.fetchone()
+        if row is not None:
+            return row
+        else:
+            return None
+
 def siapabsensiwithsql(grp, num, materi, tipe):
     jadwalid = grp.split('-')[0]
     mkkode = getMkkode(jadwalid=jadwalid)

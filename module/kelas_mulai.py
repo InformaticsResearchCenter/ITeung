@@ -54,7 +54,23 @@ def kelasMulai(data):
             elif kehadiran == '':
                 msgreply = 'yahhhhh kehadirannya ngga #BOTNAME# temuin coba di cek lagi jadwal idnya yaaa....'
             else:
-                msgreply = 'Mohon maaf Untuk kuliah daring ini sudah memenuhi kuota pertemuan pada jadwal kali ini...'
+                jadwalid = grp.split('-')[0]
+                datamatkul = kelas.getMatakuliahInfowithJadwalID(jadwalid)
+                if datamatkul == None:
+                    msgreply="mohon maaf JadwalID salah bisa untuk dicek kembali...."
+                else:
+                    datamatkul = kelas.getMatakuliahInfowithJadwalID(jadwalid)
+                    prodi = kelas.switcherJurusan(datamatkul[5])
+                    mkkode = datamatkul[11]
+                    namamatkul = datamatkul[12]
+                    hari = kelas.toHari(str(datamatkul[13]))
+                    jammulai = datamatkul[14]
+                    jamselesai = datamatkul[15]
+                    dosen = kelas.getNamaDosen(datamatkul[21])
+                    rencanakehadiran = datamatkul[22]
+                    kehadiran = datamatkul[23]
+                    msgreply = 'Mohon maaf Untuk kuliah daring ini sudah memenuhi kuota pertemuan pada jadwal kali ini...\n\n'
+                    msgreply += f"Jadwal ID: {jadwalid}\nProgram Studi: {prodi}\nKode Matakuliah: {mkkode}\nNama Matakuliah: {namamatkul}\nHari: {hari}\nJam Mulai: {jammulai}\nJam Selesai: {jamselesai}\nDosen/Kode Dosen: {dosen}/{datamatkul[21]}\nRencana Kehadiran: {rencanakehadiran}\nKehadiran: {kehadiran}"
         except Exception as e:
             print(str(e))
             listMK=kelas.getListMK(kelas.getKodeDosen(data[0]))
