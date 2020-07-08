@@ -63,10 +63,9 @@ def getJadwalID(mkkode, lecturercode):
             return ''
 
 
-def getPresensiDosen(jadwalid):
+def getPresensiDosen(jadwalid, rangepertemuan1, rangepertemuan2):
     db = kelas.dbConnectSiap()
-    sql = "select PresensiID from simak_trn_presensi_dosen where TahunID=20192 and JadwalID={jadwalid} and Pertemuan > 0 and Pertemuan < 8".format(
-        jadwalid=jadwalid)
+    sql = f"select PresensiID from simak_trn_presensi_dosen where TahunID=20192 and JadwalID={jadwalid} and Pertemuan > {rangepertemuan1} and Pertemuan < {rangepertemuan2}"
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -218,7 +217,7 @@ def makePDFHeader():
 
 
 def makePDFFooter(matkuldetails, lecturercode, pdf):
-    pdf.output('../bkd/'+matkuldetails[1] + '-' + matkuldetails[2] + '-' + getLecturerMail(lecturercode) + '.pdf', 'F')
+    pdf.output('bkd/'+matkuldetails[1] + '-' + matkuldetails[2] + '-' + getLecturerMail(lecturercode) + '.pdf', 'F')
 
 def getFilePath(email, folder):
     resultpath=[]
@@ -251,7 +250,7 @@ def mail(to, subject, text, filenames):
    mailServer.sendmail(config.email_iteung, to, msg.as_string())
    mailServer.close()
 
-def makePDFInner(datalist, matkuldetails, lecturername, pdf):
+def makePDFInner(datalist, matkuldetails, lecturername, pdf, pdfpertemuan):
     pdf.add_page()
     pdf.set_font('Times', '', 14.0)
     epw = pdf.w - 2 * pdf.l_margin
@@ -263,7 +262,7 @@ def makePDFInner(datalist, matkuldetails, lecturername, pdf):
     waktu = str(matkuldetails[3])[:-3] + " - " + str(matkuldetails[4])[:-3]
     ruang = matkuldetails[5]
     kelasid = kelas.toKelas(matkuldetails[6])
-    data = [('No.', 'NPM', 'Nama', '1', '2', '3', '4', '5', '6', '7', 'Total')]
+    data = [('No.', 'NPM', 'Nama', pdfpertemuan[0], pdfpertemuan[1], pdfpertemuan[2], pdfpertemuan[3], pdfpertemuan[4], pdfpertemuan[5], pdfpertemuan[6], 'Total')]
     for i in datalist:
         data.append(i)
     header_data = [['Program Studi', ':', prodi, 'Jadwal', ': ', waktu],
@@ -309,16 +308,23 @@ def makePDFInner(datalist, matkuldetails, lecturername, pdf):
     for i, row in enumerate(data):
         # last row
         if i == len(data)-1:
+            print(row)
+            if pdfpertemuan[0] == '1':
+                startpertemuan=1
+                endpertemuan=7
+            else:
+                startpertemuan=8
+                endpertemuan=14
             for j, datum in enumerate(row):
                 if j == 0:
                     col_width = no_width + npm_width + nama_width
                     pdf.cell(col_width, th, str(datum), border=1, align='R')
                 # tanggal
-                elif j in range(1, 8):
+                elif j in range(startpertemuan, endpertemuan):
                     col_width = pertemuan_width
                     pdf.cell(col_width, th, str(datum), border=1)
                 # total
-                elif j == 8:
+                elif j == endpertemuan:
                     col_width = total_width
                     pdf.cell(col_width, th, str(datum), border=1)
         # not last row
@@ -386,23 +392,30 @@ def makePDFandSend(data):
             matkuldetailsfix = None
             for jadwalid in jadwalids:
                 studentid, studentname = getandsetStudentIDandStudentNAME(jadwalid[0])
-                presensidosens = getPresensiDosen(jadwalid[0])
-                pertemuan = countPertemuan(presensidosens)
-                datas = list(zip(pertemuan[0], pertemuan[1], pertemuan[2], pertemuan[3], pertemuan[4], pertemuan[5],
-                                 pertemuan[6]))
-                total = countTotal(datas)
-                datas = list(
-                    zip(studentid, studentname, pertemuan[0], pertemuan[1], pertemuan[2], pertemuan[3], pertemuan[4],
-                        pertemuan[5], pertemuan[6]))
-                number = countNumber(studentid)
-                matkuldetails = kelas.getMkDetails(jadwalid[0])
-                datapdf = list(
-                    zip(number, studentid, studentname, pertemuan[0], pertemuan[1], pertemuan[2], pertemuan[3],
-                        pertemuan[4], pertemuan[5], pertemuan[6], total))
-                tanggal = tanggalBKDPresensi(getTanggalFromPresensiDosen(jadwalid[0]))
-                datapdf.append(tanggal)
-                makePDFInner(datapdf, matkuldetails, lecturername, pdf)
-                matkuldetailsfix = matkuldetails
+                presensidosens1 = getPresensiDosen(jadwalid[0], 0, 8)
+                presensidosens2 = getPresensiDosen(jadwalid[0], 7, 15)
+                for i in range(2):
+                    if i == 0:
+                        pertemuan = countPertemuan(presensidosens1)
+                        pdfpertemuan=['1', '2', '3', '4', '5', '6', '7']
+                    else:
+                        pertemuan = countPertemuan(presensidosens2)
+                        pdfpertemuan = ['8', '9', '10', '11', '12', '13', '14']
+                    datas = list(zip(pertemuan[0], pertemuan[1], pertemuan[2], pertemuan[3], pertemuan[4], pertemuan[5],
+                                     pertemuan[6]))
+                    total = countTotal(datas)
+                    datas = list(
+                        zip(studentid, studentname, pertemuan[0], pertemuan[1], pertemuan[2], pertemuan[3], pertemuan[4],
+                            pertemuan[5], pertemuan[6]))
+                    number = countNumber(studentid)
+                    matkuldetails = kelas.getMkDetails(jadwalid[0])
+                    datapdf = list(
+                        zip(number, studentid, studentname, pertemuan[0], pertemuan[1], pertemuan[2], pertemuan[3],
+                            pertemuan[4], pertemuan[5], pertemuan[6], total))
+                    tanggal = tanggalBKDPresensi(getTanggalFromPresensiDosen(jadwalid[0]))
+                    datapdf.append(tanggal)
+                    makePDFInner(datapdf, matkuldetails, lecturername, pdf, pdfpertemuan)
+                    matkuldetailsfix = matkuldetails
             makePDFFooter(matkuldetailsfix, lecturercode, pdf)
         except Exception as e:
             print(str(e))
