@@ -24,9 +24,14 @@ def replymsg(driver, data):
         resultpasscode, status = '', False
     if status:
         kodedosen = resultpasscode.split(';')[0]
-        tglterbit = resultpasscode.split(';')[1][:-1]
+        tglttd = resultpasscode.split(';')[1]
+        blnttd = resultpasscode.split(';')[2]
+        thnttd = resultpasscode.split(';')[3]
+        jamttd = resultpasscode.split(';')[4]
+        mntttd = resultpasscode.split(';')[5]
+        dtkttd = resultpasscode.split(';')[6]
         datadosen=kelas.getAllDataDosens(kodedosen)
-        penerbitantandatangan = tglterbit[0:2] + ' ' + calendar.month_name[int(tglterbit[2:4])] + ' ' + tglterbit[4:]
+        penerbitantandatangan = f'{jamttd}:{mntttd}:{dtkttd} {tglttd} {calendar.month_name[int(blnttd)]} {thnttd}'
         namadosen=kelas.getNamaDosen(kodedosen)
         datalahirdosen=datadosen[7].strftime('%d-%m-%Y')
         tahunlahirdosen=datalahirdosen.split('-')[2]
