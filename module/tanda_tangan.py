@@ -1,6 +1,5 @@
-from lib import wa, reply, message, numbers
-from module import kelas, bimbingan_mahasiswa
-from datetime import datetime, timedelta
+from lib import wa, reply
+from module import kelas
 from Crypto.Cipher import AES
 import os, config, calendar
 
@@ -12,8 +11,10 @@ def auth(data):
     return True
 
 def replymsg(driver, data):
-    # msg=data[3]
-    msg='iteung tanda tangan 54fa6462007f2cec8d422cdf512ea6d7'
+    wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
+    wmsg = wmsg.replace("#BOTNAME#", config.bot_name)
+    wa.typeAndSendMessage(driver, wmsg)
+    msg=data[3]
     passcode=msg.split(' ')[-1]
     obj = AES.new(config.key.encode("utf8"), AES.MODE_CBC, config.iv.encode("utf8"))
     dec = bytes.fromhex(passcode)
