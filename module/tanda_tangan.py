@@ -1,7 +1,7 @@
 from lib import wa, reply
-from module import kelas
+from module import kelas, bkd
 from Crypto.Cipher import AES
-import os, config, calendar
+import os, config
 
 def auth(data):
     # if kelas.getKodeDosen(data[0]) == '':
@@ -31,11 +31,11 @@ def replymsg(driver, data):
         mntttd = resultpasscode.split(';')[5]
         dtkttd = resultpasscode.split(';')[6]
         datadosen=kelas.getAllDataDosens(kodedosen)
-        penerbitantandatangan = f'{jamttd}:{mntttd}:{dtkttd} {tglttd} {calendar.month_name[int(blnttd)]} {thnttd}'
+        penerbitantandatangan = f'{jamttd}:{mntttd}:{dtkttd} {tglttd} {bkd.bulanSwitcher(blnttd)} {thnttd}'
         namadosen=kelas.getNamaDosen(kodedosen)
         datalahirdosen=datadosen[7].strftime('%d-%m-%Y')
         tahunlahirdosen=datalahirdosen.split('-')[2]
-        bulanlahirdosen=calendar.month_name[int(datalahirdosen.split('-')[1])]
+        bulanlahirdosen=bkd.bulanSwitcher(datalahirdosen.split('-')[1])
         tanggallahirdosen=datalahirdosen.split('-')[0]
         datalahirdosen=tanggallahirdosen+' '+bulanlahirdosen+' '+tahunlahirdosen
         msgreply=f'Ini yaaa data yang Akang/Teteh minta\n\nKode Dosen: {kodedosen}\nNama Dosen: {namadosen}\nNIDN: {datadosen[2]}\nTempat/Tgl Lahir: {datadosen[6]}/{datalahirdosen}\nHandphone: {datadosen[12]}\nE-mail: {datadosen[13]}\n\nPenerbitan Tanda Tangan: {penerbitantandatangan}'
