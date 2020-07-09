@@ -179,6 +179,32 @@ def getKaProdi(prodiid):
     return row[0]
 
 
+def getNipyKaProdi(prodiid):
+    db = kelas.dbConnectSiap()
+    sql = f"select NIPY from simak_mst_pejabat where ProdiID={prodiid} and JenisJabatanID=5"
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        row=cur.fetchone()
+        if row is not None:
+            return row[0]
+        else:
+            return None
+
+
+def getDosenIDfromNIPY(nipy):
+    db = kelas.dbConnectSiap()
+    sql=f'select Login from simak_mst_dosen where NIPY="{nipy}"'
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        row=cur.fetchone()
+        if row is not None:
+            return row[0]
+        else:
+            return None
+
+
 def getDeputiAkademik():
     db = kelas.dbConnectSiap()
     sql = "select Nama from simak_mst_pejabat where JenisJabatanID=9"
