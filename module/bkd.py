@@ -666,7 +666,6 @@ def makePDFandSend(data):
                     matkuldatalist.append(str(i[4]))
                     datafixbap.append(matkuldatalist)
                 makePDFBAP(pdf, datafixbap, kode_nomor, tanggalpdfbap, kode_matkul, nama_matkul, nama_kelas, semester, sks)
-
                 studentid, studentname = getandsetStudentIDandStudentNAME(jadwalid[0])
                 presensidosens1 = getPresensiDosen(jadwalid[0], 0, 8)
                 presensidosens2 = getPresensiDosen(jadwalid[0], 7, 15)
