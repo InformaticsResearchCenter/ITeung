@@ -3,14 +3,6 @@ from lib import numbers, wa, reply
 
 import subprocess, config, os
 
-def confirmBKD(jadwalid):
-    db=kelas.dbConnectSiap()
-    sql=f"UPDATE `simpati`.`simak_trn_jadwal` SET `BKD_Prodi` = 'true' WHERE `JadwalID` = {jadwalid}"
-    with db:
-        cur=db.cursor()
-        cur.execute(sql)
-
-
 def getMateriFromJadwalID(jadwalid):
     db = kelas.dbConnectSiap()
     sql = f"select MP from simak_trn_presensi_dosen WHERE `JadwalID` = {jadwalid}"
@@ -60,7 +52,7 @@ def getListJadwalIDfromDeputi():
 def cekMateriPerkuliahan(jadwalid):
     MateriTuple = getMateriFromJadwalID(jadwalid)
     MateriToList = materiToList(MateriTuple)
-    if None in MateriToList:
+    if None in MateriToList or '' in MateriToList:
         ret = False
     else:
         ret = True
