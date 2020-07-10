@@ -94,7 +94,7 @@ def infoBAPKaprodi(prodiid):
             siap.append(jadwalid[0])
         else:
             sudah.append(jadwalid[0])
-    msgreply=f"BAP yang sudah ditandatangani ada: {len(sudah)} berkas\nBAP yang siap ditandatangani ada: {len(siap)} berkas\nBAP yang belum siap ditandatangani ada: {len(belum)} berkas"
+    msgreply=f"BAP yang sudah ditandatangani ada: {len(sudah)} berkas\\nBAP yang siap ditandatangani ada: {len(siap)} berkas\\nBAP yang belum siap ditandatangani ada: {len(belum)} berkas"
     return msgreply
 
 def infoBAPDeputi():
@@ -111,7 +111,7 @@ def infoBAPDeputi():
             siap.append(jadwalid[0])
         else:
             sudah.append(jadwalid[0])
-    msgreply=f"BAP yang sudah ditandatangani ada: {len(sudah)} berkas\nBAP yang siap ditandatangani ada: {len(siap)} berkas\nBAP yang belum siap ditandatangani ada: {len(belum)} berkas"
+    msgreply=f"BAP yang sudah ditandatangani ada: {len(sudah)} berkas\\nBAP yang siap ditandatangani ada: {len(siap)} berkas\\nBAP yang belum siap ditandatangani ada: {len(belum)} berkas"
     return msgreply
 
 
