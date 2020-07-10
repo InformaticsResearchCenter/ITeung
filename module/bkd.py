@@ -313,7 +313,7 @@ def checkNone(value):
         pass
     return value
 
-def makePDFBAP(pdf, inner_data, no, date):
+def makePDFBAP(pdf, inner_data, no, date, kodematkul, namamatkul, kelasbap, semester, sks):
     pdf.add_page()
     pdf.set_font('Times', '', 14.0)
     height = 0.3
@@ -332,14 +332,20 @@ def makePDFBAP(pdf, inner_data, no, date):
     pdf.set_y(y)
     x = pdf.get_x()
     
-    cover_data = ["Kode/No: "+no,"Tanggal: "+date,"Revisi:","Halaman:"]
+    cover_data = ["Kode/No: "+no,"Tanggal: "+date,"Revisi: -","Halaman: 1"]
     for i in cover_data:
         pdf.set_x(x+5.3)
         pdf.cell(2.2, height, i, border=1)
         pdf.ln(height)
     pdf.ln(height)
     pdf.ln(height)
-    
+    pdf.cell(3, height, f"Kode Matakuliah/Nama Matakuliah : {kodematkul}/{namamatkul}")
+    pdf.ln(height)
+    pdf.cell(3, height, f"Kelas : {kelasbap}")
+    pdf.ln(height)
+    pdf.cell(3, height, f"Semester/SKS : {semester}/{sks}")
+    pdf.ln(height)
+
     for x, rows in enumerate(inner_data):
         if x == 0:
             for i, row in enumerate(rows):
@@ -664,22 +670,7 @@ def makePDFandSend(data):
                     matkuldatalist.append(str(i[3]))
                     matkuldatalist.append(str(i[4]))
                     datafixbap.append(matkuldatalist)
-                print(datafixbap)
-
-                #buat halaman BAP disini
-                makePDFBAP(pdf, datafixbap, kode_nomor, tanggalpdfbap)
-                ###############
-
-                """
-                cara penggunaannya bisa buat file baru contohnya testing.py sejajar sama file chatbot.py
-                
-                setelah itu ketik ini:
-                
-                from module import bkd
-                bkd.makePDFandSend(['6281312000300'])
-                """
-
-                ################################
+                makePDFBAP(pdf, datafixbap, kode_nomor, tanggalpdfbap, kode_matkul, nama_matkul, nama_kelas, semester, sks)
 
                 studentid, studentname = getandsetStudentIDandStudentNAME(jadwalid[0])
                 presensidosens1 = getPresensiDosen(jadwalid[0], 0, 8)
