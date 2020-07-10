@@ -163,19 +163,20 @@ def auth(data):
 
 
 def replymsg(driver, data):
+    num=numbers.normalize(data[0])
     wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
     wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
-    subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0], data], cwd=config.cwd)
+    subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0], num], cwd=config.cwd)
     return wmsg
 
 
-def run(data):
-    if isKaprodi(getNIPYfromHandphone(data[0])):
+def run(num):
+    if isKaprodi(getNIPYfromHandphone(num)):
         status='kaprodi'
     else:
         status='deputi'
     if status == 'kaprodi':
-        msgreply=infoBAPKaprodi(kelas.getAllDataDosens(kelas.getKodeDosen(data[0]))[21])
+        msgreply=infoBAPKaprodi(kelas.getAllDataDosens(kelas.getKodeDosen(num))[21])
     else:
         msgreply=infoBAPDeputi()
-    wa.setOutbox(numbers.normalize(data[0]), msgreply)
+    wa.setOutbox(numbers.normalize(num), msgreply)
