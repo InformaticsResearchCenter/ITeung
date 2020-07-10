@@ -695,6 +695,6 @@ def makePDFandSend(data):
         except Exception as e:
             print(str(e))
             print(f'pertemuan kurang dari {config.kehadiran}')
-    # mail(getLecturerMail(lecturercode), 'Halooooo, #BOTNAME# ngirim file nich....'.replace('#BOTNAME#', config.bot_name),
-    #      'ini ya file Absensi BKD yang Bapak/Ibu minta silahkan di cek... ehee....',
-    #      getFilePath(getLecturerMail(lecturercode), 'bkd'))
+    mail(getLecturerMail(lecturercode), 'Halooooo, #BOTNAME# ngirim file nich....'.replace('#BOTNAME#', config.bot_name),
+         'ini ya file Absensi BKD yang Bapak/Ibu minta silahkan di cek... ehee....',
+         getFilePath(getLecturerMail(lecturercode), 'bkd'))
