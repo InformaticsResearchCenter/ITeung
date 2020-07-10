@@ -643,22 +643,17 @@ def makePDFandSend(data):
             for jadwalid in jadwalids:
                 matkuldetails = kelas.getMkDetails(jadwalid[0])
                 datamatkulbap = getBKDMatkul(jadwalid[0])
-
                 semester=countSemester(jadwalid[0])
                 sks=getSks(jadwalid[0])
                 nama_kelas = kelas.toKelas(matkuldetails[6])
-                nama_dosen = lecturername
                 kode_matkul = matkuldetails[1]
                 nama_matkul = matkuldetails[2]
-
                 datenow = datetime.date(datetime.now()).strftime('%d-%m-%Y')
                 tanggalbap = datenow.split('-')[0]
                 bulanbap = datenow.split('-')[1]
                 tahunbap = datenow.split('-')[2]
-
                 kode_nomor = f'ITeung/{tanggalbap}/{bulanbap}/{tahunbap}'
                 tanggalpdfbap = f'{tanggalbap} {bulanSwitcher(bulanbap)} {tahunbap}'
-
                 datafixbap = []
                 datawkwkbap = ['Pertemuan', 'Tanggal', 'Materi Perkuliahan', 'Jam Mulai', 'Jam Selesai']
                 datafixbap.append(datawkwkbap)
