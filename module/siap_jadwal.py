@@ -43,21 +43,37 @@ def replymsg(driver, data):
         wmsg = wmsg.replace('#EMAIL#', getEmailDosen(kodedosen))
         wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
         wa.typeAndSendMessage(driver, wmsg)
-        subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],kodedosen],
+        msg = data[3].split(' ')
+        subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],kodedosen, msg[2]],
                          cwd=config.cwd)
     else:
         wa.typeAndSendMessage(
             driver, 'Mohon maaf server Akademik SIAP sedang dalam kondisi DOWN, mohon untuk menginformasikan ke ADMIN dan tunggu hingga beberapa menit kemudian, lalu ulangi kembali, terima kasih....')
     return ''
 
-def run(kodedosen):
-    param = {
-        'dosen': kodedosen,
-        'tahun': kelas.getTahunID(),
-        'jenis': config.jenis_ujian,
-        'program': config.jalur_program
-    }
-    makeExcelAndSend(param)
+def run(kodedosen, jenis):
+    jenis = jenis.lower()
+    try:                  
+        if jenis == 'uts':
+            param = {
+                'dosen': kodedosen,
+                'tahun': kelas.getTahunID(),
+                'jenis': convertJenisNum(jenis), # "2"
+                'program': config.jalur_program,
+            }
+            makeExcelAndSend(param)
+        elif jenis == 'uas':
+            param = {
+                'dosen': kodedosen,
+                'tahun': kelas.getTahunID(),
+                'jenis': convertJenisNum(jenis), # "2"
+                'program': config.jalur_program,
+            }
+            makeExcelAndSend(param)
+    except Exception as e: 
+        print(str(e))
+    
+    
     
 def dbConnectSiap():
     db = pymysql.connect(config.db_host_siap,
@@ -67,11 +83,18 @@ def dbConnectSiap():
     return db
 
 
-def getHeaderAbsensi(jadwalID):
+def getHeaderAbsensi(jadwalID, jenis):
     db = dbConnectSiap()
-    sql = """
-            select j.MKKode, j.Nama, j.NamaKelas, concat(d.Nama,', ',d.Gelar) as Pengajar, date_format(j.UTSTanggal,'%d-%m-%Y') as Tanggal, time_format(j.UTSJamMulai,'%H:%i') as JamMulai, time_format(j.UTSJamSelesai,'%H:%i') as JamSelesai, r.Nama as Ruang, j.JumlahMhsw from simak_trn_jadwal j, simak_mst_dosen d, simak_mst_matakuliah m, simak_mst_ruangan r, simak_mst_tahun t, simak_mst_prodi pr where j.JadwalID='"""+jadwalID+"""' and j.MKID=m.MKID and j.DosenID=d.Login and j.RuangID=r.RuangID and j.TahunID=t.TahunID and t.ProgramID='REG' and m.ProdiID = pr.ProdiID group by j.JadwalID;
-        """
+    # print(jenis)
+    jenis = convertJenis(jenis).lower()
+    if jenis == "uts":
+        sql = """
+                select j.MKKode, j.Nama, j.NamaKelas, concat(d.Nama,', ',d.Gelar) as Pengajar, date_format(j.UTSTanggal,'%d-%m-%Y') as Tanggal, time_format(j.UTSJamMulai,'%H:%i') as JamMulai, time_format(j.UTSJamSelesai,'%H:%i') as JamSelesai, r.Nama as Ruang, j.JumlahMhsw from simak_trn_jadwal j, simak_mst_dosen d, simak_mst_matakuliah m, simak_mst_ruangan r, simak_mst_tahun t, simak_mst_prodi pr where j.JadwalID='"""+jadwalID+"""' and j.MKID=m.MKID and j.DosenID=d.Login and j.RuangID=r.RuangID and j.TahunID=t.TahunID and t.ProgramID='REG' and m.ProdiID = pr.ProdiID group by j.JadwalID;
+            """
+    elif jenis == "uas":
+        sql = """
+                select j.MKKode, j.Nama, j.NamaKelas, concat(d.Nama,', ',d.Gelar) as Pengajar, date_format(j.UASTanggal,'%d-%m-%Y') as Tanggal, time_format(j.UASJamMulai,'%H:%i') as JamMulai, time_format(j.UASJamSelesai,'%H:%i') as JamSelesai, r.Nama as Ruang, j.JumlahMhsw from simak_trn_jadwal j, simak_mst_dosen d, simak_mst_matakuliah m, simak_mst_ruangan r, simak_mst_tahun t, simak_mst_prodi pr where j.JadwalID='"""+jadwalID+"""' and j.MKID=m.MKID and j.DosenID=d.Login and j.RuangID=r.RuangID and j.TahunID=t.TahunID and t.ProgramID='REG' and m.ProdiID = pr.ProdiID group by j.JadwalID;
+            """
 
     with db:
         cur = db.cursor()
@@ -102,8 +125,9 @@ def getEmailDosen(dosenid):
         else:
             return ''
 
-def getMahasiswaAbsensi(jadwalID):
-    db = dbConnectSiap()
+def getMahasiswaAbsensi(jadwalID, jenis):
+    db = dbConnectSiap()    
+    jenis = convertJenis(jenis).lower()
     sql = """
         select krs.MhswID, left(mhs.Nama,100) as Nama,
 		IFNULL((select sum(jp.Nilai)
@@ -123,12 +147,10 @@ def getMahasiswaAbsensi(jadwalID):
         rows = cur.fetchall()
         if rows is not None:
             for row in rows:
-                if row[2] > 14:
-                    hadir = str(round(((row[2]/3)/7) * 100))+'%'
-                elif row[2] > 7:
-                    hadir = str(round(((row[2]/2)/7) * 100))+'%'
-                else:
+                if jenis == 'uts':
                     hadir = str(round((row[2]/7) * 100))+'%'
+                elif jenis == 'uas':
+                    hadir = str(round((row[2]/14) * 100))+'%'
                 mahasiswa.append([row[0], row[1], hadir])
 
             return mahasiswa
@@ -179,14 +201,14 @@ def getJadwalData(dosenID, tahun, program):
 
 
 def makeExcelAndSend(param):
-    jadwal = getJadwalData(
-        param['dosen'], param['tahun'], param['program'])
+    jadwal = getJadwalData(param['dosen'], param['tahun'], param['program'])
 
     for prodi in jadwal['prodi'].unique():
         checkDir(prodi)
 
     send = list()
     for i in range(len(jadwal)):
+        # print(param['jenis'])
         nama_file = 'Jadwal-%s-%s-%s-%s' % (
             convertJenis(param['jenis']), changeSpecialChar(
                 convertTahun(param['tahun'])),
@@ -224,8 +246,9 @@ def makeExcelAndSend(param):
 
 
 def makeExcel(param):
-    head_data = getHeaderAbsensi(param['jadwal_id'])
-    body_data = getMahasiswaAbsensi(param['jadwal_id'])
+    jenisx = convertJenisNum(longText(param['jenis']))
+    head_data = getHeaderAbsensi(param['jadwal_id'], jenisx)
+    body_data = getMahasiswaAbsensi(param['jadwal_id'], jenisx)
 
     if head_data and body_data:
         title_data = ['DAFTAR HADIR DAN NILAI '+param['jenis'],
@@ -237,7 +260,7 @@ def makeExcel(param):
         sheet.column_dimensions['C'].width = 50
         sheet.column_dimensions['F'].width = 20
         generateHead(title_data, head_data, sheet)
-        generateBody(body_data, sheet)
+        generateBody(body_data, sheet, jenisx)
         wb.save(
             'absensi/{}/{}.xlsx'.format(param['prodi'], param['nama_file']))
         print('File %s.xlsx berhasil dibuat' % param['nama_file'])
@@ -293,7 +316,7 @@ def generateHead(title_data, head_data, sheet):
     sheet["F7"].value = ': '+head_data['peserta']
 
 
-def generateBody(body_data, sheet):
+def generateBody(body_data, sheet, jenis):  
     index_cell = 9
     cell = sheet["A"+str(index_cell)]
     cell.value = 'No.'
@@ -308,7 +331,7 @@ def generateBody(body_data, sheet):
     cell.value = 'Hadir'
     cell.font = Font(bold=True)
     cell = sheet["E"+str(index_cell)]
-    cell.value = 'Nilai UTS'
+    cell.value = 'Nilai '+convertJenis(jenis)
     cell.font = Font(bold=True)
     cell = sheet["F"+str(index_cell)]
     cell.value = 'Tanda Tangan'
@@ -341,6 +364,7 @@ def generateBody(body_data, sheet):
 
 def sendEmail(file):
     try:
+        # print(file)
         subject = "Absensi {} Mata Kuliah {} Kelas {} Prodi {}".format(
             file['jenis'], file['matkul'], file['kelas'], file['prodi'])
         body = "Ini file absensi oleh iteung ya..., mohon untuk dicek kembali filenya jika ada yang salah mohon untuk diinformasikan ke admin iteung yaa....:) \nAbsensi {} Mata Kuliah {} Kelas {} Prodi {}".format(
@@ -402,6 +426,8 @@ def sendEmail(file):
 
     except FileNotFoundError:
         pass
+    except Exception as e: 
+        print(str(e))
 
 # Fungsi tambahan
 
@@ -435,12 +461,26 @@ def convertJenis(ujian):
     else:
         return 'XXX'
 
+def convertJenisNum(ujian):
+    ujian = ujian.lower()
+    if ujian == "uas":
+        return "2"
+    elif ujian == "uts":
+        return "1"
 
 def shortText(text):
     if 'UTS' == text:
         return 'UJIAN TENGAH SEMESTER'
     elif 'UAS' == text:
         return 'UJIAN AKHIR SEMESTER'
+    else:
+        return text
+
+def longText(text):
+    if 'UJIAN TENGAH SEMESTER' == text:
+        return 'UTS'
+    elif 'UJIAN AKHIR SEMESTER' == text:
+        return 'UAS'
     else:
         return text
 
