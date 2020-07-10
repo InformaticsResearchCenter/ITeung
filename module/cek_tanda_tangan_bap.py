@@ -178,4 +178,4 @@ def run(data):
         msgreply=infoBAPKaprodi(kelas.getAllDataDosens(kelas.getKodeDosen(data[0]))[21])
     else:
         msgreply=infoBAPDeputi()
-    wa.setOutbox(data[0], msgreply)
+    wa.setOutbox(numbers.normalize(data[0]), msgreply)
