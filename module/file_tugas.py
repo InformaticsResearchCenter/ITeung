@@ -42,9 +42,8 @@ def auth(data):
 
 def replymsg(driver, data):
     if kelas.cekSiap():
-        wmsg = reply.getWaitingMessage(
-            os.path.basename(__file__).split('.')[0])
-        wa.typeAndSendMessage(driver, wmsg)
+        # wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
+        # wa.typeAndSendMessage(driver, wmsg)
         num = data[0]
         num = numbers.normalize(num)
         msg = data[3]
@@ -353,7 +352,7 @@ def sendEmail(file):
         sender_email = config.email_iteung
         receiver_email = file['tujuan']
         # print(receiver_email)
-        receiver_email = 'divakrishnam@yahoo.com'
+        # receiver_email = 'divakrishnam@yahoo.com'
         password = config.pass_iteung
 
         message = MIMEMultipart()

@@ -20,7 +20,6 @@ def replymsg(driver, data):
         num = data[0]
         msg = data[3].split(' ')
         msgreply = getJadwalUjian(num, msg)
-        msgreply = "Ini jadwal ujian yang Bapak/Ibu minta\n\n"+msgreply
     else:
         msgreply='Mohon maaf server Akademik SIAP sedang dalam kondisi DOWN, mohon untuk menginformasikan ke ADMIN dan tunggu hingga beberapa menit kemudian, lalu ulangi kembali, terima kasih....'
     return msgreply
@@ -116,7 +115,7 @@ def getJadwalData(nohp, jenis):
     """
     
     # print(sql)
-    jadwal = '*JADWAL '+jenis.upper()+'*'
+    jadwal = 'Ini jadwal *UJIAN  yang Bapak/Ibu minta\n\n'.format(jenis.upper())
     jadwalToday = '*Jadwal Ujian Hari Ini*'.upper() + \
         '\nJadwalID | Tanggal | Mata Kuliah | Prodi | Kelas | Jumlah | Jam Ujian | Ruangan \n'
     jadwalPrevDay = '*Jadwal Ujian Yang Telah Dilaksanakan*'.upper() + \
