@@ -18,17 +18,73 @@ def replymsg(driver, data):
         wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
         wa.typeAndSendMessage(driver, wmsg)
         num = data[0]
-        msgreply = getJadwalData(num)
+        msg = data[3].split(' ')
+        msgreply = getJadwalUjian(num, msg)
         msgreply = "Ini jadwal ujian yang Bapak/Ibu minta\n\n"+msgreply
     else:
         msgreply='Mohon maaf server Akademik SIAP sedang dalam kondisi DOWN, mohon untuk menginformasikan ke ADMIN dan tunggu hingga beberapa menit kemudian, lalu ulangi kembali, terima kasih....'
     return msgreply
 
-def getJadwalData(nohp):
-    kelas.dbConnect()
-    db = kelas.dbConnectSiap()
+def getJadwalUjian(num, msg):
+    print(len(msg))
+    if len(msg) == 3:
+        jenis = msg[2].lower()
+        try:
+            jenis = jenis if jenis == 'uts' or jenis == 'uas' else False
+            if jenis:    
+                print(jenis)                
+                if jenis == 'uts':
+                    msgreply = getJadwalData(num, "uts")
+                elif jenis == 'uas':
+                    msgreply = getJadwalData(num, "uas")
+                else:
+                    msgreply = 'Punten, bukannya gmn, tp Anda salah keyword ....'
+            else:
+                msgreply = 'Punten, bukannya gmn, tp Anda salah keyword ...'
+        except Exception as e: 
+            msgreply = "Punten error nih, "+str(e)
+    else:
+        msgreply = 'Punten, bukannya gmn, tp Anda salah keyword ..'
+        
+    return msgreply
 
-    sql = """
+def getJadwalData(nohp, jenis):
+    # kelas.dbConnect()
+    db = kelas.dbConnectSiap()
+    
+    if jenis == "uts":
+        sql = """
+            select j.JadwalID, j.Nama, CASE
+            WHEN j.ProdiID ='.13.' THEN 'D3 Teknik Informatika'
+            WHEN j.ProdiID ='.14.' THEN 'D4 Teknik Informatika'
+            WHEN j.ProdiID ='.23.' THEN 'D3 Manajemen Informatika'
+            WHEN j.ProdiID ='.33.' THEN 'D3 Akuntansi'
+            WHEN j.ProdiID ='.34.' THEN 'D4 Akuntansi Keuangan'
+            WHEN j.ProdiID ='.43.' THEN 'D3 Manajemen Pemasaran'
+            WHEN j.ProdiID ='.44.' THEN 'D4 Manajemen Perusahaan'
+            WHEN j.ProdiID ='.53.' THEN 'D3 Logistik Bisnis'
+            WHEN j.ProdiID ='.54.' THEN 'D4 Logistik Bisnis'
+            END AS namaprodi, CASE
+            WHEN j.NamaKelas =1 THEN 'A'
+            WHEN j.NamaKelas =2 THEN 'B'
+            WHEN j.NamaKelas =3 THEN 'C'
+            WHEN j.NamaKelas =4 THEN 'D'
+            WHEN j.NamaKelas =5 THEN 'E'
+            WHEN j.NamaKelas =6 THEN 'F'
+            WHEN j.NamaKelas =7 THEN 'G'
+            WHEN j.NamaKelas =8 THEN 'H'
+            WHEN j.NamaKelas =9 THEN 'I'
+            END AS namakelas, j.JumlahMhsw, date_format(j.UTSTanggal,'%d-%m-%Y') as Tanggal, 
+            time_format(j.UTSJamMulai,'%H:%i') as JamMulai, 
+            time_format(j.UTSJamSelesai,'%H:%i') as JamSelesai,  r.Nama as Ruang, j.JadwalID
+            from simak_trn_jadwal j, simak_mst_ruangan r, simak_mst_dosen d, 
+            simak_mst_matakuliah m,  simak_mst_tahun t, simak_mst_prodi pr
+            where j.MKID=m.MKID and j.DosenID=d.Login and j.DosenID='"""+kelas.getKodeDosen(nohp)+"""' 
+            and j.TahunID='"""+kelas.getTahunID()+"""' and t.ProgramID='"""+config.jalur_program+"""' 
+            and m.ProdiID = pr.ProdiID and j.RuangID=r.RuangID and j.UTSTanggal != 0 group by j.JadwalID ;
+        """
+    elif jenis == "uas":
+        sql = """
         select j.JadwalID, j.Nama, CASE
         WHEN j.ProdiID ='.13.' THEN 'D3 Teknik Informatika'
         WHEN j.ProdiID ='.14.' THEN 'D4 Teknik Informatika'
@@ -49,16 +105,18 @@ def getJadwalData(nohp):
         WHEN j.NamaKelas =7 THEN 'G'
         WHEN j.NamaKelas =8 THEN 'H'
         WHEN j.NamaKelas =9 THEN 'I'
-        END AS namakelas, j.JumlahMhsw, date_format(j.UTSTanggal,'%d-%m-%Y') as Tanggal, 
-        time_format(j.UTSJamMulai,'%H:%i') as JamMulai, 
-        time_format(j.UTSJamSelesai,'%H:%i') as JamSelesai,  r.Nama as Ruang, j.JadwalID
+        END AS namakelas, j.JumlahMhsw, date_format(j.UASTanggal,'%d-%m-%Y') as Tanggal, 
+        time_format(j.UASJamMulai,'%H:%i') as JamMulai, 
+        time_format(j.UASJamSelesai,'%H:%i') as JamSelesai,  r.Nama as Ruang, j.JadwalID
         from simak_trn_jadwal j, simak_mst_ruangan r, simak_mst_dosen d, 
         simak_mst_matakuliah m,  simak_mst_tahun t, simak_mst_prodi pr
         where j.MKID=m.MKID and j.DosenID=d.Login and j.DosenID='"""+kelas.getKodeDosen(nohp)+"""' 
         and j.TahunID='"""+kelas.getTahunID()+"""' and t.ProgramID='"""+config.jalur_program+"""' 
-        and m.ProdiID = pr.ProdiID and j.RuangID=r.RuangID and j.UTSTanggal != 0 group by j.JadwalID ;
+        and m.ProdiID = pr.ProdiID and j.RuangID=r.RuangID and j.UASTanggal != 0 group by j.JadwalID ;
     """
-    jadwal = ''
+    
+    # print(sql)
+    jadwal = '*JADWAL '+jenis.upper()+'*'
     jadwalToday = '*Jadwal Ujian Hari Ini*'.upper() + \
         '\nJadwalID | Tanggal | Mata Kuliah | Prodi | Kelas | Jumlah | Jam Ujian | Ruangan \n'
     jadwalPrevDay = '*Jadwal Ujian Yang Telah Dilaksanakan*'.upper() + \
@@ -92,4 +150,4 @@ def getJadwalData(nohp):
         if len(jadwalNextDay) == 112:
             jadwalNextDay += '_Tidak ada jadwal ujian yang akan datang_ \n'
 
-    return jadwal + jadwalToday+'\n' + jadwalNextDay+'\n' + jadwalPrevDay
+    return jadwal+'\n' + jadwalToday+'\n' + jadwalNextDay+'\n' + jadwalPrevDay

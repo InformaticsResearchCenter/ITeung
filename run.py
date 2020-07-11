@@ -11,7 +11,7 @@ from importlib import import_module
 
 modulename=str(sys.argv[1])
 param=str(sys.argv[2])
-#extra=str(sys.argv[3])
+extra=str(sys.argv[3])
 
 mod=import_module('module.' + modulename)
-mod.run(param)
+mod.run(param, extra)
