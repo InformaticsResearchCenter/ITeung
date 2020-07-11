@@ -140,6 +140,7 @@ def sendOutbox(driver):
             pesan=data[-1].split(' ')
             pesanresult=''
             for i in pesan:
+                i = i.replace('\\n', '%0A')
                 pesanresult+=str(i)+'+'
             nomortujuan=data[1]
             driver.get('https://web.whatsapp.com/send?phone={nomortujuan}&text={pesan}'.format(
@@ -169,6 +170,16 @@ def getOutbox():
             return True, row
         else:
             return False, None
+
+def setOutbox(nomortujuan, pesan):
+    db=kelas.dbConnect()
+    sql="INSERT INTO `wanda`.`outbox`(`id`, `nomor_tujuan`, `pesan`) VALUES (DEFAULT, '{nomortujuan}', '{pesan}')".format(
+        nomortujuan=nomortujuan,
+        pesan=pesan
+    )
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
 
 def deleteOutbox(id):
     db=kelas.dbConnect()
