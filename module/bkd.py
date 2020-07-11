@@ -585,7 +585,7 @@ def makeLinkVerifiy(kodedosen):
     detik = datetime.now().time().strftime('%S')
     nomordokumen=f'ITeung/{tanggal}/{bulan}/{tahun}'
     jenisdokumen='Berita Acara Perkuliahan dan Absensi Perkuliahan'
-    data = f'{kodedosen};{tanggal};{bulan};{tahun};{jam};{menit};{detik};{nomordokumen};{jenisdokumen}'
+    data = f'{kodedosen};{tanggal};{bulan};{tahun};{jam};{menit};{detik};{nomordokumen};{jenisdokumen};'
     makeit96 = f'{data}{randomString(96 - len(data))}'
     obj = AES.new(config.key.encode("utf8"), AES.MODE_CBC, config.iv.encode('utf8'))
     cp = obj.encrypt(makeit96.encode("utf8"))
