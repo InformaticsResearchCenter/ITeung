@@ -68,7 +68,7 @@ def replymsg(driver, data):
     if status == 'kaprodi':
         kaprodiprodiid=getKaprodiProdiID(num)
         if jadwalid == 'all':
-            statusbap=cek_tanda_tangan_bap.infoBAPKaprodi(kaprodiprodiid)[1]
+            statusbap=cek_tanda_tangan_bap.infoBAPKaprodi(kaprodiprodiid)[2]
             if len(statusbap) > 0:
                 for bapjadwalid in statusbap:
                     confirmBKD(bapjadwalid, updatefield)
@@ -91,7 +91,7 @@ def replymsg(driver, data):
                 msgreply=f'aduhhhhh #BOTNAME# ga bisa nemuin Jadwal ID yang {jadwalid} dehhh coba cek lagi yaaa'
     else:
         if jadwalid == 'all':
-            statusbap = cek_tanda_tangan_bap.infoBAPDeputi()[1]
+            statusbap = cek_tanda_tangan_bap.infoBAPDeputi()[2]
             if len(statusbap) > 0:
                 for bapjadwalid in statusbap:
                     confirmBKD(bapjadwalid, updatefield)
