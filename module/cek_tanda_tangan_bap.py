@@ -66,10 +66,10 @@ def cekStatusBKDKaprodi(jadwalid):
         cur=db.cursor()
         cur.execute(sql)
         row=cur.fetchone()
-        if row[0] == None or row[0] == 'false':
-            return False
-        else:
+        if row[0] == 'true':
             return True
+        else:
+            return False
 
 
 def infoBAPKaprodi(prodiid):
