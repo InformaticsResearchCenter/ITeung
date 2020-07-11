@@ -1,5 +1,5 @@
 from module import kelas, cek_mp
-from lib import wa, reply
+from lib import wa, reply, message, numbers
 import os
 
 def auth(data):
@@ -12,8 +12,8 @@ def auth(data):
 def replymsg(driver, data):
     wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
     wa.typeAndSendMessage(driver, wmsg)
-    num=data[0]
-    msg=data[3]
+    num=numbers.normalize(data[0])
+    msg=message.normalize(data[3])
     dosenID=kelas.getKodeDosen(num)
     try:
         datasplit=msg.split(' materi perkuliahan ')[1]
@@ -31,8 +31,9 @@ def replymsg(driver, data):
                 materi=datasplit.split(' pertemuan ')[1][3:]
             else:
                 materi=datasplit.split(' pertemuan ')[1][2:]
+            print(f'{jadwalid} | {pertemuan} | {materi}')
             updateMateriPerkuliahan(jadwalid, pertemuan, materi)
-            msgreply='okeee bosqqq sudah di update'
+            msgreply=f'okeee bosqqq sudah di update yaaa\nJadwal ID: {jadwalid}\nPertemuan: {pertemuan}\nMateri: {materi}'
         else:
             msgreply='Jadwal ID yang dimasukkan salah atau tidak ditemukan!'
     except Exception as e:
