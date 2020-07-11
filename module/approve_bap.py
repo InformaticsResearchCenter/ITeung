@@ -80,19 +80,19 @@ def makeSublistJadwalIDandDosenID(jadwalidlist):
     return datareturn
 
 
-def groupingDataByDosenID(data):
+def groupingDataBySecondElement(data):
     result={}
-    for jadwalid, dosenid in data:
-        if dosenid in result:
-            result[dosenid].append((jadwalid, dosenid))
+    for firstelement, secondelement in data:
+        if secondelement in result:
+            result[secondelement].append((firstelement, secondelement))
         else:
-            result[dosenid]=[(jadwalid, dosenid)]
+            result[secondelement]=[(firstelement, secondelement)]
     return result
 
 
 def makeListDosenAfterApprove(jadwalidlist):
     sublistdata=makeSublistJadwalIDandDosenID(jadwalidlist)
-    datagrouping=groupingDataByDosenID(sublistdata)
+    datagrouping=groupingDataBySecondElement(sublistdata)
     msgreply=''
     for dosenid in datagrouping:
         namadosen=kelas.getNamaDosen(dosenid)

@@ -1,7 +1,7 @@
 import string, random, qrcode
 
 from fpdf import FPDF
-from module import kelas, siap_jadwal
+from module import kelas, siap_jadwal, cek_tanda_tangan_bap, approve_bap
 from datetime import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -10,7 +10,7 @@ from email import encoders
 
 from Crypto.Cipher import AES
 
-from lib import reply, numbers
+from lib import reply, numbers, wa
 
 import smtplib, os, config, subprocess, threading
 
@@ -249,6 +249,23 @@ def getBKDMatkul(jadwalid):
             return rows
         else:
             return None
+
+
+def cekMateriByGrouping(lecturercode):
+    statusbap=[]
+    mkkodes=getMkKode(lecturercode)
+    for mkkode in mkkodes:
+        jadwalids=getJadwalID(mkkode[0], lecturercode)
+        for jadwalid in jadwalids:
+            data=[]
+            data.append(jadwalid[0])
+            data.append(cek_tanda_tangan_bap.cekMateriPerkuliahan(jadwalid[0]))
+            statusbap.append(data)
+    datastatusgrouping=approve_bap.groupingDataBySecondElement(statusbap)
+    if False in datastatusgrouping:
+        return False, datastatusgrouping[False]
+    else:
+        return True, datastatusgrouping[True]
 
 
 def bulanSwitcher(bulannum):
@@ -737,12 +754,18 @@ def makePDFandSend(num):
             print(f'pertemuan kurang dari {config.kehadiran}')
             pertemuankurang.append(jadwalid[0])
     if len(pertemuankurang) > 0:
-        msgkurang='wahhh ada yang kurang nih pertemuannya ini Jadwal ID nya yaaa:'
+        msgkurang=f'hai haiii, kamu yang request BAP yaaa?{config.whatsapp_api_lineBreak}wahhh ada yang kurang nih pertemuannya ini Jadwal ID nya yaaa:'
         for i in pertemuankurang:
-            msgkurang+=f' {i}'
+            msgkurang+=f'{config.whatsapp_api_lineBreak}{i}'
+        cekkurangmateri=cekMateriByGrouping(lecturercode)
+        if cekkurangmateri[0] == False:
+            kurangmateri=''
+            for i in cekkurangmateri[1]:
+                kurangmateri+=f'{config.whatsapp_api_lineBreak}{i[0]}'
+            msgkurang+=f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}aduhhhh ternyata ada lagi nih yang kurang, matkul dengan Jadwal ID:{kurangmateri}'
+        wa.setOutbox(num, msgkurang)
     else:
-        msgkurang='okeee sudah lengkap semuaaa, cek kembali yaaa berkasnyaaaa....'
-    mail(getLecturerMail(lecturercode),
-         f'Halooooo, {config.bot_name} ngirim file nich....',
-         f'ini ya file Absensi BKD yang Bapak/Ibu minta silahkan di cek... ehee....\n\nNOTE:{msgkurang}',
-         getFilePath(getLecturerMail(lecturercode), 'bkd'))
+        mail(getLecturerMail(lecturercode),
+             f'Halooooo, {config.bot_name} ngirim file nich....',
+             f'ini ya file Absensi BKD yang Bapak/Ibu minta silahkan di cek... ehee....',
+             getFilePath(getLecturerMail(lecturercode), 'bkd'))
