@@ -14,6 +14,7 @@ from lib import reply, numbers
 
 import smtplib, os, config, subprocess, threading
 
+
 def auth(data):
     if kelas.getKodeDosen(data[0]) == '':
         ret = False
@@ -21,8 +22,9 @@ def auth(data):
         ret = True
     return ret
 
+
 def replymsg(driver, data):
-    kodedosen=kelas.getKodeDosen(data[0])
+    kodedosen = kelas.getKodeDosen(data[0])
     num = numbers.normalize(data[0])
     wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
     wmsg = wmsg.replace('#EMAIL#', siap_jadwal.getEmailDosen(kodedosen))
@@ -30,14 +32,17 @@ def replymsg(driver, data):
     subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0], num], cwd=config.cwd)
     return wmsg
 
+
 def run(num):
     makePDFandSend(num)
+
 
 def checkDir():
     try:
         os.mkdir('bkd/')
     except:
         print('sudah ada..')
+
 
 def getMkKode(lecturercode):
     db = kelas.dbConnectSiap()
@@ -188,9 +193,9 @@ def getNipyKaProdi(prodiid):
     db = kelas.dbConnectSiap()
     sql = f"select NIPY from simak_mst_pejabat where ProdiID={prodiid} and JenisJabatanID=5"
     with db:
-        cur=db.cursor()
+        cur = db.cursor()
         cur.execute(sql)
-        row=cur.fetchone()
+        row = cur.fetchone()
         if row is not None:
             return row[0]
         else:
@@ -201,9 +206,9 @@ def getNipyDeputi(jabatanid):
     db = kelas.dbConnectSiap()
     sql = f"select NIPY from simak_mst_pejabat where JenisJabatanID={jabatanid}"
     with db:
-        cur=db.cursor()
+        cur = db.cursor()
         cur.execute(sql)
-        row=cur.fetchone()
+        row = cur.fetchone()
         if row is not None:
             return row[0]
         else:
@@ -212,11 +217,11 @@ def getNipyDeputi(jabatanid):
 
 def getDosenIDfromNIPY(nipy):
     db = kelas.dbConnectSiap()
-    sql=f'select Login from simak_mst_dosen where NIPY="{nipy}"'
+    sql = f'select Login from simak_mst_dosen where NIPY="{nipy}"'
     with db:
-        cur=db.cursor()
+        cur = db.cursor()
         cur.execute(sql)
-        row=cur.fetchone()
+        row = cur.fetchone()
         if row is not None:
             return row[0]
         else:
@@ -234,12 +239,12 @@ def getDeputiAkademik():
 
 
 def getBKDMatkul(jadwalid):
-    db=kelas.dbConnectSiap()
-    sql=f"select Pertemuan, Tanggal, MP, JamMulai, JamSelesai from simak_trn_presensi_dosen where JadwalID={jadwalid}"
+    db = kelas.dbConnectSiap()
+    sql = f"select Pertemuan, Tanggal, MP, JamMulai, JamSelesai from simak_trn_presensi_dosen where JadwalID={jadwalid}"
     with db:
-        cur=db.cursor()
+        cur = db.cursor()
         cur.execute(sql)
-        rows=cur.fetchall()
+        rows = cur.fetchall()
         if rows is not None:
             return rows
         else:
@@ -274,38 +279,41 @@ def makePDFHeader():
 
 
 def makePDFFooter(matkuldetails, lecturercode, pdf):
-    pdf.output('bkd/'+matkuldetails[1] + '-' + matkuldetails[2] + '-' + getLecturerMail(lecturercode) + '.pdf', 'F')
+    pdf.output('bkd/' + matkuldetails[1] + '-' + matkuldetails[2] + '-' + getLecturerMail(lecturercode) + '.pdf', 'F')
+
 
 def getFilePath(email, folder):
-    resultpath=[]
+    resultpath = []
     devpath = os.getcwd()
-    path='.\\{folder}'.format(folder=folder)
+    path = '.\\{folder}'.format(folder=folder)
     for root, dirs, files in os.walk(path):
         for i in files:
             if email in i:
-                rootpath=os.path.join(root, i)
+                rootpath = os.path.join(root, i)
                 resultpath.append(os.path.join(devpath, rootpath))
     return resultpath
 
+
 def mail(to, subject, text, filenames):
-   msg = MIMEMultipart()
-   msg['From'] = config.email_iteung
-   msg['To'] = to
-   msg['Subject'] = subject
-   msg.attach(MIMEText(text))
-   for file in filenames:
-      part = MIMEBase('application', 'octet-stream')
-      part.set_payload(open(file, 'rb').read())
-      encoders.encode_base64(part)
-      part.add_header('Content-Disposition', 'attachment; filename="%s"' % file.split('\\')[-1])
-      msg.attach(part)
-   mailServer = smtplib.SMTP("smtp.gmail.com", 587)
-   mailServer.ehlo()
-   mailServer.starttls()
-   mailServer.ehlo()
-   mailServer.login(config.email_iteung, config.pass_iteung)
-   mailServer.sendmail(config.email_iteung, to, msg.as_string())
-   mailServer.close()
+    msg = MIMEMultipart()
+    msg['From'] = config.email_iteung
+    msg['To'] = to
+    msg['Subject'] = subject
+    msg.attach(MIMEText(text))
+    for file in filenames:
+        part = MIMEBase('application', 'octet-stream')
+        part.set_payload(open(file, 'rb').read())
+        encoders.encode_base64(part)
+        part.add_header('Content-Disposition', 'attachment; filename="%s"' % file.split('\\')[-1])
+        msg.attach(part)
+    mailServer = smtplib.SMTP("smtp.gmail.com", 587)
+    mailServer.ehlo()
+    mailServer.starttls()
+    mailServer.ehlo()
+    mailServer.login(config.email_iteung, config.pass_iteung)
+    mailServer.sendmail(config.email_iteung, to, msg.as_string())
+    mailServer.close()
+
 
 def checkNone(value):
     if value == None:
@@ -314,28 +322,29 @@ def checkNone(value):
         pass
     return value
 
+
 def makePDFBAP(pdf, inner_data, no, date, kodematkul, namamatkul, kelasbap, semester, sks):
     pdf.add_page()
     pdf.set_font('Times', '', 14.0)
     height = 0.3
-    
+
     y = pdf.get_y()
-    pdf.image(f"./bkdqrcode/logo.png", h=height*4)
+    pdf.image(f"./bkdqrcode/logo.png", h=height * 4)
     # pdf.cell(1.2, height*4, "", border=1, align='C')
-    
+
     pdf.set_y(y)
-    pdf.set_x(height*6)
+    pdf.set_x(height * 6)
     pdf.set_font('Times', 'B', 10.0)
-    pdf.multi_cell(3.9, height*2, "POLITEKNIK POS INDOENSIA", border=1, align='C')    
+    pdf.multi_cell(3.9, height * 2, "POLITEKNIK POS INDOENSIA", border=1, align='C')
     pdf.ln(0)
-    pdf.set_x(height*6)
+    pdf.set_x(height * 6)
     pdf.multi_cell(3.9, height, "Berita Acara Perkuliahan dan \nAbsensi Perkuliahan", border=1, align='C')
     pdf.set_y(y)
     x = pdf.get_x()
-    
-    cover_data = ["Kode/No: "+no,"Tanggal: "+date,"Revisi: -","Halaman: 1"]
+
+    cover_data = ["Kode/No: " + no, "Tanggal: " + date, "Revisi: -", "Halaman: 1"]
     for i in cover_data:
-        pdf.set_x(x+5.3)
+        pdf.set_x(x + 5.3)
         pdf.cell(2.2, height, i, border=1)
         pdf.ln(height)
     pdf.ln(height)
@@ -376,7 +385,8 @@ def makePDFBAP(pdf, inner_data, no, date, kodematkul, namamatkul, kelasbap, seme
                     pdf.cell(0.8, height, checkNone(row), border=1, align='C')
         pdf.ln(height)
 
-def makePDFInner(datalist, matkuldetails, lecturername, pdf, pdfpertemuan, lecturerid):
+
+def makePDFInner(datalist, matkuldetails, lecturername, pdf, pdfpertemuan, lecturerid, statusapprove):
     pdf.add_page()
     pdf.set_font('Times', '', 14.0)
     epw = pdf.w - 2 * pdf.l_margin
@@ -388,7 +398,17 @@ def makePDFInner(datalist, matkuldetails, lecturername, pdf, pdfpertemuan, lectu
     waktu = str(matkuldetails[3])[:-3] + " - " + str(matkuldetails[4])[:-3]
     ruang = matkuldetails[5]
     kelasid = kelas.toKelas(matkuldetails[6])
-    data = [('No.', 'NPM', 'Nama', pdfpertemuan[0], pdfpertemuan[1], pdfpertemuan[2], pdfpertemuan[3], pdfpertemuan[4], pdfpertemuan[5], pdfpertemuan[6], 'Total')]
+    prodiqrcode='bkdqrcode/whiteimage.png'
+    deputiqrcode='bkdqrcode/whiteimage.png'
+    print(statusapprove)
+    if statusapprove[0] != None:
+        print('masuk ke kaprodi')
+        prodiqrcode=f"bkdqrcode/kaprodiqrcode{lecturerid}.png"
+    if statusapprove[1] != None:
+        print('masuk ke deputi')
+        deputiqrcode=f"bkdqrcode/deputiqrcode{lecturerid}.png"
+    data = [('No.', 'NPM', 'Nama', pdfpertemuan[0], pdfpertemuan[1], pdfpertemuan[2], pdfpertemuan[3], pdfpertemuan[4],
+             pdfpertemuan[5], pdfpertemuan[6], 'Total')]
     for i in datalist:
         data.append(i)
     header_data = [['Program Studi', ':', prodi, 'Jadwal', ': ', waktu],
@@ -396,8 +416,8 @@ def makePDFInner(datalist, matkuldetails, lecturername, pdf, pdfpertemuan, lectu
                    ['Pengajar', ': ', lecturername, 'Kelas', ': ', kelasid]]
     footer_data = [['Disahkan Tanggal: {sah}'.format(sah=sahTanggal()), ],
                    [['Pengajar', f"bkdqrcode/dosenqrcode{lecturerid}.png", lecturername],
-                    ['Ketua Prodi', f"bkdqrcode/kaprodiqrcode{lecturerid}.png", kaprodi],
-                    ['Deputi Akademik', f"bkdqrcode/deputiqrcode{lecturerid}.png", deputiakademik]]
+                    ['Ketua Prodi', prodiqrcode, kaprodi],
+                    ['Deputi Akademik', deputiqrcode, deputiakademik]]
                    ]
     th = pdf.font_size
     # header data
@@ -406,15 +426,15 @@ def makePDFInner(datalist, matkuldetails, lecturername, pdf, pdfpertemuan, lectu
             pdf.set_font('Times', '', 10.0)
             # columns
             if i == 0:
-                col_width = epw/6
+                col_width = epw / 6
             elif i == 1 or i == 4:
-                col_width = epw/25
+                col_width = epw / 25
             elif i == 2:
-                col_width = epw/1.95
+                col_width = epw / 1.95
             elif i == 3:
-                col_width = epw/9
+                col_width = epw / 9
             elif i == 5:
-                col_width = epw/8
+                col_width = epw / 8
             # condition columns
             if datum[:2].lower() == 'd4' or datum[:2].lower() == 'd3':
                 pdf.set_font('Times', 'B', 10.0)
@@ -426,21 +446,21 @@ def makePDFInner(datalist, matkuldetails, lecturername, pdf, pdfpertemuan, lectu
         pdf.ln(th)
     pdf.ln(th)
     # inner data
-    no_width = epw/25
-    npm_width = epw/12
-    nama_width = epw/2.65
-    pertemuan_width = epw/16
-    total_width = epw/16
+    no_width = epw / 25
+    npm_width = epw / 12
+    nama_width = epw / 2.65
+    pertemuan_width = epw / 16
+    total_width = epw / 16
 
     for i, row in enumerate(data):
         # last row
-        if i == len(data)-1:
+        if i == len(data) - 1:
             if pdfpertemuan[0] == '1':
-                startpertemuan=1
-                endpertemuan=7
+                startpertemuan = 1
+                endpertemuan = 7
             else:
-                startpertemuan=8
-                endpertemuan=14
+                startpertemuan = 8
+                endpertemuan = 14
             for j, datum in enumerate(row):
                 if j == 0:
                     col_width = no_width + npm_width + nama_width
@@ -492,13 +512,13 @@ def makePDFInner(datalist, matkuldetails, lecturername, pdf, pdfpertemuan, lectu
         y = 0
         for j, datum in enumerate(row):
             if i == 0:
-                col_width = (epw/6) + (epw/25) + (epw/1.95) + (epw/8) + (epw/9)
+                col_width = (epw / 6) + (epw / 25) + (epw / 1.95) + (epw / 8) + (epw / 9)
                 pdf.set_font('Times', '', 10.0)
                 pdf.cell(col_width, th, str(datum))
                 # pdf.ln(th)
             else:
-                col_width = ((epw/6) + (epw/25*2) +
-                             (epw/1.94) + (epw/8) + (epw/9)) / 3
+                col_width = ((epw / 6) + (epw / 25 * 2) +
+                             (epw / 1.94) + (epw / 8) + (epw / 9)) / 3
                 x = pdf.get_x()
                 y = pdf.get_y()
                 pdf.set_font('Times', '', 10.0)
@@ -517,7 +537,7 @@ def makePDFInner(datalist, matkuldetails, lecturername, pdf, pdfpertemuan, lectu
                     else:
                         pdf.cell(col_width, th, wkwk, align='C')
                     pdf.ln(th)
-                pdf.set_xy(x+col_width, y)
+                pdf.set_xy(x + col_width, y)
         pdf.ln(th)
     pdf.ln(th)
     pdf.ln(th)
@@ -531,7 +551,8 @@ def makePDFInner(datalist, matkuldetails, lecturername, pdf, pdfpertemuan, lectu
     pdf.ln(th)
     # pdf.ln(th)
     # pdf.ln(th)
-    pdf.cell(40, th, "Dokumen ini telah ditandatangani secara elektronik dan diterbitkan oleh ITeung (IT Service Utility Integrated) System")
+    pdf.cell(40, th,
+             "Dokumen ini telah ditandatangani secara elektronik dan diterbitkan oleh ITeung (IT Service Utility Integrated) System")
 
 
 def randomString(length):
@@ -542,31 +563,33 @@ def randomString(length):
 
 def makeLinkVerifiy(kodedosen):
     datenow = datetime.date(datetime.now()).strftime('%d-%m-%Y')
-    tanggal=datenow.split('-')[0]
-    bulan=datenow.split('-')[1]
-    tahun=datenow.split('-')[2]
-    jam=datetime.now().time().strftime('%H')
-    menit=datetime.now().time().strftime('%M')
-    detik=datetime.now().time().strftime('%S')
-    data=f'{kodedosen};{tanggal};{bulan};{tahun};{jam};{menit};{detik};'
-    makeit32=f'{data}{randomString(32-len(data))}'
+    tanggal = datenow.split('-')[0]
+    bulan = datenow.split('-')[1]
+    tahun = datenow.split('-')[2]
+    jam = datetime.now().time().strftime('%H')
+    menit = datetime.now().time().strftime('%M')
+    detik = datetime.now().time().strftime('%S')
+    data = f'{kodedosen};{tanggal};{bulan};{tahun};{jam};{menit};{detik};'
+    makeit32 = f'{data}{randomString(32 - len(data))}'
     obj = AES.new(config.key.encode("utf8"), AES.MODE_CBC, config.iv.encode('utf8'))
     cp = obj.encrypt(makeit32.encode("utf8"))
-    passcode=cp.hex()
-    space='%20'
-    link=f'https://api.whatsapp.com/send?phone={config.nomor_iteung}&text=iteung{space}tanda{space}tangan{space}{passcode}'
+    passcode = cp.hex()
+    space = '%20'
+    link = f'https://api.whatsapp.com/send?phone={config.nomor_iteung}&text=iteung{space}tanda{space}tangan{space}{passcode}'
     return link
+
 
 def makeQrcodeLinkVerifySign(link, status, kodedosen):
     if status == 'dosen':
-        img=qrcode.make(link)
+        img = qrcode.make(link)
         img.save(f'./bkdqrcode/dosenqrcode{kodedosen}.png')
     elif status == 'kaprodi':
-        img=qrcode.make(link)
+        img = qrcode.make(link)
         img.save(f'./bkdqrcode/kaprodiqrcode{kodedosen}.png')
     else:
-        img=qrcode.make(link)
+        img = qrcode.make(link)
         img.save(f'./bkdqrcode/deputiqrcode{kodedosen}.png')
+
 
 def checkDirQrcode():
     try:
@@ -577,12 +600,12 @@ def checkDirQrcode():
 
 def getDosenHomebase(phonenumber):
     num = numbers.normalize(phonenumber)
-    db=kelas.dbConnectSiap()
-    sql=f'select Homebase from simak_mst_dosen WHERE Handphone="{num}"'
+    db = kelas.dbConnectSiap()
+    sql = f'select Homebase from simak_mst_dosen WHERE Handphone="{num}"'
     with db:
-        cur=db.cursor()
+        cur = db.cursor()
         cur.execute(sql)
-        row=cur.fetchone()
+        row = cur.fetchone()
         if row is not None:
             return row[0]
         else:
@@ -590,33 +613,43 @@ def getDosenHomebase(phonenumber):
 
 
 def countSemester(jadwalid):
-    data=kelas.pesertaAbsensi(jadwalid)
-    middleDataLength=len(data)//2
-    npm=data[middleDataLength][-1]
-    tahunAngkatan=2000+int(npm[1:3])
-    tahunAjaran='20192'
-    semester=(int(tahunAjaran[:-1])-tahunAngkatan)*2+int(tahunAjaran[-1])
+    data = kelas.pesertaAbsensi(jadwalid)
+    middleDataLength = len(data) // 2
+    npm = data[middleDataLength][-1]
+    tahunAngkatan = 2000 + int(npm[1:3])
+    tahunAjaran = '20192'
+    semester = (int(tahunAjaran[:-1]) - tahunAngkatan) * 2 + int(tahunAjaran[-1])
     return semester
 
 
 def getSks(jadwalid):
-    db=kelas.dbConnectSiap()
-    sql=f'select SKS from simak_trn_jadwal where JadwalID={jadwalid}'
+    db = kelas.dbConnectSiap()
+    sql = f'select SKS from simak_trn_jadwal where JadwalID={jadwalid}'
     with db:
-        cur=db.cursor()
+        cur = db.cursor()
         cur.execute(sql)
-        row=cur.fetchone()
+        row = cur.fetchone()
         if row is not None:
             return row[0]
         else:
             return None
 
 
+def cekStatusApproveBAP(jadwalid):
+    db=kelas.dbConnectSiap()
+    sql=f"select BKD_Prodi, BKD_Deputi from simak_trn_jadwal where JadwalID={jadwalid}"
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        row=cur.fetchone()
+        return row
+
+
 def makePDFandSend(num):
     checkDir()
     lecturercode = kelas.getKodeDosen(num)
     lecturername = kelas.getNamaDosen(lecturercode)
-    dosenHomeBase=getDosenHomebase(num)
+    dosenHomeBase = getDosenHomebase(num)
     checkDirQrcode()
     # generate dosen barcode
     link = makeLinkVerifiy(lecturercode)
@@ -641,10 +674,11 @@ def makePDFandSend(num):
             pdf = makePDFHeader()
             matkuldetailsfix = None
             for jadwalid in jadwalids:
+                print(jadwalid)
                 matkuldetails = kelas.getMkDetails(jadwalid[0])
                 datamatkulbap = getBKDMatkul(jadwalid[0])
-                semester=countSemester(jadwalid[0])
-                sks=getSks(jadwalid[0])
+                semester = countSemester(jadwalid[0])
+                sks = getSks(jadwalid[0])
                 nama_kelas = kelas.toKelas(matkuldetails[6])
                 kode_matkul = matkuldetails[1]
                 nama_matkul = matkuldetails[2]
@@ -665,14 +699,15 @@ def makePDFandSend(num):
                     matkuldatalist.append(str(i[3]))
                     matkuldatalist.append(str(i[4]))
                     datafixbap.append(matkuldatalist)
-                makePDFBAP(pdf, datafixbap, kode_nomor, tanggalpdfbap, kode_matkul, nama_matkul, nama_kelas, semester, sks)
+                makePDFBAP(pdf, datafixbap, kode_nomor, tanggalpdfbap, kode_matkul, nama_matkul, nama_kelas, semester,
+                           sks)
                 studentid, studentname = getandsetStudentIDandStudentNAME(jadwalid[0])
                 presensidosens1 = getPresensiDosen(jadwalid[0], 0, 8)
                 presensidosens2 = getPresensiDosen(jadwalid[0], 7, 15)
                 for i in range(2):
                     if i == 0:
                         pertemuan = countPertemuan(presensidosens1)
-                        pdfpertemuan=['1', '2', '3', '4', '5', '6', '7']
+                        pdfpertemuan = ['1', '2', '3', '4', '5', '6', '7']
                     else:
                         pertemuan = countPertemuan(presensidosens2)
                         pdfpertemuan = ['8', '9', '10', '11', '12', '13', '14']
@@ -680,7 +715,8 @@ def makePDFandSend(num):
                                      pertemuan[6]))
                     total = countTotal(datas)
                     datas = list(
-                        zip(studentid, studentname, pertemuan[0], pertemuan[1], pertemuan[2], pertemuan[3], pertemuan[4],
+                        zip(studentid, studentname, pertemuan[0], pertemuan[1], pertemuan[2], pertemuan[3],
+                            pertemuan[4],
                             pertemuan[5], pertemuan[6]))
                     number = countNumber(studentid)
                     datapdf = list(
@@ -688,12 +724,14 @@ def makePDFandSend(num):
                             pertemuan[4], pertemuan[5], pertemuan[6], total))
                     tanggal = tanggalBKDPresensi(getTanggalFromPresensiDosen(jadwalid[0]))
                     datapdf.append(tanggal)
-                    makePDFInner(datapdf, matkuldetails, lecturername, pdf, pdfpertemuan, lecturercode)
+                    statusapprove=cekStatusApproveBAP(jadwalid[0])
+                    makePDFInner(datapdf, matkuldetails, lecturername, pdf, pdfpertemuan, lecturercode, statusapprove)
                     matkuldetailsfix = matkuldetails
             makePDFFooter(matkuldetailsfix, lecturercode, pdf)
         except Exception as e:
             print(str(e))
             print(f'pertemuan kurang dari {config.kehadiran}')
-    mail(getLecturerMail(lecturercode), 'Halooooo, #BOTNAME# ngirim file nich....'.replace('#BOTNAME#', config.bot_name),
+    mail(getLecturerMail(lecturercode),
+         'Halooooo, #BOTNAME# ngirim file nich....'.replace('#BOTNAME#', config.bot_name),
          'ini ya file Absensi BKD yang Bapak/Ibu minta silahkan di cek... ehee....',
          getFilePath(getLecturerMail(lecturercode), 'bkd'))
