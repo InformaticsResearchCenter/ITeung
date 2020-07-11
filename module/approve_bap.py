@@ -78,14 +78,17 @@ def replymsg(driver, data):
             else:
                 msgreply='aduh wadidiw, ga ada nih berkas yang bisa di approve hihihihi'
         else:
-            if cekProdiIDKaproditoJadwalID(kaprodiprodiid, jadwalid):
-                if cek_tanda_tangan_bap.cekMateriPerkuliahan(jadwalid):
-                    confirmBKD(jadwalid, updatefield)
-                    msgreply = f'okee sudah berhasil #BOTNAME# set approvalnya untuk JadwalID *{jadwalid}* yaa...'
+            if kelas.getMkkode(jadwalid):
+                if cekProdiIDKaproditoJadwalID(kaprodiprodiid, jadwalid):
+                    if cek_tanda_tangan_bap.cekMateriPerkuliahan(jadwalid):
+                        confirmBKD(jadwalid, updatefield)
+                        msgreply = f'okee sudah berhasil #BOTNAME# set approvalnya untuk JadwalID *{jadwalid}* yaa...'
+                    else:
+                        msgreply = f'waduh mohon maaf sepertinya belum bisa approve JadwalID yang {jadwalid} deh soalnya materinya belum lengkap atau masih ada yang kosong'
                 else:
-                    msgreply = f'waduh mohon maaf sepertinya belum bisa approve JadwalID yang {jadwalid} deh soalnya materinya belum lengkap atau masih ada yang kosong'
+                    msgreply = f'hayooo Bapak/Ibu dari prodi mana hayooo kok mau set JadwalID yang lain hayoooo'
             else:
-                msgreply = f'hayooo Bapak/Ibu dari prodi mana hayooo kok mau set JadwalID yang lain hayoooo'
+                msgreply=f'aduhhhhh #BOTNAME# ga bisa nemuin Jadwal ID yang {jadwalid} dehhh coba cek lagi yaaa'
     else:
         if jadwalid == 'all':
             statusbap = cek_tanda_tangan_bap.infoBAPDeputi()[1]
@@ -98,9 +101,12 @@ def replymsg(driver, data):
             else:
                 msgreply='yahhhh sayang sekali belum ada berkas yang siap untuk di approve nichhhhh'
         else:
-            if cek_tanda_tangan_bap.cekMateriPerkuliahan(jadwalid):
-                confirmBKD(jadwalid, updatefield)
-                msgreply = f'okee sudah berhasil #BOTNAME# set approvalnya untuk JadwalID *{jadwalid}* yaa...'
+            if kelas.getMkkode(jadwalid):
+                if cek_tanda_tangan_bap.cekMateriPerkuliahan(jadwalid):
+                    confirmBKD(jadwalid, updatefield)
+                    msgreply = f'okee sudah berhasil #BOTNAME# set approvalnya untuk JadwalID *{jadwalid}* yaa...'
+                else:
+                    msgreply = f'waduh mohon maaf sepertinya belum bisa approce JadwalID yang {jadwalid} deh soalnya materinya belum lengkap atau masih ada yang kosong'
             else:
-                msgreply = f'waduh mohon maaf sepertinya belum bisa approce JadwalID yang {jadwalid} deh soalnya materinya belum lengkap atau masih ada yang kosong'
+                msgreply = f'aduhhhhh #BOTNAME# ga bisa nemuin Jadwal ID yang {jadwalid} dehhh coba cek lagi yaaa'
     return msgreply
