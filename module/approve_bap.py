@@ -57,6 +57,55 @@ def confirmBKD(jadwalid, updatefield):
         cur.execute(sql)
 
 
+def getDosenIDfromJadwalID(jadwalid):
+    db=kelas.dbConnectSiap()
+    sql=f'select DosenID from simak_trn_jadwal where JadwalID={jadwalid}'
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        row=cur.fetchone()
+        if row is not None:
+            return row[0]
+        else:
+            return None
+
+
+def makeSublistJadwalIDandDosenID(jadwalidlist):
+    datareturn=[]
+    for jadwalid in jadwalidlist:
+        datalist=[]
+        datalist.append(jadwalid)
+        datalist.append(getDosenIDfromJadwalID(jadwalid))
+        datareturn.append(datalist)
+    return datareturn
+
+
+def groupingDataByDosenID(data):
+    result={}
+    for jadwalid, dosenid in data:
+        if dosenid in result:
+            result[dosenid].append((jadwalid, dosenid))
+        else:
+            result[dosenid]=[(jadwalid, dosenid)]
+    return result
+
+
+def makeListDosenAfterApprove(jadwalidlist):
+    sublistdata=makeSublistJadwalIDandDosenID(jadwalidlist)
+    datagrouping=groupingDataByDosenID(sublistdata)
+    msgreply=''
+    for dosenid in datagrouping:
+        namadosen=kelas.getNamaDosen(dosenid)
+        datagroup=datagrouping[dosenid]
+        msgreply+=f'\n\nNama Dosen: {namadosen}'
+        for jadwal in datagroup:
+            matkuldetails=kelas.getMkDetails(jadwal[0])
+            namamatkul=matkuldetails[2]
+            namakelas=kelas.toKelas(matkuldetails[-1])
+            msgreply+=f'\n{jadwal[0]} | {namamatkul} | {namakelas}'
+    return msgreply
+
+
 def replymsg(driver, data):
     wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
     wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
@@ -72,9 +121,8 @@ def replymsg(driver, data):
             if len(statusbap) > 0:
                 for bapjadwalid in statusbap:
                     confirmBKD(bapjadwalid, updatefield)
-                msgreply=f'okee sudah berhasil #BOTNAME# approve semua datanya yaaa ini data yang berhasil #BOTNAME# approve\n\n*Jadwal ID* :\n'
-                for i in statusbap:
-                    msgreply+=f'{i}\n'
+                resultbapdosengrouping=makeListDosenAfterApprove(statusbap)
+                msgreply=f'okee sudah berhasil #BOTNAME# approve semua datanya yaaa ini data yang berhasil #BOTNAME# approve {resultbapdosengrouping}'
             else:
                 msgreply='aduh wadidiw, ga ada nih berkas yang bisa di approve hihihihi'
         else:
@@ -95,9 +143,8 @@ def replymsg(driver, data):
             if len(statusbap) > 0:
                 for bapjadwalid in statusbap:
                     confirmBKD(bapjadwalid, updatefield)
-                msgreply = f'okee sudah berhasil #BOTNAME# approve semua datanya yaaa ini data yang berhasil #BOTNAME# approve\n\n*Jadwal ID* :\n'
-                for i in statusbap:
-                    msgreply += f'{i}\n'
+                resultbapdosengrouping = makeListDosenAfterApprove(statusbap)
+                msgreply = f'okee sudah berhasil #BOTNAME# approve semua datanya yaaa ini data yang berhasil #BOTNAME# approve {resultbapdosengrouping}'
             else:
                 msgreply='yahhhh sayang sekali belum ada berkas yang siap untuk di approve nichhhhh'
         else:
