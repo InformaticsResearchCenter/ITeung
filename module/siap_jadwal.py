@@ -44,14 +44,17 @@ def replymsg(driver, data):
         wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
         wa.typeAndSendMessage(driver, wmsg)
         msg = data[3].split(' ')
-        subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],kodedosen, msg[2]],
+        data = kodedosen+";"+msg[2]
+        subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],data],
                          cwd=config.cwd)
     else:
         wa.typeAndSendMessage(
             driver, 'Mohon maaf server Akademik SIAP sedang dalam kondisi DOWN, mohon untuk menginformasikan ke ADMIN dan tunggu hingga beberapa menit kemudian, lalu ulangi kembali, terima kasih....')
     return ''
 
-def run(kodedosen, jenis):
+def run(data):
+    data = data.split(';')
+    kodedosen, jenis = data[0], data[1]
     jenis = jenis.lower()
     try:                  
         if jenis == 'uts':
