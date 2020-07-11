@@ -583,10 +583,12 @@ def makeLinkVerifiy(kodedosen):
     jam = datetime.now().time().strftime('%H')
     menit = datetime.now().time().strftime('%M')
     detik = datetime.now().time().strftime('%S')
-    data = f'{kodedosen};{tanggal};{bulan};{tahun};{jam};{menit};{detik};'
-    makeit32 = f'{data}{randomString(32 - len(data))}'
+    nomordokumen=f'ITeung/{tanggal}/{bulan}/{tahun}'
+    jenisdokumen='Berita Acara Perkuliahan dan Absensi Perkuliahan'
+    data = f'{kodedosen};{tanggal};{bulan};{tahun};{jam};{menit};{detik};{nomordokumen};{jenisdokumen}'
+    makeit96 = f'{data}{randomString(96 - len(data))}'
     obj = AES.new(config.key.encode("utf8"), AES.MODE_CBC, config.iv.encode('utf8'))
-    cp = obj.encrypt(makeit32.encode("utf8"))
+    cp = obj.encrypt(makeit96.encode("utf8"))
     passcode = cp.hex()
     space = '%20'
     link = f'https://api.whatsapp.com/send?phone={config.nomor_iteung}&text=iteung{space}tanda{space}tangan{space}{passcode}'

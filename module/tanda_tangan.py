@@ -30,6 +30,8 @@ def replymsg(driver, data):
         jamttd = resultpasscode.split(';')[4]
         mntttd = resultpasscode.split(';')[5]
         dtkttd = resultpasscode.split(';')[6]
+        nmrsrt = resultpasscode.split(';')[7]
+        jnsdkm = resultpasscode.split(';')[8]
         datadosen=kelas.getAllDataDosens(kodedosen)
         penerbitantandatangan = f'{jamttd}:{mntttd}:{dtkttd} {tglttd} {bkd.bulanSwitcher(blnttd)} {thnttd}'
         namadosen=kelas.getNamaDosen(kodedosen)
@@ -38,7 +40,7 @@ def replymsg(driver, data):
         bulanlahirdosen=bkd.bulanSwitcher(datalahirdosen.split('-')[1])
         tanggallahirdosen=datalahirdosen.split('-')[0]
         datalahirdosen=tanggallahirdosen+' '+bulanlahirdosen+' '+tahunlahirdosen
-        msgreply=f'Ini yaaa data yang Akang/Teteh minta\n\nKode Dosen: {kodedosen}\nNama Dosen: {namadosen}\nNIDN: {datadosen[2]}\nTempat/Tgl Lahir: {datadosen[6]}/{datalahirdosen}\nHandphone: {datadosen[12]}\nE-mail: {datadosen[13]}\n\nPenerbitan Tanda Tangan: {penerbitantandatangan}'
+        msgreply=f'Ini yaaa data yang Akang/Teteh minta\n\nKode Dosen: {kodedosen}\nNama Dosen: {namadosen}\nNIDN: {datadosen[2]}\nTempat/Tgl Lahir: {datadosen[6]}/{datalahirdosen}\nHandphone: {datadosen[12]}\nE-mail: {datadosen[13]}\n\nJenis Dokumen: {jnsdkm}\nNomor Dokumen: {nmrsrt}\nPenerbitan Tanda Tangan: {penerbitantandatangan}'
     else:
         msgreply=f'waduh akang/teteh kayaknya #BOTNAME# ga bisa mengenali passcode yang *{passcode}* deh, coba di periksa lagi yaa, dan jangan diubah passcodenya'
     return msgreply
