@@ -116,7 +116,7 @@ def getJadwalData(nohp, jenis):
     """
     
     # print(sql)
-    jadwal = ''
+    jadwal = '*JADWAL '+jenis.upper()+'*'
     jadwalToday = '*Jadwal Ujian Hari Ini*'.upper() + \
         '\nJadwalID | Tanggal | Mata Kuliah | Prodi | Kelas | Jumlah | Jam Ujian | Ruangan \n'
     jadwalPrevDay = '*Jadwal Ujian Yang Telah Dilaksanakan*'.upper() + \
@@ -150,4 +150,4 @@ def getJadwalData(nohp, jenis):
         if len(jadwalNextDay) == 112:
             jadwalNextDay += '_Tidak ada jadwal ujian yang akan datang_ \n'
 
-    return jadwal + jadwalToday+'\n' + jadwalNextDay+'\n' + jadwalPrevDay
+    return jadwal+'\n' + jadwalToday+'\n' + jadwalNextDay+'\n' + jadwalPrevDay
