@@ -87,7 +87,7 @@ def infoBAPKaprodi(prodiid):
         else:
             sudah.append(jadwalid[0])
     msgreply=f"BAP yang sudah ditandatangani ada: {len(sudah)} berkas%0ABAP yang siap ditandatangani ada: {len(siap)} berkas%0ABAP yang belum siap ditandatangani ada: {len(belum)} berkas"
-    return msgreply
+    return msgreply, sudah, siap, belum
 
 def infoBAPDeputi():
     JadwalIDDataDeputi=getListJadwalIDfromDeputi()
@@ -104,7 +104,7 @@ def infoBAPDeputi():
         else:
             sudah.append(jadwalid[0])
     msgreply=f"BAP yang sudah ditandatangani ada: {len(sudah)} berkas%0ABAP yang siap ditandatangani ada: {len(siap)} berkas%0ABAP yang belum siap ditandatangani ada: {len(belum)} berkas"
-    return msgreply
+    return msgreply, sudah, siap, belum
 
 
 def getNIPYfromHandphone(num):
@@ -171,4 +171,4 @@ def run(num):
         msgreply=infoBAPKaprodi(kelas.getAllDataDosens(kelas.getKodeDosen(num))[21])
     else:
         msgreply=infoBAPDeputi()
-    wa.setOutbox(numbers.normalize(num), msgreply)
+    wa.setOutbox(numbers.normalize(num), msgreply[0])

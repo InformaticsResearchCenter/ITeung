@@ -400,12 +400,9 @@ def makePDFInner(datalist, matkuldetails, lecturername, pdf, pdfpertemuan, lectu
     kelasid = kelas.toKelas(matkuldetails[6])
     prodiqrcode='bkdqrcode/whiteimage.png'
     deputiqrcode='bkdqrcode/whiteimage.png'
-    print(statusapprove)
-    if statusapprove[0] != None:
-        print('masuk ke kaprodi')
+    if statusapprove[0] == 'true':
         prodiqrcode=f"bkdqrcode/kaprodiqrcode{lecturerid}.png"
-    if statusapprove[1] != None:
-        print('masuk ke deputi')
+    if statusapprove[1] == 'true':
         deputiqrcode=f"bkdqrcode/deputiqrcode{lecturerid}.png"
     data = [('No.', 'NPM', 'Nama', pdfpertemuan[0], pdfpertemuan[1], pdfpertemuan[2], pdfpertemuan[3], pdfpertemuan[4],
              pdfpertemuan[5], pdfpertemuan[6], 'Total')]

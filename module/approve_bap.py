@@ -68,20 +68,42 @@ def replymsg(driver, data):
         updatefield=updateField(status)
         if status == 'kaprodi':
             kaprodiprodiid=getKaprodiProdiID(num)
-            if cekProdiIDKaproditoJadwalID(kaprodiprodiid, jadwalid):
+            if jadwalid == 'all':
+                statusbap=cek_tanda_tangan_bap.infoBAPKaprodi(kaprodiprodiid)[1]
+                if len(statusbap) > 0:
+                    for bapjadwalid in statusbap:
+                        confirmBKD(bapjadwalid, updatefield)
+                    msgreply=f'okee sudah berhasil #BOTNAME# approve semua datanya yaaa ini data yang berhasil #BOTNAME# approve\n\n*Jadwal ID* :\n'
+                    for i in statusbap:
+                        msgreply+=f'{i}\n'
+                else:
+                    msgreply='aduh wadidiw, ga ada nih berkas yang bisa di approve hihihihi'
+            else:
+                if cekProdiIDKaproditoJadwalID(kaprodiprodiid, jadwalid):
+                    if cek_tanda_tangan_bap.cekMateriPerkuliahan(jadwalid):
+                        confirmBKD(jadwalid, updatefield)
+                        msgreply = f'okee sudah berhasil #BOTNAME# set approvalnya untuk JadwalID *{jadwalid}* yaa...'
+                    else:
+                        msgreply = f'waduh mohon maaf sepertinya belum bisa approve JadwalID yang {jadwalid} deh soalnya materinya belum lengkap atau masih ada yang kosong'
+                else:
+                    msgreply = f'hayooo Bapak/Ibu dari prodi mana hayooo kok mau set JadwalID yang lain hayoooo'
+        else:
+            if jadwalid == 'all':
+                statusbap = cek_tanda_tangan_bap.infoBAPDeputi()[1]
+                if len(statusbap) > 0:
+                    for bapjadwalid in statusbap:
+                        confirmBKD(bapjadwalid, updatefield)
+                    msgreply = f'okee sudah berhasil #BOTNAME# approve semua datanya yaaa ini data yang berhasil #BOTNAME# approve\n\n*Jadwal ID* :\n'
+                    for i in statusbap:
+                        msgreply += f'{i}\n'
+                else:
+                    msgreply='yahhhh sayang sekali belum ada berkas yang siap untuk di approve nichhhhh'
+            else:
                 if cek_tanda_tangan_bap.cekMateriPerkuliahan(jadwalid):
                     confirmBKD(jadwalid, updatefield)
                     msgreply = f'okee sudah berhasil #BOTNAME# set approvalnya untuk JadwalID *{jadwalid}* yaa...'
                 else:
                     msgreply = f'waduh mohon maaf sepertinya belum bisa approce JadwalID yang {jadwalid} deh soalnya materinya belum lengkap atau masih ada yang kosong'
-            else:
-                msgreply = f'hayooo Bapak/Ibu dari prodi mana hayooo kok mau set JadwalID yang lain hayoooo'
-        else:
-            if cek_tanda_tangan_bap.cekMateriPerkuliahan(jadwalid):
-                confirmBKD(jadwalid, updatefield)
-                msgreply = f'okee sudah berhasil #BOTNAME# set approvalnya untuk JadwalID *{jadwalid}* yaa...'
-            else:
-                msgreply = f'waduh mohon maaf sepertinya belum bisa approce JadwalID yang {jadwalid} deh soalnya materinya belum lengkap atau masih ada yang kosong'
     else:
         msgreply=f'wah #BOTNAME# ga bisa nemuin JadwalID yang *{jadwalid}* deh coba cek dulu'
     return msgreply
