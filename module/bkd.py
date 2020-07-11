@@ -755,14 +755,16 @@ def makePDFandSend(num):
             pertemuankurang.append(jadwalid[0])
     cekkurangmateri = cekMateriByGrouping(lecturercode)
     if len(pertemuankurang) > 0 or cekkurangmateri[0] == False:
-        msgkurang=f'hai haiii, kamu yang request BAP yaaa?{config.whatsapp_api_lineBreak}wahhh ada yang kurang nih pertemuannya ini Jadwal ID nya yaaa:'
-        for i in pertemuankurang:
-            msgkurang+=f'{config.whatsapp_api_lineBreak}{i}'
+        msgkurang=''
+        if len(pertemuankurang) > 0:
+            msgkurang+=f'hai haiii, kamu yang request BAP yaaa?{config.whatsapp_api_lineBreak}wahhh ada yang kurang nih pertemuannya ini Jadwal ID nya yaaa:'
+            for i in pertemuankurang:
+                msgkurang+=f'{config.whatsapp_api_lineBreak}{i}'
         if cekkurangmateri[0] == False:
             kurangmateri=''
             for i in cekkurangmateri[1]:
                 kurangmateri+=f'{config.whatsapp_api_lineBreak}{i[0]}'
-            msgkurang+=f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}aduhhhh ternyata ada lagi nih yang kurang, matkul dengan Jadwal ID:{kurangmateri}'
+            msgkurang+=f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}aduhhhh ternyata ada yang kurang nih ketika kamu request BAP, matkul dengan Jadwal ID:{kurangmateri}{config.whatsapp_api_lineBreak}materinya kurang nihhhhh, tolong lengkapi lagiii yaaa caranya ketik ini *iteung panduan dosen kelas online* dan baca panduan nomor 13 dan 14'
         wa.setOutbox(num, msgkurang)
     else:
         mail(getLecturerMail(lecturercode),
