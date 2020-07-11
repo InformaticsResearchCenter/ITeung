@@ -753,11 +753,11 @@ def makePDFandSend(num):
             print(str(e))
             print(f'pertemuan kurang dari {config.kehadiran}')
             pertemuankurang.append(jadwalid[0])
-    if len(pertemuankurang) > 0:
+    cekkurangmateri = cekMateriByGrouping(lecturercode)
+    if len(pertemuankurang) > 0 or cekkurangmateri[0] == False:
         msgkurang=f'hai haiii, kamu yang request BAP yaaa?{config.whatsapp_api_lineBreak}wahhh ada yang kurang nih pertemuannya ini Jadwal ID nya yaaa:'
         for i in pertemuankurang:
             msgkurang+=f'{config.whatsapp_api_lineBreak}{i}'
-        cekkurangmateri=cekMateriByGrouping(lecturercode)
         if cekkurangmateri[0] == False:
             kurangmateri=''
             for i in cekkurangmateri[1]:
