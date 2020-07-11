@@ -610,6 +610,11 @@ def getDosenHomebase(phonenumber):
 
 
 def countSemester(jadwalid):
+    jadwalserial = kelas.getJadwalSerial(jadwalid=jadwalid)
+    if jadwalserial == '0':
+        jadwalid = jadwalid
+    else:
+        jadwalid = jadwalserial
     data = kelas.pesertaAbsensi(jadwalid)
     middleDataLength = len(data) // 2
     npm = data[middleDataLength][-1]
@@ -663,6 +668,8 @@ def makePDFandSend(num):
     deputiDosenID = getDosenIDfromNIPY(deputinipycode)
     link = makeLinkVerifiy(deputiDosenID)
     makeQrcodeLinkVerifySign(link, 'deputi', lecturercode)
+
+    pertemuankurang=[]
 
     mkkodes = getMkKode(lecturercode)
     for mkkode in mkkodes:
@@ -728,7 +735,14 @@ def makePDFandSend(num):
         except Exception as e:
             print(str(e))
             print(f'pertemuan kurang dari {config.kehadiran}')
+            pertemuankurang.append(jadwalid[0])
+    if len(pertemuankurang) > 0:
+        msgkurang='wahhh ada yang kurang nih pertemuannya ini Jadwal ID nya yaaa:'
+        for i in pertemuankurang:
+            msgkurang+=f' {i}'
+    else:
+        msgkurang='okeee sudah lengkap semuaaa, cek kembali yaaa berkasnyaaaa....'
     mail(getLecturerMail(lecturercode),
-         'Halooooo, #BOTNAME# ngirim file nich....'.replace('#BOTNAME#', config.bot_name),
-         'ini ya file Absensi BKD yang Bapak/Ibu minta silahkan di cek... ehee....',
+         f'Halooooo, {config.bot_name} ngirim file nich....',
+         f'ini ya file Absensi BKD yang Bapak/Ibu minta silahkan di cek... ehee....\n\nNOTE:{msgkurang}',
          getFilePath(getLecturerMail(lecturercode), 'bkd'))
