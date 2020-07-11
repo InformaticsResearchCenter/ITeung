@@ -23,14 +23,15 @@ def auth(data):
 
 def replymsg(driver, data):
     kodedosen=kelas.getKodeDosen(data[0])
+    num = numbers.normalize(data[0])
     wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
     wmsg = wmsg.replace('#EMAIL#', siap_jadwal.getEmailDosen(kodedosen))
     wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
-    subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0], data], cwd=config.cwd)
+    subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0], num], cwd=config.cwd)
     return wmsg
 
-def run(data):
-    makePDFandSend(data)
+def run(num):
+    makePDFandSend(num)
 
 def checkDir():
     try:
@@ -611,9 +612,8 @@ def getSks(jadwalid):
             return None
 
 
-def makePDFandSend(data):
+def makePDFandSend(num):
     checkDir()
-    num = data[0]
     lecturercode = kelas.getKodeDosen(num)
     lecturername = kelas.getNamaDosen(lecturercode)
     dosenHomeBase=getDosenHomebase(num)
