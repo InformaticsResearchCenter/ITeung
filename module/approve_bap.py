@@ -82,11 +82,18 @@ def makeSublistJadwalIDandDosenID(jadwalidlist):
 
 def groupingDataBySecondElement(data):
     result={}
-    for firstelement, secondelement in data:
-        if secondelement in result:
-            result[secondelement].append((firstelement, secondelement))
-        else:
-            result[secondelement]=[(firstelement, secondelement)]
+    if len(data[0]) > 2:
+        for firstelement, secondelement, thirdelement in data:
+            if secondelement in result:
+                result[secondelement].append((firstelement, secondelement, thirdelement))
+            else:
+                result[secondelement]=[(firstelement, secondelement, thirdelement)]
+    else:
+        for firstelement, secondelement in data:
+            if secondelement in result:
+                result[secondelement].append((firstelement, secondelement))
+            else:
+                result[secondelement]=[(firstelement, secondelement)]
     return result
 
 

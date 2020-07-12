@@ -72,6 +72,19 @@ def cekStatusBKDKaprodi(jadwalid):
             return False
 
 
+def cekStatusBKDDeputi(jadwalid):
+    db=kelas.dbConnectSiap()
+    sql=f'select BKD_Deputi from simak_trn_jadwal where JadwalID={jadwalid}'
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        row=cur.fetchone()
+        if row[0] == 'true':
+            return True
+        else:
+            return False
+
+
 def infoBAPKaprodi(prodiid):
     JadwalIDDataProdi=getListJadwalIDfromKaprodi(prodiid)
     sudah=[]
@@ -96,7 +109,7 @@ def infoBAPDeputi():
     belum=[]
     for jadwalid in JadwalIDDataDeputi:
         statusmateri=cekMateriPerkuliahan(jadwalid[0])
-        statusttd=cekStatusBKDKaprodi(jadwalid[0])
+        statusttd=cekStatusBKDDeputi(jadwalid[0])
         if statusmateri == False and statusttd == False:
             belum.append(jadwalid[0])
         elif statusmateri == True and statusttd == False:

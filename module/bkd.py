@@ -277,12 +277,29 @@ def cekApprovalBAPByGrouping(lecturercode):
             data=[]
             data.append(jadwalid[0])
             data.append(cek_tanda_tangan_bap.cekStatusBKDKaprodi(jadwalid[0]))
+            data.append(cek_tanda_tangan_bap.cekStatusBKDDeputi(jadwalid[0]))
             statusbap.append(data)
     datastatusgrouping = approve_bap.groupingDataBySecondElement(statusbap)
-    if False in datastatusgrouping:
-        return False, datastatusgrouping[False]
+    if len(datastatusgrouping[True][0]) == 3:
+        for datalist in datastatusgrouping[True]:
+            if False in datalist:
+                if False in datastatusgrouping:
+                    datastatusgrouping[False].append(datalist)
+                else:
+                    datastatusgrouping[False]=[datalist]
+                # try:
+                #     datastatusgrouping[False].append(datalist)
+                # except:
+                #     datastatusgrouping[False]=[datalist]
+        if False in datastatusgrouping:
+            return False, datastatusgrouping[False]
+        else:
+            return True, datastatusgrouping[True]
     else:
-        return True, datastatusgrouping[True]
+        if False in datastatusgrouping:
+            return False, datastatusgrouping[False]
+        else:
+            return True, datastatusgrouping[True]
 
 
 def bulanSwitcher(bulannum):
@@ -788,11 +805,16 @@ def makePDFandSend(num):
                 kurangmateri+=f'{config.whatsapp_api_lineBreak}{i[0]} | {kelasdetails[2]} | {kelas.toKelas(kelasdetails[-1])}'
             msgkurang+=f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}aduhhhh ternyata ada yang kurang nih ketika kamu request BAP, matkul dengan Jadwal ID:{kurangmateri}{config.whatsapp_api_lineBreak}materinya kurang nihhhhh, tolong lengkapi lagiii yaaa caranya ketik ini *iteung panduan dosen kelas online* dan baca panduan nomor 13 dan 14'
         if cekkurangapproval[0] == False:
-            kurangapprove=''
+            kurangapprove = ''
+            siapayangkurang = ''
             for i in cekkurangapproval[1]:
                 kelasdetails = kelas.getMkDetails(i[0])
-                kurangapprove+=f'{config.whatsapp_api_lineBreak}{i[0]} | {kelasdetails[2]} | {kelas.toKelas(kelasdetails[-1])}'
-            msgkurang+=f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}wuowwww ada yang kurang nih ketika kamu request BAP, status approval nya masih belum di ACC nih dengan Jadwal ID:{kurangapprove}{config.whatsapp_api_lineBreak}'
+                if i[1] == True:
+                    siapayangkurang += ' | KAPRODI'
+                if i[2] == True:
+                    siapayangkurang += ' | DEPUTI'
+                kurangapprove += f'{config.whatsapp_api_lineBreak}{i[0]} | {kelasdetails[2]} | {kelas.toKelas(kelasdetails[-1])} {siapayangkurang}'
+            msgkurang += f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}wuowwww ada yang kurang nih ketika kamu request BAP, status approval nya masih belum di ACC nih dengan Jadwal ID:{kurangapprove}{config.whatsapp_api_lineBreak}'
         wa.setOutbox(numbers.normalize(num), msgkurang)
     else:
         mail(getLecturerMail(lecturercode),
