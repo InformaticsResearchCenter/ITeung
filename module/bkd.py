@@ -280,7 +280,11 @@ def cekApprovalBAPByGrouping(lecturercode):
             data.append(cek_tanda_tangan_bap.cekStatusBKDDeputi(jadwalid[0]))
             statusbap.append(data)
     datastatusgrouping = approve_bap.groupingDataBySecondElement(statusbap)
-    if len(datastatusgrouping[True][0]) == 3 or len(datastatusgrouping[False][0]) == 3:
+    try:
+        makeforcheck=datastatusgrouping[True]
+    except:
+        makeforcheck = datastatusgrouping[False]
+    if len(makeforcheck[0]) == 3:
         for datalist in datastatusgrouping[True]:
             if False in datalist:
                 if False in datastatusgrouping:
