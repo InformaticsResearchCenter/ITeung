@@ -813,7 +813,7 @@ def makePDFandSend(num):
                 if i[1] == False:
                     siapayangkurang += ' | KAPRODI'
                 if i[2] == False:
-                    siapayangkurang += ' | DEPUTI'
+                    siapayangkurang += ' | DEPUTI AKADEMIK'
                 kurangapprove += f'{config.whatsapp_api_lineBreak}{i[0]} | {kelasdetails[2]} | {kelas.toKelas(kelasdetails[-1])} {siapayangkurang}'
             msgkurang += f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}wuowwww ada yang kurang nih ketika kamu request BAP, status approval nya masih belum di ACC nih dengan Jadwal ID:{kurangapprove}{config.whatsapp_api_lineBreak}'
         wa.setOutbox(numbers.normalize(num), msgkurang)
