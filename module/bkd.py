@@ -806,8 +806,8 @@ def makePDFandSend(num):
             msgkurang+=f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}aduhhhh ternyata ada yang kurang nih ketika kamu request BAP, matkul dengan Jadwal ID:{kurangmateri}{config.whatsapp_api_lineBreak}materinya kurang nihhhhh, tolong lengkapi lagiii yaaa caranya ketik ini *iteung panduan dosen kelas online* dan baca panduan nomor 13 dan 14'
         if cekkurangapproval[0] == False:
             kurangapprove = ''
-            siapayangkurang = ''
             for i in cekkurangapproval[1]:
+                siapayangkurang = ''
                 kelasdetails = kelas.getMkDetails(i[0])
                 if i[1] == False:
                     siapayangkurang += ' | KAPRODI'
@@ -815,7 +815,8 @@ def makePDFandSend(num):
                     siapayangkurang += ' | DEPUTI'
                 kurangapprove += f'{config.whatsapp_api_lineBreak}{i[0]} | {kelasdetails[2]} | {kelas.toKelas(kelasdetails[-1])} {siapayangkurang}'
             msgkurang += f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}wuowwww ada yang kurang nih ketika kamu request BAP, status approval nya masih belum di ACC nih dengan Jadwal ID:{kurangapprove}{config.whatsapp_api_lineBreak}'
-        wa.setOutbox(numbers.normalize(num), msgkurang)
+        print(msgkurang)
+        # wa.setOutbox(numbers.normalize(num), msgkurang)
     else:
         mail(getLecturerMail(lecturercode),
              f'Halooooo, {config.bot_name} ngirim file nich....',
