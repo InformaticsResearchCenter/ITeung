@@ -285,16 +285,13 @@ def cekApprovalBAPByGrouping(lecturercode):
     except:
         makeforcheck = datastatusgrouping[False]
     if len(makeforcheck[0]) == 3:
-        for datalist in datastatusgrouping[True]:
-            if False in datalist:
-                if False in datastatusgrouping:
-                    datastatusgrouping[False].append(datalist)
-                else:
-                    datastatusgrouping[False]=[datalist]
-                # try:
-                #     datastatusgrouping[False].append(datalist)
-                # except:
-                #     datastatusgrouping[False]=[datalist]
+        if True in datastatusgrouping:
+            for datalist in datastatusgrouping[True]:
+                if False in datalist:
+                    if False in datastatusgrouping:
+                        datastatusgrouping[False].append(datalist)
+                    else:
+                        datastatusgrouping[False]=[datalist]
         if False in datastatusgrouping:
             return False, datastatusgrouping[False]
         else:
