@@ -809,9 +809,9 @@ def makePDFandSend(num):
             siapayangkurang = ''
             for i in cekkurangapproval[1]:
                 kelasdetails = kelas.getMkDetails(i[0])
-                if i[1] == True:
+                if i[1] == False:
                     siapayangkurang += ' | KAPRODI'
-                if i[2] == True:
+                if i[2] == False:
                     siapayangkurang += ' | DEPUTI'
                 kurangapprove += f'{config.whatsapp_api_lineBreak}{i[0]} | {kelasdetails[2]} | {kelas.toKelas(kelasdetails[-1])} {siapayangkurang}'
             msgkurang += f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}wuowwww ada yang kurang nih ketika kamu request BAP, status approval nya masih belum di ACC nih dengan Jadwal ID:{kurangapprove}{config.whatsapp_api_lineBreak}'
