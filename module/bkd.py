@@ -815,8 +815,7 @@ def makePDFandSend(num):
                     siapayangkurang += ' | DEPUTI'
                 kurangapprove += f'{config.whatsapp_api_lineBreak}{i[0]} | {kelasdetails[2]} | {kelas.toKelas(kelasdetails[-1])} {siapayangkurang}'
             msgkurang += f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}wuowwww ada yang kurang nih ketika kamu request BAP, status approval nya masih belum di ACC nih dengan Jadwal ID:{kurangapprove}{config.whatsapp_api_lineBreak}'
-        print(msgkurang)
-        # wa.setOutbox(numbers.normalize(num), msgkurang)
+        wa.setOutbox(numbers.normalize(num), msgkurang)
     else:
         mail(getLecturerMail(lecturercode),
              f'Halooooo, {config.bot_name} ngirim file nich....',
