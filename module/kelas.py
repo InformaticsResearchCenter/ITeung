@@ -706,7 +706,7 @@ def cekSiap():
         ret=True
     else:
         ret=False
-    return ret
+    return True
 
 def getMatakuliahInfowithJadwalID(jadwalid):
     db=dbConnectSiap()
