@@ -43,10 +43,23 @@ def replymsg(driver, data):
         wmsg = wmsg.replace('#EMAIL#', getEmailDosen(kodedosen))
         wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
         wa.typeAndSendMessage(driver, wmsg)
-        msg = data[3].split(' ')
-        data = kodedosen+";"+msg[2]
-        subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],data],
+        msg = data[3].lower()
+        if "uas" in msg:
+            result = "uas"
+            data = kodedosen+";"+result
+            subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],data],
                          cwd=config.cwd)
+        elif "uts" in msg:
+            result = "uts"
+            data = kodedosen+";"+result
+            subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],data],
+                         cwd=config.cwd)
+        else:
+            wa.typeAndSendMessage(
+            driver, 'Keyword salah mereun....')
+        # result =  
+        # msg = data[3].split(' ')
+        
     else:
         wa.typeAndSendMessage(
             driver, 'Mohon maaf server Akademik SIAP sedang dalam kondisi DOWN, mohon untuk menginformasikan ke ADMIN dan tunggu hingga beberapa menit kemudian, lalu ulangi kembali, terima kasih....')
