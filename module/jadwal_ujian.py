@@ -18,30 +18,18 @@ def replymsg(driver, data):
         wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
         wa.typeAndSendMessage(driver, wmsg)
         num = data[0]
-        msg = data[3].split(' ')
+        msg = data[3]
         msgreply = getJadwalUjian(num, msg)
     else:
         msgreply='Mohon maaf server Akademik SIAP sedang dalam kondisi DOWN, mohon untuk menginformasikan ke ADMIN dan tunggu hingga beberapa menit kemudian, lalu ulangi kembali, terima kasih....'
     return msgreply
 
 def getJadwalUjian(num, msg):
-    print(len(msg))
-    if len(msg) == 3:
-        jenis = msg[2].lower()
-        try:
-            jenis = jenis if jenis == 'uts' or jenis == 'uas' else False
-            if jenis:    
-                print(jenis)                
-                if jenis == 'uts':
-                    msgreply = getJadwalData(num, "uts")
-                elif jenis == 'uas':
-                    msgreply = getJadwalData(num, "uas")
-                else:
-                    msgreply = 'Punten, bukannya gmn, tp Anda salah keyword ....'
-            else:
-                msgreply = 'Punten, bukannya gmn, tp Anda salah keyword ...'
-        except Exception as e: 
-            msgreply = "Punten error nih, "+str(e)
+    msg = msg.lower()
+    if "uas" in msg:
+        msgreply = getJadwalData(num, "uas")
+    elif "uts" in msg:
+        msgreply = getJadwalData(num, "uts")
     else:
         msgreply = 'Punten, bukannya gmn, tp Anda salah keyword ..'
         
