@@ -46,8 +46,8 @@ def replymsg(driver, data):
                     msgreply = 'Salah keyword bosque..'
             except FileNotFoundError:
                 msgreply = 'Gak ada filenya....'
-            except:
-                msgreply = 'Ada masalah di kodingannya...'
+            except Exception as e:
+                msgreply = 'Ada masalah di kodingannya... '+e
         else:
             try:
                 jenis = data[3].lower() if data[3].lower(
@@ -305,6 +305,7 @@ def inputByExcel(file, jenis, tahun, func, nomor):
     sheet = book.active
     kode_matkul = sheet["C5"].value.replace(
         ":", "").replace("/", "").split()[0]
+    
     prodi = getProdi(kode_matkul)
     tgl = getTanggalNilai(tahun, prodi)
     today = datetime.today().date()
@@ -329,6 +330,8 @@ def inputByExcel(file, jenis, tahun, func, nomor):
                         'npm':  npm,
                         'nilai': str(v[0].value) if v[0].value is not None else '0',
                     }
+                    
+                    # print(jenis, func, npm, str(v[0].value) if v[0].value is not None else '0')
                     if jenis.lower() == 'uts':
                         func(data)
                     elif jenis.lower() == 'uas':
@@ -339,7 +342,7 @@ def inputByExcel(file, jenis, tahun, func, nomor):
             else:
                 msg = 'Kesalahan pada file bosque'
         else:
-            msg = 'Ohh tidak bisa bosque'
+            msg = 'Ohh tidak bisa bosque, Anda tidak berhak'
     else:
         msg = "Mana sempat, sudah telat"
 
@@ -349,26 +352,28 @@ def inputByExcel(file, jenis, tahun, func, nomor):
 def inputNilaiByExcel(file, jenis, tahun, nomor):
 
     today = datetime.today().date()
-    if jenis.lower() == 'uts':
+    book = openpyxl.load_workbook(file)
+    sheet = book.active
+    cek_ujian = sheet["E9"].value
+    # print(cek_ujian)
+    if jenis.lower() == 'uts' and 'uts' in str(cek_ujian).lower():
         # uts = getTanggalUTS(tahun)
 
         # if uts[0] <= today and uts[1] >= today and uts:
         #     msg = inputByExcel(file, jenis, tahun, inputNilaiUTS, nomor)
         # else:
         #     msg = 'Gak bisa lagi bosque'
-
         msg = inputByExcel(file, jenis, tahun, inputNilaiUTS, nomor)
 
-    elif jenis.lower() == 'uas':
+    elif jenis.lower() == 'uas' and 'uas' in str(cek_ujian).lower():
         # uas = getTanggalUAS(tahun)
         # if uas[0] <= today and uas[1] >= today and uas:
         #     msg = inputByExcel(file, jenis, tahun, inputNilaiUAS, nomor)
         # else:
         #     msg = 'Gak bisa lagi bosque'
-
-        msg = inputByExcel(file, jenis, tahun, inputNilaiUTS, nomor)
+        msg = inputByExcel(file, jenis, tahun, inputNilaiUAS, nomor)
     else:
-        msg = 'Ujian apa nih bosque'
+        msg = 'Ujian apa nih bosque, salah file mereun.. ato udh diubah format filenya ya..., hayoo lo...'
 
     return msg
 
