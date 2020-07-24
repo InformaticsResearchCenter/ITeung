@@ -387,8 +387,8 @@ def sendEmail(file):
             file['jenis'], file['matkul'], file['kelas'], file['prodi'])
 
         sender_email = config.email_iteung
-        # receiver_email = file['tujuan']
-        receiver_email = 'divakrishnam@yahoo.com'
+        receiver_email = file['tujuan']
+        # receiver_email = 'divakrishnam@yahoo.com'
         password = config.pass_iteung
 
         message = MIMEMultipart()
