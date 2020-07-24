@@ -22,8 +22,8 @@ def replymsg(driver, data):
         presensi=getPresensiFromJadwalID(i[0])
         for j in presensi:
             pertemuan = j[4]
-            if j[-1] != None:
-                materiPerkuliahan = message.normalize(j[-1])
+            if j[-2] != None:
+                materiPerkuliahan = message.normalize(j[-2])
                 msgs = f"{pertemuan} | {materiPerkuliahan}\n"
             else:
                 msgs = f"{pertemuan} | -\n"
