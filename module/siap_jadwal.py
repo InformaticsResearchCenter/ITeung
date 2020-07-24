@@ -225,11 +225,11 @@ def makeExcelAndSend(param):
     send = list()
     for i in range(len(jadwal)):
         # print(param['jenis'])
-        nama_file = 'Jadwal-%s-%s-%s-%s' % (
+        nama_file = 'Jadwal-%s-%s-%s-%s-%s' % (
             convertJenis(param['jenis']), changeSpecialChar(
                 convertTahun(param['tahun'])),
             changeSpecialChar(jadwal.loc[i, 'matkul']),
-            jadwal.loc[i, 'kelas'])
+            jadwal.loc[i, 'kelas'], str(jadwal.loc[i, 'jadwal_id']))
 
         data = {
             'jadwal_id': str(jadwal.loc[i, 'jadwal_id']),
@@ -381,14 +381,14 @@ def generateBody(body_data, sheet, jenis):
 def sendEmail(file):
     try:
         # print(file)
-        subject = "Absensi {} Mata Kuliah {} Kelas {} Prodi {}".format(
-            file['jenis'], file['matkul'], file['kelas'], file['prodi'])
+        subject = "Absensi {} Mata Kuliah {} Kelas {} Prodi {} Jadwal ID{}".format(
+            file['jenis'], file['matkul'], file['kelas'], file['prodi'], file['jadwal_id'])
         body = "Ini file absensi oleh iteung ya..., mohon untuk dicek kembali filenya jika ada yang salah mohon untuk diinformasikan ke admin iteung yaa....:) \nAbsensi {} Mata Kuliah {} Kelas {} Prodi {}".format(
             file['jenis'], file['matkul'], file['kelas'], file['prodi'])
 
         sender_email = config.email_iteung
-        receiver_email = file['tujuan']
-        # receiver_email = 'divakrishnam@yahoo.com'
+        # receiver_email = file['tujuan']
+        receiver_email = 'divakrishnam@yahoo.com'
         password = config.pass_iteung
 
         message = MIMEMultipart()
@@ -413,15 +413,15 @@ def sendEmail(file):
         )
 
         message.attach(part)
-
+        
         # Berita acara
-        if file['jenis'] == "uts":
+        if file['jenis'].lower() == "uts":
             beritafile = 'BERITA_ACARA_UJIAN.docx'
-        elif file['jenis'] == "uas":
+        elif file['jenis'].lower() == "uas":
             beritafile = 'UAS.docx'
         # else:
         #     beritafile = 'UAS.docx'
-
+        # print(file['jenis'], beritafile)
         with open('absensi\\'+beritafile, "rb") as attachment:
             part = MIMEBase("application", "octet-stream")
             part.set_payload(attachment.read())
