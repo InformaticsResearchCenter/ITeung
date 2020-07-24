@@ -419,8 +419,8 @@ def sendEmail(file):
             beritafile = 'BERITA_ACARA_UJIAN.docx'
         elif file['jenis'] == "uas":
             beritafile = 'UAS.docx'
-        else:
-            beritafile = 'BERITA_ACARA_UJIAN.docx'
+        # else:
+        #     beritafile = 'UAS.docx'
 
         with open('absensi\\'+beritafile, "rb") as attachment:
             part = MIMEBase("application", "octet-stream")
