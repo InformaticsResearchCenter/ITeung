@@ -33,14 +33,19 @@ def replymsg(driver, data):
 
         if len(data) == 4:
             try:
-                jenis = data[3] if data[3].lower(
-                ) == 'uts' or data[3].lower() == 'uas' else False
-                if jenis:
+                if 'uas' in msg:
                     filename = downloadFile(driver)
                     sleep(2)
                     moveFiles(filename)
                     msgreply = inputNilaiByExcel(
-                        filename, jenis, kelas.getTahunID(), nomor)
+                        filename, 'uas', kelas.getTahunID(), nomor)
+                    removeFile(filename)
+                elif 'uts' in msg:
+                    filename = downloadFile(driver)
+                    sleep(2)
+                    moveFiles(filename)
+                    msgreply = inputNilaiByExcel(
+                        filename, 'uts', kelas.getTahunID(), nomor)
                     removeFile(filename)
                 else:
                     msgreply = 'Salah keyword bosque..'
