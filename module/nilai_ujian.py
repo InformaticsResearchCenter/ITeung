@@ -47,7 +47,7 @@ def replymsg(driver, data):
             except FileNotFoundError:
                 msgreply = 'Gak ada filenya....'
             except Exception as e:
-                msgreply = 'Ada masalah di kodingannya... '+e
+                msgreply = 'Ada masalah di kodingannya... '+str(e)
         else:
             try:
                 jenis = data[3].lower() if data[3].lower(

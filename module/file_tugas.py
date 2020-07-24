@@ -39,27 +39,50 @@ def auth(data):
         ret = True
     return ret
 
-
 def replymsg(driver, data):
     if kelas.cekSiap():
-        # wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
-        # wa.typeAndSendMessage(driver, wmsg)
+        kodedosen = kelas.getKodeDosen(data[0])
+        wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
+        wmsg = wmsg.replace('#EMAIL#', getEmailDosen(kodedosen))
+        wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
+        wa.typeAndSendMessage(driver, wmsg)
         num = data[0]
         num = numbers.normalize(num)
-        msg = data[3]
-        data = msg.split(' ')
-        try:
-            param = {
+
+        subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],num],
+                        cwd=config.cwd)        
+    else:
+        wa.typeAndSendMessage(
+            driver, 'Mohon maaf server Akademik SIAP sedang dalam kondisi DOWN, mohon untuk menginformasikan ke ADMIN dan tunggu hingga beberapa menit kemudian, lalu ulangi kembali, terima kasih....')
+    return ''
+
+def run(num):
+    param = {
                 'nomor': num,
                 'tahun': kelas.getTahunID(),
             }
-            makeExcelAndSend(param)
-            msgreply = 'Ditunggu bos.....\nNtar dikirim ke email semua filenya....'
-        except:
-            msgreply = 'Salah keyword beb....., atau salah masukin jadwal uas atau uts'
-    else:
-        msgreply = 'Mohon maaf server Akademik SIAP sedang dalam kondisi DOWN, mohon untuk menginformasikan ke ADMIN dan tunggu hingga beberapa menit kemudian, lalu ulangi kembali, terima kasih....'
-    return msgreply
+    makeExcelAndSend(param)
+    
+# def replymsg(driver, data):
+#     if kelas.cekSiap():
+#         # wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
+#         # wa.typeAndSendMessage(driver, wmsg)
+#         num = data[0]
+#         num = numbers.normalize(num)
+#         msg = data[3]
+#         data = msg.split(' ')
+#         try:
+#             param = {
+#                 'nomor': num,
+#                 'tahun': kelas.getTahunID(),
+#             }
+#             makeExcelAndSend(param)
+#             msgreply = 'Ditunggu bos.....\nNtar dikirim ke email semua filenya....'
+#         except:
+#             msgreply = 'Salah keyword beb....., atau salah masukin jadwal uas atau uts'
+#     else:
+#         msgreply = 'Mohon maaf server Akademik SIAP sedang dalam kondisi DOWN, mohon untuk menginformasikan ke ADMIN dan tunggu hingga beberapa menit kemudian, lalu ulangi kembali, terima kasih....'
+#     return msgreply
 
 
 def dbConnectSiap():
