@@ -1,6 +1,3 @@
-module/absensi/
-module/*.xls
-module/*.xlsx
 *.xlsx
 *.xls
 *.jpg
