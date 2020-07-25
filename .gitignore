@@ -1,3 +1,6 @@
+module/absensi/
+module/*.xls
+module/*.xlsx
 consola.pkl
 absensi/
 bkd/
