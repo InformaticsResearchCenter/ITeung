@@ -297,6 +297,32 @@ def getAwaitingMessageKelasStart(module):
     return content
 
 
+def getProdiIDwithStudentID(npm):
+    db=dbConnectSiap()
+    sql=f"select ProdiID from simak_mst_mahasiswa where MhswID={npm}"
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        row=cur.fetchone()
+        if row is not None:
+            return row[0]
+        else:
+            return None
+
+
+def getTahunAjaran(prodiid):
+    db = dbConnectSiap()
+    sql = f"select Nama from simak_mst_tahun where ProdiID={prodiid} and ProgramID='REG' ORDER BY TahunID DESC LIMIT 1"
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        row = cur.fetchone()
+        if row is not None:
+            return row[0]
+        else:
+            return None
+
+
 def sudahinput(groupname):
     db = dbConnect()
     sql = "SELECT * from log WHERE DATE_FORMAT(timestamps, '%Y-%m-%d') = CURDATE() and groupname = '{0}' and message LIKE '%teung kelas mulai%'".format(
