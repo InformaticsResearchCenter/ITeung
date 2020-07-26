@@ -1,6 +1,6 @@
 from lib import wa, reply
-from module import kelas, bkd
 from Crypto.Cipher import AES
+from importlib import import_module
 import os, config
 
 def auth(data):
@@ -23,24 +23,9 @@ def replymsg(driver, data):
     except:
         resultpasscode, status = '', False
     if status:
-        kodedosen = resultpasscode.split(';')[0]
-        tglttd = resultpasscode.split(';')[1]
-        blnttd = resultpasscode.split(';')[2]
-        thnttd = resultpasscode.split(';')[3]
-        jamttd = resultpasscode.split(';')[4]
-        mntttd = resultpasscode.split(';')[5]
-        dtkttd = resultpasscode.split(';')[6]
-        nmrsrt = resultpasscode.split(';')[7]
-        jnsdkm = resultpasscode.split(';')[8]
-        datadosen=kelas.getAllDataDosens(kodedosen)
-        penerbitantandatangan = f'{jamttd}:{mntttd}:{dtkttd} {tglttd} {bkd.bulanSwitcher(blnttd)} {thnttd}'
-        namadosen=kelas.getNamaDosen(kodedosen)
-        datalahirdosen=datadosen[7].strftime('%d-%m-%Y')
-        tahunlahirdosen=datalahirdosen.split('-')[2]
-        bulanlahirdosen=bkd.bulanSwitcher(datalahirdosen.split('-')[1])
-        tanggallahirdosen=datalahirdosen.split('-')[0]
-        datalahirdosen=tanggallahirdosen+' '+bulanlahirdosen+' '+tahunlahirdosen
-        msgreply=f'Ini yaaa data yang Akang/Teteh minta\n\nKode Dosen: {kodedosen}\nNama Dosen: {namadosen}\nNIDN: {datadosen[2]}\nTempat/Tgl Lahir: {datadosen[6]}/{datalahirdosen}\nHandphone: {datadosen[12]}\nE-mail: {datadosen[13]}\n\nJenis Dokumen: {jnsdkm}\nNomor Dokumen: {nmrsrt}\nPenerbitan Tanda Tangan: {penerbitantandatangan}'
+        modulename=resultpasscode.split(';')[0]
+        mod = import_module('module.' + modulename)
+        msgreply=mod.verifyDigitalSign(resultpasscode)
     else:
         msgreply=f'waduh akang/teteh kayaknya #BOTNAME# ga bisa mengenali passcode yang *{passcode}* deh, coba di periksa lagi yaa, dan jangan diubah passcodenya'
     return msgreply

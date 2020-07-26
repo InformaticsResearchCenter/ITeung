@@ -4,10 +4,12 @@ from reportlab.lib.pagesizes import A4, inch, portrait
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from datetime import date
-from module import kelas
-from lib import numbers, message
+from module import kelas, bkd
+from lib import numbers
+from datetime import datetime
+from Crypto.Cipher import AES
 
-import qrcode, config
+import qrcode, config, os
 
 def getTipeBimbingan(npm):
     db = kelas.dbConnectSiap()
@@ -100,15 +102,16 @@ def getDataBimbinganwithMhswIDandDosenID(npm, dosenid):
         cur=db.cursor()
         cur.execute(sql)
         rows=cur.fetchall()
+        print(rows)
         if rows is not None:
             return rows
         else:
             return None
 
 
-def getDataByPertemuanandNPM(npm, pertemuanke):
+def getDataByPertemuanandNPM(npm, pertemuanke, kode_dosen):
     db=kelas.dbConnectSiap()
-    sql=f"select * from simak_croot_bimbingan where MhswID={npm} and Pertemuan_={pertemuanke} order by Pertemuan_ asc"
+    sql=f"select * from simak_croot_bimbingan where MhswID={npm} and Pertemuan_={pertemuanke} and DosenID='{kode_dosen}'"
     with db:
         cur=db.cursor()
         cur.execute(sql)
@@ -128,7 +131,7 @@ def makeListDataBimbinganByDosens(npm, kode_dosen):
     pertemuan = 1
     databimbinganforPDF=[]
     for i in range(setStart):
-        status, datawekwek=getDataByPertemuanandNPM(npm, pertemuan)
+        status, datawekwek=getDataByPertemuanandNPM(npm, pertemuan, kode_dosen)
         if status:
             data=[]
             data.append(str(pertemuan))
@@ -154,6 +157,19 @@ def makeQrcode(data, npm_mahasiswa):
     img.save(f"{npm_mahasiswa}.PNG")
 
 
+def getStudentEmail(npm):
+    db = kelas.dbConnectSiap()
+    sql = f"select Email from simak_mst_mahasiswa where MhswID={npm}"
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        row = cur.fetchone()
+        if row is not None:
+            return row[0]
+        else:
+            return None
+
+
 def switcherTipeBimbingan(tipe):
     switcher = {
         'ta': 'TUGAS AKHIR',
@@ -166,59 +182,80 @@ def switcherTipeBimbingan(tipe):
     return switcher.get(tipe, "Not Found!!")
 
 
+def getKodeDosenBimbingan(npm):
+    db = kelas.dbConnect()
+    sql = f"select pembimbing1, pembimbing2 from bimbingan_data where npm={npm}"
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        row = cur.fetchone()
+        if row is not None:
+            return row
+        else:
+            return None
+
+
 def replymsg(data, driver):
     num = numbers.normalize(data[0])
     msg = data[1]
-    msg = message.normalize(msg)
     studentid,studentname=kelas.getNpmandNameMahasiswa(num)
     status_nilai, nilai_total=True, 100
     # status_nilai, nilai_total=totalNilai(npm, config.MINIMUM_PERTEMUAN_BIMBINGAN)
     if status_nilai:
         WRONG_KEYWORD = False
         try:
-            KODE_DOSEN_1 = msg.split(' kode dosen 1 ')[1].split(' ')[0]
-            KODE_DOSEN_2 = msg.split(' kode dosen 2 ')[1]
-            JUDUL_BIMBINGAN = data[1].split(' kambing ')[1].split(' kode dosen 1 ')[0]
+            JUDUL_BIMBINGAN = data[1].split(' kambing ')[1]
         except:
             WRONG_KEYWORD = True
         if WRONG_KEYWORD:
             msgreply = 'ada yang salah keywordnya'
         else:
-            NAMA_DOSEN_1 = kelas.getNamaDosen(KODE_DOSEN_1)
-            NAMA_DOSEN_2 = kelas.getNamaDosen(KODE_DOSEN_2)
-            NIDN_DOSEN_1 = getNIDNDosen(KODE_DOSEN_1)
-            NIDN_DOSEN_2 = getNIDNDosen(KODE_DOSEN_2)
-            TAHUN_AJARAN = kelas.getTahunAjaran(kelas.getProdiIDwithStudentID(studentid)).split(' ')[-1]
-            photo = f'{config.link_foto_siap}{getFotoRoute(studentid)}'
-            makePdf(
-                npm_mahasiswa=studentid,
-                nama_mahasiswa=studentname,
-                tipe_bimbingan=switcherTipeBimbingan(getTipeBimbingan(studentid)),
-                nama_pembimbing_1=NAMA_DOSEN_1,
-                kode_dosen_pembimbing_1=KODE_DOSEN_1,
-                kode_dosen_pembimbing_2=KODE_DOSEN_2,
-                nama_pembimbing_2=NAMA_DOSEN_2,
-                nidn_pembimbing_1=NIDN_DOSEN_1,
-                nidn_pembimbing_2=NIDN_DOSEN_2,
-                tahun_ajaran=TAHUN_AJARAN,
-                photo=photo,
-                judul=JUDUL_BIMBINGAN,
-                total_nilai=str(nilai_total)
-            )
-            msgreply=f"{photo}"
+            KODE_DOSEN_BIMBINGAN=getKodeDosenBimbingan(studentid)
+            if KODE_DOSEN_BIMBINGAN is None:
+                msgreply=f'data dengan npm {studentid} tidak ditemukan'
+            else:
+                for KODE_DOSEN in KODE_DOSEN_BIMBINGAN:
+                    NAMA_DOSEN = kelas.getNamaDosen(KODE_DOSEN)
+                    print(NAMA_DOSEN)
+                    NIDN_DOSEN = getNIDNDosen(KODE_DOSEN)
+                    TAHUN_AJARAN = kelas.getTahunAjaran(kelas.getProdiIDwithStudentID(studentid)).split(' ')[-1]
+                    photo = f'{config.link_foto_siap}{getFotoRoute(studentid)}'
+                    makePdf(
+                        npm_mahasiswa=studentid,
+                        nama_mahasiswa=studentname,
+                        tipe_bimbingan=switcherTipeBimbingan(getTipeBimbingan(studentid)),
+                        nama_pembimbing=NAMA_DOSEN,
+                        kode_dosen_pembimbing=KODE_DOSEN,
+                        nidn_pembimbing=NIDN_DOSEN,
+                        tahun_ajaran=TAHUN_AJARAN,
+                        photo=photo,
+                        judul=JUDUL_BIMBINGAN,
+                        total_nilai=str(nilai_total)
+                    )
+                msgreply=f"sudah selesai"
     else:
         msgreply=f'mohon maaf belum bisa cetak kartu bimbingan dikarenakan pertemuan masih ada yang kurang dari 8'
     return msgreply
 
-def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing_1, kode_dosen_pembimbing_2, nama_pembimbing_1, nama_pembimbing_2, nidn_pembimbing_1, nidn_pembimbing_2, tahun_ajaran, photo, judul, total_nilai):
-    qrdata='12345678900123809128390092340923890482390840928349082309482093849023894082309842093849283904809238490283094829034890238409283904829304892038490283094823948290348092384231209381023'
-    makeQrcode(qrdata, "1184047")
-    d2=date.today().strftime('%d %B %Y')
-    doc = SimpleDocTemplate(f'{npm_mahasiswa}.pdf', pagesize=A4, rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=18)
+def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing, nama_pembimbing, nidn_pembimbing,  tahun_ajaran, photo, judul, total_nilai):
+    checkDir()
+    makeQrcodeVerifySign(
+        link=makeLinkVerify(kode_dosen=kode_dosen_pembimbing,
+                            npm_mahasiswa=npm_mahasiswa,
+                            tipe_bimbingan=tipe_bimbingan,
+                            total_nilai=total_nilai),
+        kode_dosen=kode_dosen_pembimbing,
+        npm_mahasiswa=npm_mahasiswa,
+        tipe_bimbingan=tipe_bimbingan
+    )
+    bulan = date.today().strftime("%m")
+    d2 = date.today().strftime(f"%d {bkd.bulanSwitcher(bulan)} %Y")
+    STUDENT_EMAIL=getStudentEmail(npm_mahasiswa)
+    doc = SimpleDocTemplate(f'./kambing/{npm_mahasiswa}-{kode_dosen_pembimbing}-{STUDENT_EMAIL}.pdf', pagesize=A4, rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=18)
     doc.pagesize = portrait(A4)
     elements = []
 
-    logo = Image("logo.png", 3.5 * inch, 1 * inch)
+    logo = Image("logoKAMBING.png", 3.5 * inch, 1 * inch)
     logo.hAlign = "LEFT"
     elements.append(logo)
 
@@ -252,7 +289,7 @@ def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing
              ['<font name="Times" size="12">Npm</font>', '<font name="Times" size="12">: ' + npm_mahasiswa + '</font>'],
              ['<font name="Times" size="12">Judul</font>', '<font name="Times" size="12">: ' + judul + '</font>'],
              ['<font name="Times" size="12">Pembimbing</font>',
-              '<font name="Times" size="12">: ' + nama_pembimbing_1 + '</font>']]
+              '<font name="Times" size="12">: ' + nama_pembimbing + '</font>']]
 
     style = TableStyle([('ALIGN', (1, 1), (-2, -2), 'RIGHT'),
                         ('VALIGN', (0, 0), (0, -1), 'TOP'),
@@ -271,7 +308,7 @@ def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing
     elements.append(Spacer(1, 0.6 * inch))
 
     data = [['Pertemuan', 'Tanggal', 'Sudah Dikerjakan', 'Pekerjaan Selanjutnya', 'Nilai']]
-    inner_data_list=makeListDataBimbinganByDosens(npm_mahasiswa, kode_dosen_pembimbing_1)
+    inner_data_list=makeListDataBimbinganByDosens(npm_mahasiswa, kode_dosen_pembimbing)
     for i in inner_data_list:
         data.append(i)
     nilai_data_list=['', '', '', 'Rata-Rata: ', total_nilai]
@@ -311,21 +348,92 @@ def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing
     elements.append(Paragraph(ptext, styles["Right"]))
     elements.append(Spacer(1, .1 * inch))
 
-    qrcode = f"./{npm_mahasiswa}.png"
+    qrcode = f"./kambingqrcode/{npm_mahasiswa}-{kode_dosen_pembimbing}-{tipe_bimbingan}.png"
     im = Image(qrcode, 1.5 * inch, 1.5 * inch)
     im.hAlign = "RIGHT"
     elements.append(im)
 
-    ptext = '<font name="Times" size="12">' + nama_pembimbing_1 + '</font>'
+    ptext = '<font name="Times" size="12">' + nama_pembimbing + '</font>'
     elements.append(Paragraph(ptext, styles["Right"]))
     elements.append(Spacer(1, 1))
 
-    ptext = '<font name="Times" size="12">NIDN. ' + nidn_pembimbing_1 + '</font>'
+    ptext = '<font name="Times" size="12">NIDN. ' + nidn_pembimbing + '</font>'
     elements.append(Paragraph(ptext, styles["Right"]))
     elements.append(Spacer(1, 12))
 
     doc.build(elements)
 
-data=['6285155494985', 'iteung minta kambing WANDA (WhatsApp Tanpa Derita) kode dosen NN257L']
-result=replymsg(data, '')
-print(result)
+
+def makeLinkVerify(kode_dosen, npm_mahasiswa, tipe_bimbingan, total_nilai):
+    datenow = datetime.date(datetime.now()).strftime('%d-%m-%Y')
+    timenow = datetime.now().time().strftime('%H:%M:%S')
+    module_name="kambing"
+    data = f'{module_name};{datenow};{timenow};{kode_dosen};{npm_mahasiswa};{tipe_bimbingan};{total_nilai};'
+    makeit64 = f'{data}{bkd.randomString(64 - len(data))}'
+    obj = AES.new(config.key.encode("utf8"), AES.MODE_CBC, config.iv.encode('utf8'))
+    cp = obj.encrypt(makeit64.encode("utf8"))
+    passcode = cp.hex()
+    space = '%20'
+    link = f'https://api.whatsapp.com/send?phone={config.nomor_iteung}&text=iteung{space}tanda{space}tangan{space}{passcode}'
+    return link
+
+
+def makeQrcodeVerifySign(link, npm_mahasiswa, kode_dosen, tipe_bimbingan):
+    checkDirQrcode()
+    img = qrcode.make(link)
+    img.save(f'./kambingqrcode/{npm_mahasiswa}-{kode_dosen}-{tipe_bimbingan}.PNG')
+
+
+def verifyDigitalSign(resultpasscode):
+    resultpasscode=resultpasscode.split(';')
+    tanggal=resultpasscode[1].split('-')[0]
+    bulan=bkd.bulanSwitcher(resultpasscode[1].split('-')[1])
+    tahun=resultpasscode[1].split('-')[2]
+    sah_jam=resultpasscode[2]
+    nama_dosen=kelas.getNamaDosen(resultpasscode[3])
+    npm_mahasiswa=resultpasscode[4]
+    kode_tipe_bimbingan=switcherTipeBimbingantoKode(resultpasscode[5])
+    total_nilai=resultpasscode[6]
+    msgreply = f"Ini data yang diminta yaaaa\n\nNama Dosen: {nama_dosen}\nPenerbitan Tanda Tangan: {sah_jam} {tanggal} {bulan} {tahun}"
+    for i in getDataBimbinganForReply(npm_mahasiswa, resultpasscode[3]):
+        msgreply+=f"\n\nPertemuan: {i[0]}\nTanggal: {i[1].strftime('%d-%m-%Y')}\nSudah Dikerjakan: {i[2].split(';')[0]}\nPekerjaan Selanjutnya: {i[2].split(';')[1]}\nNilai: {i[3]}"
+    msgreply+=f'\n\n*Nilai Rata-Rata _{total_nilai}_*'
+    return msgreply
+
+
+def switcherTipeBimbingantoKode(tipe_bimbingan):
+    switcher = {
+        "TUGAS AKHIR": "ta",
+        "INTERNSHIP I": "i1",
+        "INTERNSHIP II": "i2",
+        "PROYEK I": "p1",
+        "PROYEK II": "p2",
+        "PROYEK III": "p3",
+    }
+    return switcher.get(tipe_bimbingan, 'NOT FOUND!!')
+
+def checkDir():
+    try:
+        os.mkdir('kambing/')
+    except:
+        print('sudah ada..')
+
+
+def checkDirQrcode():
+    try:
+        os.mkdir('kambingqrcode/')
+    except:
+        print('sudah ada..')
+
+
+def getDataBimbinganForReply(npm, kode_dosen):
+    db=kelas.dbConnectSiap()
+    sql=f"select Pertemuan_, Tanggal, Topik, Nilai from simak_croot_bimbingan where MhswID={npm} and DosenID='{kode_dosen}' order by Pertemuan_ asc"
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        rows=cur.fetchall()
+        if rows == ():
+            return None
+        else:
+            return rows

@@ -620,10 +620,11 @@ def makeLinkVerifiy(kodedosen):
     detik = datetime.now().time().strftime('%S')
     nomordokumen=f'ITeung/{tanggal}/{bulan}/{tahun}'
     jenisdokumen='Berita Acara Perkuliahan dan Absensi Perkuliahan'
-    data = f'{kodedosen};{tanggal};{bulan};{tahun};{jam};{menit};{detik};{nomordokumen};{jenisdokumen};'
-    makeit96 = f'{data}{randomString(96 - len(data))}'
+    module_name='bkd'
+    data = f'{module_name};{kodedosen};{tanggal};{bulan};{tahun};{jam};{menit};{detik};{nomordokumen};{jenisdokumen};'
+    makeit112 = f'{data}{randomString(112 - len(data))}'
     obj = AES.new(config.key.encode("utf8"), AES.MODE_CBC, config.iv.encode('utf8'))
-    cp = obj.encrypt(makeit96.encode("utf8"))
+    cp = obj.encrypt(makeit112.encode("utf8"))
     passcode = cp.hex()
     space = '%20'
     link = f'https://api.whatsapp.com/send?phone={config.nomor_iteung}&text=iteung{space}tanda{space}tangan{space}{passcode}'
@@ -822,3 +823,24 @@ def makePDFandSend(num):
              f'Halooooo, {config.bot_name} ngirim file nich....',
              f'ini ya file Absensi BKD yang Bapak/Ibu minta silahkan di cek... ehee....',
              getFilePath(getLecturerMail(lecturercode), 'bkd'))
+
+def verifyDigitalSign(resultpasscode):
+    kodedosen = resultpasscode.split(';')[1]
+    tglttd = resultpasscode.split(';')[2]
+    blnttd = resultpasscode.split(';')[3]
+    thnttd = resultpasscode.split(';')[4]
+    jamttd = resultpasscode.split(';')[5]
+    mntttd = resultpasscode.split(';')[6]
+    dtkttd = resultpasscode.split(';')[7]
+    nmrsrt = resultpasscode.split(';')[8]
+    jnsdkm = resultpasscode.split(';')[9]
+    datadosen = kelas.getAllDataDosens(kodedosen)
+    penerbitantandatangan = f'{jamttd}:{mntttd}:{dtkttd} {tglttd} {bulanSwitcher(blnttd)} {thnttd}'
+    namadosen = kelas.getNamaDosen(kodedosen)
+    datalahirdosen = datadosen[7].strftime('%d-%m-%Y')
+    tahunlahirdosen = datalahirdosen.split('-')[2]
+    bulanlahirdosen = bulanSwitcher(datalahirdosen.split('-')[1])
+    tanggallahirdosen = datalahirdosen.split('-')[0]
+    datalahirdosen = tanggallahirdosen + ' ' + bulanlahirdosen + ' ' + tahunlahirdosen
+    msgreply = f'Ini yaaa data yang Akang/Teteh minta\n\nKode Dosen: {kodedosen}\nNama Dosen: {namadosen}\nNIDN: {datadosen[2]}\nTempat/Tgl Lahir: {datadosen[6]}/{datalahirdosen}\nHandphone: {datadosen[12]}\nE-mail: {datadosen[13]}\n\nJenis Dokumen: {jnsdkm}\nNomor Dokumen: {nmrsrt}\nPenerbitan Tanda Tangan: {penerbitantandatangan}'
+    return msgreply
