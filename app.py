@@ -108,30 +108,33 @@ def callback_api_va(token):
 
 class PMDK(Resource):
     def get(self, token):
-        if token == config.tokenpmb:
-            db=dbConnectPMB()
-            query='SELECT nama_lengkap, jenis_kelamin, nisn, ttl, telephone, ' \
-                  'bbm_line, email, nama_ayah_kandung, hp_ayah_kandung, nama_ibu_kandung, ' \
-                  'hp_ibu_kandung,informasi_kampus, guru_bk, hp_guru_bk, status_kelulusan, ' \
-                  'daftar_ulang, date_daftar_ulang, nama_penyetor, nominal_yang_disetor, tanggal_penyetoran ' \
-                  'from mahasiswa_baru where tahun = "2019/2020" and jalur = "pmdk"'
-            with db:
-                cur=db.cursor()
-                cur.execute(query)
-                data=cur.fetchall()
-                if data:
-                    columnname = [headers[0] for headers in cur.description]
-                    json_data = []
-                    for result in data:
-                        json_data.append(dict(zip(columnname, result)))
-                    data = {'data_pmdk': json_data}
-                    response=jsonify(data)
-                    response.status_code=200
-                    return response
-                else:
-                    abort(404, message= "data kosong...")
-        else:
-            abort(401, message='bad token')
+        try:
+            if token == config.tokenpmb:
+                db=dbConnectPMB()
+                query='SELECT nama_lengkap, jenis_kelamin, nisn, ttl, telephone, ' \
+                      'bbm_line, email, nama_ayah_kandung, hp_ayah_kandung, nama_ibu_kandung, ' \
+                      'hp_ibu_kandung,informasi_kampus, guru_bk, hp_guru_bk, status_kelulusan, ' \
+                      'daftar_ulang, date_daftar_ulang, nama_penyetor, nominal_yang_disetor, tanggal_penyetoran ' \
+                      'from mahasiswa_baru where tahun = "2019/2020" and jalur = "pmdk"'
+                with db:
+                    cur=db.cursor()
+                    cur.execute(query)
+                    data=cur.fetchall()
+                    if data:
+                        columnname = [headers[0] for headers in cur.description]
+                        json_data = []
+                        for result in data:
+                            json_data.append(dict(zip(columnname, result)))
+                        data = {'data_pmdk': json_data}
+                        response=jsonify(data)
+                        response.status_code=200
+                        return response
+                    else:
+                        abort(404, message= "data kosong...")
+            else:
+                abort(401, message='bad token')
+        except Exception as e:
+            return f'{e}'
 
 class Reguler(Resource):
     def get(self, token):
