@@ -34,7 +34,7 @@ import requests
 #     return msgreply
 
 def dbConnect():
-    db = pymysql.connect(config.db_host, config.db_username, config.db_password, config.db_name, port=int(config.db_port))
+    db = pymysql.connect(config.db_host, config.db_username, config.db_password, config.db_name)
     return db
 
 
