@@ -23,7 +23,7 @@ app = Flask(__name__, static_url_path='')
 apirest=Api(app=app)
 
 def dbConnectPMB():
-    db=pymysql.connect(config.db_host_pmb, config.db_username_pmb, config.db_password_pmb, config.db_name_pmb, port=config.db_port_pmb)
+    db=pymysql.connect(config.db_host_pmb, config.db_username_pmb, config.db_password_pmb, config.db_name_pmb)
     return db
 
 @app.route("/")
