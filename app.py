@@ -17,6 +17,8 @@ from flask_restful import Resource, Api, abort
 
 import config, pymysql
 
+import linecache, sys
+
 app = Flask(__name__, static_url_path='')
 apirest=Api(app=app)
 
@@ -55,6 +57,15 @@ def prosesdata():
     log.save(number, message, alias, groupname, isgroup, tipe)
     res = make_response(jsonify({'message': 'JSON data received'}), 200)
     return res
+
+def PrintException():
+    exc_type, exc_obj, tb = sys.exc_info()
+    f = tb.tb_frame
+    lineno = tb.tb_lineno
+    filename = f.f_code.co_filename
+    linecache.checkcache(filename)
+    line = linecache.getline(filename, lineno, f.f_globals)
+    print('EXCEPTION IN ({}, LINE {} "{}"): {}'.format(filename, lineno, line.strip(), exc_obj))
 
 @app.route('/<token>/callback/api/va', methods=['POST'])
 def callback_api_va(token):
@@ -134,7 +145,7 @@ class PMDK(Resource):
             else:
                 abort(401, message='bad token')
         except Exception as e:
-            return f'{e}'
+            return PrintException()
 
 class Reguler(Resource):
     def get(self, token):
