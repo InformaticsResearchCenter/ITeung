@@ -116,7 +116,7 @@ class PMDK(Resource):
                   'bbm_line, email, nama_ayah_kandung, hp_ayah_kandung, nama_ibu_kandung, ' \
                   'hp_ibu_kandung,informasi_kampus, guru_bk, hp_guru_bk, status_kelulusan, ' \
                   'daftar_ulang, date_daftar_ulang, nama_penyetor, nominal_yang_disetor, tanggal_penyetoran ' \
-                  'from mahasiswa_baru where tahun = "2019/2020" and jalur = "pmdk"'
+                  'from mahasiswa_baru where tahun = "2020/2021" and jalur = "pmdk"'
             with db:
                 cur=db.cursor()
                 cur.execute(query)
@@ -143,7 +143,7 @@ class Reguler(Resource):
                     'email, nama_ayah_kandung, hp_ayah_kandung, nama_ibu_kandung, hp_ibu_kandung,' \
                     'informasi_kampus, guru_bk, hp_guru_bk, status_kelulusan, daftar_ulang, ' \
                     'date_daftar_ulang, nama_penyetor, nominal_yang_disetor, tanggal_penyetoran ' \
-                    'from mahasiswa_baru where tahun = "2019/2020" and jalur = "reguler"'
+                    'from mahasiswa_baru where tahun = "2020/2021" and jalur = "reguler"'
             with db:
                 cur = db.cursor()
                 cur.execute(query)
@@ -170,7 +170,7 @@ class Mandiri(Resource):
                     'email, nama_ayah_kandung, hp_ayah_kandung, nama_ibu_kandung, hp_ibu_kandung,' \
                     'informasi_kampus, guru_bk, hp_guru_bk, status_kelulusan, daftar_ulang, ' \
                     'date_daftar_ulang, nama_penyetor, nominal_yang_disetor, tanggal_penyetoran ' \
-                    'from mahasiswa_baru where tahun = "2019/2020" and jalur = "mandiri"'
+                    'from mahasiswa_baru where tahun = "2020/2021" and jalur = "mandiri"'
             with db:
                 cur = db.cursor()
                 cur.execute(query)
@@ -197,7 +197,7 @@ class Undangan(Resource):
                     'email, nama_ayah_kandung, hp_ayah_kandung, nama_ibu_kandung, hp_ibu_kandung,' \
                     'informasi_kampus, guru_bk, hp_guru_bk, status_kelulusan, daftar_ulang, ' \
                     'date_daftar_ulang, nama_penyetor, nominal_yang_disetor, tanggal_penyetoran ' \
-                    'from mahasiswa_baru where tahun = "2019/2020" and jalur = "undangan"'
+                    'from mahasiswa_baru where tahun = "2020/2021" and jalur = "undangan"'
             with db:
                 cur = db.cursor()
                 cur.execute(query)
@@ -224,7 +224,7 @@ class Beasiswa(Resource):
                     'email, nama_ayah_kandung, hp_ayah_kandung, nama_ibu_kandung, hp_ibu_kandung,' \
                     'informasi_kampus, guru_bk, hp_guru_bk, status_kelulusan, daftar_ulang, ' \
                     'date_daftar_ulang, nama_penyetor, nominal_yang_disetor, tanggal_penyetoran ' \
-                    'from mahasiswa_baru where tahun = "2019/2020" and jalur = "beasiswa"'
+                    'from mahasiswa_baru where tahun = "2020/2021" and jalur = "beasiswa"'
             with db:
                 cur = db.cursor()
                 cur.execute(query)
