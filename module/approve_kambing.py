@@ -78,6 +78,13 @@ def bimbinganCekApprovalBimbingan(kodedosen):
         else:
             return None
 
+def auth(data):
+    if kelas.getKodeDosen(data[0]) == '':
+        ret = False
+    else:
+        ret = True
+    return ret
+
 def replymsg(driver, data):
     wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
     wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
