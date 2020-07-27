@@ -24,6 +24,3 @@ def replymsg(driver, data):
     for i in belum:
         msgreply += f'\n*{i}* | *{kelas.getStudentNameOnly(i)}*'
     return msgreply
-
-
-print(replymsg('', ['6281312000300']))
