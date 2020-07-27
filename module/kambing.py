@@ -4,7 +4,7 @@ from reportlab.lib.pagesizes import A4, inch, portrait
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from datetime import date
-from module import kelas, bkd
+from module import kelas, bkd, approve_kambing
 from lib import numbers
 from datetime import datetime
 from Crypto.Cipher import AES
@@ -199,8 +199,8 @@ def replymsg(data, driver):
     num = numbers.normalize(data[0])
     msg = data[1]
     studentid,studentname=kelas.getNpmandNameMahasiswa(num)
-    status_nilai, nilai_total=True, 100
-    # status_nilai, nilai_total=totalNilai(npm, config.MINIMUM_PERTEMUAN_BIMBINGAN)
+    # status_nilai, nilai_total=True, 100
+    status_nilai, nilai_total=totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN)
     if status_nilai:
         WRONG_KEYWORD = False
         try:
@@ -236,6 +236,9 @@ def replymsg(data, driver):
     else:
         msgreply=f'mohon maaf belum bisa cetak kartu bimbingan dikarenakan pertemuan masih ada yang kurang dari 8'
     return msgreply
+
+
+
 
 def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing, nama_pembimbing, nidn_pembimbing,  tahun_ajaran, photo, judul, total_nilai):
     checkDir()
@@ -348,7 +351,12 @@ def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing
     elements.append(Paragraph(ptext, styles["Right"]))
     elements.append(Spacer(1, .1 * inch))
 
-    qrcode = f"./kambingqrcode/{npm_mahasiswa}-{kode_dosen_pembimbing}-{tipe_bimbingan}.png"
+    data = approve_kambing.getDataPembimbing(npm_mahasiswa, kode_dosen_pembimbing)
+    pembimbingke = approve_kambing.pembimbingPositionAs(data, kode_dosen_pembimbing)
+    if approve_kambing.cekApprovalTrueorFalse(npm_mahasiswa, pembimbingke):
+        qrcode = f"./kambingqrcode/{npm_mahasiswa}-{kode_dosen_pembimbing}-{tipe_bimbingan}.png"
+    else:
+        qrcode = f"./kambingqrcode/whiteimage.png"
     im = Image(qrcode, 1.5 * inch, 1.5 * inch)
     im.hAlign = "RIGHT"
     elements.append(im)
