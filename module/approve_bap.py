@@ -25,7 +25,7 @@ def updateField(status):
 
 def cekProdiIDKaproditoJadwalID(prodiid, jadwalid):
     db=kelas.dbConnectSiap()
-    sql=f'select * from simak_trn_jadwal where JadwalID={jadwalid} and ProdiID="{prodiid}"'
+    sql=f'select * from simak_trn_jadwal where JadwalID={jadwalid} and ProdiID=".{prodiid}."'
     with db:
         cur=db.cursor()
         cur.execute(sql)
