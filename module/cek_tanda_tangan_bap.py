@@ -181,7 +181,7 @@ def run(num):
     else:
         status='deputi'
     if status == 'kaprodi':
-        msgreply=infoBAPKaprodi(kelas.getAllDataDosens(kelas.getKodeDosen(num))[21])
+        msgreply=infoBAPKaprodi(kelas.getAllDataDosens(kelas.getKodeDosen(num))[20])
     else:
         msgreply=infoBAPDeputi()
     wa.setOutbox(numbers.normalize(num), msgreply[0])

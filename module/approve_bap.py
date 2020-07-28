@@ -38,7 +38,7 @@ def cekProdiIDKaproditoJadwalID(prodiid, jadwalid):
 
 def getKaprodiProdiID(num):
     db=kelas.dbConnectSiap()
-    sql=f'select ProdiID from simak_mst_dosen where Handphone="{num}"'
+    sql=f'select Homebase from simak_mst_dosen where Handphone="{num}"'
     with db:
         cur = db.cursor()
         cur.execute(sql)
