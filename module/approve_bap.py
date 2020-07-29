@@ -124,7 +124,7 @@ def replymsg(driver, data):
     if status == 'kaprodi':
         kaprodiprodiid=getKaprodiProdiID(num)
         if jadwalid == 'all':
-            statusbap=cek_tanda_tangan_bap.infoBAPKaprodi(kaprodiprodiid)[2]
+            statusbap=cek_tanda_tangan_bap.infoBAPKaprodi(f'.{kaprodiprodiid}.')[2]
             if len(statusbap) > 0:
                 for bapjadwalid in statusbap:
                     confirmBKD(bapjadwalid, updatefield)
