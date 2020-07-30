@@ -240,7 +240,7 @@ def getDeputiAkademik():
 
 def getBKDMatkul(jadwalid):
     db = kelas.dbConnectSiap()
-    sql = f"select Pertemuan, Tanggal, MP, JamMulai, JamSelesai from simak_trn_presensi_dosen where JadwalID={jadwalid}"
+    sql = f"select Pertemuan, Tanggal, MP, JamMulai, JamSelesai from simak_trn_presensi_dosen where JadwalID={jadwalid} ORDER BY Pertemuan ASC"
     with db:
         cur = db.cursor()
         cur.execute(sql)
