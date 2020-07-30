@@ -5,7 +5,7 @@ import subprocess, config, os
 
 def getMateriFromJadwalID(jadwalid):
     db = kelas.dbConnectSiap()
-    sql = f"select MP from simak_trn_presensi_dosen WHERE `JadwalID` = {jadwalid}"
+    sql = f"select MP from simak_trn_presensi_dosen WHERE `JadwalID` = {jadwalid} ORDER BY Pertemuan ASC"
     with db:
         cur = db.cursor()
         cur.execute(sql)
