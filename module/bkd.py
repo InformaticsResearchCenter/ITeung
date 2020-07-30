@@ -75,7 +75,7 @@ def getJadwalID(mkkode, lecturercode):
 
 def getPresensiDosen(jadwalid, rangepertemuan1, rangepertemuan2):
     db = kelas.dbConnectSiap()
-    sql = f"select PresensiID from simak_trn_presensi_dosen where TahunID=20192 and JadwalID={jadwalid} and Pertemuan > {rangepertemuan1} and Pertemuan < {rangepertemuan2}"
+    sql = f"select PresensiID from simak_trn_presensi_dosen where TahunID=20192 and JadwalID={jadwalid} and Pertemuan > {rangepertemuan1} and Pertemuan < {rangepertemuan2} ORDER BY Pertemuan ASC"
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -107,7 +107,7 @@ def getListStudent(jadwalid):
 
 def getTanggalFromPresensiDosen(jadwalid):
     db = kelas.dbConnectSiap()
-    sql = "select Tanggal from simak_trn_presensi_dosen WHERE JadwalID={jadwalid}".format(
+    sql = "select Tanggal from simak_trn_presensi_dosen WHERE JadwalID={jadwalid} ORDER BY Pertemuan ASC".format(
         jadwalid=jadwalid)
     with db:
         cur = db.cursor()

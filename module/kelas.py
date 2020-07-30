@@ -683,7 +683,7 @@ def studentattendance(grp, jadwalid, tipe):
 
 def isSudahKelas(jadwalid, lecturercode):
     db = dbConnectSiap()
-    sql = "select * from simak_trn_presensi_dosen where JadwalID={jadwalid} and DosenID='{lecturercode}' and Tanggal = CURRENT_DATE".format(
+    sql = "select * from simak_trn_presensi_dosen where JadwalID={jadwalid} and DosenID='{lecturercode}' and Tanggal = CURRENT_DATE ORDER BY Pertemuan ASC".format(
         jadwalid=jadwalid, lecturercode=lecturercode)
     with db:
         cur = db.cursor()

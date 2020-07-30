@@ -43,7 +43,7 @@ def getJadwalIDfromDosenID(dosenid):
 
 def getPresensiFromJadwalID(presensiID):
     db = kelas.dbConnectSiap()
-    sql=f'select * from simak_trn_presensi_dosen where JadwalID={presensiID}'
+    sql=f'select * from simak_trn_presensi_dosen where JadwalID={presensiID} ORDER BY Pertemuan ASC'
     with db:
         cur=db.cursor()
         cur.execute(sql)
