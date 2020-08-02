@@ -702,6 +702,19 @@ def cekStatusApproveBAP(jadwalid):
         return row
 
 
+def getRencanaKehadiran(jadwalid):
+    db=kelas.dbConnectSiap()
+    sql=f"select RencanaKehadiran from simak_trn_jadwal where JadwalID={jadwalid}"
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        row=cur.fetchone()
+        if row:
+            return row[0]
+        else:
+            return None
+
+
 def makePDFandSend(num):
     checkDir()
     lecturercode = kelas.getKodeDosen(num)
@@ -733,59 +746,62 @@ def makePDFandSend(num):
             pdf = makePDFHeader()
             matkuldetailsfix = None
             for jadwalid in jadwalids:
-                print(jadwalid)
-                matkuldetails = kelas.getMkDetails(jadwalid[0])
-                datamatkulbap = getBKDMatkul(jadwalid[0])
-                semester = countSemester(jadwalid[0])
-                sks = getSks(jadwalid[0])
-                nama_kelas = kelas.toKelas(matkuldetails[6])
-                kode_matkul = matkuldetails[1]
-                nama_matkul = matkuldetails[2]
-                datenow = datetime.date(datetime.now()).strftime('%d-%m-%Y')
-                tanggalbap = datenow.split('-')[0]
-                bulanbap = datenow.split('-')[1]
-                tahunbap = datenow.split('-')[2]
-                kode_nomor = f'ITeung/{tanggalbap}/{bulanbap}/{tahunbap}'
-                tanggalpdfbap = f'{tanggalbap} {bulanSwitcher(bulanbap)} {tahunbap}'
-                datafixbap = []
-                datawkwkbap = ['Pertemuan', 'Tanggal', 'Materi Perkuliahan', 'Jam Mulai', 'Jam Selesai']
-                datafixbap.append(datawkwkbap)
-                for i in datamatkulbap:
-                    matkuldatalist = []
-                    matkuldatalist.append(i[0])
-                    matkuldatalist.append(i[1].strftime('%d-%m-%Y'))
-                    matkuldatalist.append(i[2])
-                    matkuldatalist.append(str(i[3]))
-                    matkuldatalist.append(str(i[4]))
-                    datafixbap.append(matkuldatalist)
-                makePDFBAP(pdf, datafixbap, kode_nomor, tanggalpdfbap, kode_matkul, nama_matkul, nama_kelas, semester,
-                           sks)
-                studentid, studentname = getandsetStudentIDandStudentNAME(jadwalid[0])
-                presensidosens1 = getPresensiDosen(jadwalid[0], 0, 8)
-                presensidosens2 = getPresensiDosen(jadwalid[0], 7, 15)
-                for i in range(2):
-                    if i == 0:
-                        pertemuan = countPertemuan(presensidosens1)
-                        pdfpertemuan = ['1', '2', '3', '4', '5', '6', '7']
-                    else:
-                        pertemuan = countPertemuan(presensidosens2)
-                        pdfpertemuan = ['8', '9', '10', '11', '12', '13', '14']
-                    datas = list(zip(pertemuan[0], pertemuan[1], pertemuan[2], pertemuan[3], pertemuan[4], pertemuan[5],
-                                     pertemuan[6]))
-                    total = countTotal(datas)
-                    datas = list(
-                        zip(studentid, studentname, pertemuan[0], pertemuan[1], pertemuan[2], pertemuan[3],
-                            pertemuan[4],
-                            pertemuan[5], pertemuan[6]))
-                    number = countNumber(studentid)
-                    datapdf = list(
-                        zip(number, studentid, studentname, pertemuan[0], pertemuan[1], pertemuan[2], pertemuan[3],
-                            pertemuan[4], pertemuan[5], pertemuan[6], total))
-                    tanggal = tanggalBKDPresensi(getTanggalFromPresensiDosen(jadwalid[0]))
-                    datapdf.append(tanggal)
-                    statusapprove=cekStatusApproveBAP(jadwalid[0])
-                    makePDFInner(datapdf, matkuldetails, lecturername, pdf, pdfpertemuan, lecturercode, statusapprove)
-                    matkuldetailsfix = matkuldetails
+                if getRencanaKehadiran(jadwalid[0]) == '0':
+                    print('rencana kehadiran kurang dari 0')
+                else:
+                    print(jadwalid)
+                    matkuldetails = kelas.getMkDetails(jadwalid[0])
+                    datamatkulbap = getBKDMatkul(jadwalid[0])
+                    semester = countSemester(jadwalid[0])
+                    sks = getSks(jadwalid[0])
+                    nama_kelas = kelas.toKelas(matkuldetails[6])
+                    kode_matkul = matkuldetails[1]
+                    nama_matkul = matkuldetails[2]
+                    datenow = datetime.date(datetime.now()).strftime('%d-%m-%Y')
+                    tanggalbap = datenow.split('-')[0]
+                    bulanbap = datenow.split('-')[1]
+                    tahunbap = datenow.split('-')[2]
+                    kode_nomor = f'ITeung/{tanggalbap}/{bulanbap}/{tahunbap}'
+                    tanggalpdfbap = f'{tanggalbap} {bulanSwitcher(bulanbap)} {tahunbap}'
+                    datafixbap = []
+                    datawkwkbap = ['Pertemuan', 'Tanggal', 'Materi Perkuliahan', 'Jam Mulai', 'Jam Selesai']
+                    datafixbap.append(datawkwkbap)
+                    for i in datamatkulbap:
+                        matkuldatalist = []
+                        matkuldatalist.append(i[0])
+                        matkuldatalist.append(i[1].strftime('%d-%m-%Y'))
+                        matkuldatalist.append(i[2])
+                        matkuldatalist.append(str(i[3]))
+                        matkuldatalist.append(str(i[4]))
+                        datafixbap.append(matkuldatalist)
+                    makePDFBAP(pdf, datafixbap, kode_nomor, tanggalpdfbap, kode_matkul, nama_matkul, nama_kelas, semester,
+                               sks)
+                    studentid, studentname = getandsetStudentIDandStudentNAME(jadwalid[0])
+                    presensidosens1 = getPresensiDosen(jadwalid[0], 0, 8)
+                    presensidosens2 = getPresensiDosen(jadwalid[0], 7, 15)
+                    for i in range(2):
+                        if i == 0:
+                            pertemuan = countPertemuan(presensidosens1)
+                            pdfpertemuan = ['1', '2', '3', '4', '5', '6', '7']
+                        else:
+                            pertemuan = countPertemuan(presensidosens2)
+                            pdfpertemuan = ['8', '9', '10', '11', '12', '13', '14']
+                        datas = list(zip(pertemuan[0], pertemuan[1], pertemuan[2], pertemuan[3], pertemuan[4], pertemuan[5],
+                                         pertemuan[6]))
+                        total = countTotal(datas)
+                        datas = list(
+                            zip(studentid, studentname, pertemuan[0], pertemuan[1], pertemuan[2], pertemuan[3],
+                                pertemuan[4],
+                                pertemuan[5], pertemuan[6]))
+                        number = countNumber(studentid)
+                        datapdf = list(
+                            zip(number, studentid, studentname, pertemuan[0], pertemuan[1], pertemuan[2], pertemuan[3],
+                                pertemuan[4], pertemuan[5], pertemuan[6], total))
+                        tanggal = tanggalBKDPresensi(getTanggalFromPresensiDosen(jadwalid[0]))
+                        datapdf.append(tanggal)
+                        statusapprove=cekStatusApproveBAP(jadwalid[0])
+                        makePDFInner(datapdf, matkuldetails, lecturername, pdf, pdfpertemuan, lecturercode, statusapprove)
+                        matkuldetailsfix = matkuldetails
             makePDFFooter(matkuldetailsfix, lecturercode, pdf)
         except Exception as e:
             print(str(e))
