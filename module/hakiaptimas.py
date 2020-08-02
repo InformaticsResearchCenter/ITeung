@@ -88,9 +88,9 @@ def moveFiles(namafile):
                 move = True
 
 def downloadFile(driver):
-    filecheck = driver.find_elements_by_class_name('_2RBFb')[-1]
-    filename = driver.find_elements_by_class_name('_3UPcK')[-1].text
-    driver.find_elements_by_class_name('_17viz')[-1].click()
+    filecheck = driver.find_elements_by_class_name('r9_f4')[-1]
+    filename = driver.find_elements_by_class_name('_3Whw5')[-1].text
+    driver.find_elements_by_class_name('_1-9IA')[-1].click()
     return filename
 
 def extractFiles(namafile, folder):
