@@ -13,22 +13,17 @@ def replymsg(driver, data):
     wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
     wa.typeAndSendMessage(driver, wmsg)
     num=data[0]
+    jadwal_id_msg=message.normalize(data[3]).split(' ')[-1]
     dosenid=kelas.getKodeDosen(num=num)
     jadwalID=getJadwalIDfromDosenID(dosenid=dosenid)
-    msg=''
-    for i in jadwalID:
-        msg += f"Jadwal ID: {i[0]}\nNama Matakuliah: {i[1]}\n"
-        msg += "Pertemuan | Materi Perkuliahan\n"
-        presensi=getPresensiFromJadwalID(i[0])
-        for j in presensi:
-            pertemuan = j[4]
-            if j[-2] != None:
-                materiPerkuliahan = message.normalize(j[-2])
-                msgs = f"{pertemuan} | {materiPerkuliahan}\n"
-            else:
-                msgs = f"{pertemuan} | _(belum diisi)_\n"
-            msg += msgs
-        msg += '\n'
+    if jadwal_id_msg == 'all':
+        msg=allJadwalIDDosen(jadwalID)
+    else:
+        data=[]
+        datafix=[]
+        data.append(jadwal_id_msg)
+        datafix.append(data)
+        msg=allJadwalIDDosen(datafix)
     msgreply = msg
     return msgreply
 
@@ -49,3 +44,22 @@ def getPresensiFromJadwalID(presensiID):
         cur.execute(sql)
         rows=cur.fetchall()
     return rows
+
+def allJadwalIDDosen(jadwalID):
+    msg=''
+    for i in jadwalID:
+        msg += f"Jadwal ID: {i[0]}\nNama Matakuliah: {i[1]}\n"
+        msg += "Pertemuan | Materi Perkuliahan\n"
+        presensi=getPresensiFromJadwalID(i[0])
+        if presensi != ():
+            for j in presensi:
+                pertemuan = j[4]
+                if j[-2] != None:
+                    materiPerkuliahan = message.normalize(j[-2])
+                    msgs = f"{pertemuan} | {materiPerkuliahan}\n"
+                else:
+                    msgs = f"{pertemuan} | _(belum diisi)_\n"
+                msg += msgs
+        else:
+            msg+='mohon maaf jadwalid tidak dapat ditemukan'
+        msg += '\n'
