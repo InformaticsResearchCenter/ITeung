@@ -26,7 +26,7 @@ def replymsg(driver, data):
                 materiPerkuliahan = message.normalize(j[-2])
                 msgs = f"{pertemuan} | {materiPerkuliahan}\n"
             else:
-                msgs = f"{pertemuan} | -\n"
+                msgs = f"{pertemuan} | _(belum diisi)_\n"
             msg += msgs
         msg += '\n'
     msgreply = msg
