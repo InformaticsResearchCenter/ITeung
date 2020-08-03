@@ -1,6 +1,6 @@
 from module import kelas, cek_mp, hakiaptimas
 from lib import wa, reply, message, numbers
-import os, config
+import os, config, pandas
 
 def auth(data):
     if kelas.getKodeDosen(data[0]) == '':
@@ -21,18 +21,18 @@ def replymsg(driver, data):
         try:
             namafile=hakiaptimas.downloadFile(driver)
             if namafile.split('.')[1] == 'xlsx' or namafile.split('.')[1] == 'xls':
-                msgreply='format file bener'
                 hakiaptimas.moveFiles(namafile)
+                msgreply='okeee sudah #BOTNAME# update yaa materi perkuliahannya:'
+                for i, j in pandas.read_excel(namafile).iterrows():
+                    jadwalid=j['jadwal id']
+                    pertemuan=j['pertemuan']
+                    materiperkuliahan=j['materi perkuliahan']
+                    updateMateriPerkuliahan(jadwalid, pertemuan, materiperkuliahan)
+                    msgreply+=f'\n\nJadwal ID: {jadwalid}\nPertemuan: {pertemuan}\nMateri Perkuliahan: {materiperkuliahan}'
+                    deleteFiles(namafile)
             else:
                 msgreply='format file salah'
-                source = 'C:\\Users\\'+config.computeruser+'\\Downloads\\'+str(namafile)
-                deletefiles=True
-                while deletefiles:
-                    try:
-                        os.remove(source)
-                        deletefiles=False
-                    except:
-                        deletefiles=True
+                deleteFiles(namafile)
         except Exception as e:
             msgreply=f'error: {e}'
     else:
@@ -68,3 +68,14 @@ def updateMateriPerkuliahan(jadwalid, pertemuan, materi):
     with db:
         cur=db.cursor()
         cur.execute(sql)
+
+
+def deleteFiles(namafile):
+    source = 'C:\\Users\\' + config.computeruser + '\\Downloads\\' + str(namafile)
+    deletefiles = True
+    while deletefiles:
+        try:
+            os.remove(source)
+            deletefiles = False
+        except:
+            deletefiles = True
