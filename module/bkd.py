@@ -806,16 +806,16 @@ def makePDFandSend(num):
         except Exception as e:
             print(str(e))
             print(f'pertemuan kurang dari {config.kehadiran}')
-            pertemuankurang.append(jadwalid[0])
+            # pertemuankurang.append(jadwalid[0])
     cekkurangmateri = cekMateriByGrouping(lecturercode)
     cekkurangapproval = cekApprovalBAPByGrouping(lecturercode)
-    if len(pertemuankurang) > 0 or cekkurangmateri[0] == False or cekkurangapproval[0] == False:
+    if cekkurangmateri[0] == False or cekkurangapproval[0] == False:
         msgkurang=''
-        if len(pertemuankurang) > 0:
-            msgkurang+=f'hai haiii, kamu yang request BAP yaaa?{config.whatsapp_api_lineBreak}wahhh ada yang kurang nih pertemuannya ini Jadwal ID nya yaaa:'
-            for i in pertemuankurang:
-                kelasdetails=kelas.getMkDetails(i)
-                msgkurang+=f'{config.whatsapp_api_lineBreak}{i} | {kelasdetails[2]} | {kelas.toKelas(kelasdetails[-1])}'
+        # if len(pertemuankurang) > 0:
+        #     msgkurang+=f'hai haiii, kamu yang request BAP yaaa?{config.whatsapp_api_lineBreak}wahhh ada yang kurang nih pertemuannya ini Jadwal ID nya yaaa:'
+        #     for i in pertemuankurang:
+        #         kelasdetails=kelas.getMkDetails(i)
+        #         msgkurang+=f'{config.whatsapp_api_lineBreak}{i} | {kelasdetails[2]} | {kelas.toKelas(kelasdetails[-1])}'
         if cekkurangmateri[0] == False:
             kurangmateri=''
             for i in cekkurangmateri[1]:
