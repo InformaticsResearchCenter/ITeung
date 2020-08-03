@@ -64,3 +64,4 @@ def allJadwalIDDosen(jadwalID):
         else:
             msg+='mohon maaf jadwalid tidak dapat ditemukan'
         msg += '\n'
+    return msg
