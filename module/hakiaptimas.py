@@ -89,7 +89,7 @@ def moveFiles(namafile):
 
 def downloadFile(driver):
     filecheck = driver.find_elements_by_class_name('r9_f4')[-1]
-    filename = driver.find_elements_by_class_name('_3Whw5')[-1].text
+    filename = driver.find_elements_by_class_name('h3p5g')[-1].text
     driver.find_elements_by_class_name('_1-9IA')[-1].click()
     return filename
 
