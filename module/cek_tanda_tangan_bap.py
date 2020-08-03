@@ -200,7 +200,7 @@ def run(data):
 
 def getProdiIDfromSingkatan(singkatan):
     db=kelas.dbConnectSiap()
-    sql=f"select ProdiID from simak_mst_prodi where Singkatan = {singkatan}"
+    sql=f"select ProdiID from simak_mst_prodi where Singkatan = '{singkatan}'"
     with db:
         cur=db.cursor()
         cur.execute(sql)
