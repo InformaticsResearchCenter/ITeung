@@ -1,5 +1,5 @@
 from module import kelas
-from lib import numbers, wa, reply
+from lib import numbers, wa, reply, message
 
 import subprocess, config, os
 
@@ -36,9 +36,12 @@ def getListJadwalIDfromKaprodi(prodiID):
             return None
 
 
-def getListJadwalIDfromDeputi():
+def getListJadwalIDfromDeputi(status, prodiid):
     db=kelas.dbConnectSiap()
-    sql=f"select JadwalID from simak_trn_jadwal where TahunID={kelas.getTahunID()}"
+    if status:
+        sql=f"select JadwalID from simak_trn_jadwal where TahunID={kelas.getTahunID()} and ProdiID='.{prodiid}.'"
+    else:
+        sql=f"select JadwalID from simak_trn_jadwal where TahunID={kelas.getTahunID()}"
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -102,8 +105,12 @@ def infoBAPKaprodi(prodiid):
     msgreply=f"BAP yang sudah ditandatangani ada: {len(sudah)} berkas%0ABAP yang siap ditandatangani ada: {len(siap)} berkas%0ABAP yang belum siap ditandatangani ada: {len(belum)} berkas"
     return msgreply, sudah, siap, belum
 
-def infoBAPDeputi():
-    JadwalIDDataDeputi=getListJadwalIDfromDeputi()
+def infoBAPDeputi(msg):
+    msgs=msg.split(' ')[-1]
+    if msgs == 'all':
+        JadwalIDDataDeputi=getListJadwalIDfromDeputi(False, '')
+    else:
+        JadwalIDDataDeputi=getListJadwalIDfromDeputi(True, getProdiIDfromSingkatan(msgs))
     sudah=[]
     siap=[]
     belum=[]
@@ -169,13 +176,17 @@ def auth(data):
 
 def replymsg(driver, data):
     num=numbers.normalize(data[0])
+    msg=message.normalize(data[3])
+    data=f'{num};{msg}'
     wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
     wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
-    subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0], num], cwd=config.cwd)
+    subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0], data], cwd=config.cwd)
     return wmsg
 
 
-def run(num):
+def run(data):
+    num=data.split(';')[0]
+    msg=data.split(';')[1]
     if isKaprodi(getNIPYfromHandphone(num)):
         status='kaprodi'
     else:
@@ -183,5 +194,18 @@ def run(num):
     if status == 'kaprodi':
         msgreply=infoBAPKaprodi(f'.{kelas.getAllDataDosens(kelas.getKodeDosen(num))[20]}.')
     else:
-        msgreply=infoBAPDeputi()
+        msgreply=infoBAPDeputi(msg)
     wa.setOutbox(numbers.normalize(num), msgreply[0])
+
+
+def getProdiIDfromSingkatan(singkatan):
+    db=kelas.dbConnectSiap()
+    sql=f"select ProdiID from simak_mst_prodi where Singkatan = {singkatan}"
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        row = cur.fetchone()
+        if row:
+            return f".{row[0]}."
+        else:
+            return None
