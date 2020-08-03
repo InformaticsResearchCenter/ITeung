@@ -20,6 +20,7 @@ def replymsg(driver, data):
     if excelkeyword == 'excel':
         try:
             hakiaptimas.downloadFile(driver)
+            msgreply='oke crot sudah kedownload'
         except:
             msgreply='file tidak ada'
     else:
