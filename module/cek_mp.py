@@ -48,7 +48,7 @@ def getPresensiFromJadwalID(presensiID):
     return rows
 
 def allJadwalIDDosen(jadwalID):
-    msg='ini yaaa datanya...'
+    msg='ini yaaa datanya...\n\n'
     for i in jadwalID:
         msg += f"Jadwal ID: {i[0]}\nNama Matakuliah: {i[1]}\n"
         msg += "Pertemuan | Materi Perkuliahan\n"
