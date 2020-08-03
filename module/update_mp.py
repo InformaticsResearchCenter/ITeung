@@ -29,10 +29,10 @@ def replymsg(driver, data):
                     materiperkuliahan=j['materi perkuliahan']
                     updateMateriPerkuliahan(jadwalid, pertemuan, materiperkuliahan)
                     msgreply+=f'\n\nJadwal ID: {jadwalid}\nPertemuan: {pertemuan}\nMateri Perkuliahan: {materiperkuliahan}'
-                deleteFiles(namafile)
+                deleteFilesWithCWD(namafile)
             else:
                 msgreply='format file salah'
-                deleteFiles(namafile)
+                deleteFilesOnDownloadsFolder(namafile)
         except Exception as e:
             msgreply=f'error: {e}'
     else:
@@ -70,8 +70,18 @@ def updateMateriPerkuliahan(jadwalid, pertemuan, materi):
         cur.execute(sql)
 
 
-def deleteFiles(namafile):
+def deleteFilesOnDownloadsFolder(namafile):
     source = 'C:\\Users\\' + config.computeruser + '\\Downloads\\' + str(namafile)
+    deletefiles = True
+    while deletefiles:
+        try:
+            os.remove(source)
+            deletefiles = False
+        except:
+            deletefiles = True
+
+def deleteFilesWithCWD(namafile):
+    source = os.getcwd()+'\\'+str(namafile)
     deletefiles = True
     while deletefiles:
         try:
