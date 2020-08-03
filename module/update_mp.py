@@ -19,8 +19,11 @@ def replymsg(driver, data):
     dosenID=kelas.getKodeDosen(num)
     if excelkeyword == 'excel':
         try:
-            hakiaptimas.downloadFile(driver)
-            msgreply='oke crot sudah kedownload'
+            namafile=hakiaptimas.downloadFile(driver)
+            if namafile.split('.')[1] == 'xlsx' or namafile.split('.')[1] == 'xls':
+                msgreply='format file bener'
+            else:
+                msgreply='format file salah'
         except:
             msgreply='file tidak ada'
     else:
