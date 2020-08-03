@@ -29,7 +29,7 @@ def replymsg(driver, data):
                     materiperkuliahan=j['materi perkuliahan']
                     updateMateriPerkuliahan(jadwalid, pertemuan, materiperkuliahan)
                     msgreply+=f'\n\nJadwal ID: {jadwalid}\nPertemuan: {pertemuan}\nMateri Perkuliahan: {materiperkuliahan}'
-                    deleteFiles(namafile)
+                deleteFiles(namafile)
             else:
                 msgreply='format file salah'
                 deleteFiles(namafile)
