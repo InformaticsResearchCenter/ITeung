@@ -1,4 +1,4 @@
-from module import kelas, cek_mp
+from module import kelas, cek_mp, hakiaptimas
 from lib import wa, reply, message, numbers
 import os
 
@@ -14,31 +14,39 @@ def replymsg(driver, data):
     wa.typeAndSendMessage(driver, wmsg)
     num=numbers.normalize(data[0])
     msg=message.normalize(data[3])
+    msgs=msg.split(' ')
+    excelkeyword=msgs[-1]
     dosenID=kelas.getKodeDosen(num)
-    try:
-        datasplit=msg.split(' materi perkuliahan ')[1]
-        jadwalid=int(datasplit.split(' ')[0])
-        jadwalidDosen=cek_mp.getJadwalIDfromDosenID(dosenID)
-        for i in jadwalidDosen:
-            if jadwalid in i:
-                isAdaJadwal=True
-                break
+    if excelkeyword == 'excel':
+        try:
+            hakiaptimas.downloadFile(driver)
+        except:
+            msgreply='file tidak ada'
+    else:
+        try:
+            datasplit=msg.split(' materi perkuliahan ')[1]
+            jadwalid=int(datasplit.split(' ')[0])
+            jadwalidDosen=cek_mp.getJadwalIDfromDosenID(dosenID)
+            for i in jadwalidDosen:
+                if jadwalid in i:
+                    isAdaJadwal=True
+                    break
+                else:
+                    isAdaJadwal=False
+            if isAdaJadwal:
+                pertemuan=datasplit.split(' ')[2]
+                if len(pertemuan) > 1:
+                    materi=datasplit.split(' pertemuan ')[1][3:]
+                else:
+                    materi=datasplit.split(' pertemuan ')[1][2:]
+                print(f'{jadwalid} | {pertemuan} | {materi}')
+                updateMateriPerkuliahan(jadwalid, pertemuan, materi)
+                msgreply=f'okeee bosqqq sudah di update yaaa\nJadwal ID: {jadwalid}\nPertemuan: {pertemuan}\nMateri: {materi}'
             else:
-                isAdaJadwal=False
-        if isAdaJadwal:
-            pertemuan=datasplit.split(' ')[2]
-            if len(pertemuan) > 1:
-                materi=datasplit.split(' pertemuan ')[1][3:]
-            else:
-                materi=datasplit.split(' pertemuan ')[1][2:]
-            print(f'{jadwalid} | {pertemuan} | {materi}')
-            updateMateriPerkuliahan(jadwalid, pertemuan, materi)
-            msgreply=f'okeee bosqqq sudah di update yaaa\nJadwal ID: {jadwalid}\nPertemuan: {pertemuan}\nMateri: {materi}'
-        else:
-            msgreply='Jadwal ID yang dimasukkan salah atau tidak ditemukan!'
-    except Exception as e:
-        print(str(e))
-        msgreply='format katanya salah nichhhh bosqueeee'
+                msgreply='Jadwal ID yang dimasukkan salah atau tidak ditemukan!'
+        except Exception as e:
+            print(str(e))
+            msgreply='format katanya salah nichhhh bosqueeee'
     return msgreply
 
 def updateMateriPerkuliahan(jadwalid, pertemuan, materi):
