@@ -39,7 +39,7 @@ def getListJadwalIDfromKaprodi(prodiID):
 def getListJadwalIDfromDeputi(status, prodiid):
     db=kelas.dbConnectSiap()
     if status:
-        sql=f"select JadwalID from simak_trn_jadwal where TahunID={kelas.getTahunID()} and ProdiID='.{prodiid}.'"
+        sql=f"select JadwalID from simak_trn_jadwal where TahunID={kelas.getTahunID()} and ProdiID='{prodiid}'"
     else:
         sql=f"select JadwalID from simak_trn_jadwal where TahunID={kelas.getTahunID()}"
     with db:
