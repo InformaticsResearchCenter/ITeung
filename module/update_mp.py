@@ -24,8 +24,8 @@ def replymsg(driver, data):
                 msgreply='format file bener'
             else:
                 msgreply='format file salah'
-        except:
-            msgreply='file tidak ada'
+        except Exception as e:
+            msgreply=f'error: {e}'
     else:
         try:
             datasplit=msg.split(' materi perkuliahan ')[1]
