@@ -1,6 +1,6 @@
 from module import kelas, cek_mp, hakiaptimas
 from lib import wa, reply, message, numbers
-import os
+import os, config
 
 def auth(data):
     if kelas.getKodeDosen(data[0]) == '':
@@ -22,8 +22,11 @@ def replymsg(driver, data):
             namafile=hakiaptimas.downloadFile(driver)
             if namafile.split('.')[1] == 'xlsx' or namafile.split('.')[1] == 'xls':
                 msgreply='format file bener'
+                hakiaptimas.moveFiles(namafile)
             else:
                 msgreply='format file salah'
+                source = 'C:\\Users\\'+config.computeruser+'\\Downloads\\'+str(namafile)
+                os.remove(source)
         except Exception as e:
             msgreply=f'error: {e}'
     else:
