@@ -26,7 +26,13 @@ def replymsg(driver, data):
             else:
                 msgreply='format file salah'
                 source = 'C:\\Users\\'+config.computeruser+'\\Downloads\\'+str(namafile)
-                os.remove(source)
+                deletefiles=True
+                while deletefiles:
+                    try:
+                        os.remove(source)
+                        deletefiles=False
+                    except:
+                        deletefiles=True
         except Exception as e:
             msgreply=f'error: {e}'
     else:
