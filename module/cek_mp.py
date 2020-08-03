@@ -18,13 +18,14 @@ def replymsg(driver, data):
     jadwalID=getJadwalIDfromDosenID(dosenid=dosenid)
     if jadwal_id_msg == 'all':
         msg=allJadwalIDDosen(jadwalID)
+        msgreply = msg
     else:
         data=[]
         datafix=[]
         data.append(jadwal_id_msg)
         datafix.append(data)
         msg=allJadwalIDDosen(datafix)
-    msgreply = msg
+        msgreply = msg
     return msgreply
 
 def getJadwalIDfromDosenID(dosenid):
@@ -46,7 +47,7 @@ def getPresensiFromJadwalID(presensiID):
     return rows
 
 def allJadwalIDDosen(jadwalID):
-    msg=''
+    msg='ini yaaa datanya...'
     for i in jadwalID:
         msg += f"Jadwal ID: {i[0]}\nNama Matakuliah: {i[1]}\n"
         msg += "Pertemuan | Materi Perkuliahan\n"
