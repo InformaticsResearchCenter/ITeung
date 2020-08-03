@@ -23,6 +23,7 @@ def replymsg(driver, data):
         data=[]
         datafix=[]
         data.append(jadwal_id_msg)
+        data.append(kelas.getMkDetails(jadwal_id_msg)[2])
         datafix.append(data)
         msg=allJadwalIDDosen(datafix)
         msgreply = msg
