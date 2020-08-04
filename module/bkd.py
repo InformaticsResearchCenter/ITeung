@@ -85,7 +85,7 @@ def getPresensiDosen(jadwalid, rangepertemuan1, rangepertemuan2):
 
 def getPresensiMahasiswa(presensiid):
     db = kelas.dbConnectSiap()
-    sql = "select MhswID, JenisPresensiID from simak_trn_presensi_mahasiswa where PresensiID={presensiid}".format(
+    sql = "select MhswID, JenisPresensiID from simak_trn_presensi_mahasiswa where PresensiID={presensiid} order by MhswID".format(
         presensiid=presensiid)
     with db:
         cur = db.cursor()
@@ -133,6 +133,7 @@ def countPertemuan(presensidosens):
         presensimahasiswas = getPresensiMahasiswa(presensidosen[0])
         pertemuandetail = []
         for v in presensimahasiswas:
+            print(v)
             if v[1] == "H":
                 pertemuandetail.append('v')
             else:
