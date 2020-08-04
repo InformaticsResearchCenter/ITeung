@@ -144,6 +144,11 @@ def countPertemuan(presensidosens):
 def getandsetStudentIDandStudentNAME(jadwalid):
     studentid = []
     studentname = []
+    jadwalserial = kelas.getJadwalSerial(jadwalid=jadwalid)
+    if jadwalserial == '0':
+        jadwalid = jadwalid
+    else:
+        jadwalid = jadwalserial
     studentlists = getListStudent(jadwalid)
     for studentlist in studentlists:
         studentid.append(studentlist[-1])
@@ -835,10 +840,11 @@ def makePDFandSend(num):
             msgkurang += f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}wuowwww ada yang kurang nih ketika kamu request BAP, status approval nya masih belum di ACC nih dengan Jadwal ID:{kurangapprove}{config.whatsapp_api_lineBreak}'
         wa.setOutbox(numbers.normalize(num), msgkurang)
     else:
-        mail(getLecturerMail(lecturercode),
-             f'Halooooo, {config.bot_name} ngirim file nich....',
-             f'ini ya file Absensi BKD yang Bapak/Ibu minta silahkan di cek... ehee....',
-             getFilePath(getLecturerMail(lecturercode), 'bkd'))
+        print('kirim email')
+        # mail(getLecturerMail(lecturercode),
+        #      f'Halooooo, {config.bot_name} ngirim file nich....',
+        #      f'ini ya file Absensi BKD yang Bapak/Ibu minta silahkan di cek... ehee....',
+        #      getFilePath(getLecturerMail(lecturercode), 'bkd'))
 
 def verifyDigitalSign(resultpasscode):
     kodedosen = resultpasscode.split(';')[1]
