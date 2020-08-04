@@ -34,7 +34,7 @@ def replymsg(driver, data):
                 msgreply='format file salah'
                 deleteFilesOnDownloadsFolder(namafile)
         except Exception as e:
-            msgreply=f'error: {e}'
+            msgreply='mana filenya coyyyyy'
     else:
         try:
             datasplit=msg.split(' materi perkuliahan ')[1]
