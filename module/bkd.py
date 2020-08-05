@@ -774,11 +774,12 @@ def makePDFandSend(num):
         try:
             pdf = makePDFHeader()
             for jadwalid in jadwalids:
+                print(jadwalid)
                 matkuldetailsfix = kelas.getMkDetails(jadwalid[0])
                 if getRencanaKehadiran(jadwalid[0]) == '0':
                     print('rencana kehadiran kurang dari 0')
-                elif getProgramID(jadwalid[0]) == '.KER.':
-                    print('program kerja sama')
+                elif getProgramID(jadwalid[0]) == '.KER.' and getKehadiran(jadwalid[0]) < getRencanaKehadiran(jadwalid[0]):
+                    print('program kerja sama dan jumlah kehadiran kurang dari rencana kehadiran')
                 else:
                     matkuldetails = kelas.getMkDetails(jadwalid[0])
                     datamatkulbap = getBKDMatkul(jadwalid[0])
@@ -914,27 +915,29 @@ def getProgramID(jadwalid):
             return None
 
 def cekKurangMateri(cekkurangmateri):
-    cekkurangmaterifix = []
-    for i in cekkurangmateri[1]:
-        if getProgramID(i[0]) == '.KER.' and getKehadiran(i[0]) < getRencanaKehadiran(i[0]):
-            continue
+    if cekkurangmateri[0] == False:
+        cekkurangmaterifix = []
+        for i in cekkurangmateri[1]:
+            if getProgramID(i[0]) == '.KER.' and getKehadiran(i[0]) < getRencanaKehadiran(i[0]):
+                continue
+            else:
+                cekkurangmaterifix.append(i)
+        if len(cekkurangmaterifix) == 0:
+            cekkurangmateri = (True, [])
         else:
-            cekkurangmaterifix.append(i)
-    if len(cekkurangmaterifix) == 0:
-        cekkurangmateri = (True, [])
-    else:
-        cekkurangmateri = (False, cekkurangmaterifix)
+            cekkurangmateri = (False, cekkurangmaterifix)
     return cekkurangmateri
 
 def cekKurangApproval(cekkurangapproval):
-    cekkurangapprovalfix = []
-    for i in cekkurangapproval[1]:
-        if getProgramID(i[0]) == '.KER.' and getKehadiran(i[0]) < getRencanaKehadiran(i[0]):
-            continue
+    if cekkurangapproval[0] == False:
+        cekkurangapprovalfix = []
+        for i in cekkurangapproval[1]:
+            if getProgramID(i[0]) == '.KER.' and getKehadiran(i[0]) < getRencanaKehadiran(i[0]):
+                continue
+            else:
+                cekkurangapprovalfix.append(i)
+        if len(cekkurangapprovalfix) == 0:
+            cekkurangapproval = (True, [])
         else:
-            cekkurangapprovalfix.append(i)
-    if len(cekkurangapprovalfix) == 0:
-        cekkurangmateri = (True, [])
-    else:
-        cekkurangmateri = (False, cekkurangapprovalfix)
-    return cekkurangmateri
+            cekkurangapproval = (False, cekkurangapprovalfix)
+    return cekkurangapproval
