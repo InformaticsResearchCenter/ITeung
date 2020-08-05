@@ -336,7 +336,6 @@ def makePDFHeader():
 
 
 def makePDFFooter(matkuldetails, lecturercode, pdf):
-    print(matkuldetails)
     pdf.output('bkd/' + matkuldetails[1] + '-' + matkuldetails[2] + '-' + getLecturerMail(lecturercode) + '.pdf', 'F')
 
 
@@ -775,7 +774,6 @@ def makePDFandSend(num):
         try:
             pdf = makePDFHeader()
             for jadwalid in jadwalids:
-                print(jadwalid)
                 matkuldetailsfix = kelas.getMkDetails(jadwalid[0])
                 if getRencanaKehadiran(jadwalid[0]) == '0':
                     print('rencana kehadiran kurang dari 0')
@@ -849,18 +847,8 @@ def makePDFandSend(num):
             print(str(e))
             print(f'pertemuan kurang dari {config.kehadiran}')
             pertemuankurang.append(jadwalid[0])
-    cekkurangmateri = cekMateriByGrouping(lecturercode)
-    cekkurangapproval = cekApprovalBAPByGrouping(lecturercode)
-    cekkurangmaterifix = []
-    for i in cekkurangmateri[1]:
-        if getProgramID(i[0]) == '.KER.' and getKehadiran(i[0]) < getRencanaKehadiran(i[0]):
-            continue
-        else:
-            cekkurangmaterifix.append(i)
-    if len(cekkurangmaterifix) == 0:
-        cekkurangmateri = (True, [])
-    else:
-        cekkurangmateri = (False, cekkurangmaterifix)
+    cekkurangmateri = cekKurangMateri(cekMateriByGrouping(lecturercode))
+    cekkurangapproval = cekKurangApproval(cekApprovalBAPByGrouping(lecturercode))
     if len(pertemuankurang) > 0 or cekkurangmateri[0] == False or cekkurangapproval[0] == False:
         msgkurang=''
         if len(pertemuankurang) > 0:
@@ -885,8 +873,7 @@ def makePDFandSend(num):
                     siapayangkurang += ' | DEPUTI AKADEMIK'
                 kurangapprove += f'{config.whatsapp_api_lineBreak}{i[0]} | {kelasdetails[2]} | {kelas.toKelas(kelasdetails[-1])} {siapayangkurang}'
             msgkurang += f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}wuowwww ada yang kurang nih ketika kamu request BAP, status approval nya masih belum di ACC nih dengan Jadwal ID:{kurangapprove}{config.whatsapp_api_lineBreak}'
-        # wa.setOutbox(numbers.normalize(num), msgkurang)
-        print(msgkurang)
+        wa.setOutbox(numbers.normalize(num), msgkurang)
     else:
         mail(getLecturerMail(lecturercode),
              f'Halooooo, {config.bot_name} ngirim file nich....',
@@ -925,3 +912,29 @@ def getProgramID(jadwalid):
             return row[0]
         else:
             return None
+
+def cekKurangMateri(cekkurangmateri):
+    cekkurangmaterifix = []
+    for i in cekkurangmateri[1]:
+        if getProgramID(i[0]) == '.KER.' and getKehadiran(i[0]) < getRencanaKehadiran(i[0]):
+            continue
+        else:
+            cekkurangmaterifix.append(i)
+    if len(cekkurangmaterifix) == 0:
+        cekkurangmateri = (True, [])
+    else:
+        cekkurangmateri = (False, cekkurangmaterifix)
+    return cekkurangmateri
+
+def cekKurangApproval(cekkurangapproval):
+    cekkurangapprovalfix = []
+    for i in cekkurangapproval[1]:
+        if getProgramID(i[0]) == '.KER.' and getKehadiran(i[0]) < getRencanaKehadiran(i[0]):
+            continue
+        else:
+            cekkurangapprovalfix.append(i)
+    if len(cekkurangapprovalfix) == 0:
+        cekkurangmateri = (True, [])
+    else:
+        cekkurangmateri = (False, cekkurangapprovalfix)
+    return cekkurangmateri
