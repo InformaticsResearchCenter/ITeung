@@ -851,9 +851,16 @@ def makePDFandSend(num):
             pertemuankurang.append(jadwalid[0])
     cekkurangmateri = cekMateriByGrouping(lecturercode)
     cekkurangapproval = cekApprovalBAPByGrouping(lecturercode)
+    cekkurangmaterifix = []
     for i in cekkurangmateri[1]:
-        if len(cekkurangmateri[1]) == 1 and getProgramID(i[0]) == '.KER.' and getKehadiran(i[0]) < getRencanaKehadiran(i[0]):
-            cekkurangmateri=(True, [])
+        if getProgramID(i[0]) == '.KER.' and getKehadiran(i[0]) < getRencanaKehadiran(i[0]):
+            continue
+        else:
+            cekkurangmaterifix.append(i)
+    if len(cekkurangmaterifix) == 0:
+        cekkurangmateri = (True, [])
+    else:
+        cekkurangmateri = (False, cekkurangmaterifix)
     if len(pertemuankurang) > 0 or cekkurangmateri[0] == False or cekkurangapproval[0] == False:
         msgkurang=''
         if len(pertemuankurang) > 0:
