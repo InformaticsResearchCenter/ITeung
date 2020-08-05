@@ -40,6 +40,12 @@ def detectphoneNotConnected(driver):
         ret=False
     return ret
 
+def arrowToGoDown(driver):
+    try:
+        driver.find_element_by_class_name('RbeWt').click
+    except:
+        pass
+
 #fix 32
 def retryNowClick(driver):
     retry = True
@@ -86,6 +92,7 @@ def clickChatBox(driver):
     driver.find_elements_by_xpath('//*[@id="main"]/footer/div[1]/div[2]/div/div[2]')[0].click()
 
 def openMessage(driver):
+    arrowToGoDown(driver)
     try:
         newnotifelement = driver.find_elements_by_class_name("_31gEB")[0]
         # action=ActionChains(driver)
