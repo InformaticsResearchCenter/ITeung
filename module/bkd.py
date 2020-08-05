@@ -752,10 +752,9 @@ def makePDFandSend(num):
             pdf = makePDFHeader()
             matkuldetailsfix = None
             for jadwalid in jadwalids:
-                if getRencanaKehadiran(jadwalid[0]) == '0':
-                    print('rencana kehadiran kurang dari 0')
+                if getRencanaKehadiran(jadwalid[0]) == '0' or getProgramID(jadwalid[0]) == '.KER.':
+                    print('rencana kehadiran kurang dari 0 atau program kerja sama')
                 else:
-                    print(jadwalid)
                     matkuldetails = kelas.getMkDetails(jadwalid[0])
                     datamatkulbap = getBKDMatkul(jadwalid[0])
                     semester = countSemester(jadwalid[0])
@@ -877,3 +876,15 @@ def verifyDigitalSign(resultpasscode):
     datalahirdosen = tanggallahirdosen + ' ' + bulanlahirdosen + ' ' + tahunlahirdosen
     msgreply = f'Ini yaaa data yang Akang/Teteh minta\n\nKode Dosen: {kodedosen}\nNama Dosen: {namadosen}\nNIDN: {datadosen[2]}\nTempat/Tgl Lahir: {datadosen[6]}/{datalahirdosen}\nHandphone: {datadosen[12]}\nE-mail: {datadosen[13]}\n\nJenis Dokumen: {jnsdkm}\nNomor Dokumen: {nmrsrt}\nPenerbitan Tanda Tangan: {penerbitantandatangan}'
     return msgreply
+
+def getProgramID(jadwalid):
+    db=kelas.dbConnectSiap()
+    sql=f'select ProgramID from simak_trn_jadwal where JadwalID={jadwalid}'
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        row=cur.fetchone()
+        if row is not None:
+            return row[0]
+        else:
+            return None
