@@ -720,6 +720,18 @@ def getRencanaKehadiran(jadwalid):
         else:
             return None
 
+def getTypeKelas(jadwalid):
+    db=kelas.dbConnectSiap()
+    sql= f"SELECT ProgramID FROM simpati.simak_trn_jadwal where TahunID={config.siap_tahun_id} and JadwalID={jadwalid}"
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        row=cur.fetchone()
+        if row:
+            return row[0]
+        else:
+            return None
+
 
 def makePDFandSend(num):
     checkDir()
@@ -755,6 +767,7 @@ def makePDFandSend(num):
                 if getRencanaKehadiran(jadwalid[0]) == '0' or getProgramID(jadwalid[0]) == '.KER.':
                     print('rencana kehadiran kurang dari 0 atau program kerja sama')
                 else:
+                    print(jadwalid)
                     matkuldetails = kelas.getMkDetails(jadwalid[0])
                     datamatkulbap = getBKDMatkul(jadwalid[0])
                     semester = countSemester(jadwalid[0])
