@@ -133,7 +133,6 @@ def countPertemuan(presensidosens):
         presensimahasiswas = getPresensiMahasiswa(presensidosen[0])
         pertemuandetail = []
         for v in presensimahasiswas:
-            print(v)
             if v[1] == "H":
                 pertemuandetail.append('v')
             else:
@@ -767,7 +766,6 @@ def makePDFandSend(num):
                 if getRencanaKehadiran(jadwalid[0]) == '0' or getProgramID(jadwalid[0]) == '.KER.':
                     print('rencana kehadiran kurang dari 0 atau program kerja sama')
                 else:
-                    print(jadwalid)
                     matkuldetails = kelas.getMkDetails(jadwalid[0])
                     datamatkulbap = getBKDMatkul(jadwalid[0])
                     semester = countSemester(jadwalid[0])
@@ -814,7 +812,6 @@ def makePDFandSend(num):
                                 for j in range(jumlahmahasiswa):
                                     data_pertemuan.append('-')
                                 pertemuan.append(data_pertemuan)
-                        print(pertemuan)
                         datas = list(zip(pertemuan[0], pertemuan[1], pertemuan[2], pertemuan[3], pertemuan[4], pertemuan[5],
                                          pertemuan[6]))
                         total = countTotal(datas)
