@@ -42,7 +42,7 @@ def detectphoneNotConnected(driver):
 
 def arrowToGoDown(driver):
     try:
-        driver.find_element_by_class_name('RbeWt').click
+        driver.find_element_by_class_name('_1YcH-').click
     except:
         print('arrow go down not work')
 
