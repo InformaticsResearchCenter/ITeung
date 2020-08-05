@@ -44,7 +44,7 @@ def arrowToGoDown(driver):
     try:
         driver.find_element_by_class_name('RbeWt').click
     except:
-        pass
+        print('arrow go down not work')
 
 #fix 32
 def retryNowClick(driver):
