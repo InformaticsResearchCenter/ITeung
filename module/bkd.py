@@ -817,16 +817,6 @@ def makePDFandSend(num):
                         else:
                             pertemuan = countPertemuan(presensidosens2)
                             pdfpertemuan = ['8', '9', '10', '11', '12', '13', '14']
-                        if len(pertemuan) < 7:
-                            rencanakehadiran=getRencanaKehadiran(jadwalid[0])
-                            kehadirannormal=14
-                            selisihkehadiran=kehadirannormal-int(rencanakehadiran)
-                            for i in range(selisihkehadiran):
-                                jumlahmahasiswa=len(pertemuan[0])
-                                data_pertemuan=[]
-                                for j in range(jumlahmahasiswa):
-                                    data_pertemuan.append('-')
-                                pertemuan.append(data_pertemuan)
                         datas = list(zip(pertemuan[0], pertemuan[1], pertemuan[2], pertemuan[3], pertemuan[4], pertemuan[5],
                                          pertemuan[6]))
                         total = countTotal(datas)
@@ -874,7 +864,8 @@ def makePDFandSend(num):
                     siapayangkurang += ' | DEPUTI AKADEMIK'
                 kurangapprove += f'{config.whatsapp_api_lineBreak}{i[0]} | {kelasdetails[2]} | {kelas.toKelas(kelasdetails[-1])} {siapayangkurang}'
             msgkurang += f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}wuowwww ada yang kurang nih ketika kamu request BAP, status approval nya masih belum di ACC nih dengan Jadwal ID:{kurangapprove}{config.whatsapp_api_lineBreak}'
-        wa.setOutbox(numbers.normalize(num), msgkurang)
+        # wa.setOutbox(numbers.normalize(num), msgkurang)
+        print(msgkurang)
     else:
         mail(getLecturerMail(lecturercode),
              f'Halooooo, {config.bot_name} ngirim file nich....',
