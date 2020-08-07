@@ -26,6 +26,25 @@ def dbConnectPMB():
     db=pymysql.connect(config.db_host_pmb, config.db_username_pmb, config.db_password_pmb, config.db_name_pmb)
     return db
 
+def insertnewKHS(npm, tahunid, prodiid, tipesemester):
+    db=kelas.dbConnectSiap()
+    sql=f"INSERT INTO simak_trn_khs (KHSID,TahunID,ProdiID,KodeID,ProgramID,MhswID,StatusMhswID,sesi,MaxSKS,Cetak) VALUES (DEFAULT,'{tahunid}','{prodiid} ','YPBPI','REG','{npm}','A','{tipesemester}','24','Y');"
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+
+def cekSudahAdaKHS(npm, tahunid, statusmahasiswa):
+    db=kelas.dbConnectSiap()
+    sql=f"select * from simak_trn_khs where MhswID={npm} and TahunID={tahunid} and StatusMhswID='{statusmahasiswa}'"
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        row=cur.fetchone()
+        if row is not None:
+            return True
+        else:
+            return False
+
 @app.route("/")
 def home():
     return 'hello crot...'
@@ -62,9 +81,13 @@ def prosesdata():
 def callback_api_va(token):
     try:
         datenow = datetime.date(datetime.now()).strftime('%d-%m-%Y')
+        yearnow=datetime.date(datetime.now()).strftime('%Y')
         req=request.json
         trxid=req['trx_id']
         npm=trxid.split('-')[2]
+        tipesemester=trxid.split('-')[3]
+        tahunid=f'{yearnow}{tipesemester}'
+        prodiid=f'{npm[0]}{npm[3]}'
         virtual_account=req['virtual account']
         customer_name=req['customer_name']
         trx_amount=req['trx_amount']
@@ -86,9 +109,12 @@ def callback_api_va(token):
             if passcodetrxid == trxid and passcodevirtualaccount == virtual_account and passcodedatetime == datenow:
                 message = f'Hai haiiiii kamu sudah transfer pembayaran semester yaaaa dengan{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}*NPM: {npm}*{config.whatsapp_api_lineBreak}*Nama: {customer_name}*{config.whatsapp_api_lineBreak}*Virtual Account: {virtual_account}*{config.whatsapp_api_lineBreak}*Tanggal: {datetime_payment}*{config.whatsapp_api_lineBreak}*Jumlah Transfer: {payment_amount}*{config.whatsapp_api_lineBreak}*Total Sudah Bayar: {cumulative_payment_amount}*{config.whatsapp_api_lineBreak}*Total Harus Bayar: {trx_amount}*'
                 if float(cumulative_payment_amount) >= float(float(trx_amount)/2):
-                    message+=f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}Kamu *sudah bisa* isi KRS yaaa coba cek di *SIAP* yaaa...., #BOTNAME# ucapkan terima kasihhhh dan jangan salah saat isi KRS yaaa....'
-                    message=message.replace('#BOTNAME#', config.bot_name)
-                    #query insert
+                    if cekSudahAdaKHS(npm, tahunid, 'A'):
+                        message += f'terima kasih yaaa sudah bayar semester, semangat kuliahnya kakaaaa......'
+                    else:
+                        message += f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}Kamu *sudah bisa* isi KRS yaaa coba cek di *SIAP* yaaa...., #BOTNAME# ucapkan terima kasihhhh dan jangan salah saat isi KRS yaaa....'
+                        message = message.replace('#BOTNAME#', config.bot_name)
+                        insertnewKHS(npm, tahunid, prodiid, tipesemester)
                     wa.setOutbox(kelas.getHandphoneMahasiswa(npm), message)
                     return make_response(jsonify(
                         {
