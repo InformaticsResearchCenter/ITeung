@@ -5,7 +5,7 @@ Created on Sat Mar 14 09:27:37 2020
 @author: rolly
 """
 
-from lib import iteung
+from lib import iteung, wa
 from flask import Flask, request, render_template, make_response, jsonify, send_from_directory
 from twilio.twiml.messaging_response import MessagingResponse
 from lib import log
@@ -84,7 +84,11 @@ def callback_api_va(token):
             passcodevirtualaccount=resultpasscode.split(';')[1]
             passcodedatetime=resultpasscode.split(';')[2]
             if passcodetrxid == trxid and passcodevirtualaccount == virtual_account and passcodedatetime == datenow:
+                message = f'Hai haiiiii kamu sudah transfer pembayaran semester yaaaa dengan\n\n*NPM: {npm}\nNama: {customer_name}\nVirtual Account: {virtual_account}\Tanggal: {datetime_payment}\nJumlah Transfer: {payment_amount}\nTotal Sudah Bayar: {cumulative_payment_amount}\nTotal Harus Bayar: {trx_amount}*'
                 if float(cumulative_payment_amount) >= float(float(trx_amount)/2):
+                    message+=f'\n\nKamu *sudah bisa* isi KRS yaaa coba cek di *SIAP* yaaa...., #BOTNAME# ucapkan terima kasihhhh dan jangan salah saat isi KRS yaaa....'
+                    #query insert
+                    wa.setOutbox(kelas.getHandphoneMahasiswa(npm), message)
                     return make_response(jsonify(
                         {
                             "message": "success",
@@ -92,6 +96,8 @@ def callback_api_va(token):
                         }
                     ), 200)
                 else:
+                    message+=f'\n\nYahhhh kamu *belum bisa* isi KRS nihhhh coba *buat surat* .... lalu *ajukan ke pihak BAUK* agar kamu bisa isi KRS.....'
+                    wa.setOutbox(kelas.getHandphoneMahasiswa(npm), message)
                     return make_response(jsonify(
                         {
                             "message": "success",
