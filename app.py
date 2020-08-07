@@ -110,7 +110,7 @@ def callback_api_va(token):
                 message = f'Hai haiiiii kamu sudah transfer pembayaran semester yaaaa dengan{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}*NPM: {npm}*{config.whatsapp_api_lineBreak}*Nama: {customer_name}*{config.whatsapp_api_lineBreak}*Virtual Account: {virtual_account}*{config.whatsapp_api_lineBreak}*Tanggal: {datetime_payment}*{config.whatsapp_api_lineBreak}*Jumlah Transfer: {payment_amount}*{config.whatsapp_api_lineBreak}*Total Sudah Bayar: {cumulative_payment_amount}*{config.whatsapp_api_lineBreak}*Total Harus Bayar: {trx_amount}*'
                 if float(cumulative_payment_amount) >= float(float(trx_amount)/2):
                     if cekSudahAdaKHS(npm, tahunid, 'A'):
-                        message += f'terima kasih yaaa sudah bayar semester, semangat kuliahnya kakaaaa......'
+                        message += f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}terima kasih yaaa sudah bayar semester, semangat kuliahnya kakaaaa......'
                     else:
                         message += f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}Kamu *sudah bisa* isi KRS yaaa coba cek di *SIAP* yaaa...., #BOTNAME# ucapkan terima kasihhhh dan jangan salah saat isi KRS yaaa....'
                         message = message.replace('#BOTNAME#', config.bot_name)
