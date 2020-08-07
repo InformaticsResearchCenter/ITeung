@@ -15,7 +15,7 @@ from datetime import datetime
 
 from flask_restful import Resource, Api, abort
 
-import config, pymysql, locale
+import config, pymysql
 
 import linecache, sys
 
@@ -84,8 +84,7 @@ def callback_api_va(token):
             passcodevirtualaccount=resultpasscode.split(';')[1]
             passcodedatetime=resultpasscode.split(';')[2]
             if passcodetrxid == trxid and passcodevirtualaccount == virtual_account and passcodedatetime == datenow:
-                locale.setlocale(locale.LC_ALL, "IND")
-                message = f'Hai haiiiii kamu sudah transfer pembayaran semester yaaaa dengan{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}*NPM: {npm}*{config.whatsapp_api_lineBreak}*Nama: {customer_name}*{config.whatsapp_api_lineBreak}*Virtual Account: {virtual_account}*{config.whatsapp_api_lineBreak}*Tanggal: {datetime_payment}*{config.whatsapp_api_lineBreak}*Jumlah Transfer: {locale.currency(payment_amount, grouping=True)}*{config.whatsapp_api_lineBreak}*Total Sudah Bayar: {locale.currency(cumulative_payment_amount, grouping=True)}*{config.whatsapp_api_lineBreak}*Total Harus Bayar: {locale.currency(trx_amount, grouping=True)}*'
+                message = f'Hai haiiiii kamu sudah transfer pembayaran semester yaaaa dengan{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}*NPM: {npm}*{config.whatsapp_api_lineBreak}*Nama: {customer_name}*{config.whatsapp_api_lineBreak}*Virtual Account: {virtual_account}*{config.whatsapp_api_lineBreak}*Tanggal: {datetime_payment}*{config.whatsapp_api_lineBreak}*Jumlah Transfer: {payment_amount}*{config.whatsapp_api_lineBreak}*Total Sudah Bayar: {cumulative_payment_amount}*{config.whatsapp_api_lineBreak}*Total Harus Bayar: {trx_amount}*'
                 if float(cumulative_payment_amount) >= float(float(trx_amount)/2):
                     message+=f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}Kamu *sudah bisa* isi KRS yaaa coba cek di *SIAP* yaaa...., #BOTNAME# ucapkan terima kasihhhh dan jangan salah saat isi KRS yaaa....'
                     message=message.replace('#BOTNAME#', config.bot_name)
