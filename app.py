@@ -84,9 +84,9 @@ def callback_api_va(token):
             passcodevirtualaccount=resultpasscode.split(';')[1]
             passcodedatetime=resultpasscode.split(';')[2]
             if passcodetrxid == trxid and passcodevirtualaccount == virtual_account and passcodedatetime == datenow:
-                message = f'Hai haiiiii kamu sudah transfer pembayaran semester yaaaa dengan\n\n*NPM: {npm}\nNama: {customer_name}\nVirtual Account: {virtual_account}\Tanggal: {datetime_payment}\nJumlah Transfer: {payment_amount}\nTotal Sudah Bayar: {cumulative_payment_amount}\nTotal Harus Bayar: {trx_amount}*'
+                message = f'Hai haiiiii kamu sudah transfer pembayaran semester yaaaa dengan{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}*NPM: {npm}{config.whatsapp_api_lineBreak}Nama: {customer_name}{config.whatsapp_api_lineBreak}Virtual Account: {virtual_account}{config.whatsapp_api_lineBreak}Tanggal: {datetime_payment}{config.whatsapp_api_lineBreak}Jumlah Transfer: {payment_amount}{config.whatsapp_api_lineBreak}Total Sudah Bayar: {cumulative_payment_amount}{config.whatsapp_api_lineBreak}Total Harus Bayar: {trx_amount}*'
                 if float(cumulative_payment_amount) >= float(float(trx_amount)/2):
-                    message+=f'\n\nKamu *sudah bisa* isi KRS yaaa coba cek di *SIAP* yaaa...., #BOTNAME# ucapkan terima kasihhhh dan jangan salah saat isi KRS yaaa....'
+                    message+=f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}Kamu *sudah bisa* isi KRS yaaa coba cek di *SIAP* yaaa...., #BOTNAME# ucapkan terima kasihhhh dan jangan salah saat isi KRS yaaa....'
                     #query insert
                     wa.setOutbox(kelas.getHandphoneMahasiswa(npm), message)
                     return make_response(jsonify(
@@ -96,7 +96,7 @@ def callback_api_va(token):
                         }
                     ), 200)
                 else:
-                    message+=f'\n\nYahhhh kamu *belum bisa* isi KRS nihhhh coba *buat surat* .... lalu *ajukan ke pihak BAUK* agar kamu bisa isi KRS.....'
+                    message+=f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}Yahhhh kamu *belum bisa* isi KRS nihhhh coba *buat surat* .... lalu *ajukan ke pihak BAUK* agar kamu bisa isi KRS.....'
                     wa.setOutbox(kelas.getHandphoneMahasiswa(npm), message)
                     return make_response(jsonify(
                         {
