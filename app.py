@@ -45,6 +45,20 @@ def cekSudahAdaKHS(npm, tahunid, statusmahasiswa):
         else:
             return False
 
+def floatToRupiah(uang):
+    uang=float(uang)
+    str_uang=str(uang)
+    uang_split=str_uang.split('.')[0]
+    uang_reverse=uang_split[::-1]
+    uang_temp=''
+    for i, j in enumerate(uang_reverse):
+        if i%3==0:
+            uang_temp+=f'.{j}'
+        else:
+            uang_temp+=f'{j}'
+    uang_reverse_jadi=uang_temp[1:]
+    return f'Rp {uang_reverse_jadi[::-1]},{str_uang.split(".")[1]}'
+
 @app.route("/")
 def home():
     return 'hello crot...'
@@ -107,7 +121,7 @@ def callback_api_va(token):
             passcodevirtualaccount=resultpasscode.split(';')[1]
             passcodedatetime=resultpasscode.split(';')[2]
             if passcodetrxid == trxid and passcodevirtualaccount == virtual_account and passcodedatetime == datenow:
-                message = f'Hai haiiiii kamu sudah transfer pembayaran semester yaaaa dengan{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}*NPM: {npm}*{config.whatsapp_api_lineBreak}*Nama: {customer_name}*{config.whatsapp_api_lineBreak}*Virtual Account: {virtual_account}*{config.whatsapp_api_lineBreak}*Tanggal: {datetime_payment}*{config.whatsapp_api_lineBreak}*Jumlah Transfer: {payment_amount}*{config.whatsapp_api_lineBreak}*Total Sudah Bayar: {cumulative_payment_amount}*{config.whatsapp_api_lineBreak}*Total Harus Bayar: {trx_amount}*'
+                message = f'Hai haiiiii kamu sudah transfer pembayaran semester yaaaa dengan{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}*NPM: {npm}*{config.whatsapp_api_lineBreak}*Nama: {customer_name}*{config.whatsapp_api_lineBreak}*Virtual Account: {virtual_account}*{config.whatsapp_api_lineBreak}*Tanggal: {datetime_payment}*{config.whatsapp_api_lineBreak}*Jumlah Transfer: {floatToRupiah(payment_amount)}*{config.whatsapp_api_lineBreak}*Total Sudah Bayar: {floatToRupiah(cumulative_payment_amount)}*{config.whatsapp_api_lineBreak}*Total Harus Bayar: {floatToRupiah(trx_amount)}*'
                 if float(cumulative_payment_amount) >= float(float(trx_amount)/2):
                     if cekSudahAdaKHS(npm, tahunid, 'A'):
                         message += f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}terima kasih yaaa sudah bayar semester, semangat kuliahnya kakaaaa......'
