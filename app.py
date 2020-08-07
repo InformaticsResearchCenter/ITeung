@@ -26,9 +26,9 @@ def dbConnectPMB():
     db=pymysql.connect(config.db_host_pmb, config.db_username_pmb, config.db_password_pmb, config.db_name_pmb)
     return db
 
-def insertnewKHS(npm, tahunid, prodiid, tipesemester):
+def insertnewKHS(npm, tahunid, prodiid, tipesemester, biaya):
     db=kelas.dbConnectSiap()
-    sql=f"INSERT INTO simak_trn_khs (KHSID,TahunID,ProdiID,KodeID,ProgramID,MhswID,StatusMhswID,sesi,MaxSKS,Cetak) VALUES (DEFAULT,'{tahunid}','{prodiid} ','YPBPI','REG','{npm}','A','{tipesemester}','24','Y');"
+    sql=f"INSERT INTO simak_trn_khs (KHSID,TahunID,ProdiID,KodeID,ProgramID,MhswID,StatusMhswID,sesi,MaxSKS,Cetak,Biaya) VALUES (DEFAULT,'{tahunid}','{prodiid} ','YPBPI','REG','{npm}','A','{tipesemester}','24','Y', {biaya});"
     with db:
         cur=db.cursor()
         cur.execute(sql)
@@ -128,7 +128,7 @@ def callback_api_va(token):
                     else:
                         message += f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}Kamu *sudah bisa* isi KRS yaaa coba cek di *SIAP* yaaa...., #BOTNAME# ucapkan terima kasihhhh dan jangan salah saat isi KRS yaaa....'
                         message = message.replace('#BOTNAME#', config.bot_name)
-                        insertnewKHS(npm, tahunid, prodiid, tipesemester)
+                        insertnewKHS(npm, tahunid, prodiid, tipesemester, trx_amount-cumulative_payment_amount)
                     wa.setOutbox(kelas.getHandphoneMahasiswa(npm), message)
                     return make_response(jsonify(
                         {
