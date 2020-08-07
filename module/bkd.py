@@ -776,8 +776,8 @@ def makePDFandSend(num):
             for jadwalid in jadwalids:
                 print(jadwalid)
                 matkuldetailsfix = kelas.getMkDetails(jadwalid[0])
-                if getRencanaKehadiran(jadwalid[0]) == '0':
-                    print('rencana kehadiran kurang dari 0')
+                if getRencanaKehadiran(jadwalid[0]) == 0:
+                    print('rencana kehadiran 0')
                 elif getProgramID(jadwalid[0]) == '.KER.' and getKehadiran(jadwalid[0]) < getRencanaKehadiran(jadwalid[0]):
                     print('program kerja sama dan jumlah kehadiran kurang dari rencana kehadiran')
                 else:
@@ -864,8 +864,7 @@ def makePDFandSend(num):
                     siapayangkurang += ' | DEPUTI AKADEMIK'
                 kurangapprove += f'{config.whatsapp_api_lineBreak}{i[0]} | {kelasdetails[2]} | {kelas.toKelas(kelasdetails[-1])} {siapayangkurang}'
             msgkurang += f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}wuowwww ada yang kurang nih ketika kamu request BAP, status approval nya masih belum di ACC nih dengan Jadwal ID:{kurangapprove}{config.whatsapp_api_lineBreak}'
-        # wa.setOutbox(numbers.normalize(num), msgkurang)
-        print(msgkurang)
+        wa.setOutbox(numbers.normalize(num), msgkurang)
     else:
         mail(getLecturerMail(lecturercode),
              f'Halooooo, {config.bot_name} ngirim file nich....',
@@ -909,7 +908,7 @@ def cekKurangMateri(cekkurangmateri):
     if cekkurangmateri[0] == False:
         cekkurangmaterifix = []
         for i in cekkurangmateri[1]:
-            if getProgramID(i[0]) == '.KER.' and getKehadiran(i[0]) < getRencanaKehadiran(i[0]):
+            if (getProgramID(i[0]) == '.KER.' and getKehadiran(i[0]) < getRencanaKehadiran(i[0])) or getRencanaKehadiran(i[0]) == 0:
                 continue
             else:
                 cekkurangmaterifix.append(i)
@@ -923,7 +922,7 @@ def cekKurangApproval(cekkurangapproval):
     if cekkurangapproval[0] == False:
         cekkurangapprovalfix = []
         for i in cekkurangapproval[1]:
-            if getProgramID(i[0]) == '.KER.' and getKehadiran(i[0]) < getRencanaKehadiran(i[0]):
+            if (getProgramID(i[0]) == '.KER.' and getKehadiran(i[0]) < getRencanaKehadiran(i[0])) or getRencanaKehadiran(i[0]) == 0:
                 continue
             else:
                 cekkurangapprovalfix.append(i)
