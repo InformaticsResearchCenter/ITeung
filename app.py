@@ -33,6 +33,13 @@ def insertnewKHS(npm, tahunid, prodiid, tipesemester, biaya):
         cur=db.cursor()
         cur.execute(sql)
 
+def updateBiayaKHS(npm, tahunid, biaya):
+    db=kelas.dbConnectSiap()
+    sql=f"UPDATE simak_trn_khs SET Biaya={biaya} WHERE MhswID={npm} and TahunID={tahunid}"
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+
 def cekSudahAdaKHS(npm, tahunid, statusmahasiswa):
     db=kelas.dbConnectSiap()
     sql=f"select * from simak_trn_khs where MhswID={npm} and TahunID={tahunid} and StatusMhswID='{statusmahasiswa}'"
