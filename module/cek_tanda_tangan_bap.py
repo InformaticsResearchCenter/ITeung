@@ -102,7 +102,22 @@ def infoBAPKaprodi(prodiid):
             siap.append(jadwalid[0])
         else:
             sudah.append(jadwalid[0])
-    msgreply=f"BAP yang sudah ditandatangani ada: {len(sudah)} berkas%0ABAP yang siap ditandatangani ada: {len(siap)} berkas%0ABAP yang belum siap ditandatangani ada: {len(belum)} berkas"
+    msgsudah = ''
+    for i in sudah:
+        kelas_info = kelas.getMatakuliahInfowithJadwalID(i)
+        msgsudah += f'{config.whatsapp_api_lineBreak}{kelas_info[0]} | {getNamaProdiFromProdiID(kelas_info[5].split(".")[1])} | {kelas_info[12]} | {kelas.getNamaDosen(kelas_info[21])}'
+    msgsudah += f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}'
+    msgsiap = ''
+    for i in siap:
+        kelas_info = kelas.getMatakuliahInfowithJadwalID(i)
+        msgsiap += f'{config.whatsapp_api_lineBreak}{kelas_info[0]} | {getNamaProdiFromProdiID(kelas_info[5].split(".")[1])} | {kelas_info[12]} | {kelas.getNamaDosen(kelas_info[21])}'
+    msgsiap += f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}'
+    msgbelum = ''
+    for i in belum:
+        kelas_info = kelas.getMatakuliahInfowithJadwalID(i)
+        msgbelum += f'{config.whatsapp_api_lineBreak}{kelas_info[0]} | {getNamaProdiFromProdiID(kelas_info[5].split(".")[1])} | {kelas_info[12]} | {kelas.getNamaDosen(kelas_info[21])}'
+    msgbelum += f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}'
+    msgreply = f"BAP yang sudah ditandatangani ada: {len(sudah)} berkas{msgsudah}BAP yang siap ditandatangani ada: {len(siap)} berkas{msgsiap}BAP yang belum siap ditandatangani ada: {len(belum)} berkas{msgbelum}"
     return msgreply, sudah, siap, belum
 
 def infoBAPDeputi(msg):
@@ -123,7 +138,22 @@ def infoBAPDeputi(msg):
             siap.append(jadwalid[0])
         else:
             sudah.append(jadwalid[0])
-    msgreply=f"BAP yang sudah ditandatangani ada: {len(sudah)} berkas%0ABAP yang siap ditandatangani ada: {len(siap)} berkas%0ABAP yang belum siap ditandatangani ada: {len(belum)} berkas"
+    msgsudah=''
+    for i in sudah:
+        kelas_info=kelas.getMatakuliahInfowithJadwalID(i)
+        msgsudah+=f'{config.whatsapp_api_lineBreak}{kelas_info[0]} | {getNamaProdiFromProdiID(kelas_info[5].split(".")[1])} | {kelas_info[12]} | {kelas.getNamaDosen(kelas_info[21])}'
+    msgsudah+=f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}'
+    msgsiap=''
+    for i in siap:
+        kelas_info=kelas.getMatakuliahInfowithJadwalID(i)
+        msgsiap+=f'{config.whatsapp_api_lineBreak}{kelas_info[0]} | {getNamaProdiFromProdiID(kelas_info[5].split(".")[1])} | {kelas_info[12]} | {kelas.getNamaDosen(kelas_info[21])}'
+    msgsiap += f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}'
+    msgbelum=''
+    for i in belum:
+        kelas_info=kelas.getMatakuliahInfowithJadwalID(i)
+        msgbelum+=f'{config.whatsapp_api_lineBreak}{kelas_info[0]} | {getNamaProdiFromProdiID(kelas_info[5].split(".")[1])} | {kelas_info[12]} | {kelas.getNamaDosen(kelas_info[21])}'
+    msgbelum += f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}'
+    msgreply=f"BAP yang sudah ditandatangani ada: {len(sudah)} berkas{msgsudah}BAP yang siap ditandatangani ada: {len(siap)} berkas{msgsiap}BAP yang belum siap ditandatangani ada: {len(belum)} berkas{msgbelum}"
     return msgreply, sudah, siap, belum
 
 
@@ -131,6 +161,19 @@ def getNIPYfromHandphone(num):
     num=numbers.normalize(num)
     db=kelas.dbConnectSiap()
     sql=f'select NIPY from simak_mst_dosen where Handphone="{num}"'
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        row=cur.fetchone()
+        if row is not None:
+            return row[0]
+        else:
+            return None
+
+
+def getNamaProdiFromProdiID(prodiid):
+    db=kelas.dbConnectSiap()
+    sql=f'select Nama from simak_mst_prodi where ProdiID={prodiid}'
     with db:
         cur=db.cursor()
         cur.execute(sql)
