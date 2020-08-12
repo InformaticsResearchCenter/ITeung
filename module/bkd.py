@@ -85,7 +85,7 @@ def getPresensiDosen(jadwalid, rangepertemuan1, rangepertemuan2):
 
 def getPresensiMahasiswa(presensiid):
     db = kelas.dbConnectSiap()
-    sql = "select MhswID, JenisPresensiID from simak_trn_presensi_mahasiswa where PresensiID={presensiid}".format(
+    sql = "select MhswID, JenisPresensiID from simak_trn_presensi_mahasiswa where PresensiID={presensiid} order by MhswID".format(
         presensiid=presensiid)
     with db:
         cur = db.cursor()
@@ -144,6 +144,11 @@ def countPertemuan(presensidosens):
 def getandsetStudentIDandStudentNAME(jadwalid):
     studentid = []
     studentname = []
+    jadwalserial = kelas.getJadwalSerial(jadwalid=jadwalid)
+    if jadwalserial == '0':
+        jadwalid = jadwalid
+    else:
+        jadwalid = jadwalserial
     studentlists = getListStudent(jadwalid)
     for studentlist in studentlists:
         studentid.append(studentlist[-1])
@@ -714,6 +719,30 @@ def getRencanaKehadiran(jadwalid):
         else:
             return None
 
+def getKehadiran(jadwalid):
+    db=kelas.dbConnectSiap()
+    sql=f"select Kehadiran from simak_trn_jadwal where JadwalID={jadwalid}"
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        row=cur.fetchone()
+        if row:
+            return row[0]
+        else:
+            return None
+
+def getTypeKelas(jadwalid):
+    db=kelas.dbConnectSiap()
+    sql= f"SELECT ProgramID FROM simpati.simak_trn_jadwal where TahunID={config.siap_tahun_id} and JadwalID={jadwalid}"
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        row=cur.fetchone()
+        if row:
+            return row[0]
+        else:
+            return None
+
 
 def makePDFandSend(num):
     checkDir()
@@ -744,12 +773,14 @@ def makePDFandSend(num):
         jadwalids = getJadwalID(mkkode[0], lecturercode)
         try:
             pdf = makePDFHeader()
-            matkuldetailsfix = None
             for jadwalid in jadwalids:
-                if getRencanaKehadiran(jadwalid[0]) == '0':
-                    print('rencana kehadiran kurang dari 0')
+                print(jadwalid)
+                matkuldetailsfix = kelas.getMkDetails(jadwalid[0])
+                if getRencanaKehadiran(jadwalid[0]) == 0:
+                    print('rencana kehadiran 0')
+                elif getProgramID(jadwalid[0]) == '.KER.' and getKehadiran(jadwalid[0]) < getRencanaKehadiran(jadwalid[0]):
+                    print('program kerja sama dan jumlah kehadiran kurang dari rencana kehadiran')
                 else:
-                    print(jadwalid)
                     matkuldetails = kelas.getMkDetails(jadwalid[0])
                     datamatkulbap = getBKDMatkul(jadwalid[0])
                     semester = countSemester(jadwalid[0])
@@ -807,9 +838,9 @@ def makePDFandSend(num):
             print(str(e))
             print(f'pertemuan kurang dari {config.kehadiran}')
             pertemuankurang.append(jadwalid[0])
-    cekkurangmateri = cekMateriByGrouping(lecturercode)
-    cekkurangapproval = cekApprovalBAPByGrouping(lecturercode)
-    if cekkurangmateri[0] == False or cekkurangapproval[0] == False:
+    cekkurangmateri = cekKurangMateri(cekMateriByGrouping(lecturercode))
+    cekkurangapproval = cekKurangApproval(cekApprovalBAPByGrouping(lecturercode))
+    if len(pertemuankurang) > 0 or cekkurangmateri[0] == False or cekkurangapproval[0] == False:
         msgkurang=''
         if len(pertemuankurang) > 0:
             msgkurang+=f'hai haiii, kamu yang request BAP yaaa?{config.whatsapp_api_lineBreak}wahhh ada yang kurang nih pertemuannya ini Jadwal ID nya yaaa:'
@@ -860,3 +891,43 @@ def verifyDigitalSign(resultpasscode):
     datalahirdosen = tanggallahirdosen + ' ' + bulanlahirdosen + ' ' + tahunlahirdosen
     msgreply = f'Ini yaaa data yang Akang/Teteh minta\n\nKode Dosen: {kodedosen}\nNama Dosen: {namadosen}\nNIDN: {datadosen[2]}\nTempat/Tgl Lahir: {datadosen[6]}/{datalahirdosen}\nHandphone: {datadosen[12]}\nE-mail: {datadosen[13]}\n\nJenis Dokumen: {jnsdkm}\nNomor Dokumen: {nmrsrt}\nPenerbitan Tanda Tangan: {penerbitantandatangan}'
     return msgreply
+
+def getProgramID(jadwalid):
+    db=kelas.dbConnectSiap()
+    sql=f'select ProgramID from simak_trn_jadwal where JadwalID={jadwalid}'
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        row=cur.fetchone()
+        if row is not None:
+            return row[0]
+        else:
+            return None
+
+def cekKurangMateri(cekkurangmateri):
+    if cekkurangmateri[0] == False:
+        cekkurangmaterifix = []
+        for i in cekkurangmateri[1]:
+            if (getProgramID(i[0]) == '.KER.' and getKehadiran(i[0]) < getRencanaKehadiran(i[0])) or getRencanaKehadiran(i[0]) == 0:
+                continue
+            else:
+                cekkurangmaterifix.append(i)
+        if len(cekkurangmaterifix) == 0:
+            cekkurangmateri = (True, [])
+        else:
+            cekkurangmateri = (False, cekkurangmaterifix)
+    return cekkurangmateri
+
+def cekKurangApproval(cekkurangapproval):
+    if cekkurangapproval[0] == False:
+        cekkurangapprovalfix = []
+        for i in cekkurangapproval[1]:
+            if (getProgramID(i[0]) == '.KER.' and getKehadiran(i[0]) < getRencanaKehadiran(i[0])) or getRencanaKehadiran(i[0]) == 0:
+                continue
+            else:
+                cekkurangapprovalfix.append(i)
+        if len(cekkurangapprovalfix) == 0:
+            cekkurangapproval = (True, [])
+        else:
+            cekkurangapproval = (False, cekkurangapprovalfix)
+    return cekkurangapproval
