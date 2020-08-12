@@ -103,13 +103,13 @@ def checkDosen(nomor, tahun, matkul=0, jadwal=0):
 
 def checkNilaiUTS(tahun, matkul, kode_matkul=0, jadwal=0, kelas=0):
     db = dbConnectSiap()
-    if kode_matkul != 0:
-        query = """
-            select krs.MhswID, mhs.Nama, krs.UTS from simak_trn_krs krs, simak_mst_mahasiswa mhs, simak_trn_jadwal j where krs.StatusKRSID='A' and krs.MKKode='"""+kode_matkul+"""' and krs.TahunID='"""+tahun+"""' and krs.Kelas='"""+kelas+"""' and krs.JadwalID=j.JadwalID and krs.NA='N' and krs.MhswID=mhs.MhswID group by krs.MhswID order by krs.MhswID ASC
+    if(jadwal!=0):
+        query = f"""
+            select krs.MhswID, mhs.Nama, krs.UTS from simak_trn_krs krs, simak_mst_mahasiswa mhs, simak_trn_jadwal j where krs.StatusKRSID='A' and krs.TahunID='{tahun}' and krs.JadwalID='{jadwal}' and krs.NA='N' and krs.MhswID=mhs.MhswID group by krs.MhswID order by krs.MhswID ASC
         """
-    elif jadwal != 0:
-        query = """
-            select krs.MhswID, mhs.Nama, krs.UTS from simak_trn_krs krs, simak_mst_mahasiswa mhs, simak_trn_jadwal j where krs.StatusKRSID='A' and krs.JadwalID='"""+jadwal+"""' and krs.TahunID='"""+tahun+"""' and krs.NA='N' and krs.MhswID=mhs.MhswID group by krs.MhswID order by krs.MhswID ASC
+    else:
+        query = f"""
+            select krs.MhswID, mhs.Nama, krs.UTS from simak_trn_krs krs, simak_mst_mahasiswa mhs, simak_trn_jadwal j where krs.StatusKRSID='A' and krs.MKKode='{kode_matkul}' and krs.TahunID='{tahun}' and krs.Kelas='{kelas}' and krs.NA='N' and krs.MhswID=mhs.MhswID group by krs.MhswID order by krs.MhswID ASC
         """
     with db:
         nilais = '*Nilai UTS '.upper()+matkul+'*' + '\nNPM | Nama | UTS\n'
@@ -126,9 +126,15 @@ def checkNilaiUTS(tahun, matkul, kode_matkul=0, jadwal=0, kelas=0):
 
 def checkNilaiUAS(tahun, matkul, kode_matkul=0, jadwal=0, kelas=0):
     db = dbConnectSiap()
-    query = f"""
-        select krs.MhswID, mhs.Nama, krs.UAS from simak_trn_krs krs, simak_mst_mahasiswa mhs, simak_trn_jadwal j where krs.StatusKRSID='A' and krs.MKKode='{kode_matkul}' and krs.TahunID='{tahun}' and krs.Kelas='{kelas}' and krs.JadwalID=j.JadwalID and krs.NA='N' and krs.MhswID=mhs.MhswID group by krs.MhswID order by krs.MhswID ASC
-    """
+    if(jadwal!=0):
+        query = f"""
+            select krs.MhswID, mhs.Nama, krs.UAS from simak_trn_krs krs, simak_mst_mahasiswa mhs, simak_trn_jadwal j where krs.StatusKRSID='A' and krs.TahunID='{tahun}' and krs.JadwalID='{jadwal}' and krs.NA='N' and krs.MhswID=mhs.MhswID group by krs.MhswID order by krs.MhswID ASC
+        """
+    else:
+        query = f"""
+            select krs.MhswID, mhs.Nama, krs.UAS from simak_trn_krs krs, simak_mst_mahasiswa mhs, simak_trn_jadwal j where krs.StatusKRSID='A' and krs.MKKode='{kode_matkul}' and krs.TahunID='{tahun}' and krs.Kelas='{kelas}' and krs.NA='N' and krs.MhswID=mhs.MhswID group by krs.MhswID order by krs.MhswID ASC
+        """
+    print(query)
     with db:
         nilais = '*Nilai UAS '.upper()+matkul+'*' + '\nNPM | Nama | UAS\n'
 
@@ -137,7 +143,7 @@ def checkNilaiUAS(tahun, matkul, kode_matkul=0, jadwal=0, kelas=0):
         rows = cur.fetchall()
         if rows is not None:
             for row in rows:
-                nilais += '* % s * | % s | %s\n' % (row[0], row[1], row[2])
+                nilais += '*%s* | % s | %s\n' % (row[0], row[1], row[2])
 
     return nilais
 
