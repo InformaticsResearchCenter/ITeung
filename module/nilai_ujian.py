@@ -306,7 +306,7 @@ def getProdi(matkul):
 
 
 def inputByExcel(file, jenis, tahun, func, nomor):
-    book = openpyxl.load_workbook(file)
+    book = openpyxl.load_workbook(file,data_only=True)
     sheet = book.active
     kode_matkul = sheet["C5"].value.replace(
         ":", "").replace("/", "").split()[0]
@@ -357,7 +357,7 @@ def inputByExcel(file, jenis, tahun, func, nomor):
 def inputNilaiByExcel(file, jenis, tahun, nomor):
 
     today = datetime.today().date()
-    book = openpyxl.load_workbook(file)
+    book = openpyxl.load_workbook(file,data_only=True)
     sheet = book.active
     cek_ujian = sheet["E9"].value
     # print(cek_ujian)
