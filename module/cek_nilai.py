@@ -20,8 +20,7 @@ def auth(data):
 
 def replymsg(driver, data):
     if kelas.cekSiap():
-        wmsg = reply.getWaitingMessage(
-            os.path.basename(__file__).split('.')[0])
+        wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
         wa.typeAndSendMessage(driver, wmsg)
         num = data[0]
         num = numbers.normalize(num)
@@ -127,8 +126,8 @@ def checkNilaiUTS(tahun, matkul, kode_matkul=0, jadwal=0, kelas=0):
 
 def checkNilaiUAS(tahun, matkul, kode_matkul=0, jadwal=0, kelas=0):
     db = dbConnectSiap()
-    query = """
-        select krs.MhswID, mhs.Nama, krs.UAS from simak_trn_krs krs, simak_mst_mahasiswa mhs, simak_trn_jadwal j where krs.StatusKRSID='A' and krs.MKKode='"""+kode_matkul+"""' and krs.TahunID='"""+tahun+"""' and krs.Kelas='"""+kelas+"""' and krs.JadwalID=j.JadwalID and krs.NA='N' and krs.MhswID=mhs.MhswID group by krs.MhswID order by krs.MhswID ASC
+    query = f"""
+        select krs.MhswID, mhs.Nama, krs.UAS from simak_trn_krs krs, simak_mst_mahasiswa mhs, simak_trn_jadwal j where krs.StatusKRSID='A' and krs.MKKode='{kode_matkul}' and krs.TahunID='{tahun}' and krs.Kelas='{kelas}' and krs.JadwalID=j.JadwalID and krs.NA='N' and krs.MhswID=mhs.MhswID group by krs.MhswID order by krs.MhswID ASC
     """
     with db:
         nilais = '*Nilai UAS '.upper()+matkul+'*' + '\nNPM | Nama | UAS\n'
