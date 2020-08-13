@@ -156,6 +156,44 @@ def infoBAPDeputi(msg):
     msgreply=f"BAP yang sudah ditandatangani ada: {len(sudah)} berkas{msgsudah}BAP yang siap ditandatangani ada: {len(siap)} berkas{msgsiap}BAP yang belum siap ditandatangani ada: {len(belum)} berkas{msgbelum}"
     return msgreply, sudah, siap, belum
 
+def approveBAPDeputi(msg):
+    msgs=msg.split(' ')[-1]
+    if msgs == 'all':
+        JadwalIDDataDeputi=getListJadwalIDfromDeputi(False, '')
+    else:
+        JadwalIDDataDeputi=getListJadwalIDfromDeputi(True, getProdiIDfromSingkatan(msgs))
+    sudah=[]
+    siap=[]
+    belum=[]
+    for jadwalid in JadwalIDDataDeputi:
+        statusmateri=cekMateriPerkuliahan(jadwalid[0])
+        statusttd=cekStatusBKDDeputi(jadwalid[0])
+        if statusmateri == False and statusttd == False:
+            belum.append(jadwalid[0])
+        elif statusmateri == True and statusttd == False:
+            siap.append(jadwalid[0])
+        else:
+            sudah.append(jadwalid[0])
+    msgreply = f"BAP yang sudah ditandatangani ada: {len(sudah)} berkas%0ABAP yang siap ditandatangani ada: {len(siap)} berkas%0ABAP yang belum siap ditandatangani ada: {len(belum)} berkas"
+    return msgreply, sudah, siap, belum
+
+def approveBAPKaprodi(prodiid):
+    JadwalIDDataProdi=getListJadwalIDfromKaprodi(prodiid)
+    sudah=[]
+    siap=[]
+    belum=[]
+    for jadwalid in JadwalIDDataProdi:
+        statusmateri=cekMateriPerkuliahan(jadwalid[0])
+        statusttd=cekStatusBKDKaprodi(jadwalid[0])
+        if statusmateri == False and statusttd == False:
+            belum.append(jadwalid[0])
+        elif statusmateri == True and statusttd == False:
+            siap.append(jadwalid[0])
+        else:
+            sudah.append(jadwalid[0])
+    msgreply = f"BAP yang sudah ditandatangani ada: {len(sudah)} berkas%0ABAP yang siap ditandatangani ada: {len(siap)} berkas%0ABAP yang belum siap ditandatangani ada: {len(belum)} berkas"
+    return msgreply, sudah, siap, belum
+
 
 def getNIPYfromHandphone(num):
     num=numbers.normalize(num)
