@@ -778,7 +778,7 @@ def makePDFandSend(num):
                 matkuldetailsfix = kelas.getMkDetails(jadwalid[0])
                 if getRencanaKehadiran(jadwalid[0]) == 0:
                     print('rencana kehadiran 0')
-                elif getProgramID(jadwalid[0]) == '.KER.' and getKehadiran(jadwalid[0]) < getRencanaKehadiran(jadwalid[0]):
+                elif (getProgramID(jadwalid[0]) == '.KER.' and getKehadiran(jadwalid[0]) < getRencanaKehadiran(jadwalid[0])) or getProgramID(jadwalid[0]) == '.KER.':
                     print('program kerja sama dan jumlah kehadiran kurang dari rencana kehadiran')
                 else:
                     matkuldetails = kelas.getMkDetails(jadwalid[0])
