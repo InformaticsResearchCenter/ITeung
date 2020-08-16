@@ -208,56 +208,59 @@ def replymsg(driver, data):
     studentid,studentname=kelas.getNpmandNameMahasiswa(num)
     # status_nilai, nilai_total=True, 100
     statusapprovalkambing = cekApprovalKambingAtBeginning(studentid)
-    if 'false' in statusapprovalkambing or '' in statusapprovalkambing:
-        msgreply='wiwiwiwiwi KAMBING kamu belum di approve nih sama Bapak/Ibu dosen yang ini nih:'
-        if 'false' == statusapprovalkambing[0] or '' == statusapprovalkambing[0]:
-            kodedosen1=getKodeDosenBimbingan(studentid)[0]
-            namadosen=kelas.getNamaDosen(kodedosen1)
-            msgreply+=f'\n{kodedosen1} | {namadosen} | PEMBIMBING 1'
-        if 'false' == statusapprovalkambing[1] or '' == statusapprovalkambing[1]:
-            kodedosen1 = getKodeDosenBimbingan(studentid)[1]
-            namadosen = kelas.getNamaDosen(kodedosen1)
-            msgreply += f'\n{kodedosen1} | {namadosen} | PEMBIMBING 2'
-    else:
-        status_nilai, nilai_total=totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN)
-        if status_nilai:
-            WRONG_KEYWORD = False
-            try:
-                JUDUL_BIMBINGAN = data[1].split(' kambing ')[1]
-            except:
-                WRONG_KEYWORD = True
-            if WRONG_KEYWORD:
-                msgreply = 'ada yang salah keywordnya'
-            else:
-                KODE_DOSEN_BIMBINGAN=getKodeDosenBimbingan(studentid)
-                if KODE_DOSEN_BIMBINGAN is None:
-                    msgreply=f'data dengan npm {studentid} tidak ditemukan'
-                else:
-                    for KODE_DOSEN in KODE_DOSEN_BIMBINGAN:
-                        NAMA_DOSEN = kelas.getNamaDosen(KODE_DOSEN)
-                        print(NAMA_DOSEN)
-                        NIDN_DOSEN = getNIDNDosen(KODE_DOSEN)
-                        TAHUN_AJARAN = kelas.getTahunAjaran(kelas.getProdiIDwithStudentID(studentid)).split(' ')[-1]
-                        photo = f'{config.link_foto_siap}{getFotoRoute(studentid)}'
-                        makePdf(
-                            npm_mahasiswa=studentid,
-                            nama_mahasiswa=studentname,
-                            tipe_bimbingan=switcherTipeBimbingan(getTipeBimbingan(studentid)),
-                            nama_pembimbing=NAMA_DOSEN,
-                            kode_dosen_pembimbing=KODE_DOSEN,
-                            nidn_pembimbing=NIDN_DOSEN,
-                            tahun_ajaran=TAHUN_AJARAN,
-                            photo=photo,
-                            judul=JUDUL_BIMBINGAN,
-                            total_nilai=str(nilai_total)
-                        )
-                    bkd.mail(kelas.getDataMahasiswa(studentid)[3],
-                             f'eyyowwwwwww {config.bot_name} nihhhh mau nganter file yang kamu mintaaa',
-                             f'ini ya file KAMBING (Kartu Bimbingan) yang Akang/Teteh minta silahkan di cek... ehee....',
-                             bkd.getFilePath(kelas.getDataMahasiswa(studentid)[3], 'kambing'))
-                    msgreply=f"sudah selesai dan sudah dikirim ke email kamu yang {kelas.getDataMahasiswa(studentid)[3]} yaa...."
+    if statusapprovalkambing is not None:
+        if 'false' in statusapprovalkambing or '' in statusapprovalkambing:
+            msgreply='wiwiwiwiwi KAMBING kamu belum di approve nih sama Bapak/Ibu dosen yang ini nih:'
+            if 'false' == statusapprovalkambing[0] or '' == statusapprovalkambing[0]:
+                kodedosen1=getKodeDosenBimbingan(studentid)[0]
+                namadosen=kelas.getNamaDosen(kodedosen1)
+                msgreply+=f'\n{kodedosen1} | {namadosen} | PEMBIMBING 1'
+            if 'false' == statusapprovalkambing[1] or '' == statusapprovalkambing[1]:
+                kodedosen1 = getKodeDosenBimbingan(studentid)[1]
+                namadosen = kelas.getNamaDosen(kodedosen1)
+                msgreply += f'\n{kodedosen1} | {namadosen} | PEMBIMBING 2'
         else:
-            msgreply=f'mohon maaf belum bisa cetak kartu bimbingan dikarenakan pertemuan masih ada yang kurang dari 8'
+            status_nilai, nilai_total=totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN)
+            if status_nilai:
+                WRONG_KEYWORD = False
+                try:
+                    JUDUL_BIMBINGAN = data[1].split(' kambing ')[1]
+                except:
+                    WRONG_KEYWORD = True
+                if WRONG_KEYWORD:
+                    msgreply = 'ada yang salah keywordnya'
+                else:
+                    KODE_DOSEN_BIMBINGAN=getKodeDosenBimbingan(studentid)
+                    if KODE_DOSEN_BIMBINGAN is None:
+                        msgreply=f'data dengan npm {studentid} tidak ditemukan'
+                    else:
+                        for KODE_DOSEN in KODE_DOSEN_BIMBINGAN:
+                            NAMA_DOSEN = kelas.getNamaDosen(KODE_DOSEN)
+                            print(NAMA_DOSEN)
+                            NIDN_DOSEN = getNIDNDosen(KODE_DOSEN)
+                            TAHUN_AJARAN = kelas.getTahunAjaran(kelas.getProdiIDwithStudentID(studentid)).split(' ')[-1]
+                            photo = f'{config.link_foto_siap}{getFotoRoute(studentid)}'
+                            makePdf(
+                                npm_mahasiswa=studentid,
+                                nama_mahasiswa=studentname,
+                                tipe_bimbingan=switcherTipeBimbingan(getTipeBimbingan(studentid)),
+                                nama_pembimbing=NAMA_DOSEN,
+                                kode_dosen_pembimbing=KODE_DOSEN,
+                                nidn_pembimbing=NIDN_DOSEN,
+                                tahun_ajaran=TAHUN_AJARAN,
+                                photo=photo,
+                                judul=JUDUL_BIMBINGAN,
+                                total_nilai=str(nilai_total)
+                            )
+                        bkd.mail(kelas.getDataMahasiswa(studentid)[3],
+                                 f'eyyowwwwwww {config.bot_name} nihhhh mau nganter file yang kamu mintaaa',
+                                 f'ini ya file KAMBING (Kartu Bimbingan) yang Akang/Teteh minta silahkan di cek... ehee....',
+                                 bkd.getFilePath(kelas.getDataMahasiswa(studentid)[3], 'kambing'))
+                        msgreply=f"sudah selesai dan sudah dikirim ke email kamu yang {kelas.getDataMahasiswa(studentid)[3]} yaa...."
+            else:
+                msgreply=f'mohon maaf belum bisa cetak kartu bimbingan dikarenakan pertemuan masih ada yang kurang dari 8'
+    else:
+        msgreply='mohon maaf data tidak bisa ditemukan'
     return msgreply
 
 
