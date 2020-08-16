@@ -11,13 +11,13 @@ from twilio.twiml.messaging_response import MessagingResponse
 from lib import log
 from module import kelas
 from Crypto.Cipher import AES
+from Crypto.Util.Padding import unpad
+from base64 import b64decode
 from datetime import datetime
 
 from flask_restful import Resource, Api, abort
 
 import config, pymysql
-
-import linecache, sys
 
 app = Flask(__name__, static_url_path='')
 apirest=Api(app=app)
@@ -65,6 +65,17 @@ def floatToRupiah(uang):
             uang_temp+=f'{j}'
     uang_reverse_jadi=uang_temp[1:]
     return f'Rp {uang_reverse_jadi[::-1]},{str_uang.split(".")[1]}'
+
+def decryptToken(key, iv, passcode):
+    try:
+        key_tobytes=bytes(key, 'utf-8')
+        iv_tobytes=bytes(iv, 'utf-8')
+        crypt_object=AES.new(key=key_tobytes,mode=AES.MODE_CBC,IV=iv_tobytes)
+        ciphertext=bytes(passcode, 'utf-8')
+        resultpasscode, status = unpad(crypt_object.decrypt(b64decode(ciphertext)), AES.block_size).decode("utf-8"), True
+    except:
+        resultpasscode, status = '', False
+    return resultpasscode, status
 
 @app.route("/")
 def home():
@@ -117,12 +128,7 @@ def callback_api_va(token):
         payment_ntb=req['payment_ntb']
         datetime_payment=req['datetime payment']
         datetime_payment_iso8601=req['datetime payment iso8601']
-        try:
-            obj = AES.new(config.key.encode("utf8"), AES.MODE_CBC, config.iv.encode("utf8"))
-            dec = bytes.fromhex(token)
-            resultpasscode, status = obj.decrypt(dec).decode('utf-8'), True
-        except:
-            resultpasscode, status = '', False
+        resultpasscode, status = decryptToken(config.key_va, config.iv_va, token)
         if status:
             passcodetrxid=resultpasscode.split(';')[0]
             passcodevirtualaccount=resultpasscode.split(';')[1]
