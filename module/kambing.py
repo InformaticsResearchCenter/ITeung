@@ -195,6 +195,14 @@ def getKodeDosenBimbingan(npm):
             return None
 
 
+def auth(data):
+    if kelas.getNpmandNameMahasiswa(data[0]) == None:
+        ret = False
+    else:
+        ret = True
+    return ret
+
+
 def replymsg(data, driver):
     num = numbers.normalize(data[0])
     studentid,studentname=kelas.getNpmandNameMahasiswa(num)
