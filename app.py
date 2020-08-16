@@ -71,10 +71,11 @@ def decryptToken(key, iv, passcode):
         key_tobytes=bytes(key, 'utf-8')
         iv_tobytes=bytes(iv, 'utf-8')
         crypt_object=AES.new(key=key_tobytes,mode=AES.MODE_CBC,IV=iv_tobytes)
-        ciphertext=bytes(passcode, 'utf-8')
+        passcode=b64decode(passcode)
+        ciphertext=passcode
         resultpasscode, status = unpad(crypt_object.decrypt(b64decode(ciphertext)), AES.block_size).decode("utf-8"), True
-    except:
-        resultpasscode, status = '', False
+    except Exception as e:
+        resultpasscode, status = f'', False
     return resultpasscode, status
 
 @app.route("/")
