@@ -224,7 +224,7 @@ def replymsg(driver, data):
             if status_nilai:
                 WRONG_KEYWORD = False
                 try:
-                    JUDUL_BIMBINGAN = data[1].split(' kambing ')[1]
+                    JUDUL_BIMBINGAN = data[3].split(' kambing ')[1]
                 except:
                     WRONG_KEYWORD = True
                 if WRONG_KEYWORD:
