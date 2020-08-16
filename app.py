@@ -120,14 +120,14 @@ def callback_api_va(token):
         tipesemester=trxid.split('-')[3]
         tahunid=f'{yearnow}{tipesemester}'
         prodiid=f'{npm[0]}{npm[3]}'
-        virtual_account=req['virtual account']
+        virtual_account=req['virtual_account']
         customer_name=req['customer_name']
         trx_amount=req['trx_amount']
-        payment_amount=req['payment amount']
-        cumulative_payment_amount=req['cumulative payment amount']
+        payment_amount=req['payment_amount']
+        cumulative_payment_amount=req['cumulative_payment_amount']
         payment_ntb=req['payment_ntb']
-        datetime_payment=req['datetime payment']
-        datetime_payment_iso8601=req['datetime payment iso8601']
+        datetime_payment=req['datetime_payment']
+        datetime_payment_iso8601=req['datetime_payment_iso8601']
         resultpasscode, status = decryptToken(config.key_va, config.iv_va, token)
         if status:
             passcodetrxid=resultpasscode.split(';')[0]
