@@ -11,7 +11,6 @@ from twilio.twiml.messaging_response import MessagingResponse
 from lib import log
 from module import kelas
 from Crypto.Cipher import AES
-from Crypto.Util.Padding import unpad
 from base64 import b64decode
 from datetime import datetime
 
@@ -73,10 +72,10 @@ def decryptToken(key, iv, passcode):
         crypt_object=AES.new(key=key_tobytes,mode=AES.MODE_CBC,IV=iv_tobytes)
         passcode=b64decode(passcode)
         ciphertext=passcode
-        resultpasscode, status = unpad(crypt_object.decrypt(b64decode(ciphertext)), AES.block_size).decode("utf-8"), True
+        resultpasscode, status = crypt_object.decrypt(b64decode(ciphertext)), True
     except Exception as e:
         resultpasscode, status = f'', False
-    return resultpasscode, status
+    return resultpasscode.decode('utf-8').replace('\x0e', ''), status
 
 @app.route("/")
 def home():
