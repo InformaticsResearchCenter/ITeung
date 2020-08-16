@@ -11,3 +11,5 @@ googletrans
 pymysql
 twilio
 pandas
+clipboard
+pycryptodome
