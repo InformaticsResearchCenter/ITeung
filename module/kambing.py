@@ -260,7 +260,7 @@ def replymsg(driver, data):
             else:
                 msgreply=f'mohon maaf belum bisa cetak kartu bimbingan dikarenakan pertemuan masih ada yang kurang dari 8'
     else:
-        msgreply='mohon maaf data tidak bisa ditemukan'
+        msgreply=f'mohon maaf data dengan npm {studentid} tidak bisa ditemukan'
     return msgreply
 
 
