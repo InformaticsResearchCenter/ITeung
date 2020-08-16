@@ -12,7 +12,7 @@ from Crypto.Cipher import AES
 
 from lib import reply, numbers, wa
 
-import smtplib, os, config, subprocess, threading
+import smtplib, os, config, subprocess
 
 
 def auth(data):
