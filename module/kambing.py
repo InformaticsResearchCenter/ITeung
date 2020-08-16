@@ -203,7 +203,7 @@ def auth(data):
     return ret
 
 
-def replymsg(data, driver):
+def replymsg(driver, data):
     num = numbers.normalize(data[0])
     studentid,studentname=kelas.getNpmandNameMahasiswa(num)
     # status_nilai, nilai_total=True, 100
