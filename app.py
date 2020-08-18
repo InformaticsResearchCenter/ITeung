@@ -128,7 +128,7 @@ def callback_api_va(token):
         payment_ntb=req['payment_ntb']
         datetime_payment=req['datetime_payment']
         datetime_payment_iso8601=req['datetime_payment_iso8601']
-        resultpasscode, status = decryptToken(config.key_va, config.iv_va, bytes(token, 'utf-8'))
+        resultpasscode, status = decryptToken(config.key_va, config.iv_va, token)
         if status:
             passcodetrxid=resultpasscode.split(';')[0]
             passcodevirtualaccount=resultpasscode.split(';')[1]
