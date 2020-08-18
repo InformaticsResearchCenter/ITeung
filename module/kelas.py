@@ -123,6 +123,20 @@ def getAllDataDosens(dosenid):
         else:
             return None
 
+
+def getEmailDosen(dosenid):
+    db = dbConnectSiap()
+    sql = f'select Email from simak_mst_dosen where Login="{dosenid}"'
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        row = cur.fetchone()
+        if row is not None:
+            return row[0]
+        else:
+            return None
+
+
 def getnumonly(groupname, tipe):
     db = dbConnect()
     sql = "select distinct number from log where DATE_FORMAT(timestamps, '%Y-%m-%d') = CURDATE() and groupname = '{0}' and tipe='{1}'".format(groupname, tipe)

@@ -5,14 +5,21 @@ from reportlab.lib.units import cm
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image, PageBreak
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from datetime import date
-from module import kelas, bkd, approve_kambing
+from module import kelas, bkd, approve_kambing, kambing
 from lib import numbers
 from datetime import datetime
 from Crypto.Cipher import AES
 
 import qrcode, config, os
 
-def replymsg(data, driver):
+def auth(data):
+    if kelas.getKodeDosen(data[0]) == '':
+        ret = False
+    else:
+        ret = True
+    return ret
+
+def replymsg(driver, data):
     num = numbers.normalize(data[0])  
     main(num)  
     msgreply=f"Sampun yo.."
@@ -25,7 +32,7 @@ def main(num):
 
 def getListMahasiswa(kode_dosen):
     db = kelas.dbConnect()
-    sql = f"SELECT npm FROM bimbingan_data WHERE pembimbing1='{kode_dosen}' AND tahun_id='{kelas.getTahunID()}'"
+    sql = f"SELECT npm FROM bimbingan_data WHERE (pembimbing1='{kode_dosen}'or pembimbing2='{kode_dosen}') AND tahun_id='{kelas.getTahunID()}'"
     listMahasiswa = []
     with db:
         cur = db.cursor()
@@ -48,7 +55,7 @@ def getDataMahasiswa(npm):
 
 def mainMakePdf(list_mahasiswa, kode_dosen):
     
-    doc = SimpleDocTemplate(f'./kambing/{kode_dosen}.pdf', pagesize=A4, rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=18)
+    doc = SimpleDocTemplate(f'./beritaacarapitak/BERITA ACARA PITAK-TA-{kode_dosen}-{kelas.getEmailDosen(kode_dosen)}.pdf', pagesize=A4, rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=18)
     doc.pagesize = portrait(A4)
     elements = []
 
@@ -62,17 +69,14 @@ def mainMakePdf(list_mahasiswa, kode_dosen):
 
     for npm in list_mahasiswa:
         studentid, studentname = getDataMahasiswa(npm)
-        # print(studentid, studentname)
         status_nilai, nilai_total = totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN)
-        # print(status_nilai, nilai_total)
         if status_nilai:
-            JUDUL_BIMBINGAN = "Wadaw.. ha.. ha.. ha.."
+            JUDUL_BIMBINGAN = f"{getJudulFromNpm(npm)}"
             KODE_DOSEN=kode_dosen
             NAMA_DOSEN = kelas.getNamaDosen(KODE_DOSEN)
             NIDN_DOSEN = getNIDNDosen(KODE_DOSEN)
             TAHUN_AJARAN = kelas.getTahunAjaran(kelas.getProdiIDwithStudentID(studentid)).split(' ')[-1]
-            photo = "logoKAMBING.png"#f'{config.link_foto_siap}{getFotoRoute(studentid)}'
-            # print(KODE_DOSEN, NAMA_DOSEN, NIDN_DOSEN, TAHUN_AJARAN, photo)
+            photo = f'{config.link_foto_siap}{getFotoRoute(studentid)}'
             
             makePdf(
                 npm_mahasiswa=studentid,
@@ -87,7 +91,8 @@ def mainMakePdf(list_mahasiswa, kode_dosen):
                 total_nilai=str(nilai_total),
                 elements=elements,
                 logo=logo,
-                styles=styles
+                styles=styles,
+                kode_dosen_koordinator='TI041L'
             )
             elements.append(PageBreak())
             
@@ -95,9 +100,20 @@ def mainMakePdf(list_mahasiswa, kode_dosen):
             pass
     
     doc.build(elements)
-    
 
-def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing, nama_pembimbing, nidn_pembimbing,  tahun_ajaran, photo, judul, total_nilai, elements, logo, styles):
+
+def getJudulFromNpm(npm):
+    db = kelas.dbConnect()
+    sql = f"select judul from bimbingan_data where npm='{npm}'"
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        row = cur.fetchone()
+        if row is not None:
+            return row[0]
+
+
+def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing, nama_pembimbing, nidn_pembimbing,  tahun_ajaran, photo, judul, total_nilai, elements, logo, styles, kode_dosen_koordinator):
     checkDir()
     makeQrcodeVerifySign(
         link=makeLinkVerify(kode_dosen=kode_dosen_pembimbing,
@@ -108,21 +124,18 @@ def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing
         npm_mahasiswa=npm_mahasiswa,
         tipe_bimbingan=tipe_bimbingan
     )
+    makeQrcodeVerifySign(
+        link=makeLinkVerify(kode_dosen=kode_dosen_koordinator,
+                            npm_mahasiswa=npm_mahasiswa,
+                            tipe_bimbingan=tipe_bimbingan,
+                            total_nilai=total_nilai),
+        kode_dosen=kode_dosen_koordinator,
+        npm_mahasiswa=npm_mahasiswa,
+        tipe_bimbingan=tipe_bimbingan
+    )
     bulan = date.today().strftime("%m")
     d2 = date.today().strftime(f"%d {bkd.bulanSwitcher(bulan)} %Y")
-    
-    # doc = SimpleDocTemplate(f'./kambing/{npm_mahasiswa}-{kode_dosen_pembimbing}-{STUDENT_EMAIL}.pdf', pagesize=A4, rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=18)
-    # doc.pagesize = portrait(A4)
-    # elements = []
-
-    # logo = Image("logoKAMBING.png", 3.5 * inch, 1 * inch)
-    # logo.hAlign = "LEFT"
     elements.append(logo)
-
-    # styles = getSampleStyleSheet()
-    # styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY))
-    # styles.add(ParagraphStyle(name='Center', alignment=TA_CENTER))
-    # styles.add(ParagraphStyle(name='Right', alignment=TA_RIGHT))
 
     ptext = '<font name="Times" size="14">BERITA ACARA</font>'
     elements.append(Paragraph(ptext, styles["Center"]))
@@ -174,7 +187,6 @@ def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing
     nilai_data_list=['', '', '', 'Rata-Rata: ', total_nilai]
     data.append(nilai_data_list)
 
-    # Get this line right instead of just copying it from the docs
     style = TableStyle([('FONT', (0, 0), (-1, 0), 'Helvetica-Bold'),
                         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
                         ('VALIGN', (0, 0), (0, -1), 'MIDDLE'),
@@ -185,7 +197,6 @@ def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing
                         ('BOX', (0, 0), (-1, -1), 0.25, colors.black)
                         ])
 
-    # Configure style and word wrap
     s = getSampleStyleSheet()
     s = s["Normal"]
     s.wordWrap = 'CJK'
@@ -200,23 +211,36 @@ def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing
     elements.append(Paragraph(ptext, styles["Right"]))
     elements.append(Spacer(1, .5 * inch))
 
-    #bawah
     bulan = date.today().strftime("%m")
     tanggal = date.today().strftime(f"%d {bkd.bulanSwitcher(bulan)} %Y")
-    
-    image = Image(photo, 1.1 * inch, 1.1 * inch)
-    image.hAlign = "CENTER"
-    
+
+    data = approve_kambing.getDataPembimbing(npm_mahasiswa, kode_dosen_pembimbing)
+    pembimbingke = approve_kambing.pembimbingPositionAs(data, kode_dosen_pembimbing)
+    if approve_kambing.cekApprovalTrueorFalse(npm_mahasiswa, pembimbingke.replace('pembimbing', 'koordinator')):
+        qrcode_pembimbing = f"./beritaacarapitakqrcode/{npm_mahasiswa}-{kode_dosen_pembimbing}-{tipe_bimbingan}.png"
+        qrcode_koordinator = f"./beritaacarapitakqrcode/{npm_mahasiswa}-{kode_dosen_koordinator}-{tipe_bimbingan}.PNG"
+    else:
+        qrcode_pembimbing = f"./beritaacarapitakqrcode/whiteimage.png"
+        qrcode_koordinator = f"./beritaacarapitakqrcode/whiteimage.png"
+
+    image_pembimbing = Image(qrcode_pembimbing, 1.8 * inch, 1.8 * inch)
+    image_pembimbing.vAlign = "CENTER"
+    image_pembimbing.hAlign = "CENTER"
+    image_koordinator = Image(qrcode_koordinator, 1.8 * inch, 1.8 * inch)
+    image_koordinator.hAlign = "CENTER"
+    image_koordinator.vAlign = "CENTER"
+
     data = [['', Paragraph(f'<font name="Times">Bandung, {tanggal}</font>', styles["Center"]), ''],
         [Paragraph('<font name="Times"><b>Koordinator</b></font>', styles["Center"]), '',Paragraph('<font name="Times"><b>Pembimbing</b></font>', styles["Center"])],
-        [image, '', image],
-        [Paragraph(f'<font name="Times"><b>Haha</b></font>', styles["Justify"]), '',Paragraph('<font name="Times"><b>Hihi</b></font>', styles["Justify"])],
-        [Paragraph(f'<font name="Times"><b>NIK: Haha</b></font>', styles["Justify"]), '',Paragraph('<font name="Times"><b>NIK: Hihi</b></font>', styles["Justify"])],
+        [image_koordinator, '', image_pembimbing],
+        [Paragraph(f'<font name="Times"><b>{kelas.getNamaDosen("TI041L")}</b></font>', styles["Justify"]), '',Paragraph(f'<font name="Times"><b>{kelas.getNamaDosen(kode_dosen_pembimbing)}</b></font>', styles["Justify"])],
+        [Paragraph(f'<font name="Times"><b>NIDN. {kelas.getAllDataDosens("TI041L")[2]}</b></font>', styles["Justify"]), '',Paragraph(f'<font name="Times"><b>NIDN. {nidn_pembimbing}</b></font>', styles["Justify"])],
         ]
 
-    table = Table(data, [7*cm, 4.3*cm, 7*cm], [1*cm, .5*cm, 3*cm, .5*cm, .5*cm])
+    table = Table(data, [7*cm, 4.3*cm, 7*cm], [1*cm, .5*cm, 5*cm, .5*cm, .5*cm])
     table.setStyle(TableStyle([
         ('FONT',(0,0),(-1,-1),'Times-Roman', 12),
+        ('ALIGN',(0,0),(-1,-1),'CENTER'),
         # ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
         # ('BOX', (0,0), (-1,-1), 0.25, colors.black),
     ]))
@@ -246,7 +270,45 @@ def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing
     # elements.append(Spacer(1, 12))
 
     # doc.build(elements)
-    
+
+
+def makeQrcodeVerifySign(link, npm_mahasiswa, kode_dosen, tipe_bimbingan):
+    checkDirQrcode()
+    img = qrcode.make(link)
+    img.save(f'./beritaacarapitakqrcode/{npm_mahasiswa}-{kode_dosen}-{tipe_bimbingan}.PNG')
+
+
+def makeLinkVerify(kode_dosen, npm_mahasiswa, tipe_bimbingan, total_nilai):
+    datenow = datetime.date(datetime.now()).strftime('%d-%m-%Y')
+    timenow = datetime.now().time().strftime('%H:%M:%S')
+    module_name="berita_acara_pitak"
+    data = f'{module_name};{datenow};{timenow};{kode_dosen};{npm_mahasiswa};{tipe_bimbingan};{total_nilai};'
+    makeit80 = f'{data}{bkd.randomString(80 - len(data))}'
+    obj = AES.new(config.key.encode("utf8"), AES.MODE_CBC, config.iv.encode('utf8'))
+    cp = obj.encrypt(makeit80.encode("utf8"))
+    passcode = cp.hex()
+    space = '%20'
+    link = f'https://api.whatsapp.com/send?phone={config.nomor_iteung}&text=iteung{space}tanda{space}tangan{space}{passcode}'
+    return link
+
+
+def verifyDigitalSign(resultpasscode):
+    resultpasscode=resultpasscode.split(';')
+    tanggal=resultpasscode[1].split('-')[0]
+    bulan=bkd.bulanSwitcher(resultpasscode[1].split('-')[1])
+    tahun=resultpasscode[1].split('-')[2]
+    sah_jam=resultpasscode[2]
+    nama_dosen=kelas.getNamaDosen(resultpasscode[3])
+    npm_mahasiswa=resultpasscode[4]
+    kode_tipe_bimbingan=kambing.switcherTipeBimbingantoKode(resultpasscode[5])
+    total_nilai=resultpasscode[6]
+    msgreply = f"Ini data yang diminta yaaaa\n\nNama Dosen: {nama_dosen}\nPenerbitan Tanda Tangan: {sah_jam} {tanggal} {bulan} {tahun}"
+    for i in kambing.getDataBimbinganForReply(npm_mahasiswa, resultpasscode[3]):
+        msgreply+=f"\n\nPertemuan: {i[0]}\nTanggal: {i[1].strftime('%d-%m-%Y')}\nSudah Dikerjakan: {i[2].split(';')[0]}\nPekerjaan Selanjutnya: {i[2].split(';')[1]}\nNilai: {i[3]}"
+    msgreply+=f'\n\n*Nilai Rata-Rata _{total_nilai}_*'
+    return msgreply
+
+
 def getTipeBimbingan(npm):
     db = kelas.dbConnectSiap()
     sql = f"select DISTINCT(tipe) from simak_croot_bimbingan where MhswID={npm}"
@@ -339,33 +401,15 @@ def switcherTipeBimbingan(tipe):
 
 def checkDir():
     try:
-        os.mkdir('kambing/')
+        os.mkdir('beritaacarapitak/')
     except:
         print('sudah ada..')
-
-def makeQrcodeVerifySign(link, npm_mahasiswa, kode_dosen, tipe_bimbingan):
-    checkDirQrcode()
-    img = qrcode.make(link)
-    img.save(f'./kambingqrcode/{npm_mahasiswa}-{kode_dosen}-{tipe_bimbingan}.PNG')
 
 def checkDirQrcode():
     try:
-        os.mkdir('kambingqrcode/')
+        os.mkdir('beritaacarapitakqrcode/')
     except:
         print('sudah ada..')
-
-def makeLinkVerify(kode_dosen, npm_mahasiswa, tipe_bimbingan, total_nilai):
-    datenow = datetime.date(datetime.now()).strftime('%d-%m-%Y')
-    timenow = datetime.now().time().strftime('%H:%M:%S')
-    module_name="kambing"
-    data = f'{module_name};{datenow};{timenow};{kode_dosen};{npm_mahasiswa};{tipe_bimbingan};{total_nilai};'
-    makeit64 = f'{data}{bkd.randomString(64 - len(data))}'
-    obj = AES.new(config.key.encode("utf8"), AES.MODE_CBC, config.iv.encode('utf8'))
-    cp = obj.encrypt(makeit64.encode("utf8"))
-    passcode = cp.hex()
-    space = '%20'
-    link = f'https://api.whatsapp.com/send?phone={config.nomor_iteung}&text=iteung{space}tanda{space}tangan{space}{passcode}'
-    return link
 
 def makeListDataBimbinganByDosens(npm, kode_dosen):
     dataBimbingan=getDataBimbinganwithMhswIDandDosenID(npm, kode_dosen)
