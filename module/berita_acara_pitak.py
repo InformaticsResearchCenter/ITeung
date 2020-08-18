@@ -289,6 +289,7 @@ def makeLinkVerify(kode_dosen, npm_mahasiswa, tipe_bimbingan, total_nilai):
     passcode = cp.hex()
     space = '%20'
     link = f'https://api.whatsapp.com/send?phone={config.nomor_iteung}&text=iteung{space}tanda{space}tangan{space}{passcode}'
+    print(link)
     return link
 
 
@@ -303,9 +304,12 @@ def verifyDigitalSign(resultpasscode):
     kode_tipe_bimbingan=kambing.switcherTipeBimbingantoKode(resultpasscode[5])
     total_nilai=resultpasscode[6]
     msgreply = f"Ini data yang diminta yaaaa\n\nNama Dosen: {nama_dosen}\nPenerbitan Tanda Tangan: {sah_jam} {tanggal} {bulan} {tahun}"
-    for i in kambing.getDataBimbinganForReply(npm_mahasiswa, resultpasscode[3]):
-        msgreply+=f"\n\nPertemuan: {i[0]}\nTanggal: {i[1].strftime('%d-%m-%Y')}\nSudah Dikerjakan: {i[2].split(';')[0]}\nPekerjaan Selanjutnya: {i[2].split(';')[1]}\nNilai: {i[3]}"
-    msgreply+=f'\n\n*Nilai Rata-Rata _{total_nilai}_*'
+    try:
+        for i in kambing.getDataBimbinganForReply(npm_mahasiswa, resultpasscode[3]):
+            msgreply+=f"\n\nPertemuan: {i[0]}\nTanggal: {i[1].strftime('%d-%m-%Y')}\nSudah Dikerjakan: {i[2].split(';')[0]}\nPekerjaan Selanjutnya: {i[2].split(';')[1]}\nNilai: {i[3]}"
+        msgreply+=f'\n\n*Nilai Rata-Rata _{total_nilai}_*'
+    except:
+        pass
     return msgreply
 
 
