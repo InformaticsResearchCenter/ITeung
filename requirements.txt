@@ -13,3 +13,4 @@ twilio
 pandas
 clipboard
 pycryptodome
+reportlab
