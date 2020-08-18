@@ -75,7 +75,7 @@ def decryptToken(key, iv, passcode):
         resultpasscode, status = crypt_object.decrypt(b64decode(ciphertext)), True
     except Exception as e:
         resultpasscode, status = f'', False
-    return resultpasscode.decode('utf-8').replace('\x0e', ''), status
+    return str(resultpasscode, 'utf-8').replace('\x0e', ''), status
 
 @app.route("/")
 def home():
