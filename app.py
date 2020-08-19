@@ -129,40 +129,41 @@ def callback_api_va(token):
         datetime_payment=req['datetime_payment']
         datetime_payment_iso8601=req['datetime_payment_iso8601']
         resultpasscode, status = decryptToken(config.key_va, config.iv_va, token)
-        if status:
-            passcodetrxid=resultpasscode.split(';')[0]
-            passcodevirtualaccount=resultpasscode.split(';')[1]
-            passcodedatetime=resultpasscode.split(';')[2]
-            if passcodetrxid == trxid and passcodevirtualaccount == virtual_account and passcodedatetime == datenow:
-                message = f'Hai haiiiii kamu sudah transfer pembayaran semester yaaaa dengan{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}*NPM: {npm}*{config.whatsapp_api_lineBreak}*Nama: {customer_name}*{config.whatsapp_api_lineBreak}*Virtual Account: {virtual_account}*{config.whatsapp_api_lineBreak}*Tanggal: {datetime_payment}*{config.whatsapp_api_lineBreak}*Jumlah Transfer: {floatToRupiah(payment_amount)}*{config.whatsapp_api_lineBreak}*Total Sudah Bayar: {floatToRupiah(cumulative_payment_amount)}*{config.whatsapp_api_lineBreak}*Total Harus Bayar: {floatToRupiah(trx_amount)}*'
-                if float(cumulative_payment_amount) >= float(float(trx_amount)/2):
-                    if cekSudahAdaKHS(npm, tahunid, 'A'):
-                        updateBiayaKHS(npm, tahunid, trx_amount-cumulative_payment_amount)
-                        message += f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}terima kasih yaaa sudah bayar semester, semangat kuliahnya kakaaaa......'
+        if trxid.split('-')[1] == 'SPP':
+            if status:
+                passcodetrxid=resultpasscode.split(';')[0]
+                passcodevirtualaccount=resultpasscode.split(';')[1]
+                passcodedatetime=resultpasscode.split(';')[2]
+                if passcodetrxid == trxid and passcodevirtualaccount == virtual_account and passcodedatetime == datenow:
+                    message = f'Hai haiiiii kamu sudah transfer pembayaran semester yaaaa dengan{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}*NPM: {npm}*{config.whatsapp_api_lineBreak}*Nama: {customer_name}*{config.whatsapp_api_lineBreak}*Virtual Account: {virtual_account}*{config.whatsapp_api_lineBreak}*Tanggal: {datetime_payment}*{config.whatsapp_api_lineBreak}*Jumlah Transfer: {floatToRupiah(payment_amount)}*{config.whatsapp_api_lineBreak}*Total Sudah Bayar: {floatToRupiah(cumulative_payment_amount)}*{config.whatsapp_api_lineBreak}*Total Harus Bayar: {floatToRupiah(trx_amount)}*'
+                    if float(cumulative_payment_amount) >= float(float(trx_amount)/2):
+                        if cekSudahAdaKHS(npm, tahunid, 'A'):
+                            updateBiayaKHS(npm, tahunid, trx_amount-cumulative_payment_amount)
+                            message += f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}terima kasih yaaa sudah bayar semester, semangat kuliahnya kakaaaa......'
+                        else:
+                            message += f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}Kamu *sudah bisa* isi KRS yaaa coba cek di *SIAP* yaaa...., #BOTNAME# ucapkan terima kasihhhh dan jangan salah saat isi KRS yaaa....'
+                            message = message.replace('#BOTNAME#', config.bot_name)
+                            insertnewKHS(npm, tahunid, prodiid, tipesemester, trx_amount-cumulative_payment_amount)
+                        wa.setOutbox(kelas.getHandphoneMahasiswa(npm), message)
+                        return make_response(jsonify(
+                            {
+                                "message": "success",
+                                "status": "krs otomatis"
+                            }
+                        ), 200)
                     else:
-                        message += f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}Kamu *sudah bisa* isi KRS yaaa coba cek di *SIAP* yaaa...., #BOTNAME# ucapkan terima kasihhhh dan jangan salah saat isi KRS yaaa....'
-                        message = message.replace('#BOTNAME#', config.bot_name)
-                        insertnewKHS(npm, tahunid, prodiid, tipesemester, trx_amount-cumulative_payment_amount)
-                    wa.setOutbox(kelas.getHandphoneMahasiswa(npm), message)
-                    return make_response(jsonify(
-                        {
-                            "message": "success",
-                            "status": "krs otomatis"
-                        }
-                    ), 200)
+                        message+=f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}Yahhhh kamu *belum bisa* isi KRS nihhhh coba *buat surat* .... lalu *ajukan ke pihak BAUK* agar kamu bisa isi KRS.....'
+                        wa.setOutbox(kelas.getHandphoneMahasiswa(npm), message)
+                        return make_response(jsonify(
+                            {
+                                "message": "success",
+                                "status": "kirim whatsapp bikin surat"
+                            }
+                        ), 200)
                 else:
-                    message+=f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}Yahhhh kamu *belum bisa* isi KRS nihhhh coba *buat surat* .... lalu *ajukan ke pihak BAUK* agar kamu bisa isi KRS.....'
-                    wa.setOutbox(kelas.getHandphoneMahasiswa(npm), message)
-                    return make_response(jsonify(
-                        {
-                            "message": "success",
-                            "status": "kirim whatsapp bikin surat"
-                        }
-                    ), 200)
+                    return make_response(jsonify({'message': 'bad token'}), 401)
             else:
                 return make_response(jsonify({'message': 'bad token'}), 401)
-        else:
-            return make_response(jsonify({'message': 'bad token'}), 401)
     except Exception as e:
         return {
             "code": 404,
