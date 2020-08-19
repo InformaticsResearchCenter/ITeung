@@ -164,6 +164,8 @@ def callback_api_va(token):
                     return make_response(jsonify({'message': 'bad token'}), 401)
             else:
                 return make_response(jsonify({'message': 'bad token'}), 401)
+        else:
+            return make_response(jsonify({'message': 'not spp'}), 200)
     except Exception as e:
         return {
             "code": 404,
