@@ -85,6 +85,17 @@ def cekNpmInTrxID(trxid):
             return i
 
 
+def cekTipeSemester(trxid):
+    for i in trxid.split('-'):
+        try:
+            int(i)
+            isNumber=True
+        except:
+            isNumber=False
+        if len(i) == 1 and isNumber:
+            return i
+
+
 @app.route("/")
 def home():
     return 'hello crot...'
@@ -125,8 +136,9 @@ def callback_api_va(token):
         req=request.json
         trxid=req['trx_id']
         npm=cekNpmInTrxID(trxid)
-        tipesemester=trxid.split('-')[3]
+        tipesemester=cekTipeSemester(trxid)
         tahunid=f'{yearnow}{tipesemester}'
+        print(tahunid)
         prodiid=f'{npm[0]}{npm[3]}'
         virtual_account=req['virtual_account']
         customer_name=req['customer_name']
