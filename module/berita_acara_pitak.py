@@ -21,8 +21,13 @@ def auth(data):
 
 def replymsg(driver, data):
     num = numbers.normalize(data[0])  
-    main(num)  
-    msgreply=f"Sampun yo.."
+    main(num)
+    bkd.mail(kelas.getEmailDosen(kelas.getKodeDosen(num)),
+             f'yooo watsapppp mennnnn {config.bot_name} kirim file BERITA ACARA PITAK nihhhh',
+             f'cek cek dulu ya filenya.....',
+             bkd.getFilePath(kelas.getEmailDosen(kelas.getKodeDosen(num)), 'beritaacarapitak')
+             )
+    msgreply=f"Sampun yo.. coba cek emailnyaa yaaa yang {kelas.getEmailDosen(kelas.getKodeDosen(num))}"
     return msgreply
 
 def main(num):    
@@ -216,11 +221,10 @@ def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing
 
     data = approve_kambing.getDataPembimbing(npm_mahasiswa, kode_dosen_pembimbing)
     pembimbingke = approve_kambing.pembimbingPositionAs(data, kode_dosen_pembimbing)
+    qrcode_pembimbing = f"./beritaacarapitakqrcode/{npm_mahasiswa}-{kode_dosen_pembimbing}-{tipe_bimbingan}.png"
     if approve_kambing.cekApprovalTrueorFalse(npm_mahasiswa, pembimbingke.replace('pembimbing', 'koordinator')):
-        qrcode_pembimbing = f"./beritaacarapitakqrcode/{npm_mahasiswa}-{kode_dosen_pembimbing}-{tipe_bimbingan}.png"
         qrcode_koordinator = f"./beritaacarapitakqrcode/{npm_mahasiswa}-{kode_dosen_koordinator}-{tipe_bimbingan}.PNG"
     else:
-        qrcode_pembimbing = f"./beritaacarapitakqrcode/whiteimage.png"
         qrcode_koordinator = f"./beritaacarapitakqrcode/whiteimage.png"
 
     image_pembimbing = Image(qrcode_pembimbing, 1.8 * inch, 1.8 * inch)
@@ -289,7 +293,6 @@ def makeLinkVerify(kode_dosen, npm_mahasiswa, tipe_bimbingan, total_nilai):
     passcode = cp.hex()
     space = '%20'
     link = f'https://api.whatsapp.com/send?phone={config.nomor_iteung}&text=iteung{space}tanda{space}tangan{space}{passcode}'
-    print(link)
     return link
 
 
@@ -306,7 +309,7 @@ def verifyDigitalSign(resultpasscode):
     msgreply = f"Ini data yang diminta yaaaa\n\nNama Dosen: {nama_dosen}\nPenerbitan Tanda Tangan: {sah_jam} {tanggal} {bulan} {tahun}"
     try:
         for i in kambing.getDataBimbinganForReply(npm_mahasiswa, resultpasscode[3]):
-            msgreply+=f"\n\nPertemuan: {i[0]}\nTanggal: {i[1].strftime('%d-%m-%Y')}\nSudah Dikerjakan: {i[2].split(';')[0]}\nPekerjaan Selanjutnya: {i[2].split(';')[1]}\nNilai: {i[3]}"
+            msgreply+=f"\n\nTipe Bimbingan:{kode_tipe_bimbingan}\nPertemuan: {i[0]}\nTanggal: {i[1].strftime('%d-%m-%Y')}\nSudah Dikerjakan: {i[2].split(';')[0]}\nPekerjaan Selanjutnya: {i[2].split(';')[1]}\nNilai: {i[3]}"
         msgreply+=f'\n\n*Nilai Rata-Rata _{total_nilai}_*'
     except:
         pass
