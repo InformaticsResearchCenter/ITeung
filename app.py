@@ -149,7 +149,7 @@ def callback_api_va(token):
         datetime_payment=req['datetime_payment']
         datetime_payment_iso8601=req['datetime_payment_iso8601']
         resultpasscode, status = decryptToken(config.key_va, config.iv_va, token)
-        if trxid.split('-')[1] == 'SPP':
+        if 'SPP' in trxid.split('-'):
             if status:
                 passcodetrxid=resultpasscode.split(';')[0].replace('\n', '').replace(' ', '')
                 passcodevirtualaccount=resultpasscode.split(';')[1].replace('\n', '').replace(' ', '')
