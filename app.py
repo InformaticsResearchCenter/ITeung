@@ -139,9 +139,9 @@ def callback_api_va(token):
         resultpasscode, status = decryptToken(config.key_va, config.iv_va, token)
         if trxid.split('-')[1] == 'SPP':
             if status:
-                passcodetrxid=resultpasscode.split(';')[0]
-                passcodevirtualaccount=resultpasscode.split(';')[1]
-                passcodedatetime=resultpasscode.split(';')[2]
+                passcodetrxid=resultpasscode.split(';')[0].replace('\n', '').replace(' ', '')
+                passcodevirtualaccount=resultpasscode.split(';')[1].replace('\n', '').replace(' ', '')
+                passcodedatetime=resultpasscode.split(';')[2].replace('\n', '').replace(' ', '')
                 if passcodetrxid == trxid and passcodevirtualaccount == virtual_account and passcodedatetime == datenow:
                     message = f'Hai haiiiii kamu sudah transfer pembayaran semester yaaaa dengan{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}*NPM: {npm}*{config.whatsapp_api_lineBreak}*Nama: {customer_name}*{config.whatsapp_api_lineBreak}*Virtual Account: {virtual_account}*{config.whatsapp_api_lineBreak}*Tanggal: {datetime_payment}*{config.whatsapp_api_lineBreak}*Jumlah Transfer: {floatToRupiah(payment_amount)}*{config.whatsapp_api_lineBreak}*Total Sudah Bayar: {floatToRupiah(cumulative_payment_amount)}*{config.whatsapp_api_lineBreak}*Total Harus Bayar: {floatToRupiah(trx_amount)}*'
                     if float(cumulative_payment_amount) >= float(float(trx_amount)/2):
