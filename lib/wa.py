@@ -147,7 +147,7 @@ def sendOutbox(driver):
             pesan=data[-1].split(' ')
             pesanresult=''
             for i in pesan:
-                i = i.replace('\\n', '%0A')
+                i=i.replace('\\n', '%0A')
                 pesanresult+=str(i)+'+'
             nomortujuan=data[1]
             driver.get('https://web.whatsapp.com/send?phone={nomortujuan}&text={pesan}'.format(
@@ -156,11 +156,17 @@ def sendOutbox(driver):
             ))
             waitLogin(driver)
             try:
-                sendMessage(driver)
-                deleteOutbox(id=data[0])
-            except:
+                sleep(2)
+                driver.find_element_by_class_name('_9a59P')
+                print(f'phone number invalid {nomortujuan}')
                 deleteOutbox(id=data[0])
                 driver.get("https://web.whatsapp.com/")
+            except:
+                try:
+                    sendMessage(driver)
+                    deleteOutbox(id=data[0])
+                except:
+                    driver.get("https://web.whatsapp.com/")
         except:
             driver.get("https://web.whatsapp.com/")
     else:
