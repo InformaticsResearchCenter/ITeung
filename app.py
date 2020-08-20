@@ -77,6 +77,14 @@ def decryptToken(key, iv, passcode):
         resultpasscode, status = f'', False
     return str(resultpasscode, 'utf-8').replace('\x0e', ''), status
 
+
+def cekNpmInTrxID(trxid):
+    data=trxid.split('-')
+    for i in data:
+        if kelas.getDataMahasiswa(i):
+            return i
+
+
 @app.route("/")
 def home():
     return 'hello crot...'
@@ -116,7 +124,7 @@ def callback_api_va(token):
         yearnow=datetime.date(datetime.now()).strftime('%Y')
         req=request.json
         trxid=req['trx_id']
-        npm=trxid.split('-')[2]
+        npm=cekNpmInTrxID(trxid)
         tipesemester=trxid.split('-')[3]
         tahunid=f'{yearnow}{tipesemester}'
         prodiid=f'{npm[0]}{npm[3]}'
