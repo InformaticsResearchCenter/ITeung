@@ -80,15 +80,13 @@ def mainMakePdf(list_mahasiswa, kode_dosen):
 
     for npm in list_mahasiswa:
         studentid, studentname = getDataMahasiswa(npm)
-        status_nilai, nilai_total = totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN)
+        status_nilai, nilai_total = totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN, kode_dosen)
         if status_nilai:
             JUDUL_BIMBINGAN = f"{getJudulFromNpm(npm)}"
             KODE_DOSEN=kode_dosen
             NAMA_DOSEN = kelas.getNamaDosen(KODE_DOSEN)
             NIDN_DOSEN = getNIDNDosen(KODE_DOSEN)
             TAHUN_AJARAN = kelas.getTahunAjaran(kelas.getProdiIDwithStudentID(studentid)).split(' ')[-1]
-
-            
             makePdf(
                 npm_mahasiswa=studentid,
                 nama_mahasiswa=studentname,
@@ -97,7 +95,7 @@ def mainMakePdf(list_mahasiswa, kode_dosen):
                 kode_dosen_pembimbing=KODE_DOSEN,
                 nidn_pembimbing=NIDN_DOSEN,
                 tahun_ajaran=TAHUN_AJARAN,
-                photo=photo,
+                photo=cekPhotoRoute(studentid),
                 judul=JUDUL_BIMBINGAN,
                 total_nilai=str(nilai_total),
                 elements=elements,
@@ -334,9 +332,9 @@ def getTipeBimbingan(npm):
         else:
             return None
 
-def totalNilai(npm, MINIMUM_PERTEMUAN):
+def totalNilai(npm, MINIMUM_PERTEMUAN, dosenid):
     ALL_DATA_BIMBINGAN = getAllDataBimbingan(npm)
-    ALL_NILAI_BIMBINGAN = getAllNilaiBimbingan(npm)
+    ALL_NILAI_BIMBINGAN = getAllNilaiBimbingan(npm, dosenid)
     LAST_PERTEMUAN_BIMBINGAN = ALL_DATA_BIMBINGAN[0][5]
     if len(ALL_DATA_BIMBINGAN) < 16:
         status, totalnilai=False, 0
@@ -345,12 +343,12 @@ def totalNilai(npm, MINIMUM_PERTEMUAN):
             totalnilai = 0
             for nilai in ALL_NILAI_BIMBINGAN:
                 totalnilai += nilai[0]
-            status, totalnilai = True, totalnilai / (MINIMUM_PERTEMUAN * 2)
+            status, totalnilai = True, totalnilai / (MINIMUM_PERTEMUAN)
         else:
             totalnilai = 0
             for nilai in ALL_NILAI_BIMBINGAN:
                 totalnilai += nilai[0]
-            status, totalnilai = True, totalnilai / (LAST_PERTEMUAN_BIMBINGAN * 2)
+            status, totalnilai = True, totalnilai / (LAST_PERTEMUAN_BIMBINGAN)
     return status, totalnilai
 
 def getAllDataBimbingan(npm):
@@ -365,9 +363,9 @@ def getAllDataBimbingan(npm):
         else:
             return None
         
-def getAllNilaiBimbingan(npm):
+def getAllNilaiBimbingan(npm, dosenid):
     db = kelas.dbConnectSiap()
-    sql = f"select Nilai from simak_croot_bimbingan where MhswID={npm}"
+    sql = f"select Nilai from simak_croot_bimbingan where MhswID={npm} and DosenID='{dosenid}' and TahunID={kelas.getTahunID()} ORDER BY Pertemuan_ ASC"
     with db:
         cur = db.cursor()
         cur.execute(sql)
