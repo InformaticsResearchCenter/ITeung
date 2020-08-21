@@ -86,7 +86,7 @@ def mainMakePdf(list_mahasiswa, kode_dosen):
             makePdf(
                 npm_mahasiswa=studentid,
                 nama_mahasiswa=studentname,
-                tipe_bimbingan=switcherTipeBimbingan(getTipeBimbingan(studentid)),
+                tipe_bimbingan=getTipeBimbingan(studentid),
                 nama_pembimbing=NAMA_DOSEN,
                 kode_dosen_pembimbing=KODE_DOSEN,
                 nidn_pembimbing=NIDN_DOSEN,
@@ -146,7 +146,7 @@ def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing
     elements.append(Paragraph(ptext, styles["Center"]))
     elements.append(Spacer(1, 12))
 
-    ptext = f'<font name="Times" size="14">{tipe_bimbingan}</font>'
+    ptext = f'<font name="Times" size="14">{switcherTipeBimbingan(tipe_bimbingan)}</font>'
     elements.append(Paragraph(ptext, styles["Center"]))
     elements.append(Spacer(1, 12))
 
@@ -287,9 +287,9 @@ def makeLinkVerify(kode_dosen, npm_mahasiswa, tipe_bimbingan, total_nilai):
     timenow = datetime.now().time().strftime('%H:%M:%S')
     module_name="berita_acara_pitak"
     data = f'{module_name};{datenow};{timenow};{kode_dosen};{npm_mahasiswa};{tipe_bimbingan};{total_nilai};'
-    makeit80 = f'{data}{bkd.randomString(80 - len(data))}'
+    makeit64 = f'{data}{bkd.randomString(64 - len(data))}'
     obj = AES.new(config.key.encode("utf8"), AES.MODE_CBC, config.iv.encode('utf8'))
-    cp = obj.encrypt(makeit80.encode("utf8"))
+    cp = obj.encrypt(makeit64.encode("utf8"))
     passcode = cp.hex()
     space = '%20'
     link = f'https://api.whatsapp.com/send?phone={config.nomor_iteung}&text=iteung{space}tanda{space}tangan{space}{passcode}'
@@ -304,7 +304,7 @@ def verifyDigitalSign(resultpasscode):
     sah_jam=resultpasscode[2]
     nama_dosen=kelas.getNamaDosen(resultpasscode[3])
     npm_mahasiswa=resultpasscode[4]
-    kode_tipe_bimbingan=kambing.switcherTipeBimbingantoKode(resultpasscode[5])
+    kode_tipe_bimbingan=switcherTipeBimbingan(resultpasscode[5])
     total_nilai=resultpasscode[6]
     msgreply = f"Ini data yang diminta yaaaa\n\nNama Dosen: {nama_dosen}\nPenerbitan Tanda Tangan: {sah_jam} {tanggal} {bulan} {tahun}"
     try:
