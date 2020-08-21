@@ -43,7 +43,6 @@ def getListMahasiswa(kode_dosen):
         cur = db.cursor()
         cur.execute(sql)
         rows = cur.fetchall()
-        # print(rows)
         for row in rows:
             listMahasiswa.append(row[0])            
         return listMahasiswa
@@ -81,7 +80,10 @@ def mainMakePdf(list_mahasiswa, kode_dosen):
             NAMA_DOSEN = kelas.getNamaDosen(KODE_DOSEN)
             NIDN_DOSEN = getNIDNDosen(KODE_DOSEN)
             TAHUN_AJARAN = kelas.getTahunAjaran(kelas.getProdiIDwithStudentID(studentid)).split(' ')[-1]
-            photo = f'{config.link_foto_siap}{getFotoRoute(studentid)}'
+            if getFotoRoute(studentid) == '':
+                photo=f'{config.link_foto_siap}gambar/besan.jpg'
+            else:
+                photo = f'{config.link_foto_siap}{getFotoRoute(studentid)}'
             
             makePdf(
                 npm_mahasiswa=studentid,
@@ -189,7 +191,7 @@ def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing
     inner_data_list=makeListDataBimbinganByDosens(npm_mahasiswa, kode_dosen_pembimbing)
     for i in inner_data_list:
         data.append(i)
-    nilai_data_list=['', '', '', 'Rata-Rata: ', total_nilai]
+    nilai_data_list=['', '', '', 'Rata-Rata: ', "%.2f" % round(float(total_nilai), 2)]
     data.append(nilai_data_list)
 
     style = TableStyle([('FONT', (0, 0), (-1, 0), 'Helvetica-Bold'),
@@ -212,9 +214,9 @@ def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing
     elements.append(t)
     elements.append(Spacer(1, 10))
 
-    ptext = '<font size=12> </font>'
-    elements.append(Paragraph(ptext, styles["Right"]))
-    elements.append(Spacer(1, .5 * inch))
+    # ptext = '<font size=12> </font>'
+    # elements.append(Paragraph(ptext, styles["Right"]))
+    # elements.append(Spacer(1, .5 * inch))
 
     bulan = date.today().strftime("%m")
     tanggal = date.today().strftime(f"%d {bkd.bulanSwitcher(bulan)} %Y")
@@ -227,10 +229,10 @@ def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing
     else:
         qrcode_koordinator = f"./beritaacarapitakqrcode/whiteimage.png"
 
-    image_pembimbing = Image(qrcode_pembimbing, 1.8 * inch, 1.8 * inch)
+    image_pembimbing = Image(qrcode_pembimbing, 1.4 * inch, 1.4 * inch)
     image_pembimbing.vAlign = "CENTER"
     image_pembimbing.hAlign = "CENTER"
-    image_koordinator = Image(qrcode_koordinator, 1.8 * inch, 1.8 * inch)
+    image_koordinator = Image(qrcode_koordinator, 1.4 * inch, 1.4 * inch)
     image_koordinator.hAlign = "CENTER"
     image_koordinator.vAlign = "CENTER"
 
@@ -241,7 +243,7 @@ def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing
         [Paragraph(f'<font name="Times"><b>NIDN. {kelas.getAllDataDosens("TI041L")[2]}</b></font>', styles["Justify"]), '',Paragraph(f'<font name="Times"><b>NIDN. {nidn_pembimbing}</b></font>', styles["Justify"])],
         ]
 
-    table = Table(data, [7*cm, 4.3*cm, 7*cm], [1*cm, .5*cm, 5*cm, .5*cm, .5*cm])
+    table = Table(data, [7*cm, 4.3*cm, 7*cm], [1*cm, .5*cm, 3.5*cm, .5*cm, .5*cm])
     table.setStyle(TableStyle([
         ('FONT',(0,0),(-1,-1),'Times-Roman', 12),
         ('ALIGN',(0,0),(-1,-1),'CENTER'),
@@ -286,7 +288,7 @@ def makeLinkVerify(kode_dosen, npm_mahasiswa, tipe_bimbingan, total_nilai):
     datenow = datetime.date(datetime.now()).strftime('%d-%m-%Y')
     timenow = datetime.now().time().strftime('%H:%M:%S')
     module_name="berita_acara_pitak"
-    data = f'{module_name};{datenow};{timenow};{kode_dosen};{npm_mahasiswa};{tipe_bimbingan};{total_nilai};'
+    data = f'{module_name};{datenow};{timenow};{kode_dosen};{npm_mahasiswa};{tipe_bimbingan};%.2f;' % round(float(total_nilai), 2)
     makeit64 = f'{data}{bkd.randomString(64 - len(data))}'
     obj = AES.new(config.key.encode("utf8"), AES.MODE_CBC, config.iv.encode('utf8'))
     cp = obj.encrypt(makeit64.encode("utf8"))
@@ -454,7 +456,6 @@ def getDataBimbinganwithMhswIDandDosenID(npm, dosenid):
         cur=db.cursor()
         cur.execute(sql)
         rows=cur.fetchall()
-        # print(rows)
         if rows is not None:
             return rows
         else:
