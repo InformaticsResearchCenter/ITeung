@@ -5,7 +5,7 @@ import openpyxl
 import string
 import os
 import shutil
-from module import kelas
+from module import kelas, cek_tugas
 from lib import reply, wa
 from datetime import datetime
 from lib import wa, numbers
@@ -218,7 +218,10 @@ def inputByExcel(file, tahun, nomor):
                         }
                         print(inputNilaiTugas(data))
 
-                    msg = 'Udh masuk bos'
+                    try:
+                        msg = cek_tugas.checkNilaiTugas(tahun, "yang dimasukkan tadi", kode_matkul=0, jadwal=jadwal_id, kelas=0)
+                    except:
+                        msg = 'Udh masuk bos'
                 else:
                     msg = 'Gak sama bos, takutnya salah letak'
             else:
