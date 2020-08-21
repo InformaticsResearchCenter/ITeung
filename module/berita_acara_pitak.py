@@ -46,6 +46,13 @@ def getListMahasiswa(kode_dosen):
         for row in rows:
             listMahasiswa.append(row[0])            
         return listMahasiswa
+
+def cekPhotoRoute(studentid):
+    if getFotoRoute(studentid) == '':
+        photo = f'{config.link_foto_siap}gambar/besan.jpg'
+    else:
+        photo = f'{config.link_foto_siap}{getFotoRoute(studentid)}'
+    return photo
     
 def getDataMahasiswa(npm):
     db = kelas.dbConnectSiap()
@@ -80,10 +87,7 @@ def mainMakePdf(list_mahasiswa, kode_dosen):
             NAMA_DOSEN = kelas.getNamaDosen(KODE_DOSEN)
             NIDN_DOSEN = getNIDNDosen(KODE_DOSEN)
             TAHUN_AJARAN = kelas.getTahunAjaran(kelas.getProdiIDwithStudentID(studentid)).split(' ')[-1]
-            if getFotoRoute(studentid) == '':
-                photo=f'{config.link_foto_siap}gambar/besan.jpg'
-            else:
-                photo = f'{config.link_foto_siap}{getFotoRoute(studentid)}'
+
             
             makePdf(
                 npm_mahasiswa=studentid,
