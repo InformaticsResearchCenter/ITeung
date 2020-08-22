@@ -50,6 +50,19 @@ def getAllDataBimbingan(npm):
             return None
 
 
+def getAllDataBimbinganByDosenID(npm, dosenid):
+    db = kelas.dbConnectSiap()
+    sql = f"select * from simak_croot_bimbingan where MhswID={npm} and DosenID='{dosenid}' ORDER BY Pertemuan_ DESC"
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        rows = cur.fetchall()
+        if rows is not None:
+            return rows
+        else:
+            return None
+
+
 def getAllNilaiBimbingan(npm, dosenid):
     db = kelas.dbConnectSiap()
     sql = f"select Nilai from simak_croot_bimbingan where MhswID={npm} and DosenID='{dosenid}' and TahunID={kelas.getTahunID()} ORDER BY Pertemuan_ ASC"
@@ -63,10 +76,14 @@ def getAllNilaiBimbingan(npm, dosenid):
             return None
 
 def totalNilai(npm, MINIMUM_PERTEMUAN, dosenid):
-    ALL_DATA_BIMBINGAN = getAllDataBimbingan(npm)
+    data=approve_kambing.getDataPembimbing(npm, dosenid)
+    pembimbingke=approve_kambing.pembimbingPositionAs(data, dosenid)
+    if pembimbingke == 'pembimbing2':
+        MINIMUM_PERTEMUAN=5
+    ALL_DATA_BIMBINGAN = getAllDataBimbinganByDosenID(npm, dosenid)
     ALL_NILAI_BIMBINGAN = getAllNilaiBimbingan(npm, dosenid)
     LAST_PERTEMUAN_BIMBINGAN = ALL_DATA_BIMBINGAN[0][5]
-    if len(ALL_DATA_BIMBINGAN) < 16:
+    if len(ALL_DATA_BIMBINGAN) < MINIMUM_PERTEMUAN:
         status, totalnilai = False, 0
     else:
         if LAST_PERTEMUAN_BIMBINGAN < MINIMUM_PERTEMUAN:
@@ -264,7 +281,7 @@ def replymsg(driver, data):
                              bkd.getFilePath(kelas.getDataMahasiswa(studentid)[3], 'kambing'))
                     msgreply=f"sudah selesai dan sudah dikirim ke email kamu yang {kelas.getDataMahasiswa(studentid)[3]} yaa...."
             else:
-                msgreply = f'mohon maaf belum bisa cetak kartu bimbingan dikarenakan pertemuan masih ada yang kurang dari 8'
+                msgreply = f'mohon maaf belum bisa cetak kartu bimbingan dikarenakan pertemuan masih ada yang kurang'
                 if status_nilai1 == False:
                     msgreply+=f'\n{KODE_DOSEN_BIMBINGAN[0]} | {kelas.getNamaDosen(KODE_DOSEN_BIMBINGAN[0])}'
                 if status_nilai2 == False:
