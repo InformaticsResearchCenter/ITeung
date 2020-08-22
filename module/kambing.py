@@ -232,8 +232,10 @@ def replymsg(driver, data):
                 namadosen = kelas.getNamaDosen(kodedosen1)
                 msgreply += f'\n{kodedosen1} | {namadosen} | PEMBIMBING 2'
         else:
-            status_nilai, nilai_total=totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN)
-            if status_nilai:
+            KODE_DOSEN_BIMBINGAN = getKodeDosenBimbingan(studentid)
+            status_nilai1, nilai_total1=totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN, KODE_DOSEN_BIMBINGAN[0])
+            status_nilai2, nilai_total2=totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN, KODE_DOSEN_BIMBINGAN[1])
+            if status_nilai1 and status_nilai2:
                 JUDUL_BIMBINGAN=getJudulBimbingan(studentid, kelas.getTahunID())
                 KODE_DOSEN_BIMBINGAN=getKodeDosenBimbingan(studentid)
                 if KODE_DOSEN_BIMBINGAN is None:
@@ -254,7 +256,7 @@ def replymsg(driver, data):
                             tahun_ajaran=TAHUN_AJARAN,
                             photo=photo,
                             judul=JUDUL_BIMBINGAN,
-                            total_nilai=str(nilai_total)
+                            total_nilai=totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN, KODE_DOSEN)[1]
                         )
                     bkd.mail(kelas.getDataMahasiswa(studentid)[3],
                              f'eyyowwwwwww {config.bot_name} nihhhh mau nganter file yang kamu mintaaa',
@@ -262,7 +264,11 @@ def replymsg(driver, data):
                              bkd.getFilePath(kelas.getDataMahasiswa(studentid)[3], 'kambing'))
                     msgreply=f"sudah selesai dan sudah dikirim ke email kamu yang {kelas.getDataMahasiswa(studentid)[3]} yaa...."
             else:
-                msgreply=f'mohon maaf belum bisa cetak kartu bimbingan dikarenakan pertemuan masih ada yang kurang dari 8'
+                msgreply = f'mohon maaf belum bisa cetak kartu bimbingan dikarenakan pertemuan masih ada yang kurang dari 8'
+                if status_nilai1 == False:
+                    msgreply+=f'\n{KODE_DOSEN_BIMBINGAN[0]} | {kelas.getNamaDosen(KODE_DOSEN_BIMBINGAN[0])}'
+                if status_nilai2 == False:
+                    msgreply+=f'\n{KODE_DOSEN_BIMBINGAN[1]} | {kelas.getNamaDosen(KODE_DOSEN_BIMBINGAN[1])}'
     else:
         msgreply=f'mohon maaf data dengan npm {studentid} tidak bisa ditemukan'
     return msgreply
@@ -355,7 +361,7 @@ def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing
     inner_data_list=makeListDataBimbinganByDosens(npm_mahasiswa, kode_dosen_pembimbing)
     for i in inner_data_list:
         data.append(i)
-    nilai_data_list=['', '', '', 'Rata-Rata: ', total_nilai]
+    nilai_data_list=['', '', '', 'Rata-Rata: ', '%.2f' % round(float(total_nilai), 2)]
     data.append(nilai_data_list)
 
     # Get this line right instead of just copying it from the docs
@@ -417,7 +423,8 @@ def makeLinkVerify(kode_dosen, npm_mahasiswa, tipe_bimbingan, total_nilai):
     datenow = datetime.date(datetime.now()).strftime('%d-%m-%Y')
     timenow = datetime.now().time().strftime('%H:%M:%S')
     module_name="kambing"
-    data = f'{module_name};{datenow};{timenow};{kode_dosen};{npm_mahasiswa};{tipe_bimbingan};{total_nilai};'
+    print(total_nilai)
+    data = f'{module_name};{datenow};{timenow};{kode_dosen};{npm_mahasiswa};{tipe_bimbingan};%.2f;' % round(total_nilai, 2)
     makeit64 = f'{data}{bkd.randomString(64 - len(data))}'
     obj = AES.new(config.key.encode("utf8"), AES.MODE_CBC, config.iv.encode('utf8'))
     cp = obj.encrypt(makeit64.encode("utf8"))
