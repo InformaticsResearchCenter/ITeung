@@ -5,7 +5,7 @@ import openpyxl
 import string
 import os
 import shutil
-from module import kelas
+from module import kelas, cek_nilai
 from lib import reply, wa
 from datetime import datetime
 from lib import wa, numbers
@@ -26,7 +26,7 @@ def replymsg(driver, data):
             os.path.basename(__file__).split('.')[0])
         wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
         wa.typeAndSendMessage(driver, wmsg)
-        msg = data[3]
+        msg = data[3].lower()
         num = data[0]
         nomor = numbers.normalize(num)
         data = msg.split(' ')
@@ -343,7 +343,15 @@ def inputByExcel(file, jenis, tahun, func, nomor):
                         func(data)
                     else:
                         continue
-                msg = 'Udh masuk bosque'
+                try:
+                    if jenis.lower() == 'uts':
+                        msg = cek_nilai.checkNilaiUTS(tahun, "yang dimasukan tadi", kode_matkul=kode_matkul, jadwal=0, kelas=kelas)
+                    elif jenis.lower() == 'uas':
+                        msg = cek_nilai.checkNilaiUAS(tahun, "yang dimasukan tadi", kode_matkul=kode_matkul, jadwal=0, kelas=kelas)
+                    else:
+                        pass
+                except:
+                    msg = 'Udh masuk bosque'
             else:
                 msg = 'Kesalahan pada file bosque'
         else:
