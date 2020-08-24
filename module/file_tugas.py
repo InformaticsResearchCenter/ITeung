@@ -447,3 +447,15 @@ def convertTahun(param):
     elif semester == 2:
         semester = 'Genap'
     return '%s %s/%d' % (semester, tahun, int(tahun)+1)
+
+def getEmailDosen(dosenid):
+    db=dbConnectSiap()
+    sql="select Email from simak_mst_dosen where Login='{lecturercode}'".format(lecturercode=dosenid)
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        rows=cur.fetchone()
+        if rows is not None:
+            return rows[0]
+        else:
+            return ''

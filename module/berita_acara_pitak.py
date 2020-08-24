@@ -21,8 +21,13 @@ def auth(data):
 
 def replymsg(driver, data):
     num = numbers.normalize(data[0])  
-    main(num)  
-    msgreply=f"Sampun yo.."
+    main(num)
+    bkd.mail(kelas.getEmailDosen(kelas.getKodeDosen(num)),
+             f'yooo watsapppp mennnnn {config.bot_name} kirim file BERITA ACARA PITAK nihhhh',
+             f'cek cek dulu ya filenya.....',
+             bkd.getFilePath(kelas.getEmailDosen(kelas.getKodeDosen(num)), 'beritaacarapitak')
+             )
+    msgreply=f"Sampun yo.. coba cek emailnyaa yaaa yang {kelas.getEmailDosen(kelas.getKodeDosen(num))}"
     return msgreply
 
 def main(num):    
@@ -38,10 +43,16 @@ def getListMahasiswa(kode_dosen):
         cur = db.cursor()
         cur.execute(sql)
         rows = cur.fetchall()
-        # print(rows)
         for row in rows:
             listMahasiswa.append(row[0])            
         return listMahasiswa
+
+def cekPhotoRoute(studentid):
+    if getFotoRoute(studentid) == '':
+        photo = f'{config.link_foto_siap}gambar/besan.jpg'
+    else:
+        photo = f'{config.link_foto_siap}{getFotoRoute(studentid)}'
+    return photo
     
 def getDataMahasiswa(npm):
     db = kelas.dbConnectSiap()
@@ -69,24 +80,22 @@ def mainMakePdf(list_mahasiswa, kode_dosen):
 
     for npm in list_mahasiswa:
         studentid, studentname = getDataMahasiswa(npm)
-        status_nilai, nilai_total = totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN)
+        status_nilai, nilai_total = totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN, kode_dosen)
         if status_nilai:
             JUDUL_BIMBINGAN = f"{getJudulFromNpm(npm)}"
             KODE_DOSEN=kode_dosen
             NAMA_DOSEN = kelas.getNamaDosen(KODE_DOSEN)
             NIDN_DOSEN = getNIDNDosen(KODE_DOSEN)
             TAHUN_AJARAN = kelas.getTahunAjaran(kelas.getProdiIDwithStudentID(studentid)).split(' ')[-1]
-            photo = f'{config.link_foto_siap}{getFotoRoute(studentid)}'
-            
             makePdf(
                 npm_mahasiswa=studentid,
                 nama_mahasiswa=studentname,
-                tipe_bimbingan=switcherTipeBimbingan(getTipeBimbingan(studentid)),
+                tipe_bimbingan=getTipeBimbingan(studentid),
                 nama_pembimbing=NAMA_DOSEN,
                 kode_dosen_pembimbing=KODE_DOSEN,
                 nidn_pembimbing=NIDN_DOSEN,
                 tahun_ajaran=TAHUN_AJARAN,
-                photo=photo,
+                photo=cekPhotoRoute(studentid),
                 judul=JUDUL_BIMBINGAN,
                 total_nilai=str(nilai_total),
                 elements=elements,
@@ -141,7 +150,7 @@ def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing
     elements.append(Paragraph(ptext, styles["Center"]))
     elements.append(Spacer(1, 12))
 
-    ptext = f'<font name="Times" size="14">{tipe_bimbingan}</font>'
+    ptext = f'<font name="Times" size="14">{switcherTipeBimbingan(tipe_bimbingan)}</font>'
     elements.append(Paragraph(ptext, styles["Center"]))
     elements.append(Spacer(1, 12))
 
@@ -184,7 +193,7 @@ def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing
     inner_data_list=makeListDataBimbinganByDosens(npm_mahasiswa, kode_dosen_pembimbing)
     for i in inner_data_list:
         data.append(i)
-    nilai_data_list=['', '', '', 'Rata-Rata: ', total_nilai]
+    nilai_data_list=['', '', '', 'Rata-Rata: ', "%.2f" % round(float(total_nilai), 2)]
     data.append(nilai_data_list)
 
     style = TableStyle([('FONT', (0, 0), (-1, 0), 'Helvetica-Bold'),
@@ -207,26 +216,25 @@ def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing
     elements.append(t)
     elements.append(Spacer(1, 10))
 
-    ptext = '<font size=12> </font>'
-    elements.append(Paragraph(ptext, styles["Right"]))
-    elements.append(Spacer(1, .5 * inch))
+    # ptext = '<font size=12> </font>'
+    # elements.append(Paragraph(ptext, styles["Right"]))
+    # elements.append(Spacer(1, .5 * inch))
 
     bulan = date.today().strftime("%m")
     tanggal = date.today().strftime(f"%d {bkd.bulanSwitcher(bulan)} %Y")
 
     data = approve_kambing.getDataPembimbing(npm_mahasiswa, kode_dosen_pembimbing)
     pembimbingke = approve_kambing.pembimbingPositionAs(data, kode_dosen_pembimbing)
+    qrcode_pembimbing = f"./beritaacarapitakqrcode/{npm_mahasiswa}-{kode_dosen_pembimbing}-{tipe_bimbingan}.png"
     if approve_kambing.cekApprovalTrueorFalse(npm_mahasiswa, pembimbingke.replace('pembimbing', 'koordinator')):
-        qrcode_pembimbing = f"./beritaacarapitakqrcode/{npm_mahasiswa}-{kode_dosen_pembimbing}-{tipe_bimbingan}.png"
         qrcode_koordinator = f"./beritaacarapitakqrcode/{npm_mahasiswa}-{kode_dosen_koordinator}-{tipe_bimbingan}.PNG"
     else:
-        qrcode_pembimbing = f"./beritaacarapitakqrcode/whiteimage.png"
         qrcode_koordinator = f"./beritaacarapitakqrcode/whiteimage.png"
 
-    image_pembimbing = Image(qrcode_pembimbing, 1.8 * inch, 1.8 * inch)
+    image_pembimbing = Image(qrcode_pembimbing, 1.4 * inch, 1.4 * inch)
     image_pembimbing.vAlign = "CENTER"
     image_pembimbing.hAlign = "CENTER"
-    image_koordinator = Image(qrcode_koordinator, 1.8 * inch, 1.8 * inch)
+    image_koordinator = Image(qrcode_koordinator, 1.4 * inch, 1.4 * inch)
     image_koordinator.hAlign = "CENTER"
     image_koordinator.vAlign = "CENTER"
 
@@ -237,7 +245,7 @@ def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing
         [Paragraph(f'<font name="Times"><b>NIDN. {kelas.getAllDataDosens("TI041L")[2]}</b></font>', styles["Justify"]), '',Paragraph(f'<font name="Times"><b>NIDN. {nidn_pembimbing}</b></font>', styles["Justify"])],
         ]
 
-    table = Table(data, [7*cm, 4.3*cm, 7*cm], [1*cm, .5*cm, 5*cm, .5*cm, .5*cm])
+    table = Table(data, [7*cm, 4.3*cm, 7*cm], [1*cm, .5*cm, 3.5*cm, .5*cm, .5*cm])
     table.setStyle(TableStyle([
         ('FONT',(0,0),(-1,-1),'Times-Roman', 12),
         ('ALIGN',(0,0),(-1,-1),'CENTER'),
@@ -282,14 +290,13 @@ def makeLinkVerify(kode_dosen, npm_mahasiswa, tipe_bimbingan, total_nilai):
     datenow = datetime.date(datetime.now()).strftime('%d-%m-%Y')
     timenow = datetime.now().time().strftime('%H:%M:%S')
     module_name="berita_acara_pitak"
-    data = f'{module_name};{datenow};{timenow};{kode_dosen};{npm_mahasiswa};{tipe_bimbingan};{total_nilai};'
-    makeit80 = f'{data}{bkd.randomString(80 - len(data))}'
+    data = f'{module_name};{datenow};{timenow};{kode_dosen};{npm_mahasiswa};{tipe_bimbingan};%.2f;' % round(float(total_nilai), 2)
+    makeit64 = f'{data}{bkd.randomString(64 - len(data))}'
     obj = AES.new(config.key.encode("utf8"), AES.MODE_CBC, config.iv.encode('utf8'))
-    cp = obj.encrypt(makeit80.encode("utf8"))
+    cp = obj.encrypt(makeit64.encode("utf8"))
     passcode = cp.hex()
     space = '%20'
     link = f'https://api.whatsapp.com/send?phone={config.nomor_iteung}&text=iteung{space}tanda{space}tangan{space}{passcode}'
-    print(link)
     return link
 
 
@@ -301,12 +308,12 @@ def verifyDigitalSign(resultpasscode):
     sah_jam=resultpasscode[2]
     nama_dosen=kelas.getNamaDosen(resultpasscode[3])
     npm_mahasiswa=resultpasscode[4]
-    kode_tipe_bimbingan=kambing.switcherTipeBimbingantoKode(resultpasscode[5])
+    kode_tipe_bimbingan=switcherTipeBimbingan(resultpasscode[5])
     total_nilai=resultpasscode[6]
     msgreply = f"Ini data yang diminta yaaaa\n\nNama Dosen: {nama_dosen}\nPenerbitan Tanda Tangan: {sah_jam} {tanggal} {bulan} {tahun}"
     try:
         for i in kambing.getDataBimbinganForReply(npm_mahasiswa, resultpasscode[3]):
-            msgreply+=f"\n\nPertemuan: {i[0]}\nTanggal: {i[1].strftime('%d-%m-%Y')}\nSudah Dikerjakan: {i[2].split(';')[0]}\nPekerjaan Selanjutnya: {i[2].split(';')[1]}\nNilai: {i[3]}"
+            msgreply+=f"\n\nTipe Bimbingan:{kode_tipe_bimbingan}\nPertemuan: {i[0]}\nTanggal: {i[1].strftime('%d-%m-%Y')}\nSudah Dikerjakan: {i[2].split(';')[0]}\nPekerjaan Selanjutnya: {i[2].split(';')[1]}\nNilai: {i[3]}"
         msgreply+=f'\n\n*Nilai Rata-Rata _{total_nilai}_*'
     except:
         pass
@@ -325,9 +332,9 @@ def getTipeBimbingan(npm):
         else:
             return None
 
-def totalNilai(npm, MINIMUM_PERTEMUAN):
+def totalNilai(npm, MINIMUM_PERTEMUAN, dosenid):
     ALL_DATA_BIMBINGAN = getAllDataBimbingan(npm)
-    ALL_NILAI_BIMBINGAN = getAllNilaiBimbingan(npm)
+    ALL_NILAI_BIMBINGAN = getAllNilaiBimbingan(npm, dosenid)
     LAST_PERTEMUAN_BIMBINGAN = ALL_DATA_BIMBINGAN[0][5]
     if len(ALL_DATA_BIMBINGAN) < 16:
         status, totalnilai=False, 0
@@ -336,12 +343,12 @@ def totalNilai(npm, MINIMUM_PERTEMUAN):
             totalnilai = 0
             for nilai in ALL_NILAI_BIMBINGAN:
                 totalnilai += nilai[0]
-            status, totalnilai = True, totalnilai / (MINIMUM_PERTEMUAN * 2)
+            status, totalnilai = True, totalnilai / (MINIMUM_PERTEMUAN)
         else:
             totalnilai = 0
             for nilai in ALL_NILAI_BIMBINGAN:
                 totalnilai += nilai[0]
-            status, totalnilai = True, totalnilai / (LAST_PERTEMUAN_BIMBINGAN * 2)
+            status, totalnilai = True, totalnilai / (LAST_PERTEMUAN_BIMBINGAN)
     return status, totalnilai
 
 def getAllDataBimbingan(npm):
@@ -356,9 +363,9 @@ def getAllDataBimbingan(npm):
         else:
             return None
         
-def getAllNilaiBimbingan(npm):
+def getAllNilaiBimbingan(npm, dosenid):
     db = kelas.dbConnectSiap()
-    sql = f"select Nilai from simak_croot_bimbingan where MhswID={npm}"
+    sql = f"select Nilai from simak_croot_bimbingan where MhswID={npm} and DosenID='{dosenid}' and TahunID={kelas.getTahunID()} ORDER BY Pertemuan_ ASC"
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -451,7 +458,6 @@ def getDataBimbinganwithMhswIDandDosenID(npm, dosenid):
         cur=db.cursor()
         cur.execute(sql)
         rows=cur.fetchall()
-        # print(rows)
         if rows is not None:
             return rows
         else:

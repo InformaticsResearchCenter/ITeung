@@ -77,6 +77,25 @@ def decryptToken(key, iv, passcode):
         resultpasscode, status = f'', False
     return str(resultpasscode, 'utf-8').replace('\x0e', ''), status
 
+
+def cekNpmInTrxID(trxid):
+    data=trxid.split('-')
+    for i in data:
+        if kelas.getDataMahasiswa(i):
+            return i
+
+
+def cekTipeSemester(trxid):
+    for i in trxid.split('-'):
+        try:
+            int(i)
+            isNumber=True
+        except:
+            isNumber=False
+        if len(i) == 1 and isNumber:
+            return i
+
+
 @app.route("/")
 def home():
     return 'hello crot...'
@@ -116,9 +135,10 @@ def callback_api_va(token):
         yearnow=datetime.date(datetime.now()).strftime('%Y')
         req=request.json
         trxid=req['trx_id']
-        npm=trxid.split('-')[2]
-        tipesemester=trxid.split('-')[3]
+        npm=cekNpmInTrxID(trxid)
+        tipesemester=cekTipeSemester(trxid)
         tahunid=f'{yearnow}{tipesemester}'
+        print(tahunid)
         prodiid=f'{npm[0]}{npm[3]}'
         virtual_account=req['virtual_account']
         customer_name=req['customer_name']
@@ -129,11 +149,11 @@ def callback_api_va(token):
         datetime_payment=req['datetime_payment']
         datetime_payment_iso8601=req['datetime_payment_iso8601']
         resultpasscode, status = decryptToken(config.key_va, config.iv_va, token)
-        if trxid.split('-')[1] == 'SPP':
+        if 'SPP' in trxid.split('-'):
             if status:
-                passcodetrxid=resultpasscode.split(';')[0]
-                passcodevirtualaccount=resultpasscode.split(';')[1]
-                passcodedatetime=resultpasscode.split(';')[2]
+                passcodetrxid=resultpasscode.split(';')[0].replace('\n', '').replace(' ', '')
+                passcodevirtualaccount=resultpasscode.split(';')[1].replace('\n', '').replace(' ', '')
+                passcodedatetime=resultpasscode.split(';')[2].replace('\n', '').replace(' ', '')
                 if passcodetrxid == trxid and passcodevirtualaccount == virtual_account and passcodedatetime == datenow:
                     message = f'Hai haiiiii kamu sudah transfer pembayaran semester yaaaa dengan{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}*NPM: {npm}*{config.whatsapp_api_lineBreak}*Nama: {customer_name}*{config.whatsapp_api_lineBreak}*Virtual Account: {virtual_account}*{config.whatsapp_api_lineBreak}*Tanggal: {datetime_payment}*{config.whatsapp_api_lineBreak}*Jumlah Transfer: {floatToRupiah(payment_amount)}*{config.whatsapp_api_lineBreak}*Total Sudah Bayar: {floatToRupiah(cumulative_payment_amount)}*{config.whatsapp_api_lineBreak}*Total Harus Bayar: {floatToRupiah(trx_amount)}*'
                     if float(cumulative_payment_amount) >= float(float(trx_amount)/2):

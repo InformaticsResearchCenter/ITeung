@@ -263,7 +263,7 @@ def getKehadiranMahasiswa(jadwalid, studentid):
             return ''
 def getDataMahasiswa(studentid):
     db=dbConnectSiap()
-    sql="select MhswID, Nama, Handphone, Email from simak_mst_mahasiswa where MhswID={studentid}".format(studentid=studentid)
+    sql="select MhswID, Nama, Handphone, Email from simak_mst_mahasiswa where MhswID='{studentid}'".format(studentid=studentid)
     with db:
         cur = db.cursor()
         cur.execute(sql)

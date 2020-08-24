@@ -4,7 +4,7 @@ from reportlab.lib.pagesizes import A4, inch, portrait
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from datetime import date
-from module import kelas, bkd, approve_kambing
+from module import kelas, bkd, approve_kambing, berita_acara_pitak
 from lib import numbers
 from datetime import datetime
 from Crypto.Cipher import AES
@@ -50,9 +50,9 @@ def getAllDataBimbingan(npm):
             return None
 
 
-def getAllNilaiBimbingan(npm):
+def getAllDataBimbinganByDosenID(npm, dosenid):
     db = kelas.dbConnectSiap()
-    sql = f"select Nilai from simak_croot_bimbingan where MhswID={npm}"
+    sql = f"select * from simak_croot_bimbingan where MhswID={npm} and DosenID='{dosenid}' ORDER BY Pertemuan_ DESC"
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -62,23 +62,40 @@ def getAllNilaiBimbingan(npm):
         else:
             return None
 
-def totalNilai(npm, MINIMUM_PERTEMUAN):
-    ALL_DATA_BIMBINGAN = getAllDataBimbingan(npm)
-    ALL_NILAI_BIMBINGAN = getAllNilaiBimbingan(npm)
+
+def getAllNilaiBimbingan(npm, dosenid):
+    db = kelas.dbConnectSiap()
+    sql = f"select Nilai from simak_croot_bimbingan where MhswID={npm} and DosenID='{dosenid}' and TahunID={kelas.getTahunID()} ORDER BY Pertemuan_ ASC"
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        rows = cur.fetchall()
+        if rows is not None:
+            return rows
+        else:
+            return None
+
+def totalNilai(npm, MINIMUM_PERTEMUAN, dosenid):
+    data=approve_kambing.getDataPembimbing(npm, dosenid)
+    pembimbingke=approve_kambing.pembimbingPositionAs(data, dosenid)
+    if pembimbingke == 'pembimbing2':
+        MINIMUM_PERTEMUAN=5
+    ALL_DATA_BIMBINGAN = getAllDataBimbinganByDosenID(npm, dosenid)
+    ALL_NILAI_BIMBINGAN = getAllNilaiBimbingan(npm, dosenid)
     LAST_PERTEMUAN_BIMBINGAN = ALL_DATA_BIMBINGAN[0][5]
-    if len(ALL_DATA_BIMBINGAN) < 16:
-        status, totalnilai=False, 0
+    if len(ALL_DATA_BIMBINGAN) < MINIMUM_PERTEMUAN:
+        status, totalnilai = False, 0
     else:
         if LAST_PERTEMUAN_BIMBINGAN < MINIMUM_PERTEMUAN:
             totalnilai = 0
             for nilai in ALL_NILAI_BIMBINGAN:
                 totalnilai += nilai[0]
-            status, totalnilai = True, totalnilai / (MINIMUM_PERTEMUAN * 2)
+            status, totalnilai = True, totalnilai / (MINIMUM_PERTEMUAN)
         else:
             totalnilai = 0
             for nilai in ALL_NILAI_BIMBINGAN:
                 totalnilai += nilai[0]
-            status, totalnilai = True, totalnilai / (LAST_PERTEMUAN_BIMBINGAN * 2)
+            status, totalnilai = True, totalnilai / (LAST_PERTEMUAN_BIMBINGAN)
     return status, totalnilai
 
 
@@ -195,6 +212,19 @@ def getKodeDosenBimbingan(npm):
             return None
 
 
+def getJudulBimbingan(npm, tahunid):
+    db=kelas.dbConnect()
+    sql=f'select judul from bimbingan_data where npm={npm} and tahun_id={tahunid}'
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        row=cur.fetchone()
+        if row is not None:
+            return row[0]
+        else:
+            return None
+
+
 def auth(data):
     if kelas.getNpmandNameMahasiswa(data[0]) == None:
         ret = False
@@ -206,7 +236,6 @@ def auth(data):
 def replymsg(driver, data):
     num = numbers.normalize(data[0])
     studentid,studentname=kelas.getNpmandNameMahasiswa(num)
-    # status_nilai, nilai_total=True, 100
     statusapprovalkambing = cekApprovalKambingAtBeginning(studentid)
     if statusapprovalkambing is not None:
         if 'false' in statusapprovalkambing or '' in statusapprovalkambing:
@@ -220,45 +249,43 @@ def replymsg(driver, data):
                 namadosen = kelas.getNamaDosen(kodedosen1)
                 msgreply += f'\n{kodedosen1} | {namadosen} | PEMBIMBING 2'
         else:
-            status_nilai, nilai_total=totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN)
-            if status_nilai:
-                WRONG_KEYWORD = False
-                try:
-                    JUDUL_BIMBINGAN = data[3].split(' kambing ')[1]
-                except:
-                    WRONG_KEYWORD = True
-                if WRONG_KEYWORD:
-                    msgreply = 'ada yang salah keywordnya'
+            KODE_DOSEN_BIMBINGAN = getKodeDosenBimbingan(studentid)
+            status_nilai1, nilai_total1=totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN, KODE_DOSEN_BIMBINGAN[0])
+            status_nilai2, nilai_total2=totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN, KODE_DOSEN_BIMBINGAN[1])
+            if status_nilai1 and status_nilai2:
+                JUDUL_BIMBINGAN=getJudulBimbingan(studentid, kelas.getTahunID())
+                KODE_DOSEN_BIMBINGAN=getKodeDosenBimbingan(studentid)
+                if KODE_DOSEN_BIMBINGAN is None:
+                    msgreply=f'data dengan npm {studentid} tidak ditemukan'
                 else:
-                    KODE_DOSEN_BIMBINGAN=getKodeDosenBimbingan(studentid)
-                    if KODE_DOSEN_BIMBINGAN is None:
-                        msgreply=f'data dengan npm {studentid} tidak ditemukan'
-                    else:
-                        for KODE_DOSEN in KODE_DOSEN_BIMBINGAN:
-                            NAMA_DOSEN = kelas.getNamaDosen(KODE_DOSEN)
-                            print(NAMA_DOSEN)
-                            NIDN_DOSEN = getNIDNDosen(KODE_DOSEN)
-                            TAHUN_AJARAN = kelas.getTahunAjaran(kelas.getProdiIDwithStudentID(studentid)).split(' ')[-1]
-                            photo = f'{config.link_foto_siap}{getFotoRoute(studentid)}'
-                            makePdf(
-                                npm_mahasiswa=studentid,
-                                nama_mahasiswa=studentname,
-                                tipe_bimbingan=switcherTipeBimbingan(getTipeBimbingan(studentid)),
-                                nama_pembimbing=NAMA_DOSEN,
-                                kode_dosen_pembimbing=KODE_DOSEN,
-                                nidn_pembimbing=NIDN_DOSEN,
-                                tahun_ajaran=TAHUN_AJARAN,
-                                photo=photo,
-                                judul=JUDUL_BIMBINGAN,
-                                total_nilai=str(nilai_total)
-                            )
-                        bkd.mail(kelas.getDataMahasiswa(studentid)[3],
-                                 f'eyyowwwwwww {config.bot_name} nihhhh mau nganter file yang kamu mintaaa',
-                                 f'ini ya file KAMBING (Kartu Bimbingan) yang Akang/Teteh minta silahkan di cek... ehee....',
-                                 bkd.getFilePath(kelas.getDataMahasiswa(studentid)[3], 'kambing'))
-                        msgreply=f"sudah selesai dan sudah dikirim ke email kamu yang {kelas.getDataMahasiswa(studentid)[3]} yaa...."
+                    for KODE_DOSEN in KODE_DOSEN_BIMBINGAN:
+                        NAMA_DOSEN = kelas.getNamaDosen(KODE_DOSEN)
+                        NIDN_DOSEN = getNIDNDosen(KODE_DOSEN)
+                        TAHUN_AJARAN = kelas.getTahunAjaran(kelas.getProdiIDwithStudentID(studentid)).split(' ')[-1]
+                        photo = berita_acara_pitak.cekPhotoRoute(studentid)
+                        makePdf(
+                            npm_mahasiswa=studentid,
+                            nama_mahasiswa=studentname,
+                            tipe_bimbingan=switcherTipeBimbingan(getTipeBimbingan(studentid)),
+                            nama_pembimbing=NAMA_DOSEN,
+                            kode_dosen_pembimbing=KODE_DOSEN,
+                            nidn_pembimbing=NIDN_DOSEN,
+                            tahun_ajaran=TAHUN_AJARAN,
+                            photo=photo,
+                            judul=JUDUL_BIMBINGAN,
+                            total_nilai=totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN, KODE_DOSEN)[1]
+                        )
+                    bkd.mail(kelas.getDataMahasiswa(studentid)[3],
+                             f'eyyowwwwwww {config.bot_name} nihhhh mau nganter file yang kamu mintaaa',
+                             f'ini ya file KAMBING (Kartu Bimbingan) yang Akang/Teteh minta silahkan di cek... ehee....',
+                             bkd.getFilePath(kelas.getDataMahasiswa(studentid)[3], 'kambing'))
+                    msgreply=f"sudah selesai dan sudah dikirim ke email kamu yang {kelas.getDataMahasiswa(studentid)[3]} yaa...."
             else:
-                msgreply=f'mohon maaf belum bisa cetak kartu bimbingan dikarenakan pertemuan masih ada yang kurang dari 8'
+                msgreply = f'mohon maaf belum bisa cetak kartu bimbingan dikarenakan pertemuan masih ada yang kurang'
+                if status_nilai1 == False:
+                    msgreply+=f'\n{KODE_DOSEN_BIMBINGAN[0]} | {kelas.getNamaDosen(KODE_DOSEN_BIMBINGAN[0])}'
+                if status_nilai2 == False:
+                    msgreply+=f'\n{KODE_DOSEN_BIMBINGAN[1]} | {kelas.getNamaDosen(KODE_DOSEN_BIMBINGAN[1])}'
     else:
         msgreply=f'mohon maaf data dengan npm {studentid} tidak bisa ditemukan'
     return msgreply
@@ -351,7 +378,7 @@ def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing
     inner_data_list=makeListDataBimbinganByDosens(npm_mahasiswa, kode_dosen_pembimbing)
     for i in inner_data_list:
         data.append(i)
-    nilai_data_list=['', '', '', 'Rata-Rata: ', total_nilai]
+    nilai_data_list=['', '', '', 'Rata-Rata: ', '%.2f' % round(float(total_nilai), 2)]
     data.append(nilai_data_list)
 
     # Get this line right instead of just copying it from the docs
@@ -413,7 +440,8 @@ def makeLinkVerify(kode_dosen, npm_mahasiswa, tipe_bimbingan, total_nilai):
     datenow = datetime.date(datetime.now()).strftime('%d-%m-%Y')
     timenow = datetime.now().time().strftime('%H:%M:%S')
     module_name="kambing"
-    data = f'{module_name};{datenow};{timenow};{kode_dosen};{npm_mahasiswa};{tipe_bimbingan};{total_nilai};'
+    print(total_nilai)
+    data = f'{module_name};{datenow};{timenow};{kode_dosen};{npm_mahasiswa};{tipe_bimbingan};%.2f;' % round(total_nilai, 2)
     makeit64 = f'{data}{bkd.randomString(64 - len(data))}'
     obj = AES.new(config.key.encode("utf8"), AES.MODE_CBC, config.iv.encode('utf8'))
     cp = obj.encrypt(makeit64.encode("utf8"))
