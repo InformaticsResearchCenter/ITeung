@@ -1,4 +1,5 @@
 import pandas
+from lib import message
 from module import kelas
 
 def auth(data):
@@ -16,16 +17,39 @@ def replymsg(driver, data):
     if status == False:
         msgreply='mohon untuk memberikan jadwal sidang dalam bentuk excel ke admin'
     else:
-        msgreply='ini dia jadwal sidangnya yaaa....\n\n'
-        for i, j in df.iterrows():
-            if j[0] == kode_dosen or j[1] == kode_dosen or j[2] == kode_dosen or j[3] == kode_dosen:
-                msgreply+=f'PENGUJI UTAMA (1): {kelas.getNamaDosen(j[0])}\n' \
-                          f'PENGUJI PENDAMPING (2): {kelas.getNamaDosen(j[1])}\n' \
-                          f'PENGUJI UTAMA: {kelas.getNamaDosen(j[2])}\n' \
-                          f'PENGUJI PENDAMPING: {kelas.getNamaDosen(j[3])}\n' \
-                          f'NAMA MAHASISWA: {j[4]}\n' \
-                          f'JADWAL SIDANG: {j[5]}\n' \
-                          f'JAM SIDANG: {j[6]}\n\n'
+        if 'penguji pendamping' in message.normalize(data[3]):
+            msgreply = 'ini dia jadwal sidangnya yaaa....\n\n'
+            for i, j in df.iterrows():
+                if j[1] == kode_dosen or j[3] == kode_dosen:
+                    msgreply += f'PENGUJI UTAMA (1): {kelas.getNamaDosen(j[0])}\n' \
+                                f'PENGUJI PENDAMPING (2): {kelas.getNamaDosen(j[1])}\n' \
+                                f'PENGUJI UTAMA: {kelas.getNamaDosen(j[2])}\n' \
+                                f'PENGUJI PENDAMPING: {kelas.getNamaDosen(j[3])}\n' \
+                                f'NAMA MAHASISWA: {j[4]}\n' \
+                                f'JADWAL SIDANG: {j[5]}\n' \
+                                f'JAM SIDANG: {j[6]}\n\n'
+        elif 'penguji utama' in message.normalize(data[3]):
+            msgreply = 'ini dia jadwal sidangnya yaaa....\n\n'
+            for i, j in df.iterrows():
+                if j[0] == kode_dosen or j[2] == kode_dosen :
+                    msgreply += f'PENGUJI UTAMA (1): {kelas.getNamaDosen(j[0])}\n' \
+                                f'PENGUJI PENDAMPING (2): {kelas.getNamaDosen(j[1])}\n' \
+                                f'PENGUJI UTAMA: {kelas.getNamaDosen(j[2])}\n' \
+                                f'PENGUJI PENDAMPING: {kelas.getNamaDosen(j[3])}\n' \
+                                f'NAMA MAHASISWA: {j[4]}\n' \
+                                f'JADWAL SIDANG: {j[5]}\n' \
+                                f'JAM SIDANG: {j[6]}\n\n'
+        else:
+            msgreply='ini dia jadwal sidangnya yaaa....\n\n'
+            for i, j in df.iterrows():
+                if j[0] == kode_dosen or j[1] == kode_dosen or j[2] == kode_dosen or j[3] == kode_dosen:
+                    msgreply+=f'PENGUJI UTAMA (1): {kelas.getNamaDosen(j[0])}\n' \
+                              f'PENGUJI PENDAMPING (2): {kelas.getNamaDosen(j[1])}\n' \
+                              f'PENGUJI UTAMA: {kelas.getNamaDosen(j[2])}\n' \
+                              f'PENGUJI PENDAMPING: {kelas.getNamaDosen(j[3])}\n' \
+                              f'NAMA MAHASISWA: {j[4]}\n' \
+                              f'JADWAL SIDANG: {j[5]}\n' \
+                              f'JAM SIDANG: {j[6]}\n\n'
     return msgreply
 
 
