@@ -177,7 +177,7 @@ def run(data):
             
         else:
             pass
-    wb.save(filename=namaFile)
+    wb.save(filename=f"sidang\\{namaFile}")
     
     sendEmail(email, namaFile, namaMhs)
     
