@@ -43,7 +43,7 @@ def replymsg(driver, data):
             else:
                 msgreply='ini dia jadwal sidangnya yaaa....\n\n'
                 for i, j in df.iterrows():
-                    if j[0] == kode_dosen or j[1] == kode_dosen or j[2] == kode_dosen or j[3] == kode_dosen:
+                    if j[2] == kode_dosen or j[3] == kode_dosen:
                         msgreply+=f'PEMBIMBING UTAMA (1): {kelas.getNamaDosen(j[0])}\n' \
                                   f'PEMBIMBING PENDAMPING (2): {kelas.getNamaDosen(j[1])}\n' \
                                   f'PENGUJI UTAMA: {kelas.getNamaDosen(j[2])}\n' \
