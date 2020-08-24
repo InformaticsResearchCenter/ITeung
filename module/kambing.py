@@ -277,10 +277,10 @@ def replymsg(driver, data):
                             judul=JUDUL_BIMBINGAN,
                             total_nilai=totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN, KODE_DOSEN)[1]
                         )
-                    # bkd.mail(kelas.getDataMahasiswa(studentid)[3],
-                    #          f'eyyowwwwwww {config.bot_name} nihhhh mau nganter file yang kamu mintaaa',
-                    #          f'ini ya file KAMBING (Kartu Bimbingan) yang Akang/Teteh minta silahkan di cek... ehee....',
-                    #          bkd.getFilePath(kelas.getDataMahasiswa(studentid)[3], 'kambing'))
+                    bkd.mail(kelas.getDataMahasiswa(studentid)[3],
+                             f'eyyowwwwwww {config.bot_name} nihhhh mau nganter file yang kamu mintaaa',
+                             f'ini ya file KAMBING (Kartu Bimbingan) yang Akang/Teteh minta silahkan di cek... ehee....',
+                             bkd.getFilePath(kelas.getDataMahasiswa(studentid)[3], 'kambing'))
                     msgreply=f"sudah selesai dan sudah dikirim ke email kamu yang {kelas.getDataMahasiswa(studentid)[3]} yaa...."
             else:
                 msgreply = f'mohon maaf belum bisa cetak kartu bimbingan dikarenakan pertemuan masih ada yang kurang'
