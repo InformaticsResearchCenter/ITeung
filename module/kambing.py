@@ -83,19 +83,19 @@ def totalNilai(npm, MINIMUM_PERTEMUAN, dosenid):
     ALL_DATA_BIMBINGAN = getAllDataBimbinganByDosenID(npm, dosenid)
     ALL_NILAI_BIMBINGAN = getAllNilaiBimbingan(npm, dosenid)
     LAST_PERTEMUAN_BIMBINGAN = ALL_DATA_BIMBINGAN[0][5]
-    if len(ALL_DATA_BIMBINGAN) < MINIMUM_PERTEMUAN:
-        status, totalnilai = False, 0
+    # if len(ALL_DATA_BIMBINGAN) < MINIMUM_PERTEMUAN:
+    #     status, totalnilai = False, 0
+    # else:
+    if LAST_PERTEMUAN_BIMBINGAN < MINIMUM_PERTEMUAN:
+        totalnilai = 0
+        for nilai in ALL_NILAI_BIMBINGAN:
+            totalnilai += nilai[0]
+        status, totalnilai = True, totalnilai / (MINIMUM_PERTEMUAN)
     else:
-        if LAST_PERTEMUAN_BIMBINGAN < MINIMUM_PERTEMUAN:
-            totalnilai = 0
-            for nilai in ALL_NILAI_BIMBINGAN:
-                totalnilai += nilai[0]
-            status, totalnilai = True, totalnilai / (MINIMUM_PERTEMUAN)
-        else:
-            totalnilai = 0
-            for nilai in ALL_NILAI_BIMBINGAN:
-                totalnilai += nilai[0]
-            status, totalnilai = True, totalnilai / (LAST_PERTEMUAN_BIMBINGAN)
+        totalnilai = 0
+        for nilai in ALL_NILAI_BIMBINGAN:
+            totalnilai += nilai[0]
+        status, totalnilai = True, totalnilai / (LAST_PERTEMUAN_BIMBINGAN)
     return status, totalnilai
 
 
