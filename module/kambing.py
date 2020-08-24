@@ -78,8 +78,8 @@ def getAllNilaiBimbingan(npm, dosenid):
 def totalNilai(npm, MINIMUM_PERTEMUAN, dosenid):
     data=approve_kambing.getDataPembimbing(npm, dosenid)
     pembimbingke=approve_kambing.pembimbingPositionAs(data, dosenid)
-    if pembimbingke == 'pembimbing2':
-        MINIMUM_PERTEMUAN=5
+    # if pembimbingke == 'pembimbing2':
+    #     MINIMUM_PERTEMUAN=5
     ALL_DATA_BIMBINGAN = getAllDataBimbinganByDosenID(npm, dosenid)
     ALL_NILAI_BIMBINGAN = getAllNilaiBimbingan(npm, dosenid)
     LAST_PERTEMUAN_BIMBINGAN = ALL_DATA_BIMBINGAN[0][5]
@@ -277,10 +277,10 @@ def replymsg(driver, data):
                             judul=JUDUL_BIMBINGAN,
                             total_nilai=totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN, KODE_DOSEN)[1]
                         )
-                    bkd.mail(kelas.getDataMahasiswa(studentid)[3],
-                             f'eyyowwwwwww {config.bot_name} nihhhh mau nganter file yang kamu mintaaa',
-                             f'ini ya file KAMBING (Kartu Bimbingan) yang Akang/Teteh minta silahkan di cek... ehee....',
-                             bkd.getFilePath(kelas.getDataMahasiswa(studentid)[3], 'kambing'))
+                    # bkd.mail(kelas.getDataMahasiswa(studentid)[3],
+                    #          f'eyyowwwwwww {config.bot_name} nihhhh mau nganter file yang kamu mintaaa',
+                    #          f'ini ya file KAMBING (Kartu Bimbingan) yang Akang/Teteh minta silahkan di cek... ehee....',
+                    #          bkd.getFilePath(kelas.getDataMahasiswa(studentid)[3], 'kambing'))
                     msgreply=f"sudah selesai dan sudah dikirim ke email kamu yang {kelas.getDataMahasiswa(studentid)[3]} yaa...."
             else:
                 msgreply = f'mohon maaf belum bisa cetak kartu bimbingan dikarenakan pertemuan masih ada yang kurang'
