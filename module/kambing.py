@@ -78,8 +78,8 @@ def getAllNilaiBimbingan(npm, dosenid):
 def totalNilai(npm, MINIMUM_PERTEMUAN, dosenid):
     data=approve_kambing.getDataPembimbing(npm, dosenid)
     pembimbingke=approve_kambing.pembimbingPositionAs(data, dosenid)
-    if pembimbingke == 'pembimbing2':
-        MINIMUM_PERTEMUAN=5
+    # if pembimbingke == 'pembimbing2':
+    #     MINIMUM_PERTEMUAN=5
     ALL_DATA_BIMBINGAN = getAllDataBimbinganByDosenID(npm, dosenid)
     ALL_NILAI_BIMBINGAN = getAllNilaiBimbingan(npm, dosenid)
     LAST_PERTEMUAN_BIMBINGAN = ALL_DATA_BIMBINGAN[0][5]

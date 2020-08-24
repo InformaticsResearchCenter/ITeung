@@ -3,53 +3,71 @@ from lib import message
 from module import kelas
 
 def auth(data):
-    if kelas.getKodeDosen(data[0]):
+    if kelas.getKodeDosen(data[0]) or kelas.getNpmandNameMahasiswa(data[0]):
         return True
     else:
         return False
 
 
 def replymsg(driver, data):
-    kode_dosen=kelas.getKodeDosen(data[0])
-    dosen_homebase=getHomebaseDosen(kode_dosen)
-    nama_file=f'jadwal_sidang_ta_{dosen_homebase}.xlsx'
-    status, df=openJadwalExcel(nama_file)
-    if status == False:
-        msgreply='mohon untuk memberikan jadwal sidang dalam bentuk excel ke admin'
-    else:
-        if 'penguji pendamping' in message.normalize(data[3]):
-            msgreply = 'ini dia jadwal sidangnya yaaa....\n\n'
-            for i, j in df.iterrows():
-                if j[1] == kode_dosen or j[3] == kode_dosen:
-                    msgreply += f'PENGUJI UTAMA (1): {kelas.getNamaDosen(j[0])}\n' \
-                                f'PENGUJI PENDAMPING (2): {kelas.getNamaDosen(j[1])}\n' \
-                                f'PENGUJI UTAMA: {kelas.getNamaDosen(j[2])}\n' \
-                                f'PENGUJI PENDAMPING: {kelas.getNamaDosen(j[3])}\n' \
-                                f'NAMA MAHASISWA: {j[4]}\n' \
-                                f'JADWAL SIDANG: {j[5]}\n' \
-                                f'JAM SIDANG: {j[6]}\n\n'
-        elif 'penguji utama' in message.normalize(data[3]):
-            msgreply = 'ini dia jadwal sidangnya yaaa....\n\n'
-            for i, j in df.iterrows():
-                if j[0] == kode_dosen or j[2] == kode_dosen :
-                    msgreply += f'PENGUJI UTAMA (1): {kelas.getNamaDosen(j[0])}\n' \
-                                f'PENGUJI PENDAMPING (2): {kelas.getNamaDosen(j[1])}\n' \
-                                f'PENGUJI UTAMA: {kelas.getNamaDosen(j[2])}\n' \
-                                f'PENGUJI PENDAMPING: {kelas.getNamaDosen(j[3])}\n' \
-                                f'NAMA MAHASISWA: {j[4]}\n' \
-                                f'JADWAL SIDANG: {j[5]}\n' \
-                                f'JAM SIDANG: {j[6]}\n\n'
+    if kelas.getKodeDosen(data[0]):
+        kode_dosen = kelas.getKodeDosen(data[0])
+        dosen_homebase = getHomebaseDosen(kode_dosen)
+        nama_file = f'jadwal_sidang_ta_{dosen_homebase}.xlsx'
+        status, df = openJadwalExcel(nama_file)
+        if status == False:
+            msgreply='mohon untuk memberikan jadwal sidang dalam bentuk excel ke admin'
         else:
-            msgreply='ini dia jadwal sidangnya yaaa....\n\n'
+            if 'penguji pendamping' in message.normalize(data[3]):
+                msgreply = 'ini dia jadwal sidangnya yaaa....\n\n'
+                for i, j in df.iterrows():
+                    if j[3] == kode_dosen:
+                        msgreply += f'PEMBIMBING UTAMA (1): {kelas.getNamaDosen(j[0])}\n' \
+                                    f'PEMBIMBING PENDAMPING (2): {kelas.getNamaDosen(j[1])}\n' \
+                                    f'PENGUJI UTAMA: {kelas.getNamaDosen(j[2])}\n' \
+                                    f'PENGUJI PENDAMPING: {kelas.getNamaDosen(j[3])}\n' \
+                                    f'NAMA MAHASISWA: {kelas.getStudentNameOnly(j[4])}\n' \
+                                    f'JADWAL SIDANG: {j[5]}\n' \
+                                    f'JAM SIDANG: {j[6]}\n\n'
+            elif 'penguji utama' in message.normalize(data[3]):
+                msgreply = 'ini dia jadwal sidangnya yaaa....\n\n'
+                for i, j in df.iterrows():
+                    if j[2] == kode_dosen :
+                        msgreply += f'PEMBIMBING UTAMA (1): {kelas.getNamaDosen(j[0])}\n' \
+                                    f'PEMBIMBING PENDAMPING (2): {kelas.getNamaDosen(j[1])}\n' \
+                                    f'PENGUJI UTAMA: {kelas.getNamaDosen(j[2])}\n' \
+                                    f'PENGUJI PENDAMPING: {kelas.getNamaDosen(j[3])}\n' \
+                                    f'NAMA MAHASISWA: {kelas.getStudentNameOnly(j[4])}\n' \
+                                    f'JADWAL SIDANG: {j[5]}\n' \
+                                    f'JAM SIDANG: {j[6]}\n\n'
+            else:
+                msgreply='ini dia jadwal sidangnya yaaa....\n\n'
+                for i, j in df.iterrows():
+                    if j[2] == kode_dosen or j[3] == kode_dosen:
+                        msgreply+=f'PEMBIMBING UTAMA (1): {kelas.getNamaDosen(j[0])}\n' \
+                                  f'PEMBIMBING PENDAMPING (2): {kelas.getNamaDosen(j[1])}\n' \
+                                  f'PENGUJI UTAMA: {kelas.getNamaDosen(j[2])}\n' \
+                                  f'PENGUJI PENDAMPING: {kelas.getNamaDosen(j[3])}\n' \
+                                  f'NAMA MAHASISWA: {kelas.getStudentNameOnly(j[4])}\n' \
+                                  f'JADWAL SIDANG: {j[5]}\n' \
+                                  f'JAM SIDANG: {j[6]}\n\n'
+    else:
+        mahasiswa_homebase=kelas.getProdiIDwithStudentID(kelas.getNpmandNameMahasiswa(data[0])[0])
+        nama_file = f'jadwal_sidang_ta_{mahasiswa_homebase}.xlsx'
+        status, df = openJadwalExcel(nama_file)
+        if status == False:
+            msgreply='mohon untuk memberikan jadwal sidang dalam bentuk excel ke admin'
+        else:
+            msgreply = 'ini dia jadwal sidangnya yaaa....\n\n'
             for i, j in df.iterrows():
-                if j[0] == kode_dosen or j[1] == kode_dosen or j[2] == kode_dosen or j[3] == kode_dosen:
-                    msgreply+=f'PENGUJI UTAMA (1): {kelas.getNamaDosen(j[0])}\n' \
-                              f'PENGUJI PENDAMPING (2): {kelas.getNamaDosen(j[1])}\n' \
-                              f'PENGUJI UTAMA: {kelas.getNamaDosen(j[2])}\n' \
-                              f'PENGUJI PENDAMPING: {kelas.getNamaDosen(j[3])}\n' \
-                              f'NAMA MAHASISWA: {j[4]}\n' \
-                              f'JADWAL SIDANG: {j[5]}\n' \
-                              f'JAM SIDANG: {j[6]}\n\n'
+                if str(j[4]) == str(kelas.getNpmandNameMahasiswa(data[0])[0]):
+                    msgreply += f'PEMBIMBING UTAMA (1): {kelas.getNamaDosen(j[0])}\n' \
+                                f'PEMBIMBING PENDAMPING (2): {kelas.getNamaDosen(j[1])}\n' \
+                                f'PENGUJI UTAMA: {kelas.getNamaDosen(j[2])}\n' \
+                                f'PENGUJI PENDAMPING: {kelas.getNamaDosen(j[3])}\n' \
+                                f'NAMA MAHASISWA: {kelas.getStudentNameOnly(j[4])}\n' \
+                                f'JADWAL SIDANG: {j[5]}\n' \
+                                f'JAM SIDANG: {j[6]}\n\n'
     return msgreply
 
 
