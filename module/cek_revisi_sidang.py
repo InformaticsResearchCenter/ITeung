@@ -3,10 +3,10 @@ from lib import wa, reply, message, numbers
 import os, config, pandas
 
 def auth(data):
-    if kelas.getNpmandNameMahasiswa(data[0]) == None or kelas.getKodeDosen(data[0]) == '':
-        ret = False
-    else:
+    if kelas.getNpmandNameMahasiswa(data[0]) != None or kelas.getKodeDosen(data[0]) != '':
         ret = True
+    else:
+        ret = False
     return ret
 
 
