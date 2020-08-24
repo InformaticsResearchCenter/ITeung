@@ -81,6 +81,7 @@ def mainMakePdf(list_mahasiswa, kode_dosen):
     for npm in list_mahasiswa:
         studentid, studentname = getDataMahasiswa(npm)
         status_nilai, nilai_total = totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN, kode_dosen)
+        status_nilai=True
         if status_nilai:
             JUDUL_BIMBINGAN = f"{getJudulFromNpm(npm)}"
             KODE_DOSEN=kode_dosen
