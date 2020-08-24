@@ -250,8 +250,10 @@ def replymsg(driver, data):
                 msgreply += f'\n{kodedosen1} | {namadosen} | PEMBIMBING 2'
         else:
             KODE_DOSEN_BIMBINGAN = getKodeDosenBimbingan(studentid)
-            status_nilai1, nilai_total1=totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN, KODE_DOSEN_BIMBINGAN[0])
-            status_nilai2, nilai_total2=totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN, KODE_DOSEN_BIMBINGAN[1])
+            # status_nilai1, nilai_total1=totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN, KODE_DOSEN_BIMBINGAN[0])
+            # status_nilai2, nilai_total2=totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN, KODE_DOSEN_BIMBINGAN[1])
+            status_nilai1=True
+            status_nilai2=True
             if status_nilai1 and status_nilai2:
                 JUDUL_BIMBINGAN=getJudulBimbingan(studentid, kelas.getTahunID())
                 KODE_DOSEN_BIMBINGAN=getKodeDosenBimbingan(studentid)
