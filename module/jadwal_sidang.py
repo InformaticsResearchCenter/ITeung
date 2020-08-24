@@ -26,7 +26,7 @@ def replymsg(driver, data):
                                     f'PEMBIMBING PENDAMPING (2): {kelas.getNamaDosen(j[1])}\n' \
                                     f'PENGUJI UTAMA: {kelas.getNamaDosen(j[2])}\n' \
                                     f'PENGUJI PENDAMPING: {kelas.getNamaDosen(j[3])}\n' \
-                                    f'NAMA MAHASISWA: {j[4]}\n' \
+                                    f'NAMA MAHASISWA: {kelas.getStudentNameOnly(j[4])}\n' \
                                     f'JADWAL SIDANG: {j[5]}\n' \
                                     f'JAM SIDANG: {j[6]}\n\n'
             elif 'penguji utama' in message.normalize(data[3]):
@@ -48,7 +48,7 @@ def replymsg(driver, data):
                                   f'PEMBIMBING PENDAMPING (2): {kelas.getNamaDosen(j[1])}\n' \
                                   f'PENGUJI UTAMA: {kelas.getNamaDosen(j[2])}\n' \
                                   f'PENGUJI PENDAMPING: {kelas.getNamaDosen(j[3])}\n' \
-                                  f'NAMA MAHASISWA: {j[4]}\n' \
+                                  f'NAMA MAHASISWA: {kelas.getStudentNameOnly(j[4])}\n' \
                                   f'JADWAL SIDANG: {j[5]}\n' \
                                   f'JAM SIDANG: {j[6]}\n\n'
     else:
@@ -65,7 +65,7 @@ def replymsg(driver, data):
                                 f'PEMBIMBING PENDAMPING (2): {kelas.getNamaDosen(j[1])}\n' \
                                 f'PENGUJI UTAMA: {kelas.getNamaDosen(j[2])}\n' \
                                 f'PENGUJI PENDAMPING: {kelas.getNamaDosen(j[3])}\n' \
-                                f'NAMA MAHASISWA: {kelas.getNpmandNameMahasiswa(data[0])[1]}\n' \
+                                f'NAMA MAHASISWA: {kelas.getStudentNameOnly(j[4])}\n' \
                                 f'JADWAL SIDANG: {j[5]}\n' \
                                 f'JAM SIDANG: {j[6]}\n\n'
     return msgreply
