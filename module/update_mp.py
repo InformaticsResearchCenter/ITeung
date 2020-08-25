@@ -1,5 +1,6 @@
 from module import kelas, cek_mp, hakiaptimas
 from lib import wa, reply, message, numbers
+from openpyxl import load_workbook
 import os, config, pandas
 
 def auth(data):
@@ -27,12 +28,17 @@ def replymsg(driver, data):
             if namafile.split('.')[1] == 'xlsx' or namafile.split('.')[1] == 'xls':
                 hakiaptimas.moveFiles(namafile)
                 msgreply='okeee sudah #BOTNAME# update yaa materi perkuliahannya:'
-                for i, j in pandas.read_excel(namafile).iterrows():
-                    jadwalid=j['jadwal id']
-                    pertemuan=j['pertemuan']
-                    materiperkuliahan=j['materi perkuliahan']
-                    updateMateriPerkuliahan(jadwalid, pertemuan, materiperkuliahan)
-                    msgreply+=f'\n\nJadwal ID: {jadwalid}\nPertemuan: {pertemuan}\nMateri Perkuliahan: {materiperkuliahan}'
+                wb = load_workbook(namafile)
+                ws = wb.active
+                for row in ws.iter_rows(values_only=True):
+                    if row[0] == 'jadwal id':
+                        continue
+                    else:
+                        jadwalid = row[0]
+                        pertemuan = row[1]
+                        materiperkuliahan = row[2]
+                        updateMateriPerkuliahan(jadwalid, pertemuan, materiperkuliahan)
+                        msgreply+=f'\n\nJadwal ID: {jadwalid}\nPertemuan: {pertemuan}\nMateri Perkuliahan: {materiperkuliahan}'
                 deleteFilesWithCWD(namafile)
             else:
                 msgreply='format file salah'
