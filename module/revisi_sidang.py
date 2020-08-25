@@ -18,13 +18,19 @@ def replymsg(driver, data):
     tahun_id = kelas.getTahunID()
     try:
         msg = data[3].split(';')
-        npm = [npm for npm in msg[0].split(' ') if npm.isdigit() and len(npm) == 7][0]
-        if checkMhs(npm):
-            revisi = ';'.join([data.strip() for data in msg[1:] if data != ''])
-            revisiSidang(npm, kodeDosen, revisi, tahun_id)
-            msgreply = "Sudah masuk...\n\n"+checkRevisi(npm, kodeDosen, tahun_id)
+        if len(msg) > 1 and msg[1] != "":
+            npm = [npm for npm in msg[0].split(' ') if npm.isdigit() and len(npm) == 7][0]
+            if checkMhs(npm):
+                revisi = ';'.join([data.strip() for data in msg[1:] if data != ''])
+                if revisi:
+                    revisiSidang(npm, kodeDosen, revisi, tahun_id)
+                    msgreply = "Sudah masuk...\n\n"+checkRevisi(npm, kodeDosen, tahun_id)
+                else:
+                    msgreply = "Revisinya mana, btw jgn lupa pake ; buat misahin revisinya"
+            else:
+                msgreply = "Mahasiswanya tdk terdaftar ato salah npm mungkin..."
         else:
-            msgreply = "Mahasiswanya tdk terdaftar ato salah npm mungkin..."
+            msgreply = "Revisinya mana, btw jgn lupa pake ; buat misahin revisinya"
     except Exception as e: 
         msgreply = f"Error {str(e)}"
     
