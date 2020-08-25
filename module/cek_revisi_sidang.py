@@ -13,15 +13,24 @@ def auth(data):
 def replymsg(driver, data):
     wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
     wa.typeAndSendMessage(driver, wmsg)
-    
+    msg = data[3].lower()
     num = numbers.normalize(data[0])
     tahun_id = kelas.getTahunID()
     
-    
-    
     if kelas.getKodeDosen(num):
         kodeDosen = kelas.getKodeDosen(num)
-        msgreply = f"Hayoo"
+        npm = [npm for npm in msg.split(' ') if npm.isdigit() and len(npm) == 7][0]
+        try:
+            if checkMhs(npm):
+                if checkRevisi(npm, tahun_id):
+                    msgreply = "Ini revisian dari Anda cuy...\n"+checkRevisi(npm, tahun_id, kodeDosen)
+                else:
+                    msgreply = "Emg udh masukin revisi???"
+            else:
+                msgreply = "Salah mahasiswa ato npm mungkin..."
+        except Exception as e: 
+            msgreply = f"Error {str(e)}"
+            
     elif kelas.getNpmandNameMahasiswa(num):
         npm, nama=kelas.getNpmandNameMahasiswa(num)
         try:
@@ -53,13 +62,17 @@ def checkMhs(npm):
         else:
             return False
 
-def checkRevisi(npm, tahun_id):
+def checkRevisi(npm, tahun_id, penguji=""):
     db=kelas.dbConnect()
     msg = ""    
     listPenguji = list()
-    status =True
+    status =True    
     
-    sql=f'select distinct penguji from revisi_data where npm="{npm}" and tahun_id="{tahun_id}"'
+    if penguji:
+        sql=f'select distinct penguji from revisi_data where npm="{npm}" and tahun_id="{tahun_id}" and penguji="{penguji}"'
+    else:
+        sql=f'select distinct penguji from revisi_data where npm="{npm}" and tahun_id="{tahun_id}"'
+    
     with db:
         cur=db.cursor()
         cur.execute(sql)
