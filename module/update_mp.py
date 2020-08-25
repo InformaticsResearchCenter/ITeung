@@ -20,6 +20,10 @@ def replymsg(driver, data):
     if excelkeyword == 'excel':
         try:
             namafile=hakiaptimas.downloadFile(driver)
+            downloadstatus=True
+        except Exception as e:
+            downloadstatus=False
+        if downloadstatus:
             if namafile.split('.')[1] == 'xlsx' or namafile.split('.')[1] == 'xls':
                 hakiaptimas.moveFiles(namafile)
                 msgreply='okeee sudah #BOTNAME# update yaa materi perkuliahannya:'
@@ -33,8 +37,8 @@ def replymsg(driver, data):
             else:
                 msgreply='format file salah'
                 deleteFilesOnDownloadsFolder(namafile)
-        except Exception as e:
-            msgreply='mana filenya coyyyyy'
+        else:
+            msgreply = 'mana filenya coyyyyy'
     else:
         try:
             datasplit=msg.split(' materi perkuliahan ')[1]
