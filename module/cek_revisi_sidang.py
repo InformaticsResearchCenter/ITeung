@@ -36,11 +36,11 @@ def replymsg(driver, data):
         try:
             if checkMhs(npm):
                 if checkRevisi(npm, tahun_id):
-                    msgreply = "Selamat revisian cuy...\n"+checkRevisi(npm, tahun_id)
+                    msgreply = "Selamat revisian cuy..., semangat <3<3\n"+checkRevisi(npm, tahun_id)
                 else:
-                    msgreply = "Kamu emg udh sidang? jgn ngadi-ngadi deh..."
+                    msgreply = "Kamu emg udh sidang? jgn ngadi-ngadi deh..., mungkin aja blm dibikin revisinya sama penguji bersangkutan..., semangat <3<3"
             else:
-                msgreply = "Kamu emg ikutan? jgn ngadi-ngadi deh..."
+                msgreply = "Kamu emg ikutan sidang? jgn ngadi-ngadi deh..."
         except Exception as e: 
             msgreply = f"Error {str(e)}"
     else:
