@@ -26,6 +26,7 @@ def replymsg(driver, data):
                                     f'PEMBIMBING PENDAMPING (2): {kelas.getNamaDosen(j[1])}\n' \
                                     f'PENGUJI UTAMA: {kelas.getNamaDosen(j[2])}\n' \
                                     f'PENGUJI PENDAMPING: {kelas.getNamaDosen(j[3])}\n' \
+                                    f'NPM MAHASISWA: {j[4]}' \
                                     f'NAMA MAHASISWA: {kelas.getStudentNameOnly(j[4])}\n' \
                                     f'JADWAL SIDANG: {j[5]}\n' \
                                     f'JAM SIDANG: {j[6]}\n\n'
@@ -37,6 +38,7 @@ def replymsg(driver, data):
                                     f'PEMBIMBING PENDAMPING (2): {kelas.getNamaDosen(j[1])}\n' \
                                     f'PENGUJI UTAMA: {kelas.getNamaDosen(j[2])}\n' \
                                     f'PENGUJI PENDAMPING: {kelas.getNamaDosen(j[3])}\n' \
+                                    f'NPM MAHASISWA: {j[4]}' \
                                     f'NAMA MAHASISWA: {kelas.getStudentNameOnly(j[4])}\n' \
                                     f'JADWAL SIDANG: {j[5]}\n' \
                                     f'JAM SIDANG: {j[6]}\n\n'
@@ -48,6 +50,7 @@ def replymsg(driver, data):
                                   f'PEMBIMBING PENDAMPING (2): {kelas.getNamaDosen(j[1])}\n' \
                                   f'PENGUJI UTAMA: {kelas.getNamaDosen(j[2])}\n' \
                                   f'PENGUJI PENDAMPING: {kelas.getNamaDosen(j[3])}\n' \
+                                  f'NPM MAHASISWA: {j[4]}' \
                                   f'NAMA MAHASISWA: {kelas.getStudentNameOnly(j[4])}\n' \
                                   f'JADWAL SIDANG: {j[5]}\n' \
                                   f'JAM SIDANG: {j[6]}\n\n'
@@ -65,6 +68,7 @@ def replymsg(driver, data):
                                 f'PEMBIMBING PENDAMPING (2): {kelas.getNamaDosen(j[1])}\n' \
                                 f'PENGUJI UTAMA: {kelas.getNamaDosen(j[2])}\n' \
                                 f'PENGUJI PENDAMPING: {kelas.getNamaDosen(j[3])}\n' \
+                                f'NPM MAHASISWA: {j[4]}' \
                                 f'NAMA MAHASISWA: {kelas.getStudentNameOnly(j[4])}\n' \
                                 f'JADWAL SIDANG: {j[5]}\n' \
                                 f'JAM SIDANG: {j[6]}\n\n'
