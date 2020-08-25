@@ -11,8 +11,8 @@ def auth(data):
     return ret
 
 def replymsg(driver, data):
-    wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
-    wa.typeAndSendMessage(driver, wmsg)
+    # wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
+    # wa.typeAndSendMessage(driver, wmsg)
     num = numbers.normalize(data[0])
     kodeDosen = kelas.getKodeDosen(num)
     tahun_id = kelas.getTahunID()
@@ -21,10 +21,15 @@ def replymsg(driver, data):
         if len(msg) > 1 and msg[1] != "":
             npm = [npm for npm in msg[0].split(' ') if npm.isdigit() and len(npm) == 7][0]
             if checkMhs(npm):
-                revisi = ';'.join([data.strip() for data in msg[1:] if data != ''])
+                revisi = ';'.join([data.strip().strip(';') for data in msg[1:] if data != '' and data != ' '])
                 if revisi:
-                    revisiSidang(npm, kodeDosen, revisi, tahun_id)
-                    msgreply = "Sudah masuk...\n\n"+checkRevisi(npm, kodeDosen, tahun_id)
+                    for r in revisi.split(';'):
+                        print(r)
+                        if checkRevisi(npm, kodeDosen, r, tahun_id):
+                            pass
+                        else:
+                            revisiSidang(npm, kodeDosen, r, tahun_id)
+                    msgreply = "Sudah masuk...\n\n"+listRevisi(npm, kodeDosen, tahun_id)
                 else:
                     msgreply = "Revisinya mana, btw jgn lupa pake ; buat misahin revisinya"
             else:
@@ -36,22 +41,29 @@ def replymsg(driver, data):
     
     return msgreply
 
-def checkRevisi(npm, penguji, tahun_id):
+def checkRevisi(npm, penguji, revisi, tahun_id):
     db=kelas.dbConnect()
-    sql=f'select revisi from revisi_data where npm="{npm}" and penguji="{penguji}" and tahun_id="{tahun_id}"'
+    sql=f'select revisi from revisi_data where npm="{npm}" and penguji="{penguji}" and tahun_id="{tahun_id}" and revisi="{revisi}"'
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        row=cur.fetchone()
+        if row:
+            return True
+        else:
+            return False
+
+def listRevisi(npm, penguji, tahun_id):
+    db=kelas.dbConnect()
+    sql=f'select revisi, id from revisi_data where npm="{npm}" and penguji="{penguji}" and tahun_id="{tahun_id}"'
     with db:
         cur=db.cursor()
         cur.execute(sql)
         rows=cur.fetchall()
-        if rows is not None:
-            listRevisi = list()
-            for row in rows:
-                listRevisi.extend(row[0].split(";"))
-            revisi = set(listRevisi)
+        if rows:            
             msg = f"Revisi untuk {npm} dari {penguji}"
-            for i, x in enumerate(revisi):
-                msg += f"\n{(i+1)}. {x}"
-                
+            for i, row in enumerate(rows):
+                msg += f"\n{(i+1)}. {row[0]} ({row[1]})"
             return msg
         else:
             return False
@@ -74,3 +86,4 @@ def revisiSidang(npm, penguji, revisi, tahun_id):
     with db:
         cur=db.cursor()
         cur.execute(sql)
+

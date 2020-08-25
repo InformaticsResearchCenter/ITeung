@@ -85,20 +85,15 @@ def checkRevisi(npm, tahun_id, penguji=""):
             
     if(status):
         for penguji in listPenguji:
-            sql=f'select revisi from revisi_data where npm="{npm}" and penguji="{penguji}" and tahun_id="{tahun_id}"'
+            sql=f'select revisi, id from revisi_data where npm="{npm}" and penguji="{penguji}" and tahun_id="{tahun_id}"'
             with db:
                 cur=db.cursor()
                 cur.execute(sql)
                 rows=cur.fetchall()
-                if rows is not None:
-                    listRevisi = list()
-                    for row in rows:
-                        listRevisi.extend(row[0].split(";"))
-                    revisi = set(listRevisi)
-                    # print(revisi)
+                if rows:
                     msg += f"\nRevisi untuk {npm} dari {penguji}"
-                    for i, x in enumerate(revisi):
-                        msg += f"\n{(i+1)}. {x}"
+                    for i, row in enumerate(rows):
+                        msg += f"\n{(i+1)}. {row[0]} ({row[1]})"
                         
         return msg
             
