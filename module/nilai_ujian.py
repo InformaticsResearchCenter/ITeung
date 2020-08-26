@@ -286,7 +286,7 @@ def getTanggalNilai(tahun, prodi):
         if row is not None:
             return row[0]
         else:
-            return return datetime.strptime("0000-00-00", '%Y-%m-%d').date()
+            return datetime.strptime("0000-00-00", '%Y-%m-%d').date()
 
 
 def getProdi(matkul):
