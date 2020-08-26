@@ -1,6 +1,7 @@
 from module import kelas
 from lib import wa, reply, message, numbers
-import os, config, pandas
+import os, config
+import pandas as pd
 
 
 def auth(data):
@@ -16,24 +17,35 @@ def replymsg(driver, data):
     num = numbers.normalize(data[0])
     kodeDosen = kelas.getKodeDosen(num)
     tahun_id = kelas.getTahunID()
+    
+    df = pd.read_excel(f'jadwal_sidang_ta_14.xlsx')
+    df.set_index('npm', inplace=True)
+    listPem = ['pem3', 'pem4']
+        
     try:
         msg = data[3].replace('\n', '').split(';')
         if len(msg) > 1 and msg[1] != "":
             npm = [npm for npm in msg[0].split(' ') if npm.isdigit() and len(npm) == 7][0]
-            if checkMhs(npm):
-                revisi = ';'.join([data.strip().strip(';') for data in msg[1:] if data != '' and data != ' '])
-                if revisi:
-                    for r in revisi.split(';'):
-                        print(r)
-                        if checkRevisi(npm, kodeDosen, r, tahun_id):
-                            pass
-                        else:
-                            revisiSidang(npm, kodeDosen, r, tahun_id)
-                    msgreply = "Sudah masuk...\n\n"+listRevisi(npm, kodeDosen, tahun_id)
+            print(npm)
+            pem = df.loc[int(npm), listPem].values.tolist()
+            print(pem)
+            if kodeDosen in pem:
+                if checkMhs(npm):                
+                    revisi = ';'.join([data.strip().strip(';') for data in msg[1:] if data != '' and data != ' '])
+                    if revisi:
+                        for r in revisi.split(';'):
+                            print(r)
+                            if checkRevisi(npm, kodeDosen, r, tahun_id):
+                                pass
+                            else:
+                                pass # revisiSidang(npm, kodeDosen, r, tahun_id)
+                        msgreply = "Sudah masuk...\n\n"+listRevisi(npm, kodeDosen, tahun_id)
+                    else:
+                        msgreply = "Revisinya mana, btw jgn lupa pake ; buat misahin revisinya"
                 else:
-                    msgreply = "Revisinya mana, btw jgn lupa pake ; buat misahin revisinya"
+                    msgreply = "Mahasiswanya tdk terdaftar ato salah npm mungkin..."
             else:
-                msgreply = "Mahasiswanya tdk terdaftar ato salah npm mungkin..."
+                msgreply = "Anda tidak berhak merevisi anak ini....."
         else:
             msgreply = "Revisinya mana, btw jgn lupa pake ; buat misahin revisinya"
     except Exception as e: 
