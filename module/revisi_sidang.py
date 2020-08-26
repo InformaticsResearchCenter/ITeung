@@ -38,7 +38,7 @@ def replymsg(driver, data):
                             if checkRevisi(npm, kodeDosen, r, tahun_id):
                                 pass
                             else:
-                                pass # revisiSidang(npm, kodeDosen, r, tahun_id)
+                                revisiSidang(npm, kodeDosen, r, tahun_id)
                         msgreply = "Sudah masuk...\n\n"+listRevisi(npm, kodeDosen, tahun_id)
                     else:
                         msgreply = "Revisinya mana, btw jgn lupa pake ; buat misahin revisinya"
