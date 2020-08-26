@@ -11,13 +11,13 @@ def auth(data):
     return ret
 
 def replymsg(driver, data):
-    # wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
-    # wa.typeAndSendMessage(driver, wmsg)
+    wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
+    wa.typeAndSendMessage(driver, wmsg)
     num = numbers.normalize(data[0])
     kodeDosen = kelas.getKodeDosen(num)
     tahun_id = kelas.getTahunID()
     try:
-        msg = data[3].split(';')
+        msg = data[3].replace('\n', '').split(';')
         if len(msg) > 1 and msg[1] != "":
             npm = [npm for npm in msg[0].split(' ') if npm.isdigit() and len(npm) == 7][0]
             if checkMhs(npm):
