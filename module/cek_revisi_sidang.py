@@ -114,7 +114,7 @@ def checkRevisiPenguji(tahun_id, kodeDosen):
             # print(listPenguji)
             if listPenguji:
                 for penguji in listPenguji:
-                    sql=f'select revisi, id from revisi_data where npm="{npm}" and tahun_id="{tahun_id}"'
+                    sql=f'select revisi, id from revisi_data where npm="{npm}" and tahun_id="{tahun_id}" and penguji="{penguji}"'
                     with db:
                         cur=db.cursor()
                         cur.execute(sql)
