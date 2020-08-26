@@ -158,10 +158,10 @@ def getTanggalNilai(tahun, prodi):
         cur = db.cursor()
         cur.execute(query)
         row = cur.fetchone()
-        if row is not None:
+        if row:
             return row[0]
         else:
-            return False
+            return "0000-00-00"
 
 
 def getProdi(jadwal_id):
@@ -185,7 +185,7 @@ def inputByExcel(file, tahun, nomor):
     sheet = book.active
     jadwal_id = sheet["F5"].value.replace(":", "")
     prodi = getProdi(jadwal_id)
-    tgl = getTanggalNilai(tahun, prodi)
+    tgl = datetime.strptime(getTanggalNilai(tahun, prodi), '%Y-%m-%d').date()
     today = datetime.today().date()
     # print(tgl, today)
     if tgl >= today:

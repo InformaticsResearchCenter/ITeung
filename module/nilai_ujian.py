@@ -312,7 +312,7 @@ def inputByExcel(file, jenis, tahun, func, nomor):
         ":", "").replace("/", "").split()[0]
     
     prodi = getProdi(kode_matkul)
-    tgl = getTanggalNilai(tahun, prodi)
+    tgl = tgl = datetime.strptime(getTanggalNilai(tahun, prodi), '%Y-%m-%d').date()
     today = datetime.today().date()
     # print(tgl, today)
     if tgl >= today:
