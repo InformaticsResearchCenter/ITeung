@@ -14,7 +14,7 @@ def replymsg(driver, data):
     wa.typeAndSendMessage(driver, wmsg)
     num = numbers.normalize(data[0])
     kodeDosen = kelas.getKodeDosen(num)
-    tahun_id = kelas.getTahunID()
+    tahun_id = '20192'
     try:
         npm = [npm for npm in data[3].split(' ') if npm.isdigit() and len(npm) == 7][0]
         msg = data[3].split(" id ", 1)[1]
