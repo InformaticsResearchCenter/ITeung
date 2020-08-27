@@ -286,7 +286,7 @@ def getTanggalNilai(tahun, prodi):
         if row is not None:
             return row[0]
         else:
-            return False
+            return datetime.strptime("0000-00-00", '%Y-%m-%d').date()
 
 
 def getProdi(matkul):
@@ -314,7 +314,8 @@ def inputByExcel(file, jenis, tahun, func, nomor):
     prodi = getProdi(kode_matkul)
     tgl = getTanggalNilai(tahun, prodi)
     today = datetime.today().date()
-    # print(tgl, today)
+    
+    print(tgl, today)
     if tgl >= today:
         if checkDosen(nomor, tahun, matkul=kode_matkul):
             kelas = convertKelas(sheet["C6"].value.replace(":", "").strip())

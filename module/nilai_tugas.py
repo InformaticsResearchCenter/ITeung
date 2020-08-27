@@ -158,10 +158,10 @@ def getTanggalNilai(tahun, prodi):
         cur = db.cursor()
         cur.execute(query)
         row = cur.fetchone()
-        if row is not None:
+        if row:
             return row[0]
         else:
-            return False
+            return datetime.strptime("0000-00-00", '%Y-%m-%d').date()
 
 
 def getProdi(jadwal_id):
