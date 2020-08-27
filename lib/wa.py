@@ -46,6 +46,12 @@ def arrowToGoDown(driver):
     except:
         print('arrow go down not work')
 
+def readMore(driver):
+    try:
+        driver.find_element_by_class_name('_2spA0').click()
+    except:
+        print('no read more')
+
 #fix 32
 def retryNowClick(driver):
     retry = True
@@ -226,6 +232,7 @@ def getSenderNumber(driver, default_alias_number_index):
     return senderNumber
 
 def getMessage(driver, message_wa_index):
+    readMore(driver)
     try:
         message = driver.find_elements_by_xpath("(.//span)")[message_wa_index].text
     except:
