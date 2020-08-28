@@ -102,6 +102,25 @@ def toHari(kode):
     }
     return switcher.get(kode, "Not Found!")
 
+def getKelasMahasiswabyStudentID(npm):
+    db=dbConnectSiap()
+    sql=f'select Kelas from simak_trn_krs where MhswID={npm} ORDER BY KRSID DESC LIMIT 1'
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        row=cur.fetchone()
+    alfabetkelas=toKelas(str(row[0]))
+    return f'{int(datetime.now().strftime("%Y"))-int(getTahunAngkatanWithStudentID(npm))+1}{alfabetkelas}'
+
+def getPenasehatAkademik(npm):
+    db=dbConnectSiap()
+    sql=f'select PenasehatAkademik from simak_mst_mahasiswa where MhswID={npm}'
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        row = cur.fetchone()
+        return row[0]
+
 def getTahunID():
     db=dbConnectSiap()
     sql="SELECT TahunID FROM simpati.simak_mst_tahun where NA = 'N' group by TahunID order by TahunID DESC limit 1"
@@ -193,6 +212,42 @@ def isParent(num):
         else:
             ret=False
     return ret
+
+def getParentNamefromStudentID(npm):
+    db = dbConnectSiap()
+    sql = f"select NamaAyah, NamaIbu from simak_mst_mahasiswa where MhswID={npm}"
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        rows = cur.fetchone()
+    return rows
+
+def getParentEmailfromStudentID(npm):
+    db = dbConnectSiap()
+    sql = f"select EmailOrtu from simak_mst_mahasiswa where MhswID={npm}"
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        rows = cur.fetchone()
+    return rows[0]
+
+def getParentTelpNumberandHandphoneNumber(npm):
+    db=dbConnectSiap()
+    sql=f'select TeleponOrtu, HandphoneOrtu from simak_mst_mahasiswa where MhswID={npm}'
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        rows = cur.fetchone()
+    return rows
+
+def getStudentEmail(npm):
+    db=dbConnectSiap()
+    sql=f'select Email from simak_mst_mahasiswa where MhswID={npm}'
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        rows = cur.fetchone()
+    return rows[0]
 
 def getHandphoneMahasiswa(npm):
     db = dbConnectSiap()
@@ -323,6 +378,29 @@ def getProdiIDwithStudentID(npm):
         else:
             return None
 
+def getProdiNameWithStudentID(npm):
+    db=dbConnectSiap()
+    sql=f'select Nama from simak_mst_prodi where ProdiID=(select ProdiID from simak_mst_mahasiswa where Login={npm})'
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        row = cur.fetchone()
+        if row is not None:
+            return row[0]
+        else:
+            return None
+
+def getTahunAngkatanWithStudentID(npm):
+    db=dbConnectSiap()
+    sql=f'select TahunID from simak_mst_mahasiswa where MhswID={npm}'
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        row = cur.fetchone()
+        if row is not None:
+            return str(row[0])[:-1]
+        else:
+            return None
 
 def getTahunAjaran(prodiid):
     db = dbConnectSiap()
