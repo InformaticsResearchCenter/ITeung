@@ -22,9 +22,7 @@ def replymsg(driver, data):
                 msgreply = 'ini dia jadwal sidangnya yaaa....\n\n'
                 for i, j in df.iterrows():
                     if j[3] == kode_dosen:
-                        msgreply += f'PEMBIMBING UTAMA (1): {kelas.getNamaDosen(j[0])}\n' \
-                                    f'PEMBIMBING PENDAMPING (2): {kelas.getNamaDosen(j[1])}\n' \
-                                    f'PENGUJI UTAMA: {kelas.getNamaDosen(j[2])}\n' \
+                        msgreply += f'PENGUJI UTAMA: {kelas.getNamaDosen(j[2])}\n' \
                                     f'PENGUJI PENDAMPING: {kelas.getNamaDosen(j[3])}\n' \
                                     f'NPM MAHASISWA: {j[4]}\n' \
                                     f'NAMA MAHASISWA: {kelas.getStudentNameOnly(j[4])}\n' \
@@ -34,9 +32,7 @@ def replymsg(driver, data):
                 msgreply = 'ini dia jadwal sidangnya yaaa....\n\n'
                 for i, j in df.iterrows():
                     if j[2] == kode_dosen :
-                        msgreply += f'PEMBIMBING UTAMA (1): {kelas.getNamaDosen(j[0])}\n' \
-                                    f'PEMBIMBING PENDAMPING (2): {kelas.getNamaDosen(j[1])}\n' \
-                                    f'PENGUJI UTAMA: {kelas.getNamaDosen(j[2])}\n' \
+                        msgreply += f'PENGUJI UTAMA: {kelas.getNamaDosen(j[2])}\n' \
                                     f'PENGUJI PENDAMPING: {kelas.getNamaDosen(j[3])}\n' \
                                     f'NPM MAHASISWA: {j[4]}\n' \
                                     f'NAMA MAHASISWA: {kelas.getStudentNameOnly(j[4])}\n' \
@@ -46,9 +42,7 @@ def replymsg(driver, data):
                 msgreply='ini dia jadwal sidangnya yaaa....\n\n'
                 for i, j in df.iterrows():
                     if j[2] == kode_dosen or j[3] == kode_dosen:
-                        msgreply+=f'PEMBIMBING UTAMA (1): {kelas.getNamaDosen(j[0])}\n' \
-                                  f'PEMBIMBING PENDAMPING (2): {kelas.getNamaDosen(j[1])}\n' \
-                                  f'PENGUJI UTAMA: {kelas.getNamaDosen(j[2])}\n' \
+                        msgreply+=f'PENGUJI UTAMA: {kelas.getNamaDosen(j[2])}\n' \
                                   f'PENGUJI PENDAMPING: {kelas.getNamaDosen(j[3])}\n' \
                                   f'NPM MAHASISWA: {j[4]}\n' \
                                   f'NAMA MAHASISWA: {kelas.getStudentNameOnly(j[4])}\n' \
@@ -64,9 +58,7 @@ def replymsg(driver, data):
             msgreply = 'ini dia jadwal sidangnya yaaa....\n\n'
             for i, j in df.iterrows():
                 if str(j[4]) == str(kelas.getNpmandNameMahasiswa(data[0])[0]):
-                    msgreply += f'PEMBIMBING UTAMA (1): {kelas.getNamaDosen(j[0])}\n' \
-                                f'PEMBIMBING PENDAMPING (2): {kelas.getNamaDosen(j[1])}\n' \
-                                f'PENGUJI UTAMA: {kelas.getNamaDosen(j[2])}\n' \
+                    msgreply += f'PENGUJI UTAMA: {kelas.getNamaDosen(j[2])}\n' \
                                 f'PENGUJI PENDAMPING: {kelas.getNamaDosen(j[3])}\n' \
                                 f'NPM MAHASISWA: {j[4]}\n' \
                                 f'NAMA MAHASISWA: {kelas.getStudentNameOnly(j[4])}\n' \
