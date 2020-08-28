@@ -165,6 +165,5 @@ def makePdfAndSendToEmail(npm):
         kelas.getStudentEmail(npm),
         f'eyyyyooww {config.bot_name} kirim file SURAT PERNYATAAN PENGANGGUHAN SPP/VARIABEL nihhh',
         f'coba dicek dulu ya datanya, jika belum benar, coba cek SIAP-nya ya ubah lagi datanya, terus minta lagi ke {config.bot_name}, untuk surat pernyataannya',
-        bkd.getFilePath(npm, foldername)
+        bkd.getFilePath(npm, f'/home/osdep/ITeung/suratva/SURAT PERNYATAAN-{npm}.pdf')
     )
-    return bkd.getFilePath(npm, foldername)

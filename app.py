@@ -179,7 +179,7 @@ def callback_api_va(token):
                         return make_response(jsonify(
                             {
                                 "message": "success",
-                                "status": f"kirim whatsapp bikin surat {tes}"
+                                "status": "kirim whatsapp bikin surat"
                             }
                         ), 200)
                 else:
