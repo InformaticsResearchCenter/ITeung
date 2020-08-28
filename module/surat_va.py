@@ -171,7 +171,7 @@ def makePdfAndSendToEmail(npm):
 def getFilePath(npm, foldername):
     resultpath = []
     devpath = os.getcwd()
-    path = './{folder}'.format(folder=foldername)
+    path = '{folder}'.format(folder=foldername)
     for root, dirs, files in os.walk(path):
         for i in files:
             if npm in i:
