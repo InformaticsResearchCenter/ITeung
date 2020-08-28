@@ -167,3 +167,4 @@ def makePdfAndSendToEmail(npm):
         f'coba dicek dulu ya datanya, jika belum benar, coba cek SIAP-nya ya ubah lagi datanya, terus minta lagi ke {config.bot_name}, untuk surat pernyataannya',
         bkd.getFilePath(npm, foldername)
     )
+    return bkd.getFilePath(npm, foldername)
