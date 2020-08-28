@@ -173,7 +173,7 @@ def callback_api_va(token):
                             }
                         ), 200)
                     else:
-                        message+=f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}Yahhhh kamu *belum bisa* isi KRS nihhhh coba *buat surat* .... lalu *ajukan ke pihak BAUK* agar kamu bisa isi KRS.....'
+                        message+=f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}Yahhhh kamu *belum bisa* isi KRS nihhhh coba *buat surat* lalu *ajukan ke pihak BAUK* agar kamu bisa isi KRS..... Suratnya udah {config.bot_name} kirim ke *{kelas.getStudentEmail(npm)}*'
                         wa.setOutbox(kelas.getHandphoneMahasiswa(npm), message)
                         surat_va.makePdfAndSendToEmail(npm)
                         return make_response(jsonify(
