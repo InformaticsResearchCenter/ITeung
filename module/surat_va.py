@@ -61,8 +61,8 @@ def makePdfAndSendToEmail(npm):
         logo.hAlign = "CENTER"
         elements.append(logo)
 
-        pdfmetrics.registerFont(TTFont('TNR', 'times.ttf'))
-        pdfmetrics.registerFont(TTFont('TNRB', 'timesbd.ttf'))
+        pdfmetrics.registerFont(TTFont('TNR', 'timesdownload.ttf'))
+        pdfmetrics.registerFont(TTFont('TNRB', 'timesdownloadbd.ttf'))
 
         styles = getSampleStyleSheet()
         styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY))
