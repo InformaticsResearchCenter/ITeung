@@ -40,7 +40,7 @@ def getAlamatLengkapOrtu(npm):
 
 def makePdfAndSendToEmail(npm):
     foldername='suratva'
-    doc = SimpleDocTemplate(f'./{foldername}/SURAT PERNYATAAN-{npm}.pdf', pagesize=A4, rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=18)
+    doc = SimpleDocTemplate(f'./{foldername}/SURAT-{npm}.pdf', pagesize=A4, rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=18)
     doc.pagesize = portrait(A4)
     elements = []
     for i in range(2):
@@ -161,7 +161,7 @@ def makePdfAndSendToEmail(npm):
         ]))
         elements.append(table)
     doc.build(elements)
-    path = os.path.join(os.path.expanduser('~'), 'ITeung', 'suratva', f'SURAT PERNYATAAN-{npm}.pdf')
+    path = os.path.join(os.path.expanduser('~'), 'ITeung', 'suratva', f'SURAT-{npm}.pdf')
     bkd.mail(
         kelas.getStudentEmail(npm),
         f'eyyyyooww {config.bot_name} kirim file SURAT PERNYATAAN PENGANGGUHAN SPP/VARIABEL nihhh',
