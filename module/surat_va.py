@@ -161,10 +161,20 @@ def makePdfAndSendToEmail(npm):
         ]))
         elements.append(table)
     doc.build(elements)
-    path = f"/home/osdep/ITeung/suratva/SURAT-{npm}.pdf"
     bkd.mail(
         kelas.getStudentEmail(npm),
         f'eyyyyooww {config.bot_name} kirim file SURAT PERNYATAAN PENGANGGUHAN SPP/VARIABEL nihhh',
         f'coba dicek dulu ya datanya, jika belum benar, coba cek SIAP-nya ya ubah lagi datanya, terus minta lagi ke {config.bot_name}, untuk surat pernyataannya',
-        path
+        getFilePath(npm, foldername)
     )
+
+def getFilePath(npm, foldername):
+    resultpath = []
+    devpath = os.getcwd()
+    path = './{folder}'.format(folder=foldername)
+    for root, dirs, files in os.walk(path):
+        for i in files:
+            if npm in i:
+                rootpath = os.path.join(root, i)
+                resultpath.append(os.path.join(devpath, rootpath))
+    return resultpath
