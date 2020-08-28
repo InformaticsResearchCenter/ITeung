@@ -163,7 +163,7 @@ def makePdfAndSendToEmail(npm):
     doc.build(elements)
     bkd.mail(
         kelas.getStudentEmail(npm),
-        f'eyyyyooww watsapppp {config.bot_name} kirim file surat pernyataan nihhh',
+        f'eyyyyooww {config.bot_name} kirim file SURAT PERNYATAAN PENGANGGUHAN SPP/VARIABEL nihhh',
         f'coba dicek dulu ya datanya, jika belum benar, coba cek SIAP-nya ya ubah lagi datanya, terus minta lagi ke {config.bot_name}, untuk surat pernyataannya',
         bkd.getFilePath(npm, foldername)
     )
