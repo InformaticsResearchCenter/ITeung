@@ -9,7 +9,7 @@ from datetime import datetime
 
 from module import kelas, bkd
 
-import config
+import config, os
 
 def getPekerjaanOrtuAyah(npm):
     db=kelas.dbConnectSiap()
@@ -161,9 +161,10 @@ def makePdfAndSendToEmail(npm):
         ]))
         elements.append(table)
     doc.build(elements)
+    path = os.path.join(os.path.expanduser('~'), 'ITeung', 'suratva', f'SURAT PERNYATAAN-{npm}.pdf')
     bkd.mail(
         kelas.getStudentEmail(npm),
         f'eyyyyooww {config.bot_name} kirim file SURAT PERNYATAAN PENGANGGUHAN SPP/VARIABEL nihhh',
         f'coba dicek dulu ya datanya, jika belum benar, coba cek SIAP-nya ya ubah lagi datanya, terus minta lagi ke {config.bot_name}, untuk surat pernyataannya',
-        f'suratva/SURAT PERNYATAAN-{npm}.pdf'
+        path
     )
