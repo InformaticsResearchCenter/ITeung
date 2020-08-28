@@ -40,19 +40,23 @@ def replymsg(driver, data):
                 if pem[1] == kodeDosen:
                     role = "pembimbing_pendamping"
                     approveBASidang(kodeDosen, role, tahunID, kategori, npm)
+                    kodeDosen = f'{kodeDosen} sebagai Pembimbing Pendamping'
                 
                 if pem[2] == kodeDosen:
                     role = "penguji_utama"
                     approveBASidang(kodeDosen, role, tahunID, kategori, npm)
+                    kodeDosen = f'{kodeDosen} sebagai Pembimbing dan Penguji Utama'
                 
                 if pem[3] == kodeDosen:
                     role = "penguji_pendamping"
                     approveBASidang(kodeDosen, role, tahunID, kategori, npm)
+                    kodeDosen = f'{kodeDosen} sebagai Penguji Pendamping'
                 
                 if pem[4] == kodeDosen:
                     if checkKoor(npm, tahunID, kategori):
                         role = "koordinator"
                         approveBASidang(kodeDosen, role, tahunID, kategori, npm)
+                        kodeDosen = f'{kodeDosen} sebagai Koordinator'
                     else:
                         pass
                     
@@ -60,6 +64,7 @@ def replymsg(driver, data):
                     if checkKaprodi(npm, tahunID, kategori):
                         role = "kaprodi"
                         approveBASidang(kodeDosen, role, tahunID, kategori, npm)
+                        kodeDosen = f'{kodeDosen} sebagai Kepala Prodi'
                     else:
                         pass
                 
