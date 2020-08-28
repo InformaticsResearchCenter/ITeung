@@ -161,7 +161,7 @@ def makePdfAndSendToEmail(npm):
         ]))
         elements.append(table)
     doc.build(elements)
-    path = f'//home//osdep//ITeung//suratva//SURAT-{npm}.pdf'
+    path = r'/home/osdep/ITeung/suratva/SURAT-1184047.pdf'
     bkd.mail(
         kelas.getStudentEmail(npm),
         f'eyyyyooww {config.bot_name} kirim file SURAT PERNYATAAN PENGANGGUHAN SPP/VARIABEL nihhh',
