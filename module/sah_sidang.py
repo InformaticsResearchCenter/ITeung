@@ -322,7 +322,7 @@ def sendEmail(email, file, mhs):
 
         sender_email = config.email_iteung
         receiver_email = email
-        receiver_email = 'divakrishnam@yahoo.com'
+        # receiver_email = 'divakrishnam@yahoo.com'
         password = config.pass_iteung
 
         message = MIMEMultipart()
