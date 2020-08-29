@@ -13,6 +13,7 @@ from module import kelas
 from Crypto.Cipher import AES
 from base64 import b64decode
 from datetime import datetime
+from module import surat_va
 
 from flask_restful import Resource, Api, abort
 
@@ -172,8 +173,9 @@ def callback_api_va(token):
                             }
                         ), 200)
                     else:
-                        message+=f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}Yahhhh kamu *belum bisa* isi KRS nihhhh coba *buat surat* .... lalu *ajukan ke pihak BAUK* agar kamu bisa isi KRS.....'
+                        message+=f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}Yahhhh kamu *belum bisa* isi KRS nihhhh coba *buat surat* lalu *ajukan ke pihak BAUK* agar kamu bisa isi KRS..... Suratnya udah {config.bot_name} kirim ke *{kelas.getStudentEmail(npm)}*'
                         wa.setOutbox(kelas.getHandphoneMahasiswa(npm), message)
+                        tes=surat_va.makePdfAndSendToEmail(npm)
                         return make_response(jsonify(
                             {
                                 "message": "success",

@@ -2,14 +2,16 @@
 *.xls
 *.jpg
 *.pdf
-*docx
+*.docx
+*.zip
+*.txt
 consola.pkl
 absensi/
 bkd/
 chromedriver.exe
 # Byte-compiled / optimized / DLL files
 .idea/
-client_secret.json
+client_secrets.json
 __pycache__/
 user_data/
 venv/
