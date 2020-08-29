@@ -93,6 +93,6 @@ def run(num):
                         'role': 'reader'})
         link[f'{singkatan}']=file1['alternateLink']
     msgreply=f'ini yaaa link berdasarkan prodinyaa....{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}'
-    for prodi, link in link:
-        msgreply+=f'{prodi}: {link}{config.whatsapp_api_lineBreak}'
+    for prodisingkatan, linkdrive in link:
+        msgreply+=f'{prodisingkatan}: {linkdrive}{config.whatsapp_api_lineBreak}'
     wa.setOutbox(num, msgreply)
