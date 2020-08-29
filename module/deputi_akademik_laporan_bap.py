@@ -65,7 +65,11 @@ def run(num):
                 pathperprodi.append(i)
         with ZipFile(f'{singkatan}.zip', 'w') as zip:
             for file in pathperprodi:
-                zip.write(file)
+                try:
+                    zip.write(file)
+                except:
+                    print(f'file: {file}, ngga ada')
+                    continue
         zippath.append(f'{os.getcwd()}\\{singkatan}.zip')
     bkd.mail(
         kelas.getEmailDosen(kelas.getKodeDosen(num)),
