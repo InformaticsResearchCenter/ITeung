@@ -36,10 +36,10 @@ def auth(data):
 def replymsg(driver, data):    
     if kelas.cekSiap():    
         num = numbers.normalize(data[0])
-        # wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
-        # wmsg = wmsg.replace('#EMAIL#', kelas.getEmailDosen(kodeDosen))
-        # wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
-        # wa.typeAndSendMessage(driver, wmsg)
+        wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
+        wmsg = wmsg.replace('#EMAIL#', kelas.getEmailDosen(kodeDosen))
+        wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
+        wa.typeAndSendMessage(driver, wmsg)
         tahunID = '20192'
         msg = data[3].lower().split(' ')
         msgreply = ""
@@ -87,7 +87,7 @@ def replymsg(driver, data):
             msgreply = f'Wadaw.. anda salah keyword... {str(e)}'
         
         print(msgreply)
-        # wa.typeAndSendMessage(driver, msgreply)
+        wa.typeAndSendMessage(driver, msgreply)
         
     else:
         wa.typeAndSendMessage(
@@ -413,7 +413,7 @@ def checkDir(path):
     try:
         os.mkdir(path)
     except:
-        print('sudah ada..')
+        pass #print('sudah ada..')
 
 def makePages(contain, logo, styles, tahunAjaran, noSurat, namaMhs, npmMhs, prodi, tanggal, penUtama, penPendamping, kaProdi, koor, kategori, listTTD, waktu, judul, listRevisiPenUt, listRevisiPenPen, styleWrap):
     data = [[Image(logo, 2.78 * cm, 2.38 * cm), Paragraph(f'<font size="14"><b>BERITA ACARA REVISI<br/>{kategori.upper()}<br/>POLITEKNIK POS INDONESIA<br/>TAHUN AJARAN {tahunAjaran}</b></font>', styles["CenterSpacing"]), Paragraph(f'<font size="23"><b>F10</b></font><br/><font size="11"><b>{noSurat}</b></font>', styles["CenterSpacing"])]

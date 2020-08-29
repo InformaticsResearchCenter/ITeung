@@ -36,10 +36,10 @@ def auth(data):
 def replymsg(driver, data):    
     if kelas.cekSiap():    
         num = numbers.normalize(data[0])
-        # wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
-        # wmsg = wmsg.replace('#EMAIL#', kelas.getEmailDosen(kodeDosen))
-        # wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
-        # wa.typeAndSendMessage(driver, wmsg)
+        wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
+        wmsg = wmsg.replace('#EMAIL#', kelas.getEmailDosen(kodeDosen))
+        wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
+        wa.typeAndSendMessage(driver, wmsg)
         tahunID = '20192'
         msg = data[3].lower().split(' ')
         msgreply = ""
@@ -87,7 +87,7 @@ def replymsg(driver, data):
             msgreply = f'Wadaw.. anda salah keyword... {str(e)}'
         
         print(msgreply)
-        # wa.typeAndSendMessage(driver, msgreply)
+        wa.typeAndSendMessage(driver, msgreply)
         
     else:
         wa.typeAndSendMessage(
@@ -363,7 +363,7 @@ def checkDir(path):
     try:
         os.mkdir(path)
     except:
-        print('sudah ada..')
+        pass #print('sudah ada..')
         
 def getDataDosen(dosenid):
     db= kelas.dbConnectSiap()
