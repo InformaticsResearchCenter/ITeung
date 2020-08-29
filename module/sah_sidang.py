@@ -510,7 +510,7 @@ def tipeDosen(tipe):
 def checkStatusSidang(npm, tahunID, kategori):
     db=kelas.dbConnect()
     # sql=f"SELECT npm FROM sidang_data WHERE npm = '{npm}' AND tahun_id = '{tahunID}' AND kategori = '{kategori}'"
-    sql=f"SELECT npm FROM sidang_data WHERE npm = '{npm}' AND tahun_id = '{tahunID}' AND kategori = '{kategori}' and (penguji_utama is not null and penguji_utama <> '') and (penguji_pendamping is not null and penguji_pendamping <> '') and (pembimbing_utama is not null and pembimbing_utama <> '') and (pembimbing_pendamping is not null and pembimbing_pendamping <> '')"
+    sql=f"SELECT npm FROM sidang_data WHERE npm = '{npm}' AND tahun_id = '{tahunID}' AND kategori = '{kategori}' and (penguji_utama is not null and penguji_utama <> '') and (penguji_pendamping is not null and penguji_pendamping <> '') and (pembimbing_utama is not null and pembimbing_utama <> '') and (pembimbing_pendamping is not null and pembimbing_pendamping <> '') and (koordinator is not null and koordinator <> '') and (kaprodi is not null and kaprodi <> '')"
     # print(sql)
     with db:
         cur=db.cursor()
