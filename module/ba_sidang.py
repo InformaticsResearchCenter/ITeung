@@ -36,16 +36,19 @@ def auth(data):
 def replymsg(driver, data):    
     if kelas.cekSiap():    
         num = numbers.normalize(data[0])
-        wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
-        wmsg = wmsg.replace('#EMAIL#', kelas.getEmailDosen(kodeDosen))
-        wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
-        wa.typeAndSendMessage(driver, wmsg)
         tahunID = '20192'
         msg = data[3].lower().split(' ')
         msgreply = ""
         try:
             if kelas.getKodeDosen(num):          
                 dosenID = kelas.getKodeDosen(num)
+                
+                email = kelas.getEmailDosen(dosenID)
+                wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
+                wmsg = wmsg.replace('#EMAIL#', email)
+                wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
+                wa.typeAndSendMessage(driver, wmsg)
+                
                 tipe = 'ta'
                 
                 df = pd.read_excel(f'jadwal_sidang_ta_14.xlsx')
@@ -58,7 +61,7 @@ def replymsg(driver, data):
                     msgreply = "Harus koornya cuy ato Anda salah tipe sidang..."
                 else:
                     if checkStatusSidangKoor(dosenID, tahunID, tipe):
-                        email = kelas.getEmailDosen(dosenID)
+                        
                         data = f"{'dosen'};{dosenID};{tahunID};{email};{tipe}"
                         subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],data], cwd=config.cwd)
                     else:
@@ -67,10 +70,17 @@ def replymsg(driver, data):
             elif kelas.getNpmandNameMahasiswa(num):
                 try:
                     npm, nama=kelas.getNpmandNameMahasiswa(num)
+                    
+                    email = getEmail(npm)
+                    wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
+                    wmsg = wmsg.replace('#EMAIL#', email)
+                    wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
+                    wa.typeAndSendMessage(driver, wmsg)
+                    
                     kategori = getKategoriSidang(npm, tahunID)
                     if checkRevisiStatus(npm, tahunID):
                         if checkStatusSidang(npm, tahunID, kategori):
-                            email = getEmail(npm)
+                            
                             data = f"{'mahasiswa'};{npm};{tahunID};{email};{kategori}"
                             subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],data], cwd=config.cwd)
                         else:
