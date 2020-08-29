@@ -2,7 +2,8 @@
 *.xls
 *.jpg
 *.pdf
-*docx
+*.docx
+*.zip
 consola.pkl
 absensi/
 bkd/
