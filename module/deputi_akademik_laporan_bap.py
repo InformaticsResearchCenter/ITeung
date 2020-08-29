@@ -1,6 +1,9 @@
 from module import kelas, bkd, cek_tanda_tangan_bap
 from zipfile import ZipFile
-from lib import numbers
+from lib import numbers, wa
+from pydrive.auth import GoogleAuth
+from pydrive.drive import GoogleDrive
+from datetime import datetime
 
 import os, subprocess, config
 
@@ -39,16 +42,17 @@ def getProdiIDAndSingkatan():
 
 
 def replymsg(driver, data):
-    kodedosen = kelas.getKodeDosen(data[0])
     num = numbers.normalize(data[0])
-    msgreply = f'okeeeeeee tunggu yaaa sekitaran 15-20 menit, dan akan {config.bot_name} kirim ke email yang {kelas.getEmailDosen(kodedosen)} yaaa....'
+    msgreply = f'okeeeeeee tunggu yaaa sekitaran 15-20 menit, dan akan {config.bot_name} kirim ke linknya nanti ke nomor {num} yaaa....'
     subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0], num], cwd=config.cwd)
     return msgreply
 
 
 def run(num):
+    link={}
+    dmy=datetime.now().strftime("%d-%m-%Y")
+    hms=datetime.now().strftime("%H:%M:%S")
     prodiidandsingkatan = getProdiIDAndSingkatan()
-    zippath = []
     for prodiID, singkatan in prodiidandsingkatan:
         mkkodelist = []
         for i in getJadwalIDFullApproval(prodiID):
@@ -70,10 +74,25 @@ def run(num):
                 except:
                     print(f'file: {file}, ngga ada')
                     continue
-        zippath.append(f'{os.getcwd()}\\{singkatan}.zip')
-    bkd.mail(
-        kelas.getEmailDosen(kelas.getKodeDosen(num)),
-        f'yowwwwwww {config.bot_name} kirim file .zip semua berkas yang udah lengkap approvalnya eheee',
-        f'coba dicek dulu yaaaa kalo ada yang kurang bisa di kontak ke admin {config.bot_name} maaciwww..... :9',
-        zippath
-    )
+        gauth = GoogleAuth()
+        gauth.LoadCredentialsFile("mycreds.txt")
+        if gauth.credentials is None:
+            gauth.LocalWebserverAuth()
+        elif gauth.access_token_expired:
+            gauth.Refresh()
+        else:
+            gauth.Authorize()
+        gauth.SaveCredentialsFile("mycreds.txt")
+        drive=GoogleDrive(gauth)
+        file1=drive.CreateFile({'title': f'{singkatan} {dmy} {hms}.zip'})
+        file1.SetContentFile(f'{os.getcwd()}\\{singkatan}.zip')
+        file1.Upload()
+        file1.InsertPermission({
+                        'type': 'anyone',
+                        'value': 'anyone',
+                        'role': 'reader'})
+        link[f'{singkatan}']=file1['alternateLink']
+    msgreply=f'ini yaaa link berdasarkan prodinyaa....{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}'
+    for prodi, link in link:
+        msgreply+=f'{prodi}: {link}{config.whatsapp_api_lineBreak}'
+    wa.setOutbox(num, msgreply)
