@@ -63,6 +63,7 @@ def replymsg(driver, data):
                     if checkStatusSidangKoor(dosenID, tahunID, tipe):
                         data = f"{'dosen'};{dosenID};{tahunID};{email};{tipe}"
                         subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],data], cwd=config.cwd)
+                        msgreply = ""
                     else:
                         msgreply = "Blm ada tuh..."
                     
@@ -82,6 +83,7 @@ def replymsg(driver, data):
                             email = getEmail(npm)
                             data = f"{'mahasiswa'};{npm};{tahunID};{email};{kategori}"
                             subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],data], cwd=config.cwd)
+                            msgreply = ""
                         else:
                             msgreply = "Approve dulu dari semuanya pembimbing, penguji, koordinator, kaprodi..."
                     else:
@@ -95,13 +97,10 @@ def replymsg(driver, data):
         except Exception as e: 
             msgreply = f'Wadaw.. anda salah keyword... {str(e)}'
         
-        print(msgreply)
-        wa.typeAndSendMessage(driver, msgreply)
-        
     else:
         wa.typeAndSendMessage(
             driver, 'Mohon maaf server Akademik SIAP sedang dalam kondisi DOWN, mohon untuk menginformasikan ke ADMIN dan tunggu hingga beberapa menit kemudian, lalu ulangi kembali, terima kasih....')
-    return ''
+    return msgreply
 
 def run(data):
     data = data.split(';')
