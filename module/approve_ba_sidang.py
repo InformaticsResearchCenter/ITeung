@@ -15,7 +15,7 @@ def replymsg(driver, data):
     wa.typeAndSendMessage(driver, wmsg)
     num = numbers.normalize(data[0])
     kodeDosen = kelas.getKodeDosen(num)
-    print(kodeDosen)
+    # print(kodeDosen)
     tahunID = '20192'
     try:
         npm = [npm for npm in data[3].split(' ') if npm.isdigit() and len(npm) == 7][0]
@@ -25,8 +25,7 @@ def replymsg(driver, data):
                 listPem = ['pem1', 'pem2', 'pem3', 'pem4', 'koor']
                 pem = df.loc[(df["npm"] == int(npm)) & (df["tahun"] == int(tahunID)), listPem].values.tolist()[0]
                 
-                print(pem)
-                
+                peran = f"{kodeDosen} sebagai "
                 nip = getKaProdi('14')
                 kaprodiID = getDosenIDfromNIPY(nip)
                 
@@ -36,39 +35,40 @@ def replymsg(driver, data):
                 if pem[0] == kodeDosen:
                     role = "pembimbing_utama"
                     approveBASidang(kodeDosen, role, tahunID, kategori, npm)
+                    peran += 'Pembimbing Utama '
                 
                 if pem[1] == kodeDosen:
                     role = "pembimbing_pendamping"
                     approveBASidang(kodeDosen, role, tahunID, kategori, npm)
-                    kodeDosen = f'{kodeDosen} sebagai Pembimbing Pendamping'
+                    peran += 'Pembimbing Pendamping '
                 
                 if pem[2] == kodeDosen:
                     role = "penguji_utama"
                     approveBASidang(kodeDosen, role, tahunID, kategori, npm)
-                    kodeDosen = f'{kodeDosen} sebagai Pembimbing dan Penguji Utama'
+                    peran += 'Penguji Utama '
                 
                 if pem[3] == kodeDosen:
                     role = "penguji_pendamping"
                     approveBASidang(kodeDosen, role, tahunID, kategori, npm)
-                    kodeDosen = f'{kodeDosen} sebagai Penguji Pendamping'
-                
+                    peran += 'Penguji Pendamping '
+                    
                 if pem[4] == kodeDosen:
                     if checkKoor(npm, tahunID, kategori):
                         role = "koordinator"
                         approveBASidang(kodeDosen, role, tahunID, kategori, npm)
-                        kodeDosen = f'{kodeDosen} sebagai Koordinator'
+                        peran += 'Koordinator '
                     else:
                         pass
-                    
+
                 if kaprodiID == kodeDosen:
                     if checkKaprodi(npm, tahunID, kategori):
                         role = "kaprodi"
                         approveBASidang(kodeDosen, role, tahunID, kategori, npm)
-                        kodeDosen = f'{kodeDosen} sebagai Kepala Prodi'
+                        peran = 'Kepala Prodi '
                     else:
                         pass
                 
-                msgreply = f"Dah diapprove ya {npm} oleh {kodeDosen}"
+                msgreply = f"Dah diapprove ya {npm} oleh {peran}"
             else:
                 msgreply = f"Blm acc revisi {npm} dari kedua penguji nih......"
         else:
@@ -83,7 +83,7 @@ def checkKoor(npm, tahunID, kategori):
     db=kelas.dbConnect()
     sql=f"SELECT npm FROM sidang_data WHERE npm='{npm}' and tahun_id='{tahunID}' and kategori = '{kategori}' and (penguji_utama is not null and penguji_utama <> '') and (penguji_pendamping is not null and penguji_pendamping <> '') and (pembimbing_utama is not null and pembimbing_utama <> '') and (pembimbing_pendamping is not null and pembimbing_pendamping <> '')"
     
-    print(sql)
+    # print(sql)
     with db:
         cur=db.cursor()
         cur.execute(sql)
@@ -97,7 +97,7 @@ def checkKaprodi(npm, tahunID, kategori):
     db=kelas.dbConnect()
     sql=f"SELECT npm FROM sidang_data WHERE npm='{npm}' and tahun_id='{tahunID}' and kategori = '{kategori}' and (penguji_utama is not null and penguji_utama <> '') and (penguji_pendamping is not null and penguji_pendamping <> '') and (pembimbing_utama is not null and pembimbing_utama <> '') and (pembimbing_pendamping is not null and pembimbing_pendamping <> '') and (koordinator is not null and koordinator <> '')"
     
-    print(sql)
+    # print(sql)
     with db:
         cur=db.cursor()
         cur.execute(sql)
@@ -110,7 +110,7 @@ def checkKaprodi(npm, tahunID, kategori):
 def approveBASidang(kodeDosen, role, tahunID, kategori, npm):
     db=kelas.dbConnect()
     sql=f'UPDATE sidang_data SET {role}="{kodeDosen}" WHERE npm="{npm}" and tahun_id="{tahunID}" and kategori = "{kategori}"'
-    print(sql)
+    # print(sql)
     with db:
         cur=db.cursor()
         cur.execute(sql)
@@ -154,13 +154,13 @@ def getKategoriSidang(npm, tahunID):
 def checkRevisiStatus(npm, tahunID):
     db=kelas.dbConnect()
     sql=f"SELECT COUNT(DISTINCT(penguji)) as total FROM revisi_data WHERE npm ='{npm}' AND tahun_id = '{tahunID}' AND status = 'True'"
-    print(sql)
+    # print(sql)
     with db:
         cur=db.cursor()
         cur.execute(sql)
         row=cur.fetchone()
         if row:
-            print(row[0])
+            # print(row[0])
             if int(row[0]) == 2:
                 return True
             else:
