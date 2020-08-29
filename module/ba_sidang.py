@@ -47,7 +47,7 @@ def replymsg(driver, data):
                 wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
                 wmsg = wmsg.replace('#EMAIL#', email)
                 wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
-                wa.typeAndSendMessage(driver, wmsg)
+                wa .typeAndSendMessage(driver, wmsg)
                 
                 tipe = 'ta'
                 
@@ -64,6 +64,7 @@ def replymsg(driver, data):
                         
                         data = f"{'dosen'};{dosenID};{tahunID};{email};{tipe}"
                         subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],data], cwd=config.cwd)
+                        msgreply = ""
                     else:
                         msgreply = "Blm ada tuh..."
                     
@@ -75,7 +76,7 @@ def replymsg(driver, data):
                     wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
                     wmsg = wmsg.replace('#EMAIL#', email)
                     wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
-                    wa.typeAndSendMessage(driver, wmsg)
+                    wa .typeAndSendMessage(driver, wmsg)
                     
                     kategori = getKategoriSidang(npm, tahunID)
                     if checkRevisiStatus(npm, tahunID):
@@ -83,6 +84,7 @@ def replymsg(driver, data):
                             
                             data = f"{'mahasiswa'};{npm};{tahunID};{email};{kategori}"
                             subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],data], cwd=config.cwd)
+                            msgreply = ""
                         else:
                             msgreply = "Approve dulu dari semuanya pembimbing, penguji, koordinator, kaprodi..."
                     else:
@@ -96,13 +98,11 @@ def replymsg(driver, data):
         except Exception as e: 
             msgreply = f'Wadaw.. anda salah keyword... {str(e)}'
         
-        print(msgreply)
-        wa.typeAndSendMessage(driver, msgreply)
         
     else:
         wa.typeAndSendMessage(
             driver, 'Mohon maaf server Akademik SIAP sedang dalam kondisi DOWN, mohon untuk menginformasikan ke ADMIN dan tunggu hingga beberapa menit kemudian, lalu ulangi kembali, terima kasih....')
-    return ''
+    return msgreply
 
 def run(data):
     data = data.split(';')
@@ -256,7 +256,7 @@ def checkRevisiStatus(npm, tahunID):
 def checkStatusSidang(npm, tahunID, kategori):
     db=kelas.dbConnect()
     # sql=f"SELECT npm FROM sidang_data WHERE npm = '{npm}' AND tahun_id = '{tahunID}' AND kategori = '{kategori}'"
-    sql=f"SELECT npm FROM sidang_data WHERE npm = '{npm}' AND tahun_id = '{tahunID}' AND kategori = '{kategori}' and (penguji_utama is not null and penguji_utama <> '') and (penguji_pendamping is not null and penguji_pendamping <> '') and (pembimbing_utama is not null and pembimbing_utama <> '') and (pembimbing_pendamping is not null and pembimbing_pendamping <> '')"
+    sql=f"SELECT npm FROM sidang_data WHERE npm = '{npm}' AND tahun_id = '{tahunID}' AND kategori = '{kategori}' and (penguji_utama is not null and penguji_utama <> '') and (penguji_pendamping is not null and penguji_pendamping <> '') and (pembimbing_utama is not null and pembimbing_utama <> '') and (pembimbing_pendamping is not null and pembimbing_pendamping <> '') and (koordinator is not null and koordinator <> '') and (kaprodi is not null and kaprodi <> '')"
     # print(sql)
     with db:
         cur=db.cursor()
