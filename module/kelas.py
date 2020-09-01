@@ -485,8 +485,7 @@ def getJadwalSerial(jadwalid):
 
 def pesertaAbsensi(jadwalid):
     db = dbConnectSiap()
-    sql = "select j.JadwalID, j.TahunID, j.MKKode, j.Nama, j.DosenID, krs.MhswID from simak_trn_jadwal as j join simak_trn_krs as krs where j.jadwalid = krs.jadwalid and j.tahunid=20192 and j.JadwalID = '{0}'".format(
-        jadwalid)
+    sql = f"select j.JadwalID, j.TahunID, j.MKKode, j.Nama, j.DosenID, krs.MhswID from simak_trn_jadwal as j join simak_trn_krs as krs where j.jadwalid = krs.jadwalid and j.tahunid={getTahunID()} and j.JadwalID = {jadwalid}"
     with db:
         cur = db.cursor()
         cur.execute(sql)
