@@ -171,9 +171,12 @@ def checkRevisiStatus(npm, tahunID):
 def checkMhs(npm, kodeDosen):
     df = pd.read_excel(f'jadwal_sidang_ta_14.xlsx')
     df.set_index('npm', inplace=True)
-    listPem = ['pem1','pem2','pem3', 'pem4', ]
+    listPem = ['pem1','pem2','pem3', 'pem4', 'koor']
     pem = df.loc[int(npm), listPem].values.tolist()
-    
+    nip = getKaProdi('14')
+    kaprodiID = getDosenIDfromNIPY(nip)
+    pem.append(kaprodiID)
+    print(pem)
     if kodeDosen in pem:
         return True
     else:
