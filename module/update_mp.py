@@ -25,7 +25,7 @@ def replymsg(driver, data):
         except Exception as e:
             downloadstatus=False
         if downloadstatus:
-            if namafile.split('.')[1] == 'xlsx' or namafile.split('.')[1] == 'xls':
+            if namafile.split('.')[1] == 'xlsx':
                 hakiaptimas.moveFiles(namafile)
                 msgreply='okeee sudah #BOTNAME# update yaa materi perkuliahannya:'
                 wb = load_workbook(namafile)
@@ -41,7 +41,7 @@ def replymsg(driver, data):
                         msgreply+=f'\n\nJadwal ID: {jadwalid}\nPertemuan: {pertemuan}\nMateri Perkuliahan: {materiperkuliahan}'
                 deleteFilesWithCWD(namafile)
             else:
-                msgreply='format file salah'
+                msgreply='format file salah, harus .xlsx'
                 deleteFilesOnDownloadsFolder(namafile)
         else:
             msgreply = 'mana filenya coyyyyy'
