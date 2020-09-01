@@ -128,7 +128,10 @@ def getTahunID():
         cur=db.cursor()
         cur.execute(sql)
         row=cur.fetchone()
-    return row[0]
+        if row[0][-1] == '3':
+            return str(int(row[0])-1)
+        else:
+            return row[0]
 
 def getAllDataDosens(dosenid):
     db=dbConnectSiap()
@@ -482,8 +485,7 @@ def getJadwalSerial(jadwalid):
 
 def pesertaAbsensi(jadwalid):
     db = dbConnectSiap()
-    sql = "select j.JadwalID, j.TahunID, j.MKKode, j.Nama, j.DosenID, krs.MhswID from simak_trn_jadwal as j join simak_trn_krs as krs where j.jadwalid = krs.jadwalid and j.tahunid=" + getTahunID() + " and j.JadwalID = '{0}'".format(
-        jadwalid)
+    sql = f"select j.JadwalID, j.TahunID, j.MKKode, j.Nama, j.DosenID, krs.MhswID from simak_trn_jadwal as j join simak_trn_krs as krs where j.jadwalid = krs.jadwalid and j.tahunid={getTahunID()} and j.JadwalID = {jadwalid}"
     with db:
         cur = db.cursor()
         cur.execute(sql)
