@@ -70,7 +70,7 @@ def checkRevisi(npm, tahun_id):
     db=kelas.dbConnect()
     msg = "*Revisi Sidang :*\n"
     
-    sql=f'select distinct penguji from revisi_data where npm="{npm}" and tahun_id="{tahun_id}"'
+    sql=f'select distinct penguji from revisi_data where npm="{npm}" and tahun_id="{tahun_id}" and status = "True"'
     # print(sql)
     with db:
         cur=db.cursor()
