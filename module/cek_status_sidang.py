@@ -47,7 +47,7 @@ def checkSidang(npm, tahun_id):
         cur.execute(sql)
         row=cur.fetchone()
         if row:
-            if row[0]:
+            if row[0] or row[1] or row[2] or row[3]:
                 if row[0]:
                     msg += f'Penguji Utama - Accept\n'
                 if row[1]:
