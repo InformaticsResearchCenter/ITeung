@@ -19,7 +19,7 @@ def auth(data):
     return ret
 
 def replymsg(driver, data):
-    npm=kelas.getNpmandNameMahasiswa(data[0])
+    npm=kelas.getNpmandNameMahasiswa(data[0])[0]
     makePdfAndSendToEmail(npm)
     msgreply=f'okeee sudah dikirim ke email kamu yang {kelas.getStudentEmail(npm)} yaa... coba buruan dicekk...'
     return msgreply
