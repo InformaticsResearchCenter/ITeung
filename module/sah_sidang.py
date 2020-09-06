@@ -248,7 +248,7 @@ def makePagePenguji(contain, styles, judul, namaMhs, npmMhs, program, tglSidang,
     data = [[Paragraph(f'<font size="12">Laporan Program {program} ini telah diperiksa, disetujui dan disidangkan<br/>Di Bandung, {tglSidang}<br/>Oleh :</font>', styles["CenterSpacing"])],
             ['Penguji Pendamping', '', 'Penguji Utama'],
             [Image(f'{path}{listTTD[3]}.png', 4 * cm, 4 * cm), '', Image(f'{path}{listTTD[2]}.png', 4 * cm, 4 * cm)],
-            [Paragraph(f'<font size="12"><u>{penPendamping}</u><br/>NIK. {nikPenPendamping}</font>', styles["CenterSpacing"]), '', Paragraph(f'<font size="12"><u>{penUtama}</u><br/>NIK. {nikPenUtama}</font>', styles["CenterSpacing"])],
+            [Paragraph(f'<font size="12"><u>{penUtama}</u><br/>NIK. {nikPenUtama}</font>', styles["CenterSpacing"]), '',Paragraph(f'<font size="12"><u>{penPendamping}</u><br/>NIK. {nikPenPendamping}</font>', styles["CenterSpacing"])],
             [Paragraph(f'<font size="12">Menyetujui,<br/>Koordinator {program}</font>', styles["CenterSpacing"])],
             [Image(f'{path}{listTTD[4]}.png', 4 * cm, 4 * cm)],
             [Paragraph(f'<font size="12"><u>{koor}</u><br/>NIK. {nikKoor}</font>', styles["CenterSpacing"])],
@@ -293,7 +293,7 @@ def makePagePembimbing(contain, styles, judul, namaMhs, npmMhs, program, tglSida
     data = [[Paragraph(f'<font size="12">Laporan Program {program} ini telah diperiksa, disetujui dan disidangkan<br/>Di Bandung, {tglSidang}<br/>Oleh :</font>', styles["CenterSpacing"])],
             ['Pembimbing Utama,', '', 'Pembimbing Pendamping'],
             [Image(f'{path}{listTTD[0]}.png', 4 * cm, 4 * cm), '', Image(f'{path}{listTTD[1]}.png', 4 * cm, 4 * cm)],
-            [Paragraph(f'<font size="12"><u>{pemUtama}</u><br/>NIK. {nikPemUtama}</font>', styles["CenterSpacing"]), '', Paragraph(f'<font size="12"><u>{pemPendamping}</u><br/>NIK. {nikPemPendamping}</font>', styles["CenterSpacing"])],
+            [Paragraph(f'<font size="12"><u>{pemPendamping}</u><br/>NIK. {nikPemPendamping}</font>', styles["CenterSpacing"]), '',Paragraph(f'<font size="12"><u>{pemUtama}</u><br/>NIK. {nikPemUtama}</font>', styles["CenterSpacing"])],
             [Paragraph(f'<font size="12">Menyetujui,<br/>Ketua Program Studi {prodi},</font>', styles["CenterSpacing"])],
             [Image(f'{path}{listTTD[5]}.png', 4 * cm, 4 * cm)],
             [Paragraph(f'<font size="12"><u>{kaProdi}</u><br/>NIK. {nikKaProdi}</font>', styles["CenterSpacing"])],
@@ -381,7 +381,7 @@ def getDataDosen(dosenid):
         cur.execute(sql)
         row=cur.fetchone()
         if row is not None:
-            return (f"{row[0].title()} {row[1]}", row[2] if row[2] else "Belum Diisi") 
+            return (f"{row[0].title()}, {row[1]}", row[2] if row[2] else "Belum Diisi") 
         else:
             return None
         

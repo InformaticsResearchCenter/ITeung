@@ -316,7 +316,7 @@ def getDataDosen(dosenid):
         cur.execute(sql)
         row=cur.fetchone()
         if row is not None:
-            return f"{row[0].title()} {row[1]}"
+            return f"{row[0].title()}, {row[1]}"
         else:
             return None
 

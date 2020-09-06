@@ -47,7 +47,7 @@ def checkSidang(npm, tahun_id):
         cur.execute(sql)
         row=cur.fetchone()
         if row:
-            if row[0]:
+            if row[0] or row[1] or row[2] or row[3]:
                 if row[0]:
                     msg += f'Penguji Utama - Accept\n'
                 if row[1]:
@@ -70,7 +70,7 @@ def checkRevisi(npm, tahun_id):
     db=kelas.dbConnect()
     msg = "*Revisi Sidang :*\n"
     
-    sql=f'select distinct penguji from revisi_data where npm="{npm}" and tahun_id="{tahun_id}"'
+    sql=f'select distinct penguji from revisi_data where npm="{npm}" and tahun_id="{tahun_id}" and status = "True"'
     # print(sql)
     with db:
         cur=db.cursor()
