@@ -52,6 +52,7 @@ def getAlamatLengkapOrtu(npm):
     return f'{rows[0]}, RT{rows[1]}/RW{rows[2]}, {rows[3]}, {rows[4]}, {rows[5]}, {rows[6]}'
 
 def makePdfAndSendToEmail(npm):
+    checkDir()
     foldername='suratva'
     doc = SimpleDocTemplate(f'./{foldername}/SURAT-{npm}.pdf', pagesize=A4, rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=18)
     doc.pagesize = portrait(A4)
@@ -191,3 +192,9 @@ def getFilePath(npm, foldername):
                 rootpath = os.path.join(root, i)
                 resultpath.append(os.path.join(devpath, rootpath))
     return resultpath
+
+def checkDir():
+    try:
+        os.mkdir('suratva/')
+    except:
+        print('sudah ada..')
