@@ -52,6 +52,18 @@ def cekSudahAdaKHS(npm, tahunid, statusmahasiswa):
         else:
             return False
 
+def cekSesiSemester(tipesemester, npm):
+    tahunangkatan=int(kelas.getTahunAngkatanWithStudentID(npm))
+    tahunsekarang=int(datetime.now().strftime('%Y'))
+    selisihtahun=tahunsekarang-tahunangkatan
+    if tipesemester == '1':
+        selisihtahun+=0.5
+        sesisemester=selisihtahun/0.5
+    else:
+        selisihtahun+=1
+        sesisemester=selisihtahun/0.5
+    return str(sesisemester)
+
 def floatToRupiah(uang):
     uang=float(uang)
     str_uang=str(uang)
@@ -164,7 +176,7 @@ def callback_api_va(token):
                         else:
                             message += f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}Kamu *sudah bisa* isi KRS yaaa coba cek di *SIAP* yaaa...., #BOTNAME# ucapkan terima kasihhhh dan jangan salah saat isi KRS yaaa....'
                             message = message.replace('#BOTNAME#', config.bot_name)
-                            insertnewKHS(npm, tahunid, prodiid, tipesemester, trx_amount-cumulative_payment_amount)
+                            insertnewKHS(npm, tahunid, prodiid, cekSesiSemester(tipesemester, npm), trx_amount-cumulative_payment_amount)
                         wa.setOutbox(kelas.getHandphoneMahasiswa(npm), message)
                         return make_response(jsonify(
                             {
