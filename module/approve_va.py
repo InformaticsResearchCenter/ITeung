@@ -78,6 +78,7 @@ def replymsg(driver, data):
         tipesemester = validTahunID()[-1]
         prodiid = f'{npm[0]}{npm[3]}'
         if app.cekSudahAdaKHS(npm, validTahunID(), 'A'):
+            app.updateBiayaKHS(npm, validTahunID(), sisa_biaya)
             msgreply = f'Mahasiswa dengan,\n\nNPM: {npm}\nNama: {kelas.getStudentNameOnly(npm)}\nProdi: {getProdiName(prodiid)}\n\nSudah bisa ambil KRS'
             if cekSudahApprove(npm, validTahunID()):
                 data_verif=cekSudahApprove(npm, validTahunID())
