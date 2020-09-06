@@ -11,12 +11,12 @@ class Chatbot(object):
         self.alscheck=''
         self.numcheck=''
         while True:
-            wa.sendOutbox(driver)
             self.cekAndSendMessage(driver)
 
     def cekAndSendMessage(self, driver):
         if config.useemulator:
             wa.restartMemu(wa.detectphoneNotConnected(driver))
+        wa.sendOutbox(driver)
         messageindex = config.message_wa_index
         alsandnumindex = config.default_alias_number_index
         # for loop in range(wa.messageunread(driver)):
