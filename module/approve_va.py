@@ -40,7 +40,6 @@ def insertLogApproval(data):
     sql=f"INSERT INTO `wanda`.`log_approval_va`(`log_id`, `MhswID`, `DosenID`, `SessionApproval`, `SisaPembayaran`, `TahunID`) VALUES (DEFAULT, '{data['npm']}', '{data['dosen_id']}', '{data['session_approval']}', {data['sisa_pembayaran']}, {data['tahun_id']});"
     with db:
         cur=db.cursor()
-        print(sql)
         cur.execute(sql)
 
 
@@ -72,7 +71,10 @@ def replymsg(driver, data):
     if npm == '':
         msgreply='NPM tidak ada/Invalid'
     else:
-        sisa_biaya = data[3].split(' sisa pembayaran ')[1].replace('.', '')
+        if 'catatan' in data[3]:
+            sisa_biaya = data[3].split(' sisa pembayaran ')[1].split(' catatan ')[0].replace('.', '')
+        else:
+            sisa_biaya = data[3].split(' sisa pembayaran ')[1].replace('.', '')
         tipesemester = validTahunID()[-1]
         prodiid = f'{npm[0]}{npm[3]}'
         if app.cekSudahAdaKHS(npm, validTahunID(), 'A'):
@@ -87,8 +89,12 @@ def replymsg(driver, data):
             data_log['session_approval']=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             data_log['sisa_pembayaran']=sisa_biaya
             data_log['tahun_id']=validTahunID()
+            if 'catatan' in data[3]:
+                catatan=data[3].split(' catatan ')[1]
+            else:
+                catatan='-'
             insertLogApproval(data_log)
             app.insertnewKHS(npm, validTahunID(), prodiid, app.cekSesiSemester(tipesemester, npm), sisa_biaya)
-            wa.setOutbox(kelas.getStudentPhoneNumberFromNPM(npm), f'hai haiiiiii kamu dengan,{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}NPM: {npm}{config.whatsapp_api_lineBreak}Nama: {kelas.getStudentNameOnly(npm)}{config.whatsapp_api_lineBreak}Sisa Pembayaran: {app.floatToRupiah(float(sisa_biaya))}{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}Sudah diverifikasi ya data pembayaran VA kamu oleh,{config.whatsapp_api_lineBreak}Nama: *{kelas.getNamaDosen(kelas.getKodeDosen(data[0]))}*')
-            msgreply=f'sudah {config.bot_name} approve yaaa va dengan data berikut:\n\nNPM: {npm}\nNama: {kelas.getStudentNameOnly(npm)}\nProdi: {getProdiName(prodiid)}\nSisa Pembayaran: {app.floatToRupiah(float(sisa_biaya))}\n\nAkan {config.bot_name} langsung informasikan ke mahasiswanya langsung yaaa'
+            wa.setOutbox(kelas.getStudentPhoneNumberFromNPM(npm), f'hai haiiiiii kamu dengan,{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}NPM: {npm}{config.whatsapp_api_lineBreak}Nama: {kelas.getStudentNameOnly(npm)}{config.whatsapp_api_lineBreak}Sisa Pembayaran: {app.floatToRupiah(float(sisa_biaya))}{config.whatsapp_api_lineBreak}Catatan: {catatan}{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}Sudah diverifikasi ya data pembayaran VA kamu oleh,{config.whatsapp_api_lineBreak}Nama: *{kelas.getNamaDosen(kelas.getKodeDosen(data[0]))}*')
+            msgreply=f'Sudah {config.bot_name} approve yaaa va dengan data berikut:\n\nNPM: {npm}\nNama: {kelas.getStudentNameOnly(npm)}\nProdi: {getProdiName(prodiid)}\nSisa Pembayaran: {app.floatToRupiah(float(sisa_biaya))}\nCatatan: {catatan}\n\nAkan {config.bot_name} langsung informasikan ke mahasiswanya langsung yaaa'
     return msgreply

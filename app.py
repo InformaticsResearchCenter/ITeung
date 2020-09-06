@@ -31,7 +31,6 @@ def insertnewKHS(npm, tahunid, prodiid, tipesemester, biaya):
     sql=f"INSERT INTO simak_trn_khs (KHSID,TahunID,ProdiID,KodeID,ProgramID,MhswID,StatusMhswID,sesi,MaxSKS,Cetak,Biaya) VALUES (DEFAULT,'{tahunid}','{prodiid} ','YPBPI','REG','{npm}','A','{tipesemester}','24','Y', {biaya});"
     with db:
         cur=db.cursor()
-        print(sql)
         cur.execute(sql)
 
 def updateBiayaKHS(npm, tahunid, biaya):
@@ -152,7 +151,6 @@ def callback_api_va(token):
         npm=cekNpmInTrxID(trxid)
         tipesemester=cekTipeSemester(trxid)
         tahunid=f'{yearnow}{tipesemester}'
-        print(tahunid)
         prodiid=f'{npm[0]}{npm[3]}'
         virtual_account=req['virtual_account']
         customer_name=req['customer_name']
