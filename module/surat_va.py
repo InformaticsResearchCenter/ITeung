@@ -11,6 +11,19 @@ from module import kelas, bkd
 
 import config, os
 
+def auth(data):
+    if kelas.getNpmandNameMahasiswa(data[0]) == None:
+        ret = False
+    else:
+        ret = True
+    return ret
+
+def replymsg(driver, data):
+    npm=kelas.getNpmandNameMahasiswa(data[0])
+    makePdfAndSendToEmail(npm)
+    msgreply=f'okeee sudah dikirim ke email kamu yang {kelas.getStudentEmail(npm)} yaa... coba buruan dicekk...'
+    return msgreply
+
 def getPekerjaanOrtuAyah(npm):
     db=kelas.dbConnectSiap()
     sql=f'select Nama from simak_ref_pekerjaan_ortu where Pekerjaan=(select PekerjaanAyah from simak_mst_mahasiswa where MhswID={npm})'
