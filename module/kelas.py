@@ -34,7 +34,7 @@ import requests
 #     return msgreply
 
 def dbConnect():
-    db = pymysql.connect(config.db_host, config.db_username, config.db_password, config.db_name)
+    db = pymysql.connect(config.db_host, config.db_username, config.db_password, config.db_name, port=int(config.db_port))
     return db
 
 
@@ -128,10 +128,11 @@ def getTahunID():
         cur=db.cursor()
         cur.execute(sql)
         row=cur.fetchone()
-        if row[0][-1] == '3':
-            return str(int(row[0])-1)
-        else:
-            return row[0]
+        return row[0]
+        # if row[0][-1] == '3':
+        #     return str(int(row[0])-1)
+        # else:
+        #     return row[0]
 
 def getAllDataDosens(dosenid):
     db=dbConnectSiap()
