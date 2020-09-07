@@ -43,7 +43,7 @@ def replymsg(driver, data):
              f'Biaya Pokok SPP: {app.floatToRupiah(float(biaya_pokok_spp))}\n' \
              f'Biaya Tunggakan SPP: {app.floatToRupiah(tunggakan)}\n' \
              f'Jumlah Tagihan: {app.floatToRupiah(float(trx_amount))}\n' \
-             f'Biaya Minimal Pembayaran: {app.floatToRupiah(float(trx_amount))}\n' \
+             f'Biaya Minimal Pembayaran: {app.floatToRupiah(float(trx_amount)/2)}\n' \
              f'Batas KRS: .....'
     return msgreply
 
