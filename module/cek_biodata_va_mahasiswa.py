@@ -40,10 +40,10 @@ def replymsg(driver, data):
              f'Customer Name: {customer_name}\n' \
              f'Customer Email: {customer_email}\n' \
              f'Customer Phone Number: {customer_phone}\n' \
-             f'Biaya Pokok SPP: {biaya_pokok_spp}\n' \
-             f'Biaya Tunggakan SPP: {tunggakan}\n' \
+             f'Biaya Pokok SPP: {app.floatToRupiah(float(biaya_pokok_spp))}\n' \
+             f'Biaya Tunggakan SPP: {app.floatToRupiah(tunggakan)}\n' \
              f'Jumlah Tagihan: {app.floatToRupiah(float(trx_amount))}\n' \
-             f'Biaya Minimal Pembayaran: {minimum_pembayaran}\n' \
+             f'Biaya Minimal Pembayaran: {app.floatToRupiah(float(trx_amount))}\n' \
              f'Batas KRS: .....'
     return msgreply
 
