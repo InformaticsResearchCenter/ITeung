@@ -36,7 +36,7 @@ def replymsg(driver, data):
              f'Penasehat Akademik: {kelas.getNamaDosen(penasehat_akademik)}\n\n' \
              f'*DATA VIRTUAL ACCOUNT BNI (Semester Ganjil 2020/2021)*\n' \
              f'Virtual Account: {virtual_account}\n' \
-             f'Status Virtual Account: Aktif' \
+             f'Status Virtual Account: Aktif\n' \
              f'Customer Name: {customer_name}\n' \
              f'Customer Email: {customer_email}\n' \
              f'Customer Phone Number: {customer_phone}\n' \
