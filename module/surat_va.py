@@ -95,7 +95,7 @@ def makePdfAndSendToEmail(npm):
 
         data= [
             [f'<font name="Times" size="10">Nama</font>', '<font name="Times" size="10">:</font>', f'<font name="Times" size="10">{namaOrtu}</font>'],
-            [f'<font name="Times" size="10">KTP</font>', '<font name="Times" size="10">:</font>', f'<font name="Times" size="10">1234567890</font>'],
+            [f'<font name="Times" size="10">KTP</font>', '<font name="Times" size="10">:</font>', f'<font name="Times" size="10"> </font>'],
             [f'<font name="Times" size="10">No. Telepon</font>', '<font name="Times" size="10">:</font>', f'<font name="Times" size="10">{noTelp}</font>'],
             [f'<font name="Times" size="10">No. HP/WA</font>', '<font name="Times" size="10">:</font>', f'<font name="Times" size="10">{noHandphone}</font>'],
             [f'<font name="Times" size="10">Alamat E-mail</font>', '<font name="Times" size="10">:</font>', f'<font name="Times" size="10">{emailOrtu}</font>'],
