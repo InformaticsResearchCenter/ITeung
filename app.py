@@ -113,8 +113,7 @@ def cekTipeSemester(trxid):
 def openfile():
     namafile='wekwek.xlsx'
     wb = load_workbook(namafile)
-    ws = wb.active
-    return ws
+    return wb
 
 
 def getDataDefault(key, ws):
@@ -214,7 +213,7 @@ def callback_api_va(token):
                 passcodedatetime=resultpasscode.split(';')[2].replace('\n', '').replace(' ', '')
                 if passcodetrxid == trxid and passcodevirtualaccount == virtual_account and passcodedatetime == datenow:
                     message = f'Hai haiiiii kamu sudah transfer pembayaran semester yaaaa dengan{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}*NPM: {npm}*{config.whatsapp_api_lineBreak}*Nama: {customer_name}*{config.whatsapp_api_lineBreak}*Virtual Account: {virtual_account}*{config.whatsapp_api_lineBreak}*Tanggal: {datetime_payment}*{config.whatsapp_api_lineBreak}*Jumlah Transfer: {floatToRupiah(payment_amount)}*{config.whatsapp_api_lineBreak}*Total Sudah Bayar: {floatToRupiah(cumulative_payment_amount)}*{config.whatsapp_api_lineBreak}*Total Harus Bayar: {floatToRupiah(trx_amount)}*'
-                    ws = openfile()
+                    ws = openfile().active
                     prodi_singkatan = getProdiSingkatanFromProdiID(kelas.getProdiIDwithStudentID(npm)).lower()
                     tingkat = f"tk{int(datetime.now().strftime('%Y')) - int(kelas.getTahunAngkatanWithStudentID(npm)) + 1}"
                     angkatan = kelas.getTahunAngkatanWithStudentID(npm)
@@ -226,6 +225,7 @@ def callback_api_va(token):
                         minimum_payment = amount_tunggakan + fifty_percent_default_payment
                     else:
                         minimum_payment = int(trx_amount / 2)
+                    openfile().close()
                     if float(cumulative_payment_amount) >= float(minimum_payment):
                         if cekSudahAdaKHS(npm, tahunid, 'A'):
                             updateBiayaKHS(npm, tahunid, trx_amount-cumulative_payment_amount)
