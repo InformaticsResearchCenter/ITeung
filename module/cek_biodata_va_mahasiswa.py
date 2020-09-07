@@ -1,6 +1,8 @@
 from module import va_parent, kelas
 from lib import numbers
 
+import app
+
 def auth(data):
     if kelas.getNpmandNameMahasiswa(data[0]):
         return True
@@ -22,7 +24,7 @@ def replymsg(driver, data):
              f'Customer Name: {customer_name}\n' \
              f'Customer Email: {customer_email}\n' \
              f'Customer Phone Number: {customer_phone}\n' \
-             f'Transaction Amount: {trx_amount}'
+             f'Transaction Amount: {app.floatToRupiah(float(trx_amount))}'
     return msgreply
 
 def getDataVaforMahasiswa(phonenumber):
