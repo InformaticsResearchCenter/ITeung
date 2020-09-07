@@ -21,7 +21,8 @@ def replymsg(driver, data):
              f'Virtual Account: {virtual_account}\n' \
              f'Customer Name: {customer_name}\n' \
              f'Customer Email: {customer_email}\n' \
-             f'Customer Phone Number: {customer_phone}\n'
+             f'Customer Phone Number: {customer_phone}\n' \
+             f'Transaction Amount: {trx_amount}'
     return msgreply
 
 def getDataVaforMahasiswa(phonenumber):
