@@ -24,7 +24,7 @@ def replymsg(driver, data):
              f'Customer Name: {customer_name}\n' \
              f'Customer Email: {customer_email}\n' \
              f'Customer Phone Number: {customer_phone}\n' \
-             f'Transaction Amount: {app.floatToRupiah(float(trx_amount))}'
+             f'Jumlah Tagihan: {app.floatToRupiah(float(trx_amount))}'
     return msgreply
 
 def getDataVaforMahasiswa(phonenumber):
