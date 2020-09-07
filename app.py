@@ -14,6 +14,7 @@ from Crypto.Cipher import AES
 from base64 import b64decode
 from datetime import datetime
 from module import surat_va
+from openpyxl import load_workbook
 
 from flask_restful import Resource, Api, abort
 
@@ -109,6 +110,51 @@ def cekTipeSemester(trxid):
             return i
 
 
+def openfile():
+    namafile='wekwek.xlsx'
+    wb = load_workbook(namafile)
+    ws = wb.active
+    return ws
+
+
+def getDataDefault(key, ws):
+    switcher={
+        'd3titk22019': ws['F8'].value,
+        'd3titk32018': ws['H8'].value,
+        'd3mitk22019': ws['F9'].value,
+        'd3mitk32018': ws['H9'].value,
+        'd3aktk22019': ws['F10'].value,
+        'd3aktk32018': ws['H10'].value,
+        'd3mbtk22019': ws['F11'].value,
+        'd3mbtk32018': ws['H11'].value,
+        'd3lbtk22019': ws['F12'].value,
+        'd3lbtk32018': ws['H12'].value,
+        'd4titk22019': ws['F21'].value,
+        'd4titk32018': ws['H21'].value,
+        'd4titk42017': ws['J21'].value,
+        'd4aktk22019': ws['F22'].value,
+        'd4aktk32018': ws['H22'].value,
+        'd4aktk42017': ws['J22'].value,
+        'd4mbtk22019': ws['F23'].value,
+        'd4mbtk32018': ws['H23'].value,
+        'd4mbtk42017': ws['J23'].value,
+        'd4lbtk22019': ws['F24'].value,
+        'd4lbtk32018': ws['H24'].value,
+        'd4lbtk42017': ws['J24'].value
+    }
+    return switcher.get(key, 'not found!!!')
+
+
+def getProdiSingkatanFromProdiID(prodiid):
+    db=kelas.dbConnectSiap()
+    sql=f'select Singkatan from simak_mst_prodi where ProdiID={prodiid}'
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        row=cur.fetchone()
+        return row[0]
+
+
 @app.route("/")
 def home():
     return 'hello crot...'
@@ -168,7 +214,19 @@ def callback_api_va(token):
                 passcodedatetime=resultpasscode.split(';')[2].replace('\n', '').replace(' ', '')
                 if passcodetrxid == trxid and passcodevirtualaccount == virtual_account and passcodedatetime == datenow:
                     message = f'Hai haiiiii kamu sudah transfer pembayaran semester yaaaa dengan{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}*NPM: {npm}*{config.whatsapp_api_lineBreak}*Nama: {customer_name}*{config.whatsapp_api_lineBreak}*Virtual Account: {virtual_account}*{config.whatsapp_api_lineBreak}*Tanggal: {datetime_payment}*{config.whatsapp_api_lineBreak}*Jumlah Transfer: {floatToRupiah(payment_amount)}*{config.whatsapp_api_lineBreak}*Total Sudah Bayar: {floatToRupiah(cumulative_payment_amount)}*{config.whatsapp_api_lineBreak}*Total Harus Bayar: {floatToRupiah(trx_amount)}*'
-                    if float(cumulative_payment_amount) >= float(float(trx_amount)/2):
+                    ws = openfile()
+                    prodi_singkatan = getProdiSingkatanFromProdiID(kelas.getProdiIDwithStudentID(npm)).lower()
+                    tingkat = f"tk{int(datetime.now().strftime('%Y')) - int(kelas.getTahunAngkatanWithStudentID(npm)) + 1}"
+                    angkatan = kelas.getTahunAngkatanWithStudentID(npm)
+                    key = f'{prodi_singkatan}{tingkat}{angkatan}'
+                    default_amount_payment = getDataDefault(key, ws)
+                    if trx_amount > default_amount_payment:
+                        amount_tunggakan = trx_amount - default_amount_payment
+                        fifty_percent_default_payment = int(default_amount_payment / 2)
+                        minimum_payment = amount_tunggakan + fifty_percent_default_payment
+                    else:
+                        minimum_payment = int(trx_amount / 2)
+                    if float(cumulative_payment_amount) >= float(minimum_payment):
                         if cekSudahAdaKHS(npm, tahunid, 'A'):
                             updateBiayaKHS(npm, tahunid, trx_amount-cumulative_payment_amount)
                             message += f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}terima kasih yaaa sudah bayar semester, semangat kuliahnya kakaaaa......'
