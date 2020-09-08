@@ -156,12 +156,10 @@ def sendOutbox(driver):
                 i=i.replace('\\n', '%0A')
                 pesanresult+=str(i)+'+'
             nomortujuan=data[1]
-            sleep(20)
             driver.get('https://web.whatsapp.com/send?phone={nomortujuan}&text={pesan}'.format(
                 nomortujuan=str(nomortujuan),
                 pesan=str(pesanresult)
             ))
-            sleep(10)
             waitLogin(driver)
             try:
                 sleep(2)
