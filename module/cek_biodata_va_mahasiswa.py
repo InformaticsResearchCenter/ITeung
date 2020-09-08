@@ -27,13 +27,16 @@ def replymsg(driver, data):
         tunggakan=float(0)
         minimum_pembayaran = int(biaya_pokok_spp / 2)
     app.openfile().close()
+    ayah, ibu, handphoneortu=getNamaOrangTua(npm)
     msgreply=f'*BIODATA MAHASISWA*\n' \
              f'NPM: {npm}\n' \
              f'Nama: {nama_mahasiswa}\n' \
              f'Prodi: {kelas.getProdiNameWithStudentID(npm)}\n' \
              f'Nomor Handphone: {phonenumber}\n' \
              f'E-mail: {email}\n' \
-             f'Penasehat Akademik: {kelas.getNamaDosen(penasehat_akademik)}\n\n' \
+             f'Dosen Wali: {kelas.getNamaDosen(penasehat_akademik)}\n' \
+             f'Nama Orang Tua/Wali: {ayah} (Ayah) | {ibu} (Ibu)\n' \
+             f'No HP orang Tua/Wali: {handphoneortu}\n\n' \
              f'*DATA VIRTUAL ACCOUNT BNI (Semester Ganjil 2020/2021)*\n' \
              f'Virtual Account: {virtual_account}\n' \
              f'Status Virtual Account: Aktif\n' \
@@ -42,7 +45,7 @@ def replymsg(driver, data):
              f'Customer Phone Number: {customer_phone}\n' \
              f'Biaya Pokok SPP: {app.floatToRupiah(float(biaya_pokok_spp))}\n' \
              f'Biaya Tunggakan SPP: {app.floatToRupiah(tunggakan)}\n' \
-             f'Jumlah Tagihan: {app.floatToRupiah(float(trx_amount))}\n' \
+             f'Biaya Paket SPP Per Semester: {app.floatToRupiah(float(trx_amount))}\n' \
              f'Biaya Minimal Pembayaran: {app.floatToRupiah(float(trx_amount)/2)}\n' \
              f'Batas KRS: 12 Oktober 2020 - 16 Oktober 2020\n\n'\
              f'*CATATAN:* Untuk mempercepat layanan KRS Realtime *(langsung bayar langsung aktif dan bisa isi KRS)* anda diwajibkan melakukan pembayaran SPP menggunakan account VA anda, apabila pembayaran SPP tidak menggunakan account VA atau menggunakan metode transfer ke rekening YPBPI atau Giro Pos maka pengisian KRS dan aktivasi membutuhkan waktu 2 s.d 4 hari untuk mengecek bukti validasi pembayaran anda. Mohon kerjasamanya.'
@@ -73,3 +76,11 @@ def getDataMahasiswa(phonenumber):
             return row
         else:
             return None
+
+def getNamaOrangTua(npm):
+    db=kelas.dbConnectSiap()
+    sql=f'select NamaAyah, NamaIbu, HandphoneOrtu from simak_mst_mahasiswa where MhswID={npm}'
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        return cur.fetchone()
