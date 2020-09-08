@@ -221,14 +221,11 @@ def callback_api_va(token):
                     default_amount_payment = getDataDefault(key, ws)
                     if int(trx_amount) > int(default_amount_payment):
                         amount_tunggakan = int(trx_amount) - int(default_amount_payment)
-                        fifty_percent_default_payment = int(default_amount_payment / 2)
+                        fifty_percent_default_payment = int(default_amount_payment) / 2
                         minimum_payment = int(amount_tunggakan) + int(fifty_percent_default_payment)
                     else:
-                        minimum_payment = int(trx_amount / 2)
+                        minimum_payment = int(trx_amount) / 2
                     openfile().close()
-                    f = open("datavahitungan.txt", "a")
-                    f.write(f'{prodi_singkatan},{tingkat},{angkatan},{key},{default_amount_payment},{trx_amount},{minimum_payment}')
-                    f.close()
                     if float(cumulative_payment_amount) >= float(minimum_payment):
                         writedata=open("krs.txt", "a")
                         writedata.write(f'{npm},{customer_name},{datenow}')
@@ -247,9 +244,6 @@ def callback_api_va(token):
                             }
                         ), 200)
                     else:
-                        writedata = open("tidakkrs.txt", "w+")
-                        writedata.write(f'{npm},{customer_name},{datenow}')
-                        writedata.close()
                         message+=f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}Yahhhh kamu *belum bisa* isi KRS nihhhh coba *buat surat* lalu *ajukan ke pihak BAUK* agar kamu bisa isi KRS..... Suratnya udah {config.bot_name} kirim ke *{kelas.getStudentEmail(npm)}*'
                         wa.setOutbox(kelas.getHandphoneMahasiswa(npm), message)
                         tes=surat_va.makePdfAndSendToEmail(npm)
