@@ -174,7 +174,11 @@ def sendOutbox(driver):
                 except:
                     driver.get("https://web.whatsapp.com/")
         except:
-            driver.get("https://web.whatsapp.com/")
+            try:
+                driver.get("https://web.whatsapp.com/")
+            except:
+                driver.close()
+                loginWA(driver)
     else:
         print('no outbox')
 
