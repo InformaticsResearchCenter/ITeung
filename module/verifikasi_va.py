@@ -47,7 +47,7 @@ def replymsg(driver, data):
         angkatan = kelas.getTahunAngkatanWithStudentID(npm)
         key = f'{prodi_singkatan}{tingkat}{angkatan}'
         default_amount_payment = app.getDataDefault(key, ws)
-        message = f'Hai haiiiii kamu sudah transfer pembayaran semester yaaaa dengan{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}*NPM: {npm}*{config.whatsapp_api_lineBreak}*Nama: {customer_name}*{config.whatsapp_api_lineBreak}*Virtual Account: {virtual_account}*{config.whatsapp_api_lineBreak}*Tanggal: {datetime_payment}*{config.whatsapp_api_lineBreak}*Jumlah Transfer: {app.floatToRupiah(payment_amount)}*{config.whatsapp_api_lineBreak}*Total Sudah Bayar: {app.floatToRupiah(cumulative_payment_amount)}*{config.whatsapp_api_lineBreak}*Total Harus Bayar: {app.floatToRupiah(trx_amount)}*'
+        message = f'Hai haiiiii kamu sudah transfer pembayaran semester yaaaa dengan\n\n*NPM: {npm}*\n*Nama: {customer_name}*\n*Virtual Account: {virtual_account}*\n*Tanggal: {datetime_payment}*\n*Jumlah Transfer: {app.floatToRupiah(payment_amount)}*\n*Total Sudah Bayar: {app.floatToRupiah(cumulative_payment_amount)}*\n*Total Harus Bayar: {app.floatToRupiah(trx_amount)}*'
         if int(trx_amount) > int(default_amount_payment):
             amount_tunggakan = int(trx_amount) - int(default_amount_payment)
             fifty_percent_default_payment = int(default_amount_payment) / 2
@@ -58,13 +58,13 @@ def replymsg(driver, data):
         if float(cumulative_payment_amount) >= float(minimum_payment):
             if app.cekSudahAdaKHS(npm, tahunid, 'A'):
                 app.updateBiayaKHS(npm, tahunid, trx_amount - cumulative_payment_amount)
-                message += f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}terima kasih yaaa sudah bayar semester, semangat kuliahnya kakaaaa......'
+                message += f'\n\nterima kasih yaaa sudah bayar semester, semangat kuliahnya kakaaaa......'
             else:
-                message += f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}Kamu *sudah bisa* isi KRS yaaa coba cek di *SIAP* yaaa...., #BOTNAME# ucapkan terima kasihhhh dan jangan salah saat isi KRS yaaa....'
+                message += f'\n\nKamu *sudah bisa* isi KRS yaaa coba cek di *SIAP* yaaa...., #BOTNAME# ucapkan terima kasihhhh dan jangan salah saat isi KRS yaaa....'
                 message = message.replace('#BOTNAME#', config.bot_name)
                 app.insertnewKHS(npm, tahunid, prodiid, app.cekSesiSemester(tipesemester, npm), trx_amount - cumulative_payment_amount)
         else:
-            message += f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}Yahhhh kamu *belum bisa* isi KRS nihhhh coba *buat surat* lalu *ajukan ke pihak BAUK* agar kamu bisa isi KRS..... Suratnya udah {config.bot_name} kirim ke *{kelas.getStudentEmail(npm)}*'
+            message += f'\n\nYahhhh kamu *belum bisa* isi KRS nihhhh coba *buat surat* lalu *ajukan ke pihak BAUK* agar kamu bisa isi KRS..... Suratnya udah {config.bot_name} kirim ke *{kelas.getStudentEmail(npm)}*'
             surat_va.makePdfAndSendToEmail(npm)
         msgreply=message
     else:
