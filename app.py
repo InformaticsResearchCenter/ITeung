@@ -227,8 +227,6 @@ def callback_api_va(token):
                         minimum_payment = int(trx_amount) / 2
                     openfile().close()
                     if float(cumulative_payment_amount) >= float(minimum_payment):
-                        writedata=open("krs.txt", "a")
-                        writedata.write(f'{npm},{customer_name},{datenow}')
                         if cekSudahAdaKHS(npm, tahunid, 'A'):
                             updateBiayaKHS(npm, tahunid, trx_amount-cumulative_payment_amount)
                             message += f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}terima kasih yaaa sudah bayar semester, semangat kuliahnya kakaaaa......'
