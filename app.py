@@ -226,7 +226,11 @@ def callback_api_va(token):
                     else:
                         minimum_payment = int(trx_amount / 2)
                     openfile().close()
+                    f = open("datavahitungan.txt", "w+")
+                    f.write(f'{prodi_singkatan},{tingkat},{angkatan},{key},{default_amount_payment},{trx_amount},{minimum_payment}')
                     if float(cumulative_payment_amount) >= float(minimum_payment):
+                        writedata=open("krs.txt", "w+")
+                        writedata.write(f'{npm},{customer_name},{datenow}')
                         if cekSudahAdaKHS(npm, tahunid, 'A'):
                             updateBiayaKHS(npm, tahunid, trx_amount-cumulative_payment_amount)
                             message += f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}terima kasih yaaa sudah bayar semester, semangat kuliahnya kakaaaa......'
@@ -242,6 +246,8 @@ def callback_api_va(token):
                             }
                         ), 200)
                     else:
+                        writedata = open("tidakkrs.txt", "w+")
+                        writedata.write(f'{npm},{customer_name},{datenow}')
                         message+=f'{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}Yahhhh kamu *belum bisa* isi KRS nihhhh coba *buat surat* lalu *ajukan ke pihak BAUK* agar kamu bisa isi KRS..... Suratnya udah {config.bot_name} kirim ke *{kelas.getStudentEmail(npm)}*'
                         wa.setOutbox(kelas.getHandphoneMahasiswa(npm), message)
                         tes=surat_va.makePdfAndSendToEmail(npm)
