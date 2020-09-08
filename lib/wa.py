@@ -147,6 +147,7 @@ def isGroup(driver, default_alias_number_index):
     return group
 
 def sendOutbox(driver):
+    sleep(5)
     status, data = getOutbox()
     if status:
         try:
