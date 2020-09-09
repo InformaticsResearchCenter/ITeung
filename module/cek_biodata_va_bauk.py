@@ -1,9 +1,10 @@
+from lib import numbers
 from module import kelas, cek_biodata_va_mahasiswa
 from datetime import datetime
-import app
+import app, config
 
 def auth(data):
-    if kelas.getKodeDosen(data[0]) == 'NN257L':
+    if numbers.normalize(data[0]) == config.nomor_kepalaBAUK or numbers.normalize(data[0] == config.nomor_staffBAUK):
         return True
     else:
         return False
