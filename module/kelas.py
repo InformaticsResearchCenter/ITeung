@@ -192,7 +192,8 @@ def getStudentNameOnly(npm):
         cur = db.cursor()
         cur.execute(sql)
         rows = cur.fetchone()
-    return rows[0]
+        if rows is not None:
+            return rows[0]
 
 def getStudentIDOnly(npm):
     db = dbConnectSiap()
