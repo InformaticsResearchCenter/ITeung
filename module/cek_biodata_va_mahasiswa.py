@@ -43,9 +43,9 @@ def replymsg(driver, data):
              f'Customer Name: {customer_name}\n' \
              f'Customer Email: {customer_email}\n' \
              f'Customer Phone Number: {customer_phone}\n' \
-             f'Biaya Pokok SPP: {app.floatToRupiah(float(biaya_pokok_spp))}\n' \
+             f'Biaya Paket SPP Per Semester: {app.floatToRupiah(float(biaya_pokok_spp))}\n' \
              f'Biaya Tunggakan SPP: {app.floatToRupiah(tunggakan)}\n' \
-             f'Biaya Paket SPP Per Semester: {app.floatToRupiah(float(trx_amount))}\n' \
+             f'Jumlah Tagihan: {app.floatToRupiah(float(trx_amount))}\n' \
              f'Biaya Minimal Pembayaran: {app.floatToRupiah(float(trx_amount)/2)}\n' \
              f'Batas KRS: 12 Oktober 2020 - 16 Oktober 2020\n\n'\
              f'*CATATAN:* Untuk mempercepat layanan KRS Realtime *(langsung bayar langsung aktif dan bisa isi KRS)* anda diwajibkan melakukan pembayaran SPP menggunakan account VA anda, apabila pembayaran SPP tidak menggunakan account VA atau menggunakan metode transfer ke rekening YPBPI atau Giro Pos maka pengisian KRS dan aktivasi membutuhkan waktu 2 s.d 4 hari untuk mengecek bukti validasi pembayaran anda. Mohon kerjasamanya.'
