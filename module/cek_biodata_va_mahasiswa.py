@@ -21,11 +21,8 @@ def replymsg(driver, data):
     biaya_pokok_spp = app.getDataDefault(key, ws)
     if trx_amount > biaya_pokok_spp:
         tunggakan=float(int(trx_amount)-int(biaya_pokok_spp))
-        lima_puluh_persen_spp = int(biaya_pokok_spp / 2)
-        minimum_pembayaran = tunggakan + lima_puluh_persen_spp
     else:
         tunggakan=float(0)
-        minimum_pembayaran = int(biaya_pokok_spp / 2)
     app.openfile().close()
     ayah, ibu, handphoneortu=getNamaOrangTua(npm)
     msgreply=f'*BIODATA MAHASISWA*\n' \
