@@ -10,7 +10,10 @@ def auth(data):
 def replymsg(driver, data):
     npm, nama=kelas.getNpmandNameMahasiswa(data[0])
     judul=data[3].split(' pitak ')[1]
-    updateJudulPitak(npm, judul, kelas.getTahunID())
+    tahunid=kelas.getTahunID()
+    if tahunid[-1] == '3':
+        tahunid=str(int(tahunid)-1)
+    updateJudulPitak(npm, judul, tahunid)
     msgreply=f'oke sudah #BOTNAME# update judulnya menjadi {judul}'
     return msgreply
 
