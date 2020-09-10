@@ -4,7 +4,7 @@ from datetime import datetime
 import app, config
 
 def auth(data):
-    if numbers.normalize(data[0]) == config.nomor_kepalaBAUK or numbers.normalize(data[0]) == config.nomor_staffBAUK:
+    if numbers.normalize(data[0]) == config.nomor_kepalaBAUK or numbers.normalize(data[0]) == config.nomor_staffBAUK or numbers.normalize(data[0]) == config.nomor_callcenterBAUK:
         return True
     else:
         return False
@@ -37,8 +37,8 @@ def replymsg(driver, data):
                    f'Dosen Wali: {kelas.getNamaDosen(penasehat_akademik)}\n' \
                    f'Nama Orang Tua/Wali: {ayah} (Ayah) | {ibu} (Ibu)\n' \
                    f'No HP orang Tua/Wali: {handphoneortu}\n\n' \
-                   f'*DATA VIRTUAL ACCOUNT BNI (Semester Ganjil 2020/2021)*\n' \
-                   f'Virtual Account: {virtual_account}\n' \
+                   f'*DATA VIRTUAL ACCOUNT BNI (Semester Ganjil 2020/2021)*\n\n' \
+                   f'Virtual Account: *{virtual_account}*\n' \
                    f'Status Virtual Account: Aktif\n' \
                    f'Customer Name: {customer_name}\n' \
                    f'Customer Email: {customer_email}\n' \
