@@ -60,13 +60,13 @@ def replymsg(driver, data):
         msgreply+=f'*DATA VIRTUAL ACCOUNT BNI TA (Semester Ganjil 2020/2021)*\n' \
                   f'Kode Transaksi: {payment_ta["trx_id"]}\n\n'
     if payment_sp:
-        msgreply += f'*DATA VIRTUAL ACCOUNT BNI SPP (Semester Ganjil 2020/2021)*\n' \
+        msgreply += f'*DATA VIRTUAL ACCOUNT BNI SP (Semester Ganjil 2020/2021)*\n' \
                     f'Kode Transaksi: {payment_sp["trx_id"]}\n\n'
     if payment_ulang:
-        msgreply += f'*DATA VIRTUAL ACCOUNT BNI SPP (Semester Ganjil 2020/2021)*\n' \
+        msgreply += f'*DATA VIRTUAL ACCOUNT BNI ULANG (Semester Ganjil 2020/2021)*\n' \
                     f'Kode Transaksi: {payment_ulang["trx_id"]}\n\n'
     if payment_wisuda:
-        msgreply += f'*DATA VIRTUAL ACCOUNT BNI SPP (Semester Ganjil 2020/2021)*\n' \
+        msgreply += f'*DATA VIRTUAL ACCOUNT BNI WISUDA (Semester Ganjil 2020/2021)*\n' \
                     f'Kode Transaksi: {payment_wisuda["trx_id"]}\n\n'
     msgreply+=f'*CATATAN:* Untuk mempercepat layanan KRS Realtime *(langsung bayar langsung aktif dan bisa isi KRS)* anda diwajibkan melakukan pembayaran SPP menggunakan account VA anda, apabila pembayaran SPP tidak menggunakan account VA atau menggunakan metode transfer ke rekening YPBPI atau Giro Pos maka pengisian KRS dan aktivasi membutuhkan waktu 2 s.d 4 hari untuk mengecek bukti validasi pembayaran anda. Mohon kerjasamanya.'
     return msgreply
@@ -163,7 +163,7 @@ def getULANG(npm):
 
 def getWISUDA(npm):
     db=va_parent.dbConnectVA()
-    sql=f"SELECT * FROM `upload` where trx_id like '%SP%{npm}%' order by upload_id desc limit 1"
+    sql=f"SELECT * FROM `upload` where trx_id like '%WISUDA%{npm}%' order by upload_id desc limit 1"
     with db:
         cur=db.cursor()
         cur.execute(sql)
