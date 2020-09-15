@@ -21,7 +21,7 @@ def replymsg(driver, data):
             i=getData(f'{tahun}1', npm)
             msgreply += f'NPM Mahasiswa: *{i["MhswID"]}*\n' \
                         f'Nama Mahasiswa: *{i["nama"]}*\n' \
-                        f'Tanggal Lahir: *{i["TanggalLahir"]}*\n' \
+                        f'Tanggal Lahir: *{i["TGL_LAHIR"]}*\n' \
                         f'NIK KTP: *{i["nik"]}*\n' \
                         f'Judul: *{i["Judul"]}*\n\n'
         else:
@@ -41,7 +41,12 @@ def valid_year_uda(message):
 
 def getData(tahun, npm):
     db = kelas.dbConnectSiap()
-    sql = f"SELECT simpati.simak_mst_mahasiswa.MhswID, simpati.simak_mst_mahasiswa.nama, simpati.simak_mst_mahasiswa.TanggalLahir, simpati.simak_mst_mahasiswa.nik, simak_trn_ta.Judul, " \
+    sql = f"SELECT " \
+          f"simpati.simak_mst_mahasiswa.MhswID, " \
+          f"simpati.simak_mst_mahasiswa.nama, " \
+          f"iteungformattanggal(STR_TO_DATE(simpati.simak_mst_mahasiswa.TanggalLahir,'%Y-%m-%d')) AS TGL_LAHIR, " \
+          f"simpati.simak_mst_mahasiswa.nik, " \
+          f"simak_trn_ta.Judul, " \
           f"sum(simpati.simak_trn_transkrip.sks) as SKS_SMT, " \
           f"sum(simpati.simak_trn_transkrip.BobotNilai * simpati.simak_trn_transkrip.sks) as T_bobot," \
           f"round (sum(simpati.simak_trn_transkrip.BobotNilai * simpati.simak_trn_transkrip.sks) / sum(simpati.simak_trn_transkrip.sks),2) as IPK_Trans, " \
