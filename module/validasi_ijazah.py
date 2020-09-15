@@ -19,14 +19,11 @@ def replymsg(driver, data):
         if tahun:
             msgreply = 'ini yaa datanyaa...\n\n'
             i=getData(f'{tahun}1', npm)
-            msgreply += f'NPM Mahasiswa: {i["MhswID"]}\n' \
-                        f'Nama Mahasiswa: {i["nama"]}\n' \
-                        f'Tanggal Lahir: {i["TanggalLahir"]}\n' \
-                        f'NIK KTP: {i["nik"]}\n' \
-                        f'Judul: {i["Judul"]}\n' \
-                        f'SKS Semester: {i["SKS_SMT"]}\n' \
-                        f'IPK Transkrip: {i["IPK_Trans"]}\n' \
-                        f'Prodi: {i["Nama"]}\n\n'
+            msgreply += f'NPM Mahasiswa: *{i["MhswID"]}*\n' \
+                        f'Nama Mahasiswa: *{i["nama"]}*\n' \
+                        f'Tanggal Lahir: *{i["TanggalLahir"]}*\n' \
+                        f'NIK KTP: *{i["nik"]}*\n' \
+                        f'Judul: {i["Judul"]}\n\n'
         else:
             msgreply = 'tahun tidak valid'
     else:
