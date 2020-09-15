@@ -30,7 +30,7 @@ def replymsg(driver, data):
         tunggakan=float(int(payment_spp['trx_amount'])-int(biaya_pokok_spp))
     else:
         tunggakan=float(0)
-        
+
     app.openfile().close()
     ayah, ibu, handphoneortu=getNamaOrangTua(npm)
     msgreply = f'*BIODATA MAHASISWA*\n' \
@@ -52,8 +52,8 @@ def replymsg(driver, data):
                   f'Customer Phone Number: {payment_spp["customer_phone"]}\n' \
                   f'Biaya Paket SPP Per Semester: {app.floatToRupiah(float(biaya_pokok_spp))}\n' \
                   f'Biaya Tunggakan SPP: {app.floatToRupiah(tunggakan)}\n' \
-                  f'Jumlah Tagihan: {app.floatToRupiah(float(trx_amount))}\n' \
-                  f'Biaya Minimal Pembayaran: {app.floatToRupiah(float(trx_amount) / 2)}\n' \
+                  f'Jumlah Tagihan: {app.floatToRupiah(float(payment_spp["trx_amount"]))}\n' \
+                  f'Biaya Minimal Pembayaran: {app.floatToRupiah(float(payment_spp["trx_amount"]) / 2)}\n' \
                   f'Batas KRS: 12 Oktober 2020 - 16 Oktober 2020\n\n'
     if payment_toefl:
         msgreply+=f'*DATA VIRTUAL ACCOUNT BNI SPP (Semester Ganjil 2020/2021)*\n' \
