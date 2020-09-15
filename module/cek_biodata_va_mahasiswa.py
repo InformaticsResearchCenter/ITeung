@@ -26,7 +26,7 @@ def replymsg(driver, data):
     payment_ulang = getULANG(npm)
     payment_wisuda = getWISUDA(npm)
 
-    if payment_spp['trx_amount'] > biaya_pokok_spp:
+    if int(payment_spp['trx_amount']) > int(biaya_pokok_spp):
         tunggakan=float(int(payment_spp['trx_amount'])-int(biaya_pokok_spp))
     else:
         tunggakan=float(0)
