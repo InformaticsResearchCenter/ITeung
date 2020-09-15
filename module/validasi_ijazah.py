@@ -53,7 +53,7 @@ def getData(tahun, npm):
           f"inner join simak_mst_prodi on simak_mst_prodi.ProdiID=simak_mst_mahasiswa.ProdiID " \
           f"INNER JOIN simak_trn_ta ON simpati.simak_mst_mahasiswa.MhswID=simak_trn_ta.MhswID " \
           f"left join simpati.simak_trn_transkrip on simak_mst_mahasiswa.MhswID=simpati.simak_trn_transkrip.MhswID " \
-          f"where simpati.simak_mst_mahasiswa.TahunID in ('{tahun}') and simpati.simak_mst_mahasiswa.MhswID = {npm}" \
+          f"where simpati.simak_mst_mahasiswa.TahunID in ('{tahun}') and simpati.simak_mst_mahasiswa.MhswID = {npm} " \
           f"group by simak_mst_mahasiswa.MhswID, simak_mst_mahasiswa.Nama, simak_mst_prodi.Nama;"
     with db:
         cur = db.cursor()
