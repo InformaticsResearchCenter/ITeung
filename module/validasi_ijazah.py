@@ -1,4 +1,5 @@
 from module import kelas
+from module import cek_biodata_va_bauk
 
 from lib import numbers
 from lib import message
@@ -13,10 +14,11 @@ def auth(data):
 
 def replymsg(driver, data):
     tahun = valid_year_uda(message.normalize(data[3]).split(' '))
-    if tahun:
-        msgreply = 'ini yaa datanyaa...\n\n'
-        for i in getData(f'{tahun}1'):
-            print(i)
+    npm, status = cek_biodata_va_bauk.cekNPM(message.normalize(data[3]).split(' '))
+    if status:
+        if tahun:
+            msgreply = 'ini yaa datanyaa...\n\n'
+            i=getData(f'{tahun}1', npm)
             msgreply += f'NPM Mahasiswa: {i["MhswID"]}\n' \
                         f'Nama Mahasiswa: {i["nama"]}\n' \
                         f'Tanggal Lahir: {i["TanggalLahir"]}\n' \
@@ -25,8 +27,10 @@ def replymsg(driver, data):
                         f'SKS Semester: {i["SKS_SMT"]}\n' \
                         f'IPK Transkrip: {i["IPK_Trans"]}\n' \
                         f'Prodi: {i["Nama"]}\n\n'
+        else:
+            msgreply = 'tahun tidak valid'
     else:
-        msgreply = 'tahun tidak valid'
+        msgreply='npm tidak valid'
     return msgreply
 
 
@@ -38,7 +42,7 @@ def valid_year_uda(message):
                 return i
 
 
-def getData(tahun):
+def getData(tahun, npm):
     db = kelas.dbConnectSiap()
     sql = f"SELECT simpati.simak_mst_mahasiswa.MhswID, simpati.simak_mst_mahasiswa.nama, simpati.simak_mst_mahasiswa.TanggalLahir, simpati.simak_mst_mahasiswa.nik, simak_trn_ta.Judul, " \
           f"sum(simpati.simak_trn_transkrip.sks) as SKS_SMT, " \
@@ -49,13 +53,15 @@ def getData(tahun):
           f"inner join simak_mst_prodi on simak_mst_prodi.ProdiID=simak_mst_mahasiswa.ProdiID " \
           f"INNER JOIN simak_trn_ta ON simpati.simak_mst_mahasiswa.MhswID=simak_trn_ta.MhswID " \
           f"left join simpati.simak_trn_transkrip on simak_mst_mahasiswa.MhswID=simpati.simak_trn_transkrip.MhswID " \
-          f"where simpati.simak_mst_mahasiswa.TahunID in ('{tahun}') " \
+          f"where simpati.simak_mst_mahasiswa.TahunID in ('{tahun}') and simpati.simak_mst_mahasiswa.MhswID = {npm}" \
           f"group by simak_mst_mahasiswa.MhswID, simak_mst_mahasiswa.Nama, simak_mst_prodi.Nama;"
     with db:
         cur = db.cursor()
         cur.execute(sql)
-        desc = cur.description
-        column_names = [col[0] for col in desc]
-        data = [dict(zip(column_names, row))
-                for row in cur.fetchall()]
-        return data
+        data=cur.fetchone()
+        if data != None:
+            fields = map(lambda x: x[0], cur.description)
+            result = dict(zip(fields, data))
+        else:
+            result=None
+        return result
