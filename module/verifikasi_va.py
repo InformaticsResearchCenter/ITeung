@@ -53,7 +53,9 @@ def replymsg(driver, data):
             fifty_percent_default_payment = int(default_amount_payment) / 2
             minimum_payment = int(amount_tunggakan) + int(fifty_percent_default_payment)
         else:
-            minimum_payment = int(trx_amount) / 2
+            potongan = int(default_amount_payment) - int(trx_amount)
+            minimum_payment = int(default_amount_payment) / 2
+            cumulative_payment_amount += (int(default_amount_payment) - int(trx_amount))
         app.openfile().close()
         if float(cumulative_payment_amount) >= float(minimum_payment):
             if app.cekSudahAdaKHS(npm, tahunid, 'A'):
