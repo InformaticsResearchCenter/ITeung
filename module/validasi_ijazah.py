@@ -23,7 +23,7 @@ def replymsg(driver, data):
                         f'Nama Mahasiswa: *{i["nama"]}*\n' \
                         f'Tanggal Lahir: *{i["TanggalLahir"]}*\n' \
                         f'NIK KTP: *{i["nik"]}*\n' \
-                        f'Judul: {i["Judul"]}\n\n'
+                        f'Judul: *{i["Judul"]}*\n\n'
         else:
             msgreply = 'tahun tidak valid'
     else:
