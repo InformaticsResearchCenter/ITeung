@@ -107,7 +107,7 @@ def getNamaOrangTua(npm):
 
 def getSPP(npm):
     db=va_parent.dbConnectVA()
-    sql=f"SELECT * FROM `upload` where trx_id like '%SPP%{npm}%' order by upload_id desc limit 1"
+    sql=f"SELECT * FROM `upload` where trx_id like '%-SPP-%{npm}%' order by upload_id desc limit 1"
     with db:
         cur=db.cursor()
         cur.execute(sql)
@@ -121,7 +121,7 @@ def getSPP(npm):
 
 def getTOEFL(npm):
     db=va_parent.dbConnectVA()
-    sql=f"SELECT * FROM `upload` where trx_id like '%TOEFL%{npm}%' order by upload_id desc limit 1"
+    sql=f"SELECT * FROM `upload` where trx_id like '%-TOEFL-%{npm}%' order by upload_id desc limit 1"
     with db:
         cur=db.cursor()
         cur.execute(sql)
@@ -135,7 +135,7 @@ def getTOEFL(npm):
 
 def getSP(npm):
     db=va_parent.dbConnectVA()
-    sql=f"SELECT * FROM `upload` where trx_id like '%SP%{npm}%' order by upload_id desc limit 1"
+    sql=f"SELECT * FROM `upload` where trx_id like '%-SP-%{npm}%' order by upload_id desc limit 1"
     with db:
         cur=db.cursor()
         cur.execute(sql)
@@ -149,7 +149,7 @@ def getSP(npm):
 
 def getULANG(npm):
     db=va_parent.dbConnectVA()
-    sql=f"SELECT * FROM `upload` where trx_id like '%ULANG%{npm}%' order by upload_id desc limit 1"
+    sql=f"SELECT * FROM `upload` where trx_id like '%-ULANG-%{npm}%' order by upload_id desc limit 1"
     with db:
         cur=db.cursor()
         cur.execute(sql)
@@ -163,7 +163,7 @@ def getULANG(npm):
 
 def getWISUDA(npm):
     db=va_parent.dbConnectVA()
-    sql=f"SELECT * FROM `upload` where trx_id like '%WISUDA%{npm}%' order by upload_id desc limit 1"
+    sql=f"SELECT * FROM `upload` where trx_id like '%-WISUDA-%{npm}%' order by upload_id desc limit 1"
     with db:
         cur=db.cursor()
         cur.execute(sql)
@@ -177,7 +177,7 @@ def getWISUDA(npm):
 
 def getTA(npm):
     db=va_parent.dbConnectVA()
-    sql=f"SELECT * FROM `upload` where trx_id like '%TA%{npm}%' order by upload_id desc limit 1"
+    sql=f"SELECT * FROM `upload` where trx_id like '%-TA-%{npm}%' order by upload_id desc limit 1"
     with db:
         cur=db.cursor()
         cur.execute(sql)
