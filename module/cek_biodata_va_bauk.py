@@ -64,7 +64,7 @@ def replymsg(driver, data):
                             f'Batas KRS: 12 Oktober 2020 - 16 Oktober 2020\n\n'
         except:
             pass
-        
+
         if payment_toefl:
             msgreply += f'*DATA VIRTUAL ACCOUNT BNI TOEFL*\n\n' \
                         f'*Kode Transaksi: {payment_toefl["trx_id"]}*\n' \
@@ -76,7 +76,7 @@ def replymsg(driver, data):
         if payment_ta:
             msgreply += f'*DATA VIRTUAL ACCOUNT BNI TA*\n\n' \
                         f'*Kode Transaksi: {payment_ta["trx_id"]}*\n' \
-                        f'Virtual Account: {payment_ta["virtual_account"]}\n' \
+                        f'*Virtual Account: {payment_ta["virtual_account"]}*\n' \
                         f'Customer Name: {payment_ta["customer_name"]}\n' \
                         f'Customer Email: {payment_ta["customer_email"]}\n' \
                         f'Customer Phone Number: {payment_ta["customer_phone"]}\n' \
@@ -92,7 +92,7 @@ def replymsg(driver, data):
         if payment_ulang:
             msgreply += f'*DATA VIRTUAL ACCOUNT BNI ULANG*\n\n' \
                         f'*Kode Transaksi: {payment_ulang["trx_id"]}*\n' \
-                        f'Virtual Account: {payment_ulang["virtual_account"]}\n' \
+                        f'*Virtual Account: {payment_ulang["virtual_account"]}*\n' \
                         f'Customer Name: {payment_ulang["customer_name"]}\n' \
                         f'Customer Email: {payment_ulang["customer_email"]}\n' \
                         f'Customer Phone Number: {payment_ulang["customer_phone"]}\n' \
