@@ -15,7 +15,7 @@ def replymsg(driver, data):
     if status:
         studentphonenumber=kelas.getStudentPhoneNumberFromNPM(npm)
         npm, nama_mahasiswa, prodi_id, phonenumber, email, penasehat_akademik = cek_biodata_va_mahasiswa.getDataMahasiswa(studentphonenumber)
-        virtual_account, customer_name, customer_email, customer_phone, trx_amount = cek_biodata_va_mahasiswa.getDataVaforMahasiswa(studentphonenumber)
+        virtual_account, customer_name, customer_email, customer_phone, trx_amount, trx_id = cek_biodata_va_mahasiswa.getDataVaforMahasiswa(studentphonenumber)
         ws = app.openfile().active
         prodi_singkatan = app.getProdiSingkatanFromProdiID(kelas.getProdiIDwithStudentID(npm)).lower()
         tingkat = f"tk{int(datetime.now().strftime('%Y')) - int(kelas.getTahunAngkatanWithStudentID(npm)) + 1}"
