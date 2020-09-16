@@ -56,7 +56,7 @@ def replymsg(driver, data):
                   f'Biaya Minimal Pembayaran: {app.floatToRupiah(float(payment_spp["trx_amount"]) / 2)}\n' \
                   f'Batas KRS: 12 Oktober 2020 - 16 Oktober 2020\n\n'
     if payment_toefl:
-        msgreply+=f'*DATA VIRTUAL ACCOUNT BNI SPP (Semester Ganjil 2020/2021)*\n' \
+        msgreply+=f'*DATA VIRTUAL ACCOUNT BNI TOEFL (Semester Ganjil 2020/2021)*\n' \
                   f'Kode Transaksi: {payment_toefl["trx_id"]}\n\n'
     if payment_ta:
         msgreply+=f'*DATA VIRTUAL ACCOUNT BNI TA (Semester Ganjil 2020/2021)*\n' \
