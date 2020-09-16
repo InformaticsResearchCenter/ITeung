@@ -43,9 +43,9 @@ def replymsg(driver, data):
                f'Nama Orang Tua/Wali: {ayah} (Ayah) | {ibu} (Ibu)\n' \
                f'No HP orang Tua/Wali: {handphoneortu}\n\n'
     if payment_spp:
-        msgreply+=f'*DATA VIRTUAL ACCOUNT BNI SPP (Semester Ganjil 2020/2021)*\n' \
-                  f'Kode Transaksi: {payment_spp["trx_id"]}\n' \
-                  f'Virtual Account: {payment_spp["virtual_account"]}\n' \
+        msgreply+=f'*DATA VIRTUAL ACCOUNT BNI SPP (Semester Ganjil 2020/2021)*\n\n' \
+                  f'*Kode Transaksi: {payment_spp["trx_id"]}*\n' \
+                  f'*Virtual Account: {payment_spp["virtual_account"]}*\n' \
                   f'Status Virtual Account: Aktif\n' \
                   f'Customer Name: {payment_spp["customer_name"]}\n' \
                   f'Customer Email: {payment_spp["customer_email"]}\n' \
@@ -56,20 +56,45 @@ def replymsg(driver, data):
                   f'Biaya Minimal Pembayaran: {app.floatToRupiah(float(payment_spp["trx_amount"]) / 2)}\n' \
                   f'Batas KRS: 12 Oktober 2020 - 16 Oktober 2020\n\n'
     if payment_toefl:
-        msgreply+=f'*DATA VIRTUAL ACCOUNT BNI TOEFL (Semester Ganjil 2020/2021)*\n' \
-                  f'Kode Transaksi: {payment_toefl["trx_id"]}\n\n'
+        msgreply += f'*DATA VIRTUAL ACCOUNT BNI TOEFL*\n\n' \
+                    f'*Kode Transaksi: {payment_toefl["trx_id"]}*\n' \
+                    f'*Virtual Account: {payment_toefl["virtual_account"]}*\n' \
+                    f'Customer Name: {payment_toefl["customer_name"]}\n' \
+                    f'Customer Email: {payment_toefl["customer_email"]}\n' \
+                    f'Customer Phone Number: {payment_toefl["customer_phone"]}\n' \
+                    f'Jumlah Tagihan: {app.floatToRupiah(float(payment_toefl["trx_amount"]))}\n\n'
     if payment_ta:
-        msgreply+=f'*DATA VIRTUAL ACCOUNT BNI TA (Semester Ganjil 2020/2021)*\n' \
-                  f'Kode Transaksi: {payment_ta["trx_id"]}\n\n'
+        msgreply += f'*DATA VIRTUAL ACCOUNT BNI TA*\n\n' \
+                    f'*Kode Transaksi: {payment_ta["trx_id"]}*\n' \
+                    f'Virtual Account: {payment_ta["virtual_account"]}\n' \
+                    f'Customer Name: {payment_ta["customer_name"]}\n' \
+                    f'Customer Email: {payment_ta["customer_email"]}\n' \
+                    f'Customer Phone Number: {payment_ta["customer_phone"]}\n' \
+                    f'Jumlah Tagihan: {app.floatToRupiah(float(payment_ta["trx_amount"]))}\n\n'
     if payment_sp:
-        msgreply += f'*DATA VIRTUAL ACCOUNT BNI SP (Semester Ganjil 2020/2021)*\n' \
-                    f'Kode Transaksi: {payment_sp["trx_id"]}\n\n'
+        msgreply += f'*DATA VIRTUAL ACCOUNT BNI SP*\n\n' \
+                    f'*Kode Transaksi: {payment_sp["trx_id"]}*\n' \
+                    f'*Virtual Account: {payment_sp["virtual_account"]}*\n' \
+                    f'Customer Name: {payment_sp["customer_name"]}\n' \
+                    f'Customer Email: {payment_sp["customer_email"]}\n' \
+                    f'Customer Phone Number: {payment_sp["customer_phone"]}\n' \
+                    f'Jumlah Tagihan: {app.floatToRupiah(float(payment_sp["trx_amount"]))}\n\n'
     if payment_ulang:
-        msgreply += f'*DATA VIRTUAL ACCOUNT BNI ULANG (Semester Ganjil 2020/2021)*\n' \
-                    f'Kode Transaksi: {payment_ulang["trx_id"]}\n\n'
+        msgreply += f'*DATA VIRTUAL ACCOUNT BNI ULANG*\n\n' \
+                    f'*Kode Transaksi: {payment_ulang["trx_id"]}*\n' \
+                    f'Virtual Account: {payment_ulang["virtual_account"]}\n' \
+                    f'Customer Name: {payment_ulang["customer_name"]}\n' \
+                    f'Customer Email: {payment_ulang["customer_email"]}\n' \
+                    f'Customer Phone Number: {payment_ulang["customer_phone"]}\n' \
+                    f'Jumlah Tagihan: {app.floatToRupiah(float(payment_ulang["trx_amount"]))}\n\n'
     if payment_wisuda:
-        msgreply += f'*DATA VIRTUAL ACCOUNT BNI WISUDA (Semester Ganjil 2020/2021)*\n' \
-                    f'Kode Transaksi: {payment_wisuda["trx_id"]}\n\n'
+        msgreply += f'*DATA VIRTUAL ACCOUNT BNI WISUDA*\n\n' \
+                    f'*Kode Transaksi: {payment_wisuda["trx_id"]}*\n' \
+                    f'*Virtual Account: {payment_wisuda["virtual_account"]}*\n' \
+                    f'Customer Name: {payment_wisuda["customer_name"]}\n' \
+                    f'Customer Email: {payment_wisuda["customer_email"]}\n' \
+                    f'Customer Phone Number: {payment_wisuda["customer_phone"]}\n' \
+                    f'Jumlah Tagihan: {app.floatToRupiah(float(payment_wisuda["trx_amount"]))}\n\n'
     msgreply+=f'*CATATAN:* Untuk mempercepat layanan KRS Realtime *(langsung bayar langsung aktif dan bisa isi KRS)* anda diwajibkan melakukan pembayaran SPP menggunakan account VA anda, apabila pembayaran SPP tidak menggunakan account VA atau menggunakan metode transfer ke rekening YPBPI atau Giro Pos maka pengisian KRS dan aktivasi membutuhkan waktu 2 s.d 4 hari untuk mengecek bukti validasi pembayaran anda. Mohon kerjasamanya.'
     return msgreply
 
