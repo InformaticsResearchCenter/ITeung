@@ -30,7 +30,7 @@ def replymsg(driver, data):
         payment_ulang = cek_biodata_va_mahasiswa.getULANG(npm)
         payment_wisuda = cek_biodata_va_mahasiswa.getWISUDA(npm)
 
-        if trx_amount > biaya_pokok_spp:
+        if int(trx_amount) > int(biaya_pokok_spp):
             tunggakan = float(int(trx_amount) - int(biaya_pokok_spp))
         else:
             tunggakan = float(0)
