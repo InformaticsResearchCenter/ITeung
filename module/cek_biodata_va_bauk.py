@@ -47,58 +47,73 @@ def cekNPM(msgs):
             continue
 
 def paymentWisuda(npm):
-    payment_wisuda = cek_biodata_va_mahasiswa.getWISUDA(npm)
-    msgreply  = f'*DATA VIRTUAL ACCOUNT BNI WISUDA*\n\n' \
-                f'*Kode Transaksi: {payment_wisuda["trx_id"]}*\n' \
-                f'*Virtual Account: {payment_wisuda["virtual_account"]}*\n' \
-                f'Customer Name: {payment_wisuda["customer_name"]}\n' \
-                f'Customer Email: {payment_wisuda["customer_email"]}\n' \
-                f'Customer Phone Number: {payment_wisuda["customer_phone"]}\n' \
-                f'Jumlah Tagihan: {app.floatToRupiah(float(payment_wisuda["trx_amount"]))}\n\n'
+    try:
+        payment_wisuda = cek_biodata_va_mahasiswa.getWISUDA(npm)
+        msgreply  = f'*DATA VIRTUAL ACCOUNT BNI WISUDA*\n\n' \
+                    f'*Kode Transaksi: {payment_wisuda["trx_id"]}*\n' \
+                    f'*Virtual Account: {payment_wisuda["virtual_account"]}*\n' \
+                    f'Customer Name: {payment_wisuda["customer_name"]}\n' \
+                    f'Customer Email: {payment_wisuda["customer_email"]}\n' \
+                    f'Customer Phone Number: {payment_wisuda["customer_phone"]}\n' \
+                    f'Jumlah Tagihan: {app.floatToRupiah(float(payment_wisuda["trx_amount"]))}\n\n'
+    except:
+        msgreply=''
     return msgreply
 
 def paymentUlang(npm):
-    payment_ulang=cek_biodata_va_mahasiswa.getULANG(npm)
-    msgreply = f'*DATA VIRTUAL ACCOUNT BNI ULANG*\n\n' \
-                f'*Kode Transaksi: {payment_ulang["trx_id"]}*\n' \
-                f'*Virtual Account: {payment_ulang["virtual_account"]}*\n' \
-                f'Customer Name: {payment_ulang["customer_name"]}\n' \
-                f'Customer Email: {payment_ulang["customer_email"]}\n' \
-                f'Customer Phone Number: {payment_ulang["customer_phone"]}\n' \
-                f'Jumlah Tagihan: {app.floatToRupiah(float(payment_ulang["trx_amount"]))}\n\n'
+    try:
+        payment_ulang=cek_biodata_va_mahasiswa.getULANG(npm)
+        msgreply = f'*DATA VIRTUAL ACCOUNT BNI ULANG*\n\n' \
+                    f'*Kode Transaksi: {payment_ulang["trx_id"]}*\n' \
+                    f'*Virtual Account: {payment_ulang["virtual_account"]}*\n' \
+                    f'Customer Name: {payment_ulang["customer_name"]}\n' \
+                    f'Customer Email: {payment_ulang["customer_email"]}\n' \
+                    f'Customer Phone Number: {payment_ulang["customer_phone"]}\n' \
+                    f'Jumlah Tagihan: {app.floatToRupiah(float(payment_ulang["trx_amount"]))}\n\n'
+    except:
+        msgreply=''
     return msgreply
 
 def paymentSp(npm):
-    payment_sp=cek_biodata_va_mahasiswa.getSP(npm)
-    msgreply = f'*DATA VIRTUAL ACCOUNT BNI SP*\n\n' \
-               f'*Kode Transaksi: {payment_sp["trx_id"]}*\n' \
-               f'*Virtual Account: {payment_sp["virtual_account"]}*\n' \
-               f'Customer Name: {payment_sp["customer_name"]}\n' \
-               f'Customer Email: {payment_sp["customer_email"]}\n' \
-               f'Customer Phone Number: {payment_sp["customer_phone"]}\n' \
-               f'Jumlah Tagihan: {app.floatToRupiah(float(payment_sp["trx_amount"]))}\n\n'
+    try:
+        payment_sp=cek_biodata_va_mahasiswa.getSP(npm)
+        msgreply = f'*DATA VIRTUAL ACCOUNT BNI SP*\n\n' \
+                   f'*Kode Transaksi: {payment_sp["trx_id"]}*\n' \
+                   f'*Virtual Account: {payment_sp["virtual_account"]}*\n' \
+                   f'Customer Name: {payment_sp["customer_name"]}\n' \
+                   f'Customer Email: {payment_sp["customer_email"]}\n' \
+                   f'Customer Phone Number: {payment_sp["customer_phone"]}\n' \
+                   f'Jumlah Tagihan: {app.floatToRupiah(float(payment_sp["trx_amount"]))}\n\n'
+    except:
+        msgreply=''
     return msgreply
 
 def paymentTa(npm):
-    payment_ta=cek_biodata_va_mahasiswa.getTA(npm)
-    msgreply = f'*DATA VIRTUAL ACCOUNT BNI TA*\n\n' \
-                f'*Kode Transaksi: {payment_ta["trx_id"]}*\n' \
-                f'*Virtual Account: {payment_ta["virtual_account"]}*\n' \
-                f'Customer Name: {payment_ta["customer_name"]}\n' \
-                f'Customer Email: {payment_ta["customer_email"]}\n' \
-                f'Customer Phone Number: {payment_ta["customer_phone"]}\n' \
-                f'Jumlah Tagihan: {app.floatToRupiah(float(payment_ta["trx_amount"]))}\n\n'
+    try:
+        payment_ta=cek_biodata_va_mahasiswa.getTA(npm)
+        msgreply = f'*DATA VIRTUAL ACCOUNT BNI TA*\n\n' \
+                    f'*Kode Transaksi: {payment_ta["trx_id"]}*\n' \
+                    f'*Virtual Account: {payment_ta["virtual_account"]}*\n' \
+                    f'Customer Name: {payment_ta["customer_name"]}\n' \
+                    f'Customer Email: {payment_ta["customer_email"]}\n' \
+                    f'Customer Phone Number: {payment_ta["customer_phone"]}\n' \
+                    f'Jumlah Tagihan: {app.floatToRupiah(float(payment_ta["trx_amount"]))}\n\n'
+    except:
+        msgreply=''
     return msgreply
 
 def paymentToefl(npm):
-    payment_toefl=cek_biodata_va_mahasiswa.getTOEFL(npm)
-    msgreply = f'*DATA VIRTUAL ACCOUNT BNI TOEFL*\n\n' \
-                f'*Kode Transaksi: {payment_toefl["trx_id"]}*\n' \
-                f'*Virtual Account: {payment_toefl["virtual_account"]}*\n' \
-                f'Customer Name: {payment_toefl["customer_name"]}\n' \
-                f'Customer Email: {payment_toefl["customer_email"]}\n' \
-                f'Customer Phone Number: {payment_toefl["customer_phone"]}\n' \
-                f'Jumlah Tagihan: {app.floatToRupiah(float(payment_toefl["trx_amount"]))}\n\n'
+    try:
+        payment_toefl=cek_biodata_va_mahasiswa.getTOEFL(npm)
+        msgreply = f'*DATA VIRTUAL ACCOUNT BNI TOEFL*\n\n' \
+                    f'*Kode Transaksi: {payment_toefl["trx_id"]}*\n' \
+                    f'*Virtual Account: {payment_toefl["virtual_account"]}*\n' \
+                    f'Customer Name: {payment_toefl["customer_name"]}\n' \
+                    f'Customer Email: {payment_toefl["customer_email"]}\n' \
+                    f'Customer Phone Number: {payment_toefl["customer_phone"]}\n' \
+                    f'Jumlah Tagihan: {app.floatToRupiah(float(payment_toefl["trx_amount"]))}\n\n'
+    except:
+        msgreply=''
     return msgreply
 
 def paymentSpp(npm):
