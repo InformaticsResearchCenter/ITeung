@@ -139,7 +139,7 @@ def keyword_to_jenisBiaya(keyword_split, npm):
 
 def jenis_biaya_from_word(word, npm):
     switcher = {
-        'spp': paymentSp(npm),
+        'spp': paymentSpp(npm),
         'toefl': paymentToefl(npm),
         'sp': paymentSp(npm),
         'wisuda': paymentWisuda(npm),
