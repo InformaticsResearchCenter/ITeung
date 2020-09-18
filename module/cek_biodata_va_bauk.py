@@ -13,7 +13,8 @@ def replymsg(driver, data):
     msgs=data[3].split(' ')
     npm, status=cekNPM(msgs)
     if status:
-        if keyword_to_jenisBiaya(msgs, npm):
+        data_result=keyword_to_jenisBiaya(msgs, npm)
+        if data_result:
             studentphonenumber=kelas.getStudentPhoneNumberFromNPM(npm)
             npm, nama_mahasiswa, prodi_id, phonenumber, email, penasehat_akademik = cek_biodata_va_mahasiswa.getDataMahasiswa(studentphonenumber)
 
@@ -29,7 +30,7 @@ def replymsg(driver, data):
                        f'Nama Orang Tua/Wali: {ayah} (Ayah) | {ibu} (Ibu)\n' \
                        f'No HP orang Tua/Wali: {handphoneortu}\n\n'
 
-            msgreply += keyword_to_jenisBiaya(msgs, npm)
+            msgreply += data_result
 
             msgreply += f'*CATATAN:* Untuk mempercepat layanan KRS Realtime *(langsung bayar langsung aktif dan bisa isi KRS)* anda diwajibkan melakukan pembayaran SPP menggunakan account VA anda, apabila pembayaran SPP tidak menggunakan account VA atau menggunakan metode transfer ke rekening YPBPI atau Giro Pos maka pengisian KRS dan aktivasi membutuhkan waktu 2 s.d 4 hari untuk mengecek bukti validasi pembayaran anda. Mohon kerjasamanya.'
         else:
