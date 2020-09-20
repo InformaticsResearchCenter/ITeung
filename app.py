@@ -18,7 +18,7 @@ from openpyxl import load_workbook
 
 from flask_restful import Resource, Api, abort
 
-import config, pymysql
+import config, pymysql, flask_chatbot
 
 app = Flask(__name__, static_url_path='')
 apirest=Api(app=app)
@@ -154,9 +154,13 @@ def getProdiSingkatanFromProdiID(prodiid):
         return row[0]
 
 
-@app.route("/")
+@app.route("/", methods=['GET', 'POST'])
 def home():
-    return 'hello crot...'
+    if request.method == 'GET':
+        return render_template('chatbot.html', bot_reply='')
+    if request.method == 'POST':
+        message=request.form['message']
+        return render_template('chatbot.html', bot_reply=flask_chatbot.cekAndSendMessage(message))
 
 @app.route("/wa", methods=['GET', 'POST'])
 def sms_reply():
