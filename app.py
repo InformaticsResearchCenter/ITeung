@@ -156,11 +156,15 @@ def getProdiSingkatanFromProdiID(prodiid):
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
-    if request.method == 'GET':
-        return render_template('chatbot.html', bot_reply='')
-    if request.method == 'POST':
-        message=request.form['message']
-        return render_template('chatbot.html', bot_reply=flask_chatbot.cekAndSendMessage(message))
+    email=request.cookies.get('email')
+    if email:
+        if request.method == 'GET':
+            return render_template('chatbot.html', bot_reply='')
+        if request.method == 'POST':
+            message=request.form['message']
+            return render_template('chatbot.html', bot_reply=flask_chatbot.cekAndSendMessage(message))
+    else:
+        return render_template('login.html')
 
 @app.route("/wa", methods=['GET', 'POST'])
 def sms_reply():
