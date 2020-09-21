@@ -31,6 +31,7 @@
                   });
                   request.execute(function (resp) {
                       document.cookie = "email="+resp.email;
+                      location.reload();
                   });
               });
           }
