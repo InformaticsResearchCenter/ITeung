@@ -1,65 +1,25 @@
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="google-signin-client_id" content="726841730618-rs1s10q2umctu9e1tn1b7gra5kltdurg.apps.googleusercontent.com">
-    <script src="https://apis.google.com/js/client:platform.js?onload=renderButton" async defer></script>
-    <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
     <title>ITeung</title>
-  </head>
-  <body>
-      <div id="gSignIn"></div>
-      <div class="userContent" style="display: none;"></div>
-      <div id="iteung-form" style="display: none;">
-          <h1>ITeung hereee~~~~!!!!!!!</h1>
-          <form method='post'>
-            Human: <input type='text' name='message'><br>
-            ITeung: {{ bot_reply }}<br>
-            <input type="submit" name="action">
-          </form>
-      </div>
-
-      <script>
-          function renderButton() {
-              gapi.signin2.render('gSignIn', {
-                  'scope': 'profile email',
-                  'width': 240,
-                  'height': 50,
-                  'longtitle': true,
-                  'theme': 'dark',
-                  'onsuccess': onSuccess
-              });
-          }
-
-          function onSuccess(googleUser) {
-              gapi.client.load('oauth2', 'v2', function () {
-                  var request = gapi.client.oauth2.userinfo.get({
-                      'userId': 'me'
-                  });
-                  request.execute(function (resp) {
-                      var profileHTML = '<h3>Welcome '+resp.given_name+'! <a href="javascript:void(0);" onclick="signOut();">Sign out</a></h3>';
-                      profileHTML += '<img src="'+resp.picture+'"/><p><b>Google ID: </b>'+resp.id+'</p><p><b>Name: </b>'+resp.name+'</p><p><b>Email: </b>'+resp.email+'</p><p><b>Gender: </b>'+resp.gender+'</p><p><b>Locale: </b>'+resp.locale+'</p><p><b>Google Profile:</b> <a target="_blank" href="'+resp.link+'">click to view profile</a></p>';
-                      document.getElementsByClassName("userContent")[0].innerHTML = profileHTML;
-                      document.getElementById("gSignIn").style.display = "none";
-                      document.getElementsByClassName("userContent")[0].style.display = "block";
-                      document.getElementById("iteung-form").style.display = "block";
-                  });
-              });
-          }
-
-          function signOut() {
-               var auth2 = gapi.auth2.getAuthInstance();
-               auth2.signOut().then(function () {
-                   document.getElementsByClassName("userContent")[0].innerHTML = '';
-                   document.getElementsByClassName("userContent")[0].style.display = "none";
-                   document.getElementByClassId("iteung-form").style.display = "none";
-                   document.getElementById("gSignIn").style.display = "block";
-               });
-               auth2.disconnect();
-          }
-      </script>
-  </body>
+</head>
+<body>
+    <h1>ITeung hereee~~~~!!!!!!!</h1>
+    <button onclick="signOut()">Log out</button>
+    <form method='POST'>
+        Human: <input type='text' name='message'><br>
+        ITeung: {{ bot_reply }}<br>
+        <input type="submit" name="action">
+    </form>
+    <script>
+        function signOut() {
+             var auth2 = gapi.auth2.getAuthInstance();
+             auth2.signOut().then(function () {
+                 document.cookie = "email=";
+             });
+             auth2.disconnect();
+        }
+    </script>
+</body>
 </html>
