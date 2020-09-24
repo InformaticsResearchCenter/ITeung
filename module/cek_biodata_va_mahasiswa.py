@@ -251,7 +251,7 @@ def paymentSpp(npm):
                         f'Biaya Paket SPP Per Semester: {app.floatToRupiah(float(biaya_pokok_spp))}\n' \
                         f'Biaya Tunggakan SPP: {app.floatToRupiah(tunggakan)}\n' \
                         f'Jumlah Tagihan: {app.floatToRupiah(float(payment_spp["trx_amount"]))}\n' \
-                        f'Biaya Minimal Pembayaran: {app.floatToRupiah(float(payment_spp["trx_amount"]) / 2)}\n' \
+                        f'Biaya Minimal Pembayaran: {app.floatToRupiah(float(minimum_payment))}\n' \
                         f'Batas KRS: 12 Oktober 2020 - 16 Oktober 2020\n\n'
     except Exception as error:
         msgreply = f'ERROR: {error}\n\n'
