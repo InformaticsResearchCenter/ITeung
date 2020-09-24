@@ -8,9 +8,9 @@ def auth(data):
 
 
 def replymsg(driver, data):
-    wmsg=reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
-    wmsg=wmsg.replace('#BOTNAME#', config.bot_name)
-    wa.typeAndSendMessage(driver, wmsg)
+    # wmsg=reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
+    # wmsg=wmsg.replace('#BOTNAME#', config.bot_name)
+    # wa.typeAndSendMessage(driver, wmsg)
     loginid = getLoginID(num=data[0])
     newpasswd=passwdGenerate()
     if loginid is not None:
