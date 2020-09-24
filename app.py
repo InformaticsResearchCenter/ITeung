@@ -141,7 +141,7 @@ def getDataDefault(key, ws):
         'd4lbtk32018': ws['H24'].value,
         'd4lbtk42017': ws['J24'].value
     }
-    return switcher.get(key, 'not found!!!')
+    return switcher.get(key, False)
 
 
 def getProdiSingkatanFromProdiID(prodiid):
