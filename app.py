@@ -205,7 +205,7 @@ def is_logged_in():
 def home():
     if is_logged_in():
         if request.method == 'GET':
-            return render_template('chatbot.html', bot_reply='', user_name=is_logged_in()['name']+is_logged_in()['email'])
+            return render_template('chatbot.html', bot_reply='', user_name=is_logged_in()['name'])
         if request.method == 'POST':
             message=request.form['message']
             email=is_logged_in()['email']
@@ -217,7 +217,10 @@ def home():
                 phonenumber=lecturerphonenumber
             else:
                 phonenumber=None
-            return render_template('chatbot.html', bot_reply=flask_chatbot.cekAndSendMessage(message, phonenumber), user_name=is_logged_in()['name'])
+            if phonenumber == None:
+                return render_template('chatbot.html', bot_reply='your phone number is not registered as Politeknik Pos Indonesia Academic', user_name=is_logged_in()['name'])
+            else:
+                return render_template('chatbot.html', bot_reply=flask_chatbot.cekAndSendMessage(message, phonenumber), user_name=is_logged_in()['name'])
     else:
         return f'you are not logged in<br><a href="/google/login">login</a>'
 
