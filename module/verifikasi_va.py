@@ -47,6 +47,10 @@ def replymsg(driver, data):
         angkatan = kelas.getTahunAngkatanWithStudentID(npm)
         key = f'{prodi_singkatan}{tingkat}{angkatan}'
         default_amount_payment = app.getDataDefault(key, ws)
+        if default_amount_payment:
+            default_amount_payment=int(default_amount_payment)
+        else:
+            default_amount_payment=2500000
         message = f'Hai haiiiii kamu sudah transfer pembayaran semester yaaaa dengan\n\n*NPM: {npm}*\n*Nama: {customer_name}*\n*Virtual Account: {virtual_account}*\n*Tanggal: {datetime_payment}*\n*Jumlah Transfer: {app.floatToRupiah(payment_amount)}*\n*Total Sudah Bayar: {app.floatToRupiah(cumulative_payment_amount)}*\n*Total Harus Bayar: {app.floatToRupiah(trx_amount)}*\n*Sisa Yang Harus Dibayar: {app.floatToRupiah(float(int(trx_amount)-int(cumulative_payment_amount)))}*'
         if int(trx_amount) > int(default_amount_payment):
             amount_tunggakan = int(trx_amount) - int(default_amount_payment)
