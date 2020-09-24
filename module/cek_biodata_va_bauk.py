@@ -147,8 +147,8 @@ def paymentSpp(npm):
                     f'Jumlah Tagihan: {app.floatToRupiah(float(payment_spp["trx_amount"]))}\n' \
                     f'Biaya Minimal Pembayaran: {app.floatToRupiah(float(payment_spp["trx_amount"]) / 2)}\n' \
                     f'Batas KRS: 12 Oktober 2020 - 16 Oktober 2020\n\n'
-    except:
-        msgreply = f'Data untuk SPP dengan {npm} ini tidak memiliki biaya pokok\n\n'
+    except Exception as error:
+        msgreply = f'ERROR: {error}\n\n'
     return msgreply
 
 def keyword_to_jenisBiaya(keyword_split, npm):
