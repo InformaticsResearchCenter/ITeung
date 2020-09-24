@@ -140,8 +140,13 @@ def paymentSpp(npm):
             biaya_pokok_spp=2500000
         if int(payment_spp['trx_amount']) > int(biaya_pokok_spp):
             tunggakan = float(int(payment_spp['trx_amount']) - int(biaya_pokok_spp))
+            amount_tunggakan = int(payment_spp["trx_amount"]) - int(biaya_pokok_spp)
+            fifty_percent_default_payment = int(biaya_pokok_spp) / 2
+            minimum_payment = int(amount_tunggakan) + int(fifty_percent_default_payment)
         else:
             tunggakan = float(0)
+            potongan = int(biaya_pokok_spp) - int(payment_spp['trx_amount'])
+            minimum_payment = (int(biaya_pokok_spp) - int(potongan)) / 2
         msgreply=''
         if datetime.now() < payment_spp['expired_date']:
             msgreply = f'*DATA VIRTUAL ACCOUNT BNI SPP (Semester Ganjil 2020/2021)*\n\n' \
@@ -154,7 +159,7 @@ def paymentSpp(npm):
                         f'Biaya Paket SPP Per Semester: {app.floatToRupiah(float(biaya_pokok_spp))}\n' \
                         f'Biaya Tunggakan SPP: {app.floatToRupiah(tunggakan)}\n' \
                         f'Jumlah Tagihan: {app.floatToRupiah(float(payment_spp["trx_amount"]))}\n' \
-                        f'Biaya Minimal Pembayaran: {app.floatToRupiah(float(payment_spp["trx_amount"]) / 2)}\n' \
+                        f'Biaya Minimal Pembayaran: {app.floatToRupiah(float(minimum_payment))}\n' \
                         f'Batas KRS: 12 Oktober 2020 - 16 Oktober 2020\n\n'
     except Exception as error:
         msgreply = f'ERROR: {error}\n\n'
