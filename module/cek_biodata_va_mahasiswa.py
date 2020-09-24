@@ -28,7 +28,7 @@ def replymsg(driver, data):
         msgreply+=data_result
         msgreply+=f'*CATATAN:* Untuk mempercepat layanan KRS Realtime *(langsung bayar langsung aktif dan bisa isi KRS)* anda diwajibkan melakukan pembayaran SPP menggunakan account VA anda, apabila pembayaran SPP tidak menggunakan account VA atau menggunakan metode transfer ke rekening YPBPI atau Giro Pos maka pengisian KRS dan aktivasi membutuhkan waktu 2 s.d 4 hari untuk mengecek bukti validasi pembayaran anda. Mohon kerjasamanya.'
     else:
-        msgreply = f'jenis biaya tidak ditemukan atau tidak ada dalam keyword... tambahkan jenis biaya dikeywordnya yaa.. berikut jenis biayanya:\n1. spp\n2. toefl\n3. sp\n4. wisuda\n5. ulang\n6. ta'
+        msgreply = f'jenis biaya tidak ditemukan atau tidak ada dalam keyword... tambahkan jenis biaya dikeywordnya yaa.. berikut jenis biayanya:\n1. spp\n2. toefl\n3. sp\n4. wisuda\n5. ulang\n6. ta\n\nContoh: iteung minta biodata dan va spp mahasiswa'
     return msgreply
 
 def getDataMahasiswa(phonenumber):
