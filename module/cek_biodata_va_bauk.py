@@ -127,6 +127,10 @@ def paymentSpp(npm):
     app.openfile().close()
     payment_spp=cek_biodata_va_mahasiswa.getSPP(npm)
     try:
+        if biaya_pokok_spp:
+            biaya_pokok_spp=int(biaya_pokok_spp)
+        else:
+            biaya_pokok_spp=2500000
         if int(payment_spp['trx_amount']) > int(biaya_pokok_spp):
             tunggakan = float(int(payment_spp['trx_amount']) - int(biaya_pokok_spp))
         else:
@@ -144,7 +148,7 @@ def paymentSpp(npm):
                     f'Biaya Minimal Pembayaran: {app.floatToRupiah(float(payment_spp["trx_amount"]) / 2)}\n' \
                     f'Batas KRS: 12 Oktober 2020 - 16 Oktober 2020\n\n'
     except:
-        msgreply = f'Data untuk SPP dengan {npm} ini tidak memiliki biaya pokok'
+        msgreply = f'Data untuk SPP dengan {npm} ini tidak memiliki biaya pokok\n\n'
     return msgreply
 
 def keyword_to_jenisBiaya(keyword_split, npm):
