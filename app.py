@@ -6,7 +6,7 @@ Created on Sat Mar 14 09:27:37 2020
 """
 
 from lib import iteung, wa
-from flask import Flask, request, render_template, make_response, jsonify, send_from_directory
+from flask import Flask, request, render_template, make_response, jsonify, session, url_for, redirect
 from twilio.twiml.messaging_response import MessagingResponse
 from lib import log
 from module import kelas
@@ -18,10 +18,24 @@ from openpyxl import load_workbook
 
 from flask_restful import Resource, Api, abort
 
+from authlib.integrations.flask_client import OAuth
+
 import config, pymysql, flask_chatbot
 
 app = Flask(__name__, static_url_path='')
+app.secret_key = config.FN_FLASK_SECRET_KEY
+app.config.from_object('config')
 apirest=Api(app=app)
+
+config_URL='https://accounts.google.com/.well-known/openid-configuration'
+oauth=OAuth(app)
+oauth.register(
+    name='google',
+    server_metadata_url=config_URL,
+    client_kwargs={
+        'scope': 'openid email profile'
+    }
+)
 
 def dbConnectPMB():
     db=pymysql.connect(config.db_host_pmb, config.db_username_pmb, config.db_password_pmb, config.db_name_pmb)
@@ -154,17 +168,77 @@ def getProdiSingkatanFromProdiID(prodiid):
         return row[0]
 
 
+def getStudentPhoneNumberFromEmail(email):
+    db=kelas.dbConnectSiap()
+    sql=f'select Handphone from simak_mst_mahasiswa where Email="{email}"'
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        row=cur.fetchone()
+        if row is not None:
+            return row[0]
+        else:
+            return None
+
+def getLecturerPhoneNumberFromEmail(email):
+    db=kelas.dbConnectSiap()
+    sql=f'select Handphone from simak_mst_dosen where Email="{email}"'
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        row=cur.fetchone()
+        if row is not None:
+            return row[0]
+        else:
+            return None
+
+
+def is_logged_in():
+    user = session.get('user')
+    if user:
+        return user
+    else:
+        return False
+
+
 @app.route("/", methods=['GET', 'POST'])
 def home():
-    email=request.cookies.get('email')
-    if email:
+    if is_logged_in():
         if request.method == 'GET':
             return render_template('chatbot.html', bot_reply='')
         if request.method == 'POST':
             message=request.form['message']
-            return render_template('chatbot.html', bot_reply=flask_chatbot.cekAndSendMessage(message))
+            email=is_logged_in()['email']
+            studentphonenumber = getStudentPhoneNumberFromEmail(email)
+            lecturerphonenumber = getLecturerPhoneNumberFromEmail(email)
+            if studentphonenumber:
+                phonenumber=studentphonenumber
+            elif lecturerphonenumber:
+                phonenumber=lecturerphonenumber
+            else:
+                phonenumber=''
+            return render_template('chatbot.html', bot_reply=flask_chatbot.cekAndSendMessage(message, phonenumber), user_name=is_logged_in()['name'])
     else:
-        return render_template('login.html')
+        return f'you are not logged in<br><a href="/google/login">login</a>'
+
+@app.route('/google/login')
+def google_login():
+    redirect_uri=config.FN_BASE_URL + url_for('google_auth')
+    return oauth.google.authorize_redirect(redirect_uri)
+
+@app.route('/google/logout')
+def google_logout():
+    session.pop('user', None)
+    return redirect('/')
+
+@app.route('/google/auth')
+def google_auth():
+    session['_google_authlib_state_'] = request.args.get('state')
+    session['_google_authlib_redirect_uri_'] = config.FN_BASE_URL + url_for('google_auth')
+    token = oauth.google.authorize_access_token()
+    user = oauth.google.parse_id_token(token)
+    session['user'] = user
+    return redirect('/')
 
 @app.route("/wa", methods=['GET', 'POST'])
 def sms_reply():

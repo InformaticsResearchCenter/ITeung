@@ -1,16 +1,20 @@
-from lib import message, reply, log
+from lib import message
+from lib import reply
+from lib import log
+from lib import numbers
+
 from importlib import import_module
 
 import config
 
-def cekAndSendMessage(message_flask):
+def cekAndSendMessage(message_flask, number):
     try:
         driver=''
-        isgrp = 'false'
+        isgrp = 'website'
         msg = message_flask
-        als = 'web testing'
-        grp = 'web testing'
-        num = 'web testing'
+        als = 'website'
+        grp = 'website'
+        num = numbers.normalize(number)
         log.save(num=num, msg=msg, als=als, grp=grp, isgrp=isgrp, tipe='website')
         data=[]
         data.append(num)
@@ -19,7 +23,6 @@ def cekAndSendMessage(message_flask):
         data.append(msg)
         data.append(isgrp)
         msg = message.normalize(msg)
-        print(msg)
         msgs = list(msg.split(" "))
         if msg.find(config.bot_name) >= 0:
             if len(msgs) == 1:
