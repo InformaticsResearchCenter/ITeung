@@ -17,9 +17,7 @@ def replymsg(driver, data):
         if data_result:
             studentphonenumber=kelas.getStudentPhoneNumberFromNPM(npm)
             npm, nama_mahasiswa, prodi_id, phonenumber, email, penasehat_akademik = cek_biodata_va_mahasiswa.getDataMahasiswa(studentphonenumber)
-
             ayah, ibu, handphoneortu = cek_biodata_va_mahasiswa.getNamaOrangTua(npm)
-
             msgreply = f'*BIODATA MAHASISWA*\n' \
                        f'NPM: {npm}\n' \
                        f'Nama: {nama_mahasiswa}\n' \
@@ -29,9 +27,7 @@ def replymsg(driver, data):
                        f'Dosen Wali: {kelas.getNamaDosen(penasehat_akademik)}\n' \
                        f'Nama Orang Tua/Wali: {ayah} (Ayah) | {ibu} (Ibu)\n' \
                        f'No HP orang Tua/Wali: {handphoneortu}\n\n'
-
             msgreply += data_result
-
             msgreply += f'*CATATAN:* Untuk mempercepat layanan KRS Realtime *(langsung bayar langsung aktif dan bisa isi KRS)* anda diwajibkan melakukan pembayaran SPP menggunakan account VA anda, apabila pembayaran SPP tidak menggunakan account VA atau menggunakan metode transfer ke rekening YPBPI atau Giro Pos maka pengisian KRS dan aktivasi membutuhkan waktu 2 s.d 4 hari untuk mengecek bukti validasi pembayaran anda. Mohon kerjasamanya.'
         else:
             msgreply = f'jenis biaya tidak ditemukan atau tidak ada dalam keyword... tambahkan jenis biaya dikeywordnya yaa.. berikut jenis biayanya:\n1. spp\n2. toefl\n3. sp\n4. wisuda\n5. ulang\n6. ta'
