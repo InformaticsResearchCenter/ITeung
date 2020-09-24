@@ -205,7 +205,7 @@ def is_logged_in():
 def home():
     if is_logged_in():
         if request.method == 'GET':
-            return render_template('chatbot.html', bot_reply='', user_name=is_logged_in()['name'])
+            return render_template('chatbot.html', bot_reply='', user_name=is_logged_in()['name']+is_logged_in()['email'])
         if request.method == 'POST':
             message=request.form['message']
             email=is_logged_in()['email']
