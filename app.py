@@ -216,7 +216,7 @@ def home():
             elif lecturerphonenumber:
                 phonenumber=lecturerphonenumber
             else:
-                phonenumber=''
+                phonenumber=None
             return render_template('chatbot.html', bot_reply=flask_chatbot.cekAndSendMessage(message, phonenumber), user_name=is_logged_in()['name'])
     else:
         return f'you are not logged in<br><a href="/google/login">login</a>'
