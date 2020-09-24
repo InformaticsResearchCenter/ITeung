@@ -217,8 +217,11 @@ def home():
             elif lecturerphonenumber:
                 phonenumber=lecturerphonenumber
             else:
-                phonenumber=''
-            return render_template('chatbot.html', bot_reply=flask_chatbot.cekAndSendMessage(message, phonenumber), user_name=is_logged_in()['name'])
+                phonenumber=None
+            if phonenumber == None:
+                return render_template('chatbot.html', bot_reply='your phone number is not registered as Politeknik Pos Indonesia Academic', user_name=is_logged_in()['name'])
+            else:
+                return render_template('chatbot.html', bot_reply=flask_chatbot.cekAndSendMessage(message, phonenumber), user_name=is_logged_in()['name'])
     else:
         # return f'you are not logged in<br><a href="/google/login">login</a>'
         return render_template('login.html')
