@@ -1,4 +1,91 @@
-<!DOCTYPE html>
+{% extends 'base.html' %}
+
+{% block title%}{{ title }}{% endblock %}
+{% block login_as%}{{ login_as }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="mt-4">Dashboard</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+    </ol>
+    <div class="card mb-4">
+        <div class="card-body">
+            <h1 class="mb-4">
+                Backyard Boy
+            </h1>
+            <div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="main-section">
+        <div class="row border-chat">
+            <div class="col-md-12 col-sm-12 col-xs-12 first-section">
+                <div class="row">
+                    <div class="col-md-8 col-sm-6 col-xs-6 left-first-section">
+                        <p>ITeung</p>
+                    </div>
+                    <div class="col-md-4 col-sm-6 col-xs-6 right-first-section">
+                        <a href="#" class="close">&times;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row border-chat">
+            <div class="col-md-12 col-sm-12 col-xs-12 second-section">
+                <div class="chat-section">
+                    <ul>
+                        <li>
+                            <div class="left-chat">
+                                <img src="{{ url_for('static', filename='assets/img/ypbpi.png') }}">
+                                <p>{{ bot_reply }}
+                                </p>
+                                <!-- <span>2 min</span> -->
+                            </div>
+                        </li>
+                        <!-- <li>
+                            <div class="right-chat">
+                                <img src="{{ url_for('static', filename='assets/img/ypbpi.png') }}">
+                                <p>Lorem ipsum dolor sit ameeserunt.</p> -->
+                        <!-- <span>2 min</span> -->
+                        <!-- </div>
+                        </li> -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row border-chat">
+            <div class="col-md-12 col-sm-12 col-xs-12 third-section">
+                <div class="text-bar">
+                    <form method='POST'>
+                        <input type="text" placeholder="Write message" name='message' class="message">
+                        <input type="submit" name="action" value='&#129130;' class="send">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+<script>
+    $(document).ready(function () {
+        $(".left-first-section").click(function () {
+            $('.main-section').toggleClass("open-more");
+        });
+    });
+    $(document).ready(function () {
+        $(".close").click(function () {
+            $('.main-section').toggleClass("open-more");
+        });
+    });
+</script>
+
+{% endblock %}
+
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -14,4 +101,4 @@
     <br>
     <a href="/google/logout">Logout</a>
 </body>
-</html>
+</html> -->

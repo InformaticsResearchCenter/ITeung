@@ -205,7 +205,8 @@ def is_logged_in():
 def home():
     if is_logged_in():
         if request.method == 'GET':
-            return render_template('chatbot.html', bot_reply='', user_name=is_logged_in()['name'])
+            # return render_template('chatbot.html', bot_reply='', user_name=is_logged_in()['name'])
+            return render_template('chatbot.html', bot_reply='', user_name=is_logged_in()['name'], login_as="Backyard Boy", title="Backyard Boy")
         if request.method == 'POST':
             message=request.form['message']
             email=is_logged_in()['email']
@@ -219,7 +220,8 @@ def home():
                 phonenumber=''
             return render_template('chatbot.html', bot_reply=flask_chatbot.cekAndSendMessage(message, phonenumber), user_name=is_logged_in()['name'])
     else:
-        return f'you are not logged in<br><a href="/google/login">login</a>'
+        # return f'you are not logged in<br><a href="/google/login">login</a>'
+        return render_template('login.html')
 
 @app.route('/google/login')
 def google_login():
