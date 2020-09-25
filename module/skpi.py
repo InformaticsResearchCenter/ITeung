@@ -68,7 +68,7 @@ def replymsg(driver, data):
                     
                 
             else:
-                msgreply = f"Ikan teri pake saos.. anda siapa bos..\nSebenarnya ada beberapa kemungkinan, pertama kamu bukan mahasiswa yg udh wisuda.. apalagi ya.. kyknya itu aja.."
+                msgreply = f"Ikan teri pake saos.. anda siapa bos..\nSebenarnya ada beberapa kemungkinan, pertama kamu bukan mahasiswa yg udh wisuda.. Mungkin no hp di SIAP salah kali... apalagi ya.. kyknya itu aja.."
             
         except Exception as e:
             msgreply = f'Ikan hiu makan tomat.. ada error mat... {str(e)}'
@@ -81,11 +81,11 @@ def run(data):
     data = data.split(';')
     kode = data[1]
     email = data[2]
-    print(data)
+    # print(data)
     if data[0] == "mahasiswa":
         prodi = convertProdi(data[3])
         mainPages(kode, prodi, email)
-    print("Udahan")
+    # print("Udahan")
 
 def mainPages(npm = None, prodi = None, email=None):
     checkSKPIDir(prodi[0])
@@ -110,10 +110,10 @@ def mainPages(npm = None, prodi = None, email=None):
     dfAkreditasi = pd.read_csv(f"./skpi/akreditasi.csv")
     akreditasiInstitusi = dfAkreditasi.loc[dfAkreditasi["institusi"] == "poltek"].values.tolist()[0]
     akreInstitusi = f'{akreditasiInstitusi[1]} "Terakreditasi {akreditasiInstitusi[2]}"'
-    print('Boom')
+    # print('Boom')
     dfNomor = pd.read_excel(f"./skpi/list-skpi/list-wisudawan.xlsx")
-    print(dfNomor)
-    print('Baam')
+    # print(dfNomor)
+    # print('Baam')
     nikWadirI, wadirI = getWadirI()
     
     if npm:
@@ -122,7 +122,7 @@ def mainPages(npm = None, prodi = None, email=None):
         
         listTTD = []
         
-        print(prodi[2])
+        # print(prodi[2])
         nikKaprodi, kaprodi = getKaprodi(prodi[2])
         
         kodeWadirI = getKodeDosen(nikWadirI)
@@ -138,7 +138,7 @@ def mainPages(npm = None, prodi = None, email=None):
         
         mahasiswa = df.loc[df["NPM"] == int(npm)].values.tolist()[0]
         tahun = f'{int(mahasiswa[3])-1}/{int(mahasiswa[3])}'
-        print(dfNomor.loc[dfNomor["NPM"] == int(npm)])
+        # print(dfNomor.loc[dfNomor["NPM"] == int(npm)])
         nomorA = dfNomor.loc[dfNomor["NPM"] == int(npm)].values.tolist()[0][0]
         
         tanggalBerlaku = "23 Oktober 2020"
@@ -153,7 +153,7 @@ def mainPages(npm = None, prodi = None, email=None):
     sendEmail(email, giveFileName(npm, prodi[0]), f"./skpi/skpi-{prodi[0]}/", npm)
 
 def convertMonth(month):
-    print(month)
+    # print(month)
     months = {
         '1': 'Januari',
         '2': 'Februari',
@@ -433,7 +433,7 @@ def makeLinkVerifiy(kodeDosen, npm, role):
     datenow = datetime.datetime.date(datetime.datetime.now()).strftime('%d-%m-%Y')
     timenow = datetime.datetime.now().time().strftime('%H:%M:%S')
     module_name="skpi"
-    data = f'{module_name};{datenow};{timenow};{kodeDosen};{npm};{role}'
+    data = f'{module_name};{datenow};{timenow};{kodeDosen};{npm};{role};'
     makeit64 = f'{data}{bkd.randomString(64 - len(data))}'
     obj = AES.new(config.key.encode("utf8"), AES.MODE_CBC, config.iv.encode('utf8'))
     cp = obj.encrypt(makeit64.encode("utf8"))
@@ -456,6 +456,40 @@ def verifyDigitalSign(resultpasscode):
     kodeDosen = data[3]
     npm = data[4]
     role = data[5]
+    namaMhs, prodi = getMahasiswaByNpm(npm)
+    namaDosen, gelar = getDosenById(kodeDosen)
+    a, b, c = convertProdi(prodi)
     
-    msgreply = f'SKL {npm} telah ditandatangani oleh {kodeDosen} sebagai {role} penerbitan tanda tangan pada {tanggal} jam {waktu}'
+    msgreply = f'SKL {namaMhs} dari prodi {b} telah ditandatangani oleh {namaDosen.title()}, {gelar} sebagai {convertRole(role)} penerbitan tanda tangan pada {tanggal} jam {waktu}'
     return msgreply
+
+def convertRole(role):
+    roles = {
+        'kaprodi': 'Kepala Prodi',
+        'wadirI': 'Wadir I'
+    }
+    return roles.get(role, 'XXX')
+
+def getMahasiswaByNpm(npm):
+    db = kelas.dbConnectSiap()
+    sql = "select Nama, ProdiID from simak_mst_mahasiswa where MhswID = '{0}'".format(npm)
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        row = cur.fetchone()
+        if row is not None:
+            return [row[0], row[1]]
+        else:
+            return False
+
+def getDosenById(id):
+    db = kelas.dbConnectSiap()
+    sql = "select Nama, Gelar from simak_mst_dosen where Login = '{0}'".format(id)
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        row = cur.fetchone()
+        if row is not None:
+            return [row[0], row[1]]
+        else:
+            return False
