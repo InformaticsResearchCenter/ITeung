@@ -432,7 +432,7 @@ def getSemester(jenjang):
 def makeLinkVerifiy(kodeDosen, npm, role):
     datenow = datetime.datetime.date(datetime.datetime.now()).strftime('%d-%m-%Y')
     timenow = datetime.datetime.now().time().strftime('%H:%M:%S')
-    module_name="skpi_status_ttd"
+    module_name="skpi"
     data = f'{module_name};{datenow};{timenow};{kodeDosen};{npm};{role}'
     makeit64 = f'{data}{bkd.randomString(64 - len(data))}'
     obj = AES.new(config.key.encode("utf8"), AES.MODE_CBC, config.iv.encode('utf8'))

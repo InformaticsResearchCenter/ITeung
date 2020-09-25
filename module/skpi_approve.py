@@ -13,8 +13,8 @@ def auth(data):
     return ret
 
 def replymsg(driver, data):
-    wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
-    wa.typeAndSendMessage(driver, wmsg)
+    # wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
+    # wa.typeAndSendMessage(driver, wmsg)
     num = numbers.normalize(data[0])
     
     kodeDosen = kelas.getKodeDosen(num)
@@ -29,13 +29,14 @@ def replymsg(driver, data):
         kodeWadirI = getKodeDosen(nipyWadirI)
         if(kodeDosen == kodeWadirI):
             approveSKL(npm, "wadirI", kodeDosen)
-            msgreply = f"Anda telah mengapprove SKL {npm}-{namaMhs}"
+            msgreply = f"{namaWadirI} sebagai wadir I telah mengapprove SKL milik {npm} - {namaMhs}"
         elif(kodeDosen == kodeKaprodi):
             approveSKL(npm, "kaprodi", kodeDosen)
-            msgreply = f"Anda telah mengapprove SKL {npm}-{namaMhs}"
+            msgreply = f"{namaDosen} sebagai kaprodinya telah mengapprove SKL {npm}-{namaMhs}"
         else:
             msgreply = "Anda bukan siapa-siapa untuknya.."
-            
+    except IndexError:
+        msgreply = "NPMnya mana sahabat.... atau salah NPM nih Anda... atau NPM gak terdaftar sebagai wisudawan tahun ini..."
     except Exception as e: 
         msgreply = f"Error {str(e)}"
     
