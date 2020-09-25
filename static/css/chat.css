@@ -2,7 +2,7 @@
     width: 300px;
     position: fixed;
     right: 50px;
-    bottom: -390px;
+    bottom: -350px;
 }
 
 .first-section:hover {
@@ -134,7 +134,7 @@
     background-color: #FD8468;
     color: #fff;
     /* height: 30px; */
-    padding: 1px 5px;
+    padding: 2px 5px;
     border-radius: 50%;
     text-align: center;
     text-decoration: none;
