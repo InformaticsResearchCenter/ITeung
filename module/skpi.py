@@ -57,12 +57,12 @@ def replymsg(driver, data):
                         subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],data], cwd=config.cwd)
                         msgreply = ""
                     else:
-                        msgreply = "Minta approve dulu sana"
+                        msgreply = "Permohonan *Surat Keterangan Lulus* Anda akan diajukan ketika Anda sudah melakukan konfirmasi"
                         if status[2] == '-':
-                            msgreply += " ke *kaprodi*"
+                            msgreply += " ke staff *kaprodi* masing-masing"
                         if status[3] == '-':
-                            msgreply += " sama *wadir 1*"
-                        msgreply += " baru bisa minta SKLnya... xixixixi"
+                            msgreply += " sama staff *Wadir 1* (Bu Tetty)"
+                        msgreply += ", setelah dikonfirmasi tinggal menunggu feedback dari para staff lalu Anda bisa memintanya lagi ke saya..."
                 else:   
                     msgreply = "Belum ada nih list data SKLnya..."
                     
@@ -145,12 +145,32 @@ def mainPages(npm = None, prodi = None, email=None):
         now = datetime.datetime.now()
         tanggalSurat = f"{now.day} {convertMonth(str(now.month))} {now.year}"
         
-        createAPage(contain, styles, nomorA, "IX", "2020", akreInstitusi, akreProdi, tahun, "18 September 2020", tanggalSurat, wadirI, nikWadirI, mahasiswa[0], mahasiswa[1], mahasiswa[2], prodi[1], prodi[0][:2], getSemester(prodi[0][:2]), mahasiswa[4], mahasiswa[5], mahasiswa[6], kaprodi, nikKaprodi, listTTD, tanggalBerlaku)
+        tanggalRomawi = convertRomawi(str(now.month))
+        
+        createAPage(contain, styles, nomorA, tanggalRomawi, "2020", akreInstitusi, akreProdi, tahun, "18 September 2020", tanggalSurat, wadirI, nikWadirI, mahasiswa[0], mahasiswa[1], mahasiswa[2], prodi[1], prodi[0][:2], getSemester(prodi[0][:2]), mahasiswa[4], mahasiswa[5], mahasiswa[6], kaprodi, nikKaprodi, listTTD, tanggalBerlaku)
     #     contain.append(PageBreak())
 
     doc.build(contain)
     
     sendEmail(email, giveFileName(npm, prodi[0]), f"./skpi/skpi-{prodi[0]}/", npm)
+
+def convertRomawi(month):
+    # print(month)
+    months = {
+        '1': 'I',
+        '2': 'II',
+        '3': 'III',
+        '4': 'IV',
+        '5': 'V',
+        '6': 'VI',
+        '7': 'VII',
+        '8': 'VIII',
+        '9': 'IX',
+        '10': 'X',
+        '11': 'XI',
+        '12': 'XII',
+    }
+    return months.get(month, "XXX")
 
 def convertMonth(month):
     # print(month)
