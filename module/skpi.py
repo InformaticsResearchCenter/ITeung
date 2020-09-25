@@ -460,7 +460,7 @@ def verifyDigitalSign(resultpasscode):
     namaDosen, gelar = getDosenById(kodeDosen)
     a, b, c = convertProdi(prodi)
     
-    msgreply = f'SKL {namaMhs} dari prodi {b} telah ditandatangani oleh {namaDosen.title()}, {gelar} sebagai {convertRole(role)} penerbitan tanda tangan pada {tanggal} jam {waktu}'
+    msgreply = f'SKL {namaMhs} dari prodi {b} telah ditandatangani oleh {namaDosen.title()}, {gelar} sebagai {role} {convertRole(role)} penerbitan tanda tangan pada {tanggal} jam {waktu}'
     return msgreply
 
 def convertRole(role):
