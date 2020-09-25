@@ -2,7 +2,7 @@
     width: 300px;
     position: fixed;
     right: 50px;
-    bottom: -350px;
+    bottom: -390px;
 }
 
 .first-section:hover {
@@ -130,11 +130,11 @@
     border: 1px solid #fff;
 }
 
-.text-bar .send{
+.text-bar .send {
     background-color: #FD8468;
     color: #fff;
     /* height: 30px; */
-    padding: 5px 8px;
+    padding: 1px 5px;
     border-radius: 50%;
     text-align: center;
     text-decoration: none;
