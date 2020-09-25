@@ -12,8 +12,10 @@
     <div class="card mb-4">
         <div class="card-body">
             <h1 class="mb-4">
-                Backyard Boy
+                Panduan Penggunaan ITeung Bot Whatsapp
+                <h3></h3>
             </h1>
+
             <div>
 
             </div>
@@ -37,6 +39,7 @@
             <div class="col-md-12 col-sm-12 col-xs-12 second-section">
                 <div class="chat-section">
                     <ul>
+                        {% if bot_reply !='' %}
                         <li>
                             <div class="left-chat">
                                 <img src="{{ url_for('static', filename='assets/img/iteung.png') }}">
@@ -45,6 +48,7 @@
                                 <!-- <span>2 min</span> -->
                             </div>
                         </li>
+                        {% endif %}
                         <!-- <li>
                             <div class="right-chat">
                                 <img src="{{ url_for('static', filename='assets/img/ypbpi.png') }}">
