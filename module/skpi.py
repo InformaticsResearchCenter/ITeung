@@ -13,6 +13,7 @@ from lib import wa, reply, message, numbers
 import config
 import pandas as pd
 import subprocess
+import openpyxl
 
 from Crypto.Cipher import AES
 
@@ -51,18 +52,19 @@ def replymsg(driver, data):
                     status = dfStatus.loc[dfStatus["NPM"] == int(npm)].values.tolist()[0]
                     # print(status)
                     # print(status[2] != '-', status[3] != '-')
-                    if status[2] != '-' and status[3] != '-':
+                    if status[2] != '-' and status[3] != '-' and status[4] != '-':
                         data = f"{'mahasiswa'};{npm};{email};{prodi}"
                         # print(data)
                         subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],data], cwd=config.cwd)
                         msgreply = ""
                     else:
-                        msgreply = "Permohonan *Surat Keterangan Lulus* Anda akan diajukan ketika Anda sudah melakukan konfirmasi"
+                        submitSKL(npm)
+                        msgreply = "Permohonan *Surat Keterangan Lulus* Anda telah diajukan, harap lakukan konfirmasi"
                         if status[2] == '-':
-                            msgreply += " ke staff *kaprodi* masing-masing"
+                            msgreply += " ke staff *Kaprodi* masing-masing"
                         if status[3] == '-':
                             msgreply += " sama staff *Wadir 1* (Bu Tetty)"
-                        msgreply += ", setelah dikonfirmasi tinggal menunggu feedback dari para staff lalu Anda bisa memintanya lagi ke saya..."
+                        msgreply += ", setelah dikonfirmasi tinggal menunggu saja, lalu Anda bisa memintanya lagi ke saya..."
                 else:   
                     msgreply = "Belum ada nih list data SKLnya..."
                     
@@ -76,6 +78,25 @@ def replymsg(driver, data):
     else:
         wa.typeAndSendMessage(driver, 'Mohon maaf server Akademik SIAP sedang dalam kondisi DOWN, mohon untuk menginformasikan ke ADMIN dan tunggu hingga beberapa menit kemudian, lalu ulangi kembali, terima kasih....')
     return msgreply
+
+def submitSKL(npm):
+    file = f"./skpi/list-skpi/list-wisudawan.xlsx"
+    
+    dfStatus = pd.read_excel(file)
+    excel = dfStatus.loc[dfStatus["NPM"] == int(npm)].values.tolist()[0]
+    # print(excel)
+    if excel[4] != '-':
+        pass
+    else:
+        book = openpyxl.load_workbook(file)
+        sheet = book.active
+
+        # print('E'+str(int(excel[0])-3))
+        E = sheet['E'+str(int(excel[0])-3)] 
+        E.value = 'TRUE'
+    
+        book.save(file) 
+        book.close()
 
 def run(data):
     data = data.split(';')
