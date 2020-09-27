@@ -13,8 +13,8 @@ def auth(data):
     return ret
 
 def replymsg(driver, data):
-    wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
-    wa.typeAndSendMessage(driver, wmsg)
+    # wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
+    # wa.typeAndSendMessage(driver, wmsg)
     num = numbers.normalize(data[0])
     print(num)
     kodeDosen = kelas.getKodeDosen(num)
@@ -132,12 +132,12 @@ def dataSumbitSKL(prodi=None):
     file = f"./skpi/list-skpi/list-wisudawan.xlsx"
     
     dfStatus = pd.read_excel(file)
-    dfExcel = dfStatus.loc[dfStatus["AJUKAN"] != '-']
+    dfExcel = dfStatus.loc[(dfStatus["AJUKAN"] != '-') & ((dfStatus["KAPRODI"] == '-') | (dfStatus["WADIR1"] == '-'))]
     print(prodi)
     
     if prodi != None:
-        excel = dfExcel.loc[dfExcel["PRODI"] == getKodeProdi(str(prodi))].values.tolist()
+        excel = dfExcel.loc[(dfExcel["PRODI"] == getKodeProdi(str(prodi))) & (dfStatus["KAPRODI"] == '-')].values.tolist()
         return excel
     else:
-        excel = dfExcel.values.tolist()
+        excel = dfExcel.loc[dfStatus["WADIR1"] == '-'].values.tolist()
         return excel
