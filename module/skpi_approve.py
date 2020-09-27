@@ -13,8 +13,8 @@ def auth(data):
     return ret
 
 def replymsg(driver, data):
-    # wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
-    # wa.typeAndSendMessage(driver, wmsg)
+    wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
+    wa.typeAndSendMessage(driver, wmsg)
     num = numbers.normalize(data[0])
     
     kodeDosen = kelas.getKodeDosen(num)
@@ -36,7 +36,21 @@ def replymsg(driver, data):
         else:
             msgreply = "Anda bukan siapa-siapa untuknya.."
     except IndexError:
-        msgreply = "NPMnya mana sahabat.... atau salah NPM nih Anda... atau NPM gak terdaftar sebagai wisudawan tahun ini..."
+        prodi = getProdiDosen(kodeDosen)
+        nipyKaprodi, namaDosen = getKaprodi(prodi)
+        kodeKaprodi = getKodeDosen(nipyKaprodi)
+        nipyWadirI, namaWadirI = getWadirI()
+        kodeWadirI = getKodeDosen(nipyWadirI)
+        
+        if(kodeDosen == kodeWadirI):
+            approveAllSKL("wadirI", kodeDosen)
+            msgreply = f"Udh di approve semua yaa"
+        elif(kodeDosen == kodeKaprodi):
+            approveAllSKL("kaprodi", kodeDosen, prodi)
+            msgreply = f"Dah di approve semua yoo"
+        else:
+            msgreply = "Anda bukan siapa-siapa untuknya.."
+        
     except Exception as e: 
         msgreply = f"Error {str(e)}"
     
@@ -53,6 +67,18 @@ def getMahasiswa(npm):
             return [row[0], row[1]]
         else:
             return False
+
+def getProdiDosen(kodeDosen):
+    db = kelas.dbConnectSiap()
+    sql = f'SELECT Homebase FROM simak_mst_dosen WHERE Login = "{kodeDosen}"'
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        row = cur.fetchone()
+        if row is not None:
+            return row[0]
+        else:
+            return None
 
 def getKaprodi(prodi):
     db = kelas.dbConnectSiap()
@@ -102,7 +128,7 @@ def approveSKL(npm, role, kodeDosen):
     sheet = book.active
     
     if role == 'wadirI':
-        print('C'+str(noUrut-3))
+        print('D'+str(noUrut-3))
         D = sheet['D'+str(noUrut-3)] 
         D.value = kodeDosen
     elif role == 'kaprodi':
@@ -112,3 +138,45 @@ def approveSKL(npm, role, kodeDosen):
     book.save(file) 
     book.close()
 
+def approveAllSKL(role, kodeDosen, prodi=None):
+    file = f"./skpi/list-skpi/list-wisudawan.xlsx"
+    
+    dfStatus = pd.read_excel(file)
+    
+    dfExcel = dfStatus.loc[(dfStatus["AJUKAN"] != '-') & ((dfStatus["KAPRODI"] == '-') | (dfStatus["WADIR1"] == '-'))]
+    print(prodi)
+    
+    book = openpyxl.load_workbook(file)
+    sheet = book.active
+    
+    if prodi != None:
+        excel = dfExcel.loc[(dfExcel["PRODI"] == getKodeProdi(str(prodi))) & (dfStatus["KAPRODI"] == '-')].values.tolist()
+        
+        for data in excel:
+            print('C'+str(data[0]-3))
+            C = sheet['C'+str(data[0]-3)] 
+            C.value = kodeDosen
+    else:
+        excel = dfExcel.loc[dfStatus["WADIR1"] == '-'].values.tolist()
+        
+        for data in excel:
+            print('D'+str(data[0]-3))
+            C = sheet['D'+str(data[0]-3)] 
+            C.value = kodeDosen
+            
+    book.save(file) 
+    book.close()
+    
+def getKodeProdi(prodi):
+    prodis = {
+        '13':'d3ti',
+        '14':'d4ti',
+        '23':'d3mi',
+        '33':'d3ak',
+        '34':'d4ak',
+        '43':'d3mb',
+        '44':'d4mb',
+        '53':'d3lb',
+        '54':'d4lb'
+    }    
+    return prodis.get(prodi, 'XXX')
