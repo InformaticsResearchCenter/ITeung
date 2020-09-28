@@ -41,13 +41,15 @@ def checkDir():
     try:
         os.mkdir('bkd/')
     except:
-        print('sudah ada..')
+        pass
 
 
 def getMkKode(lecturercode):
     db = kelas.dbConnectSiap()
-    sql = "select DISTINCT (MKKode) from simak_trn_jadwal where TahunID=20192 and DosenID='{lecturercode}'".format(
-        lecturercode=lecturercode)
+    tahunid=kelas.getTahunID()
+    if tahunid[-1] == '3':
+        tahunid=int(tahunid)-1
+    sql = f"select DISTINCT (MKKode) from simak_trn_jadwal where TahunID={tahunid} and DosenID='{lecturercode}'"
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -61,8 +63,10 @@ def getMkKode(lecturercode):
 
 def getJadwalID(mkkode, lecturercode):
     db = kelas.dbConnectSiap()
-    sql = "select JadwalID from simak_trn_jadwal where TahunID=20192 and MKKode='{mkkode}' and DosenID='{lecturercode}'".format(
-        mkkode=mkkode, lecturercode=lecturercode)
+    tahunid = kelas.getTahunID()
+    if tahunid[-1] == '3':
+        tahunid = int(tahunid) - 1
+    sql = f"select JadwalID from simak_trn_jadwal where TahunID={tahunid} and MKKode='{mkkode}' and DosenID='{lecturercode}'"
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -75,7 +79,10 @@ def getJadwalID(mkkode, lecturercode):
 
 def getPresensiDosen(jadwalid, rangepertemuan1, rangepertemuan2):
     db = kelas.dbConnectSiap()
-    sql = f"select PresensiID from simak_trn_presensi_dosen where TahunID=20192 and JadwalID={jadwalid} and Pertemuan > {rangepertemuan1} and Pertemuan < {rangepertemuan2} ORDER BY Pertemuan ASC"
+    tahunid = kelas.getTahunID()
+    if tahunid[-1] == '3':
+        tahunid = int(tahunid) - 1
+    sql = f"select PresensiID from simak_trn_presensi_dosen where TahunID={tahunid} and JadwalID={jadwalid} and Pertemuan > {rangepertemuan1} and Pertemuan < {rangepertemuan2} ORDER BY Pertemuan ASC"
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -96,8 +103,10 @@ def getPresensiMahasiswa(presensiid):
 
 def getListStudent(jadwalid):
     db = kelas.dbConnectSiap()
-    sql = "select j.JadwalID, j.TahunID, j.MKKode, j.Nama, j.DosenID, krs.MhswID from simak_trn_jadwal as j join simak_trn_krs as krs where j.jadwalid = krs.jadwalid and j.tahunid=20192 and j.JadwalID = '{0}'".format(
-        jadwalid)
+    tahunid = kelas.getTahunID()
+    if tahunid[-1] == '3':
+        tahunid = int(tahunid) - 1
+    sql = f"select j.JadwalID, j.TahunID, j.MKKode, j.Nama, j.DosenID, krs.MhswID from simak_trn_jadwal as j join simak_trn_krs as krs where j.jadwalid = krs.jadwalid and j.tahunid={tahunid} and j.JadwalID = '{jadwalid}'"
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -336,16 +345,19 @@ def makePDFHeader():
 
 
 def makePDFFooter(matkuldetails, lecturercode, pdf):
-    pdf.output('bkd/' + matkuldetails[1] + '-' + matkuldetails[2] + '-' + getLecturerMail(lecturercode) + '.pdf', 'F')
+    tahunid=kelas.getTahunID()
+    if tahunid[-1] == '3':
+        tahunid=int(tahunid)-1
+    pdf.output(f'bkd/{matkuldetails[1]}-{tahunid}-{matkuldetails[2]}-{getLecturerMail(lecturercode)}.pdf', 'F')
 
 
-def getFilePath(email, folder):
+def getFilePath(email, folder, tahunid):
     resultpath = []
     devpath = os.getcwd()
     path = '.\\{folder}'.format(folder=folder)
     for root, dirs, files in os.walk(path):
         for i in files:
-            if email in i:
+            if email in i and tahunid in i:
                 rootpath = os.path.join(root, i)
                 resultpath.append(os.path.join(devpath, rootpath))
     return resultpath
@@ -457,10 +469,11 @@ def makePDFInner(datalist, matkuldetails, lecturername, pdf, pdfpertemuan, lectu
     kelasid = kelas.toKelas(matkuldetails[6])
     prodiqrcode='bkdqrcode/whiteimage.png'
     deputiqrcode='bkdqrcode/whiteimage.png'
+    tahunidqrcode=str(int(kelas.getTahunID())-1) if kelas.getTahunID()[-1] == '3' else kelas.getTahunID()
     if statusapprove[0] == 'true':
-        prodiqrcode=f"bkdqrcode/kaprodiqrcode{lecturerid}.png"
+        prodiqrcode=f"bkdqrcode/kaprodiqrcode-{tahunidqrcode}-{lecturerid}.png"
     if statusapprove[1] == 'true':
-        deputiqrcode=f"bkdqrcode/deputiqrcode{lecturerid}.png"
+        deputiqrcode=f"bkdqrcode/deputiqrcode-{tahunidqrcode}-{lecturerid}.png"
     data = [('No.', 'NPM', 'Nama', pdfpertemuan[0], pdfpertemuan[1], pdfpertemuan[2], pdfpertemuan[3], pdfpertemuan[4],
              pdfpertemuan[5], pdfpertemuan[6], 'Total')]
     for i in datalist:
@@ -469,7 +482,7 @@ def makePDFInner(datalist, matkuldetails, lecturername, pdf, pdfpertemuan, lectu
                    ['Kode / Mata Kuliah', ': ', kodenmatkul, 'Ruang', ': ', ruang],
                    ['Pengajar', ': ', lecturername, 'Kelas', ': ', kelasid]]
     footer_data = [['Disahkan Tanggal: {sah}'.format(sah=sahTanggal()), ],
-                   [['Pengajar', f"bkdqrcode/dosenqrcode{lecturerid}.png", lecturername],
+                   [['Pengajar', f"bkdqrcode/dosenqrcode-{tahunidqrcode}-{lecturerid}.png", lecturername],
                     ['Ketua Prodi', prodiqrcode, kaprodi],
                     ['Deputi Akademik', deputiqrcode, deputiakademik]]
                    ]
@@ -637,22 +650,23 @@ def makeLinkVerifiy(kodedosen):
 
 
 def makeQrcodeLinkVerifySign(link, status, kodedosen):
+    tahunid=str(int(kelas.getTahunID())-1) if kelas.getTahunID()[-1] == '3' else kelas.getTahunID()
     if status == 'dosen':
         img = qrcode.make(link)
-        img.save(f'./bkdqrcode/dosenqrcode{kodedosen}.png')
+        img.save(f'./bkdqrcode/dosenqrcode-{tahunid}-{kodedosen}.png')
     elif status == 'kaprodi':
         img = qrcode.make(link)
-        img.save(f'./bkdqrcode/kaprodiqrcode{kodedosen}.png')
+        img.save(f'./bkdqrcode/kaprodiqrcode-{tahunid}-{kodedosen}.png')
     else:
         img = qrcode.make(link)
-        img.save(f'./bkdqrcode/deputiqrcode{kodedosen}.png')
+        img.save(f'./bkdqrcode/deputiqrcode-{tahunid}-{kodedosen}.png')
 
 
 def checkDirQrcode():
     try:
         os.mkdir('bkdqrcode/')
     except:
-        print('sudah ada..')
+        pass
 
 
 def getDosenHomebase(phonenumber):
@@ -679,7 +693,9 @@ def countSemester(jadwalid):
     middleDataLength = len(data) // 2
     npm = data[middleDataLength][-1]
     tahunAngkatan = 2000 + int(npm[1:3])
-    tahunAjaran = '20192'
+    tahunAjaran = kelas.getTahunID()
+    if tahunAjaran[-1] == '3':
+        tahunAjaran=str(int(tahunAjaran)-1)
     semester = (int(tahunAjaran[:-1]) - tahunAngkatan) * 2 + int(tahunAjaran[-1])
     return semester
 
@@ -774,12 +790,11 @@ def makePDFandSend(num):
         try:
             pdf = makePDFHeader()
             for jadwalid in jadwalids:
-                print(jadwalid)
                 matkuldetailsfix = kelas.getMkDetails(jadwalid[0])
                 if getRencanaKehadiran(jadwalid[0]) == 0:
-                    print('rencana kehadiran 0')
+                    continue
                 elif getProgramID(jadwalid[0]) == '.KER.' and getKehadiran(jadwalid[0]) < getRencanaKehadiran(jadwalid[0]):
-                    print('program kerja sama dan jumlah kehadiran kurang dari rencana kehadiran')
+                    continue
                 else:
                     matkuldetails = kelas.getMkDetails(jadwalid[0])
                     datamatkulbap = getBKDMatkul(jadwalid[0])
@@ -835,8 +850,6 @@ def makePDFandSend(num):
                         matkuldetailsfix = matkuldetails
             makePDFFooter(matkuldetailsfix, lecturercode, pdf)
         except Exception as e:
-            print(str(e))
-            print(f'pertemuan kurang dari {config.kehadiran}')
             pertemuankurang.append(jadwalid[0])
     cekkurangmateri = cekKurangMateri(cekMateriByGrouping(lecturercode))
     cekkurangapproval = cekKurangApproval(cekApprovalBAPByGrouping(lecturercode))
@@ -869,7 +882,7 @@ def makePDFandSend(num):
         mail(getLecturerMail(lecturercode),
              f'Halooooo, {config.bot_name} ngirim file nich....',
              f'ini ya file Absensi BKD yang Bapak/Ibu minta silahkan di cek... ehee....',
-             getFilePath(getLecturerMail(lecturercode), 'bkd'))
+             getFilePath(getLecturerMail(lecturercode), 'bkd', str(int(kelas.getTahunID())-1) if kelas.getTahunID()[-1] == '3' else kelas.getTahunID()))
 
 def verifyDigitalSign(resultpasscode):
     kodedosen = resultpasscode.split(';')[1]

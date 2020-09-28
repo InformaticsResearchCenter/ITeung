@@ -34,7 +34,7 @@ import requests
 #     return msgreply
 
 def dbConnect():
-    db = pymysql.connect(config.db_host, config.db_username, config.db_password, config.db_name)
+    db = pymysql.connect(config.db_host, config.db_username, config.db_password, config.db_name, port=int(config.db_port))
     return db
 
 
@@ -487,7 +487,7 @@ def getJadwalSerial(jadwalid):
 
 def pesertaAbsensi(jadwalid):
     db = dbConnectSiap()
-    sql = f"select j.JadwalID, j.TahunID, j.MKKode, j.Nama, j.DosenID, krs.MhswID from simak_trn_jadwal as j join simak_trn_krs as krs where j.jadwalid = krs.jadwalid and j.tahunid={getTahunID()} and j.JadwalID = {jadwalid}"
+    sql = f"select j.JadwalID, j.TahunID, j.MKKode, j.Nama, j.DosenID, krs.MhswID from simak_trn_jadwal as j join simak_trn_krs as krs where j.jadwalid = krs.jadwalid and j.tahunid={int(getTahunID())-1 if getTahunID()[-1] == '3' else getTahunID()} and j.JadwalID = {jadwalid}"
     with db:
         cur = db.cursor()
         cur.execute(sql)

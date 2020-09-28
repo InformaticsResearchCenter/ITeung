@@ -65,7 +65,10 @@ def getAllDataBimbinganByDosenID(npm, dosenid):
 
 def getAllNilaiBimbingan(npm, dosenid):
     db = kelas.dbConnectSiap()
-    sql = f"select Nilai from simak_croot_bimbingan where MhswID={npm} and DosenID='{dosenid}' and TahunID={kelas.getTahunID()} ORDER BY Pertemuan_ ASC"
+    tahunid=kelas.getTahunID()
+    if tahunid[-1] == "3":
+        tahunid=int(tahunid)-1
+    sql = f"select Nilai from simak_croot_bimbingan where MhswID={npm} and DosenID='{dosenid}' and TahunID={tahunid} ORDER BY Pertemuan_ ASC"
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -81,21 +84,24 @@ def totalNilai(npm, MINIMUM_PERTEMUAN, dosenid):
     # if pembimbingke == 'pembimbing2':
     #     MINIMUM_PERTEMUAN=5
     ALL_DATA_BIMBINGAN = getAllDataBimbinganByDosenID(npm, dosenid)
-    ALL_NILAI_BIMBINGAN = getAllNilaiBimbingan(npm, dosenid)
-    LAST_PERTEMUAN_BIMBINGAN = ALL_DATA_BIMBINGAN[0][5]
-    # if len(ALL_DATA_BIMBINGAN) < MINIMUM_PERTEMUAN:
-    #     status, totalnilai = False, 0
-    # else:
-    if LAST_PERTEMUAN_BIMBINGAN < MINIMUM_PERTEMUAN:
-        totalnilai = 0
-        for nilai in ALL_NILAI_BIMBINGAN:
-            totalnilai += nilai[0]
-        status, totalnilai = True, totalnilai / (MINIMUM_PERTEMUAN)
+    if ALL_DATA_BIMBINGAN:
+        ALL_NILAI_BIMBINGAN = getAllNilaiBimbingan(npm, dosenid)
+        LAST_PERTEMUAN_BIMBINGAN = ALL_DATA_BIMBINGAN[0][5]
+        # if len(ALL_DATA_BIMBINGAN) < MINIMUM_PERTEMUAN:
+        #     status, totalnilai = False, 0
+        # else:
+        if LAST_PERTEMUAN_BIMBINGAN < MINIMUM_PERTEMUAN:
+            totalnilai = 0
+            for nilai in ALL_NILAI_BIMBINGAN:
+                totalnilai += nilai[0]
+            status, totalnilai = True, totalnilai / (MINIMUM_PERTEMUAN)
+        else:
+            totalnilai = 0
+            for nilai in ALL_NILAI_BIMBINGAN:
+                totalnilai += nilai[0]
+            status, totalnilai = True, totalnilai / (LAST_PERTEMUAN_BIMBINGAN)
     else:
-        totalnilai = 0
-        for nilai in ALL_NILAI_BIMBINGAN:
-            totalnilai += nilai[0]
-        status, totalnilai = True, totalnilai / (LAST_PERTEMUAN_BIMBINGAN)
+        status, totalnilai=True, 0
     return status, totalnilai
 
 

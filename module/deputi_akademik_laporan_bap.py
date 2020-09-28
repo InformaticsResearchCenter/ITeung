@@ -64,7 +64,7 @@ def run(num):
         foldername = 'bkd'
         pathperprodi = []
         for i in mkkodelist:
-            abc = bkd.getFilePath(i, foldername)
+            abc = bkd.getFilePath(i, foldername, str(int(kelas.getTahunID())-1) if kelas.getTahunID()[-1] == '3' else kelas.getTahunID())
             for i in abc:
                 pathperprodi.append(i)
         with ZipFile(f'{singkatan}.zip', 'w') as zip:
