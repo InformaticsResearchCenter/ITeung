@@ -1,6 +1,8 @@
 from module import kelas
 from module import va_parent
 
+import app
+
 def auth(data):
     if kelas.getNpmandNameMahasiswa(data[0]):
         return True
@@ -25,9 +27,9 @@ def replymsg(driver, data):
                   f'Kode Transaksi: *{kode_transaksi}*\n' \
                   f'Virtual Account: *{virtual_account}*\n' \
                   f'Nama Pelanggan: *{customer_name}*\n' \
-                  f'Jumlah Yang Harus Dibayar: *{trx_amount}*\n' \
-                  f'Jumlah Transfer: *{payment_amount}*\n' \
-                  f'Total Transfer: *{cumulative_payment_amount}*\n' \
+                  f'Jumlah Yang Harus Dibayar: *{app.floatToRupiah(float(trx_amount))}*\n' \
+                  f'Jumlah Transfer: *{app.floatToRupiah(float(payment_amount))}*\n' \
+                  f'Total Transfer: *{app.floatToRupiah(float(cumulative_payment_amount))}*\n' \
                   f'Tanggal dan Jam Transfer: *{datetime_payment}*\n\n'
     return msgreply
 
