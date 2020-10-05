@@ -11,6 +11,7 @@ def replymsg(driver, data):
     npm, nama = kelas.getNpmandNameMahasiswa(data[0])
     msgreply = ''
     for trx_id in getTrxIDList(npm):
+        trx_id=trx_id[0]
         payment=getDataPembayaran(trx_id)
         kode_transaksi=trx_id
         judul_transaksi=trx_id.split('-')[1]
