@@ -41,10 +41,6 @@ def replymsg(driver, data):
             if getMahasiswa(num):
                 npm, prodi, email = getMahasiswa(num)
                 
-                wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
-                wmsg = wmsg.replace('#EMAIL#', email)
-                wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
-                wa .typeAndSendMessage(driver, wmsg)
                 prodis = convertProdi(prodi)
                 if checkSKPIProdiFile(prodis[0]):
                     dfStatus = pd.read_excel(f"./skpi/list-skpi/list-wisudawan.xlsx")
@@ -57,6 +53,10 @@ def replymsg(driver, data):
                         # print(data)
                         subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],data], cwd=config.cwd)
                         msgreply = ""
+                        wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
+                        wmsg = wmsg.replace('#EMAIL#', email)
+                        wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
+                        wa .typeAndSendMessage(driver, wmsg)
                     else:
                         submitSKL(npm)
                         msgreply = "Permohonan *Surat Keterangan Lulus* Anda telah diajukan, harap lakukan konfirmasi"
