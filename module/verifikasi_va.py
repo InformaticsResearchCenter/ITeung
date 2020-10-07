@@ -4,7 +4,7 @@ import app, config
 
 def getDataPayment(npm):
     db = va_parent.dbConnectVA()
-    sql = f"select * from payment_notification where trx_id='INV-SPP-{npm}-1-0920'"
+    sql = f"select * from payment_notification where trx_id like '%INV%' and trx_id like '%SPP%' and trx_id like '%{npm}%' and trx_id like '%{config.trx_id_monthyears}%'"
     with db:
         cur = db.cursor()
         cur.execute(sql)
