@@ -258,7 +258,7 @@ def createAPage(contain, styles, nomorA, nomorB, nomorC, akreInstitusi, akreProd
     data = [['Semester', ':', 'Genap'],
     ['Tahun Akademik', ':', tahun],
     ['Tanggal Yudisium', ':', tanggalYudisium],
-    ['IPK', ':', ipk],
+    ['IPK', ':', "%.2f" % round(ipk, 2)],
     ['Predikat Kelulusan', ':', predikat],
     ['Judul Tugas Akhir/Skripsi', ':', Paragraph(judul, styleWrap)],
     ]
@@ -324,7 +324,7 @@ def sendEmail(email, fileName, path, mhs):
 
         sender_email = config.email_iteung
         receiver_email = email
-        # receiver_email = 'syafrial.fachri@poltekpos.ac.id'
+        # receiver_email = 'divakrishnam@yahoo.com'
         password = config.pass_iteung
 
         message = MIMEMultipart()
