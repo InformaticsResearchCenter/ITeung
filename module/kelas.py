@@ -732,7 +732,7 @@ def getStudentIdFromParentPhoneNumber(num):
 
 def getStudentScores(studentid):
     db=dbConnectSiap()
-    sql="select k.MhswID,m.Nama,k.JadwalID , mt.Nama as 'nama matkul',k.GradeNilai from simak_trn_krs as k,simak_mst_matakuliah as mt,simak_mst_mahasiswa as m where k.MKID=mt.MKID and k.MhswID=m.MhswID and k.TahunID={tahunid} and k.MhswID={npm}".format(tahunid=getTahunID(), npm=studentid)
+    sql="select k.MhswID,m.Nama,k.JadwalID , mt.Nama as 'nama matkul',k.GradeNilai from simak_trn_krs as k,simak_mst_matakuliah as mt,simak_mst_mahasiswa as m where k.MKID=mt.MKID and k.MhswID=m.MhswID and k.TahunID={tahunid} and k.MhswID={npm}".format(tahunid=int(getTahunID())-1 if getTahunID()[-1] == '3' else getTahunID(), npm=studentid)
     with db:
         cur = db.cursor()
         cur.execute(sql)
