@@ -16,6 +16,14 @@ def getDataPayment(npm):
             result=None
         return result
 
+def getProdiIDfromNPM(npm):
+    db=kelas.dbConnectSiap()
+    sql=f'SELECT ProdiID FROM `simak_mst_mahasiswa` where Login={npm}'
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        return cur.fetchone()[0]
+
 def auth(data):
     if kelas.getNpmandNameMahasiswa(data[0]):
         return True
@@ -32,7 +40,7 @@ def replymsg(driver, data):
         npm = app.cekNpmInTrxID(trxid)
         tipesemester = app.cekTipeSemester(trxid)
         tahunid = f'{yearnow}{tipesemester}'
-        prodiid = f'{npm[0]}{npm[3]}'
+        prodiid = getProdiIDfromNPM(npm)
         virtual_account = datava['virtual_account']
         customer_name =datava['customer_name']
         trx_amount = datava['trx_amount']
