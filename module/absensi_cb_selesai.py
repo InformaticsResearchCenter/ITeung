@@ -191,7 +191,7 @@ def makePDFandSEND(kode_pleton, nama_pleton, group_name, materi, npm_koor_pleton
     elements.append(tab)
     elements.append(Spacer(1, 0.35 * inch))
 
-    data = [['Nomor', 'NPM', 'Nama',]]
+    data = [['Nomor', 'NPM', 'Nama', 'Program Studi']]
     nomor=1
     for npmnama in npm_and_nama:
         if npmnama:
@@ -199,6 +199,7 @@ def makePDFandSEND(kode_pleton, nama_pleton, group_name, materi, npm_koor_pleton
             data_for_append.append(f'{str(nomor)}.')
             data_for_append.append(npmnama[0])
             data_for_append.append(npmnama[1])
+            data_for_append.append(kelas.getProdiNameWithStudentID(npmnama[0]))
             data.append(data_for_append)
             nomor+=1
         else:
@@ -215,7 +216,7 @@ def makePDFandSEND(kode_pleton, nama_pleton, group_name, materi, npm_koor_pleton
     s = s["Normal"]
     s.wordWrap = 'CJK'
     data2 = [[Paragraph(cell, s) for cell in row] for row in data]
-    t = Table(data2, hAlign='CENTER', colWidths=[4 * cm, 4 * cm, 10 * cm,])
+    t = Table(data2, hAlign='CENTER', colWidths=[1.5 * cm, 2 * cm, 8 * cm, 6 * cm])
     t.setStyle(style)
 
     elements.append(t)
@@ -263,7 +264,7 @@ def makePDFandSEND(kode_pleton, nama_pleton, group_name, materi, npm_koor_pleton
             npm_koor_pleton
         )
     )
-    
+
     msgreply = f'Kode Pleton: {kode_pleton}\n' \
                f'Nama Pleton: {nama_pleton}\n' \
                f'Materi: {materi}\n' \
