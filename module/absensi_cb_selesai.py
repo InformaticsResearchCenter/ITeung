@@ -93,6 +93,21 @@ def makeLinkVerifiy(npm_koor_pleton):
     link = f'https://api.whatsapp.com/send?phone={config.nomor_iteung}&text=iteung{space}tanda{space}tangan{space}{passcode}'
     return link
 
+def verifyDigitalSign(resultpasscode):
+    npm_koor_pleton = resultpasscode.split(';')[1]
+    tglttd = resultpasscode.split(';')[2]
+    blnttd = resultpasscode.split(';')[3]
+    thnttd = resultpasscode.split(';')[4]
+    jamttd = resultpasscode.split(';')[5]
+    mntttd = resultpasscode.split(';')[6]
+    dtkttd = resultpasscode.split(';')[7]
+    jnsdkm = resultpasscode.split(';')[8]
+    data_koor_pleton = kelas.getDataMahasiswa(npm_koor_pleton)
+    penerbitantandatangan = f'{jamttd}:{mntttd}:{dtkttd} {tglttd} {bkd.bulanSwitcher(blnttd)} {thnttd}'
+    nama_koor_pleton = kelas.getStudentNameOnly(npm_koor_pleton)
+    msgreply = f'Ini yaaa data yang Akang/Teteh minta\n\nNPM: {npm_koor_pleton}\nNama Mahasiswa: {nama_koor_pleton}\nHandphone: {data_koor_pleton[2]}\nE-mail: {data_koor_pleton[3]}\n\nJenis Dokumen: {jnsdkm}\nPenerbitan Tanda Tangan: {penerbitantandatangan}'
+    return msgreply
+
 def checkDirQrcode(folder_name):
     try:
         os.mkdir(f'{folder_name}/')
@@ -233,7 +248,7 @@ def makePDFandSEND(kode_pleton, nama_pleton, group_name, materi, npm_koor_pleton
     bkd.mail(
         kelas.getStudentEmail(npm_koor_pleton),
         f'Halooooo, {config.bot_name} ngirim file nich....',
-        f'ini ya file Absensi BKD yang Bapak/Ibu minta silahkan di cek... ehee....',
+        f'ini ya file Absensi Character Building 2020 yang Akang/Teteh minta silahkan di cek... ehee....',
         getFilePath(
             kelas.getStudentEmail(npm_koor_pleton),
             'bkd',
