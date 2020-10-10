@@ -22,6 +22,7 @@ from reportlab.lib.enums import TA_RIGHT
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.pagesizes import A4
+from reportlab.lib.pagesizes import letter
 from reportlab.lib.pagesizes import inch
 from reportlab.lib.pagesizes import portrait
 from reportlab.pdfbase.ttfonts import TTFont
@@ -122,17 +123,26 @@ def getFilePath(email, folder, kode_pleton, nama_pleton, npm_koor_pleton):
                 resultpath.append(os.path.join(devpath, rootpath))
     return resultpath
 
+
+def header_footer(canvas, doc):
+    canvas.saveState()
+
+    footer = Image('./skpi/footer.png', 19 * cm, 2.5 * cm)
+    w, h = footer.wrap(doc.width, doc.bottomMargin)
+    footer.drawOn(canvas, doc.leftMargin, h)
+
+    canvas.restoreState()
+
 def makePDFandSEND(kode_pleton, nama_pleton, group_name, materi, npm_koor_pleton):
     folder_name='absensi_cb'
     checkDir(folder_name)
-    doc = SimpleDocTemplate(f'./{folder_name}/ABSENSI-CB-PLETON-{npm_koor_pleton}-{kode_pleton}-{nama_pleton}-{kelas.getStudentEmail(npm_koor_pleton)}.pdf', pagesize=A4, rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=18)
+    doc = SimpleDocTemplate(f'./{folder_name}/ABSENSI-CB-PLETON-{npm_koor_pleton}-{kode_pleton}-{nama_pleton}-{kelas.getStudentEmail(npm_koor_pleton)}.pdf', pagesize=letter, leftMargin=30, rightMargin=30, topMargin=.1, bottomMargin=130)
     doc.pagesize = portrait(A4)
 
     elements = []
 
-    logo = Image("logo.png", 7.3 * inch, 1 * inch)
-    logo.hAlign = "CENTER"
-    elements.append(logo)
+    elements.append(Image(f'./skpi/header.png', 19 * cm, 2.5 * cm))
+    elements.append(Spacer(1, 0 * cm))
 
     absensi_from_log = kelas.getnumonly(groupname=group_name, tipe='daring')
     npm_and_nama = []
@@ -239,20 +249,20 @@ def makePDFandSEND(kode_pleton, nama_pleton, group_name, materi, npm_koor_pleton
     elements.append(Paragraph(ptext, styles["Right"]))
     elements.append(Spacer(1, 1))
 
-    doc.build(elements)
+    doc.build(elements, onFirstPage=header_footer, onLaterPages=header_footer)
 
-    bkd.mail(
-        kelas.getStudentEmail(npm_koor_pleton),
-        f'Halooooo, {config.bot_name} ngirim file nich....',
-        f'ini ya file Absensi Character Building 2020 yang Akang/Teteh minta silahkan di cek... ehee....',
-        getFilePath(
-            kelas.getStudentEmail(npm_koor_pleton),
-            folder_name,
-            kode_pleton,
-            nama_pleton,
-            npm_koor_pleton
-        )
-    )
+    # bkd.mail(
+    #     kelas.getStudentEmail(npm_koor_pleton),
+    #     f'Halooooo, {config.bot_name} ngirim file nich....',
+    #     f'ini ya file Absensi Character Building 2020 yang Akang/Teteh minta silahkan di cek... ehee....',
+    #     getFilePath(
+    #         kelas.getStudentEmail(npm_koor_pleton),
+    #         folder_name,
+    #         kode_pleton,
+    #         nama_pleton,
+    #         npm_koor_pleton
+    #     )
+    # )
     msgreply = f'Kode Pleton: {kode_pleton}\n' \
                f'Nama Pleton: {nama_pleton}\n' \
                f'Materi: {materi}\n' \
