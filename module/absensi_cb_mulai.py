@@ -12,7 +12,10 @@ def replymsg(driver, data):
     grp=data[1]
     kode_pleton=grp.split('-')[1]
     nama_pleton=pletonSwitcher(kode_pleton)
-    msgreply=f'okeeeeee, absensi CB untuk *PLETON {nama_pleton}* dimulai, kepada peserta Character Building Politeknik Pos Indonesia 2020 untuk segera absen ke ITeung yaa, cukup dengan kirimkan pesannya ke GROUP PLETON kamu sudah bisa terabsen, minimal 2 - 3 pesan yaa...'
+    if nama_pleton:
+        msgreply=f'okeeeeee, absensi CB untuk *PLETON {nama_pleton}* dimulai, kepada peserta Character Building Politeknik Pos Indonesia 2020 untuk segera absen ke {config.bot_name} yaa, cukup dengan kirimkan pesannya ke GROUP PLETON kamu sudah bisa terabsen, minimal 2 - 3 pesan yaa...'
+    else:
+        msgreply=f'duhhh kakak koordinator, nama pletonnya ngga bisa {config.bot_name} temuin nih, coba cek yaa nama groupnyaa'
     return msgreply
 
 def pletonSwitcher(kode_pleton):
