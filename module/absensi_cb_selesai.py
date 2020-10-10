@@ -251,18 +251,19 @@ def makePDFandSEND(kode_pleton, nama_pleton, group_name, materi, npm_koor_pleton
 
     doc.build(elements, onFirstPage=header_footer, onLaterPages=header_footer)
 
-    # bkd.mail(
-    #     kelas.getStudentEmail(npm_koor_pleton),
-    #     f'Halooooo, {config.bot_name} ngirim file nich....',
-    #     f'ini ya file Absensi Character Building 2020 yang Akang/Teteh minta silahkan di cek... ehee....',
-    #     getFilePath(
-    #         kelas.getStudentEmail(npm_koor_pleton),
-    #         folder_name,
-    #         kode_pleton,
-    #         nama_pleton,
-    #         npm_koor_pleton
-    #     )
-    # )
+    bkd.mail(
+        kelas.getStudentEmail(npm_koor_pleton),
+        f'Halooooo, {config.bot_name} ngirim file nich....',
+        f'ini ya file Absensi Character Building 2020 yang Akang/Teteh minta silahkan di cek... ehee....',
+        getFilePath(
+            kelas.getStudentEmail(npm_koor_pleton),
+            folder_name,
+            kode_pleton,
+            nama_pleton,
+            npm_koor_pleton
+        )
+    )
+    
     msgreply = f'Kode Pleton: {kode_pleton}\n' \
                f'Nama Pleton: {nama_pleton}\n' \
                f'Materi: {materi}\n' \
