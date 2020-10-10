@@ -136,6 +136,10 @@ def makePDFandSEND(kode_pleton, nama_pleton, group_name, materi, npm_koor_pleton
 
     elements = []
 
+    logo = Image("logo.png", 7.3 * inch, 1 * inch)
+    logo.hAlign = "CENTER"
+    elements.append(logo)
+
     absensi_from_log = kelas.getnumonly(groupname=group_name, tipe='daring')
     npm_and_nama = []
     for phone_number in absensi_from_log:
