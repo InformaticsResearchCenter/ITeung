@@ -20,6 +20,7 @@ def replymsg(driver, data):
 
 def pletonSwitcher(kode_pleton):
     switcher = {
+        '0': 'ITeung hore hore',
         '1': 'PLETON 1',
         '2': 'PLETON 2',
         '3': 'PLETON 3',
