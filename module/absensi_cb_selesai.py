@@ -45,12 +45,6 @@ def replymsg(driver, data):
         materi=msg.split(' materi ')[1]
     except:
         return 'duhh materinya mana nihhh'
-    absensi_from_log=kelas.getnumonly(groupname=grp, tipe='daring')
-    npm_and_nama=[]
-    for phone_number in absensi_from_log:
-        peserta_cb_phone_number=numbers.normalize(phone_number[0])
-        npm_nama=kelas.getNpmandNameMahasiswa(peserta_cb_phone_number)
-        npm_and_nama.append(npm_nama)
     kode_pleton=grp.split("-")[1]
     nama_pleton=absensi_cb_mulai.pletonSwitcher(kode_pleton)
     npm_koor=kelas.getNpmandNameMahasiswa(data[0])[0]
@@ -102,7 +96,7 @@ def checkDirQrcode(folder_name):
     try:
         os.mkdir(f'{folder_name}/')
     except:
-        print('sudah ada..')
+        pass
 
 def makeQrcodeLinkVerifySign(link, npm_koor_pleton, kode_pleton, nama_pleton):
     checkDirQrcode('absensi_cb_qrcode')
@@ -115,7 +109,7 @@ def checkDir(folder_name):
     try:
         os.mkdir(f'{folder_name}/')
     except:
-        print('sudah ada..')
+        pass
 
 def getFilePath(email, folder, kode_pleton, nama_pleton, npm_koor_pleton):
     resultpath = []
@@ -262,11 +256,14 @@ def makePDFandSEND(kode_pleton, nama_pleton, group_name, materi, npm_koor_pleton
     msgreply = f'Kode Pleton: {kode_pleton}\n' \
                f'Nama Pleton: {nama_pleton}\n' \
                f'Materi: {materi}\n' \
-               f'Koordinator Pleton: {kelas.getNpmandNameMahasiswa(data[0])[1]}\n' \
+               f'Koordinator Pleton: {kelas.getStudentNameOnly(npm_koor_pleton)}\n' \
                f'Tanggal dan Waktu: {waktu_tanggal}\n' \
                f'Absensi Peserta CB:\n'
     number = 1
-    for npm, nama in npm_and_nama:
-        msgreply += f'{number}. {npm} - {nama}\n'
-        number += 1
+    for data_npm_nama in npm_and_nama:
+        if data_npm_nama:
+            msgreply += f'{number}. {data_npm_nama[0]} - {data_npm_nama[1]}\n'
+            number += 1
+        else:
+            continue
     return msgreply
