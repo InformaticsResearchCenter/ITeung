@@ -53,18 +53,8 @@ def replymsg(driver, data):
         npm_and_nama.append(npm_nama)
     kode_pleton=grp.split("-")[1]
     nama_pleton=absensi_cb_mulai.pletonSwitcher(kode_pleton)
-    msgreply=f'Kode Pleton: {kode_pleton}\n' \
-             f'Nama Pleton: {nama_pleton}\n' \
-             f'Materi: {materi}\n' \
-             f'Koordinator Pleton: {kelas.getNpmandNameMahasiswa(data[0])[1]}\n' \
-             f'Tanggal dan Waktu: {datetime.now().strftime("%d-%m-%Y %H:%M:%S")}\n' \
-             f'Absensi Peserta CB:\n'
-    number=1
-    for npm, nama in npm_and_nama:
-        msgreply+=f'{number}. {npm} - {nama}\n'
-        number+=1
     npm_koor=kelas.getNpmandNameMahasiswa(data[0])[0]
-    makePDFandSEND(
+    msgreply=makePDFandSEND(
         kode_pleton=kode_pleton,
         nama_pleton=nama_pleton,
         group_name=grp,
@@ -167,9 +157,11 @@ def makePDFandSEND(kode_pleton, nama_pleton, group_name, materi, npm_koor_pleton
     elements.append(Paragraph(f'{ptext}', styles["absensi_cb_style"]))
     elements.append(Spacer(1, 35))
 
+    waktu_tanggal=datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+
     data = [
         [f'<font name="Times" size="10">Kode Pleton</font>', f'<font name="Times" size="10">:</font>', f'<font name="Times" size="10">{kode_pleton}</font>', f'<font name="Times" size="10">Nama Pleton</font>', f'<font name="Times" size="10">:</font>', f'<font name="Times" size="10">{nama_pleton}</font>'],
-        [f'<font name="Times" size="10">Materi</font>', f'<font name="Times" size="10">:</font>', f'<font name="Times" size="10">{materi}</font>', f'<font name="Times" size="10">Tanggal dan Waktu</font>', f'<font name="Times" size="10">:</font>', f'<font name="Times" size="10">{datetime.now().strftime("%d-%m-%Y %H:%M:%S")}</font>'],
+        [f'<font name="Times" size="10">Materi</font>', f'<font name="Times" size="10">:</font>', f'<font name="Times" size="10">{materi}</font>', f'<font name="Times" size="10">Tanggal dan Waktu</font>', f'<font name="Times" size="10">:</font>', f'<font name="Times" size="10">{waktu_tanggal}</font>'],
     ]
 
     style = TableStyle(
@@ -257,3 +249,14 @@ def makePDFandSEND(kode_pleton, nama_pleton, group_name, materi, npm_koor_pleton
             npm_koor_pleton
         )
     )
+    msgreply = f'Kode Pleton: {kode_pleton}\n' \
+               f'Nama Pleton: {nama_pleton}\n' \
+               f'Materi: {materi}\n' \
+               f'Koordinator Pleton: {kelas.getNpmandNameMahasiswa(data[0])[1]}\n' \
+               f'Tanggal dan Waktu: {waktu_tanggal}\n' \
+               f'Absensi Peserta CB:\n'
+    number = 1
+    for npm, nama in npm_and_nama:
+        msgreply += f'{number}. {npm} - {nama}\n'
+        number += 1
+    return msgreply
