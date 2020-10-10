@@ -251,7 +251,7 @@ def makePDFandSEND(kode_pleton, nama_pleton, group_name, materi, npm_koor_pleton
         f'ini ya file Absensi Character Building 2020 yang Akang/Teteh minta silahkan di cek... ehee....',
         getFilePath(
             kelas.getStudentEmail(npm_koor_pleton),
-            'bkd',
+            folder_name,
             kode_pleton,
             nama_pleton,
             npm_koor_pleton
