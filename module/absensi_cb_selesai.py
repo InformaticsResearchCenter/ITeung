@@ -144,8 +144,11 @@ def makePDFandSEND(kode_pleton, nama_pleton, group_name, materi, npm_koor_pleton
     npm_and_nama = []
     for phone_number in absensi_from_log:
         peserta_cb_phone_number = numbers.normalize(phone_number[0])
-        npm_nama = kelas.getNpmandNameMahasiswa(peserta_cb_phone_number)
-        npm_and_nama.append(npm_nama)
+        if peserta_cb_phone_number in config.nomor_koor_pleton_cb:
+            continue
+        else:
+            npm_nama = kelas.getNpmandNameMahasiswa(peserta_cb_phone_number)
+            npm_and_nama.append(npm_nama)
 
     pdfmetrics.registerFont(TTFont('TNR', 'timesdownload.ttf'))
     pdfmetrics.registerFont(TTFont('TNRB', 'timesdownloadbd.ttf'))
@@ -186,13 +189,16 @@ def makePDFandSEND(kode_pleton, nama_pleton, group_name, materi, npm_koor_pleton
 
     data = [['Nomor', 'NPM', 'Nama',]]
     nomor=1
-    for npm, nama in npm_and_nama:
-        data_for_append=[]
-        data_for_append.append(f'{str(nomor)}.')
-        data_for_append.append(npm)
-        data_for_append.append(nama)
-        data.append(data_for_append)
-        nomor+=1
+    for npmnama in npm_and_nama:
+        if npmnama:
+            data_for_append=[]
+            data_for_append.append(f'{str(nomor)}.')
+            data_for_append.append(npmnama[0])
+            data_for_append.append(npmnama[1])
+            data.append(data_for_append)
+            nomor+=1
+        else:
+            continue
 
     style = TableStyle([('FONT', (0, 0), (-1, -1), 'Helvetica-Bold'),
                         ('VALIGN', (0, -1), (-1, -1), 'MIDDLE'),
