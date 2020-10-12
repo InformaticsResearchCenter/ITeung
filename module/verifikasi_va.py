@@ -41,6 +41,8 @@ def replymsg(driver, data):
         tipesemester = app.cekTipeSemester(trxid)
         tahunid = f'{yearnow}{tipesemester}'
         prodiid = getProdiIDfromNPM(npm)
+        if prodiid == '64':
+            prodiid='54'
         virtual_account = datava['virtual_account']
         customer_name =datava['customer_name']
         trx_amount = datava['trx_amount']
