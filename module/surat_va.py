@@ -31,7 +31,10 @@ def getPekerjaanOrtuAyah(npm):
         cur = db.cursor()
         cur.execute(sql)
         rows = cur.fetchone()
-    return rows[0]
+        if rows is not None:
+            return rows[0]
+        else:
+            return None
 
 def getPekerjaanOrtuIbu(npm):
     db=kelas.dbConnectSiap()
@@ -40,7 +43,10 @@ def getPekerjaanOrtuIbu(npm):
         cur = db.cursor()
         cur.execute(sql)
         rows = cur.fetchone()
-    return rows[0]
+        if rows is not None:
+            return rows[0]
+        else:
+            return None
 
 def getAlamatLengkapOrtu(npm):
     db=kelas.dbConnectSiap()
