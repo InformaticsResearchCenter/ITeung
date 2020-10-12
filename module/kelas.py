@@ -34,7 +34,7 @@ import requests
 #     return msgreply
 
 def dbConnect():
-    db = pymysql.connect(config.db_host, config.db_username, config.db_password, config.db_name, port=int(config.db_port))
+    db = pymysql.connect(config.db_host, config.db_username, config.db_password, config.db_name)
     return db
 
 
@@ -104,12 +104,13 @@ def toHari(kode):
 
 def getKelasMahasiswabyStudentID(npm):
     db=dbConnectSiap()
-    sql=f'select Kelas from simak_trn_krs where MhswID={npm} ORDER BY KRSID DESC LIMIT 1'
+    sql=f'select Kelas from simak_trn_krs where MhswID={npm} ORDER BY Kelas'
     with db:
         cur=db.cursor()
         cur.execute(sql)
-        row=cur.fetchone()
-    alfabetkelas=toKelas(str(row[0]))
+        rows=cur.fetchall()
+        middle_data=len(rows)//2
+    alfabetkelas=toKelas(str(rows[middle_data]))
     return f'{int(datetime.now().strftime("%Y"))-int(getTahunAngkatanWithStudentID(npm))+1}{alfabetkelas}'
 
 def getPenasehatAkademik(npm):
