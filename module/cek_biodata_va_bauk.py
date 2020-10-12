@@ -4,7 +4,7 @@ from datetime import datetime
 import app, config
 
 def auth(data):
-    if numbers.normalize(data[0]) == config.nomor_kepalaBAUK or numbers.normalize(data[0]) == config.nomor_staffBAUK or numbers.normalize(data[0]) == config.nomor_callcenterBAUK:
+    if numbers.normalize(data[0]) in config.nomor_BAUK_list:
         return True
     else:
         return False
