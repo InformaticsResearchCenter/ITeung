@@ -13,7 +13,7 @@ def replymsg(driver, data):
     msgreply = ''
     npms = kelas.getStudentIdFromParentPhoneNumber(data[0])
     for npm in npms:
-        nama = getStudentNameOnly(npm)
+        nama = kelas.getStudentNameOnly(npm)
         for trx_id in getTrxIDList(npm):
             trx_id=trx_id[0]
             payment=getDataPembayaran(trx_id)
