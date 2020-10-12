@@ -11,7 +11,7 @@ def auth(data):
 
 def replymsg(driver, data):
     msgreply = ''
-    npms = kelas.getStudentIdFromParentPhoneNumber(num)
+    npms = kelas.getStudentIdFromParentPhoneNumber(data[0])
     for npm in npms:
         nama = getStudentNameOnly(npm)
         for trx_id in getTrxIDList(npm):
