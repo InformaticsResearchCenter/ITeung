@@ -110,7 +110,7 @@ def getKelasMahasiswabyStudentID(npm):
         cur.execute(sql)
         rows=cur.fetchall()
         middle_data=len(rows)//2
-    alfabetkelas=toKelas(str(rows[middle_data]))
+    alfabetkelas=toKelas(str(rows[middle_data][0]))
     return f'{int(datetime.now().strftime("%Y"))-int(getTahunAngkatanWithStudentID(npm))+1}{alfabetkelas}'
 
 def getPenasehatAkademik(npm):
