@@ -30,7 +30,17 @@ def replymsg(driver, data):
             absent='\n=====ABSENSI=====\n'
             for v in jadwalid:
                 absent=absent+kelas.getDataMatkul(v)[1]+': '+str(round(int(kelas.getKehadiranMahasiswa(jadwalid=v, studentid=npmmahasiswa)/config.kehadiran*100)))+'%\n'
-            msgreply+=npm+nama+score+absent+'\n\n'
+            ipk = f'IPK: {ipkMahasiswa(npmmahasiswa)}'
+            msgreply+=npm+nama+score+absent+'\n'+ipk+'\n\n'
     else:
         msgreply='Mohon maaf server Akademik SIAP sedang dalam kondisi DOWN, mohon untuk menginformasikan ke ADMIN dan tunggu hingga beberapa menit kemudian, lalu ulangi kembali, terima kasih....'
     return msgreply
+
+def ipkMahasiswa(npm):
+    db = kelas.dbConnectSiap()
+    sql= f"SELECT IPK FROM `simak_mst_mahasiswa` where MhswID = '{npm}'"
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        row = cur.fetchone()
+        return str(row[0])
