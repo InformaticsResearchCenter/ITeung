@@ -16,7 +16,8 @@ def replymsg(driver, data):
     # wa.typeAndSendMessage(driver, wmsg)
     num = numbers.normalize(data[0])
     kodeDosen = kelas.getKodeDosen(num)
-    tahun_id = '20192'
+    # tahun_id = '20192'
+    tahun_id = kelas.getTahunID()
     
     df = pd.read_excel(f'jadwal_sidang_ta_14.xlsx')
     df.set_index('npm', inplace=True)

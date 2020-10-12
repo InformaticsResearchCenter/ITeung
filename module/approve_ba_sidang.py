@@ -16,7 +16,8 @@ def replymsg(driver, data):
     num = numbers.normalize(data[0])
     kodeDosen = kelas.getKodeDosen(num)
     # print(kodeDosen)
-    tahunID = '20192'
+    # tahunID = '20192'
+    tahun_id = kelas.getTahunID()
     try:
         npm = [npm for npm in data[3].split(' ') if npm.isdigit() and len(npm) == 7][0]
         if checkMhs(npm, kodeDosen): 

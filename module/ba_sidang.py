@@ -36,7 +36,8 @@ def auth(data):
 def replymsg(driver, data):    
     if kelas.cekSiap():    
         num = numbers.normalize(data[0])
-        tahunID = '20192'
+        # tahunID = '20192'
+        tahun_id = kelas.getTahunID()
         msg = data[3].lower().split(' ')
         msgreply = ""
         try:

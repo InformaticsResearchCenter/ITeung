@@ -114,7 +114,8 @@ def run(data):
     dataMhs = getDataMahasiswa(npm)
     namaMhs = dataMhs[0]
     prodi = dataMhs[1]
-    tahun = '20192'
+    # tahun = '20192'
+    tahun_id = kelas.getTahunID()
     judul = getJudul(npm, tahun)
     
     namaFile = f"bap-sidang-{npm}.xlsx"
