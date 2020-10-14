@@ -1,7 +1,10 @@
 import pymysql, config, os
 
-from lib import wa, reply
+from lib import wa
+from lib import reply
+
 from module import kelas
+from module import cek_pembayaran_va_mahasiswa
 
 def auth(data):
     if kelas.isParent(data[0]):
@@ -18,14 +21,15 @@ def replymsg(driver, data):
     npmmahasiswa=kelas.getStudentIdFromParentPhoneNumber(num)
     msgreply=''
     for i in npmmahasiswa:
-        vadata = getVaData(i[0])
-        virtualaccount = vadata[0]
-        jumlahygharusdibayar = vadata[1]
-        jumlahterakhirbayar = vadata[2]
-        jumlahygsudahdibayar = vadata[3]
-        waktuterakhirbayar = vadata[4].strftime('%d-%m-%Y %H:%M:%S')
-        customername=vadata[5]
-        msgreply+="Nama: {customername}\nNomor virtual account: {virtualaccount}\nTotal yang harus dibayar: {jumlahygharusdibayar}\nTotal yang sudah dibayar: {jumlahygsudahdibayar}\n\nJumlah terakhir pembayaran: {jumlahterakhirbayar}\nWaktu terakhir pembayaran: {waktuterakhirbayar}\n\n".format(waktuterakhirbayar=waktuterakhirbayar, jumlahterakhirbayar=jumlahterakhirbayar, jumlahygsudahdibayar=jumlahygsudahdibayar, jumlahygharusdibayar=jumlahygharusdibayar, virtualaccount=virtualaccount, customername=customername)
+        for j in cek_pembayaran_va_mahasiswa.getTrxIDList(i[0]):
+            vadata=cek_pembayaran_va_mahasiswa.getDataPembayaran(j[0])
+            virtualaccount = vadata['virtual_account']
+            jumlahygharusdibayar = vadata['trx_amount']
+            jumlahterakhirbayar = vadata['payment_amount']
+            jumlahygsudahdibayar = vadata['cumulative_payment_amount']
+            waktuterakhirbayar = vadata['datetime_payment'].strftime('%d-%m-%Y %H:%M:%S')
+            customername=vadata['customer_name']
+            msgreply+=f"Nama: {customername}\nNomor virtual account: {virtualaccount}\nTotal yang harus dibayar: {jumlahygharusdibayar}\nTotal yang sudah dibayar: {jumlahygsudahdibayar}\n\nJumlah terakhir pembayaran: {jumlahterakhirbayar}\nWaktu terakhir pembayaran: {waktuterakhirbayar}\n\n"
     return msgreply
 
 def dbConnectVA():
@@ -34,9 +38,9 @@ def dbConnectVA():
 
 def getVaData(studentid):
     db=dbConnectVA()
-    sql="select virtual_account, trx_amount, payment_amount, cumulative_payment_amount, datetime_payment, customer_name from payment_notification where trx_id like '%{npm}%' group by trx_id desc limit 1".format(npm=studentid)
+    sql=f"select * from upload where trx_id like '%{studentid}%' and expired_date > CURRENT_DATE"
     with db:
         cur=db.cursor()
         cur.execute(sql)
-        row=cur.fetchone()
+        row=cur.fetchall()
     return row
