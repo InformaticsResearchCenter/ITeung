@@ -9,17 +9,49 @@ from reportlab.lib.units import cm, cm
 from reportlab.platypus.tables import Table, TableStyle
 from reportlab.lib import colors
 
-def mainPages():
+from module import kelas
+from module import bkd
+
+from lib import sql_to_dictionary
+
+def auth(data):
+    if kelas.getKodeDosen(data[0]):
+        return True
+    else:
+        return False
+
+def replymsg(driver, data):
+    dosen_data=getDosenDataDictionaryDump(kelas.getKodeDosen(data[0]))
+    print(dosen_data)
+    home_base_prodi=dosen_data['Homebase']
+    nama_dosen = kelas.getNamaDosen(dosen_data['Login'])
+    nama_kaprodi=kelas.getNamaDosen(bkd.getDosenIDfromNIPY(bkd.getNipyKaProdi(home_base_prodi)))
+    nama_deputi=kelas.getNamaDosen(bkd.getDosenIDfromNIPY(bkd.getNipyDeputi(9)))
+    nama_prodi=kelas.getNamaProdiFromProdiID(home_base_prodi)['Nama']
+    tipe_kelas=data[1].split('-')[2]
+    print(tipe_kelas)
+    msgreply=f''
+    return msgreply
+
+def getDosenDataDictionaryDump(kode_dosen):
+    db=kelas.dbConnectSiap()
+    sql=f'select * from simak_mst_dosen where Login="{kode_dosen}"'
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        data=cur.fetchone()
+        return sql_to_dictionary.fetchOneMode(data, cur)
+
+def mainPages(nama_dosen, nama_kaprodi, nama_deputi, nama_prodi, kelas):
     namaFile = "perwalian.pdf"
     
-    namaDeputi = 'Marwanto Rahmatuloh, ST., MT.'
-    namaKaprodi = 'M. Yusril Helmi S, S.Kom., M.Kom.'    
-    namaDosen = 'Rolly Maulana Awangga ST., MT'
+    namaDeputi = nama_deputi
+    namaKaprodi = nama_kaprodi
+    namaDosen = nama_dosen
     qrDeputi = 'logo-poltekpos.png'
     qrKaprodi = 'logo-poltekpos.png'
     qrDosen = 'logo-poltekpos.png'
-    prodi = 'D4 Teknik Informatika'
-    kelas = 'A'
+    prodi = nama_prodi
     
     tahunAkademik = '2020 - 2021'
     hariSekarang = 'Jumat'
@@ -154,5 +186,3 @@ def createAbsensiPage(contain, styles, namaDosen, prodi, kelas, listMahasiswa, n
         ('ALIGN',(0,1),(-1,-1),'CENTER'),
     ]))
     contain.append(table)
-
-mainPages()
