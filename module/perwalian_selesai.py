@@ -168,6 +168,15 @@ def checkDirQrcode():
     except:
         pass
 
+def cekStatusApprovePerwalian(kode_dosen, tahun_id):
+    db=kelas.dbConnect()
+    sql=f"select ApproveKaprodi, ApproveDeputi from perwalian_log where KodeDosen='{kode_dosen}' and TahunID={tahun_id}"
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        row=cur.fetchone()
+        return row
+
 def replymsg(driver, data):
     dosen_data=getDosenDataDictionaryDump(kelas.getKodeDosen(data[0]))
     home_base_prodi=dosen_data['Homebase']
@@ -223,8 +232,16 @@ def mainPages(kode_dosen, prodi_id, nama_dosen, nama_kaprodi, nama_deputi, nama_
 
     prodi = nama_prodi
 
-    qrDeputi = f'surat_perwalian_qrcode/deputiqrcode-{kelas.getTahunID()}-{kode_dosen}.png'
-    qrKaprodi = f'surat_perwalian_qrcode/kaprodiqrcode-{kelas.getTahunID()}-{kode_dosen}.png'
+    statusappove=cekStatusApprovePerwalian(kode_dosen, kelas.getTahunID())
+
+    qrDeputi = 'bkdqrcode/whiteimage.png'
+    if statusappove[1] == 'true':
+        qrDeputi = f'surat_perwalian_qrcode/deputiqrcode-{kelas.getTahunID()}-{kode_dosen}.png'
+
+    qrKaprodi = 'bkdqrcode/whiteimage.png'
+    if statusappove[0] == 'true':
+        qrKaprodi = f'surat_perwalian_qrcode/kaprodiqrcode-{kelas.getTahunID()}-{kode_dosen}.png'
+
     qrDosen = f'surat_perwalian_qrcode/dosenqrcode-{kelas.getTahunID()}-{kode_dosen}.png'
 
     listMahasiswa = hadirAbsensiData(group_name, 'daring')
@@ -310,7 +327,7 @@ def createBeritaAcaraPage(contain, styles, tahunAkademik, hariSekarang, tglSekar
     
     data = [
         [Paragraph('<font size="12"><b>Dosen Wali,</b></font>', styles["Center"]), Paragraph('<font size="12"><b>Ketua Prodi,</b></font>', styles["Center"]), Paragraph('<font size="12"><b>Deputi Akademik,</b></font>', styles["Center"])],
-        [Image(qrDeputi, 4*cm, 4*cm), Image(qrKaprodi, 4*cm, 4*cm), Image(qrDosen, 4*cm, 4*cm)],
+        [Image(qrDosen, 4*cm, 4*cm), Image(qrKaprodi, 4*cm, 4*cm), Image(qrDeputi, 4*cm, 4*cm)],
         [Paragraph(f'<font size="12"><u>{namaDosen}</u></font>', styles["Center"]), Paragraph(f'<font size="12"><u>{namaKaprodi}</u></font>', styles["Center"]), Paragraph(f'<font size="12"><u>{namaDeputi}</u></font>', styles["Center"])],
         ]
 
@@ -356,7 +373,7 @@ def createAbsensiPage(contain, styles, namaDosen, prodi, kelas, listMahasiswa, n
     
     data = [
         [Paragraph('<font size="12"><b>Dosen Wali,</b></font>', styles["Center"]), Paragraph('<font size="12"><b>Ketua Prodi,</b></font>', styles["Center"]), Paragraph('<font size="12"><b>Deputi Akademik,</b></font>', styles["Center"])],
-        [Image(qrDeputi, 4*cm, 4*cm), Image(qrKaprodi, 4*cm, 4*cm), Image(qrDosen, 4*cm, 4*cm)],
+        [Image(qrDosen, 4*cm, 4*cm), Image(qrKaprodi, 4*cm, 4*cm), Image(qrDeputi, 4*cm, 4*cm)],
         [Paragraph(f'<font size="12"><u>{namaDosen}</u></font>', styles["Center"]), Paragraph(f'<font size="12"><u>{namaKaprodi}</u></font>', styles["Center"]), Paragraph(f'<font size="12"><u>{namaDeputi}</u></font>', styles["Center"])],
         ]
 
