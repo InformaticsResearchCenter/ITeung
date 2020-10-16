@@ -168,6 +168,12 @@ def checkDirQrcode():
     except:
         pass
 
+def checkDir():
+    try:
+        os.mkdir('surat_perwalian/')
+    except:
+        pass
+
 def cekStatusApprovePerwalian(kode_dosen, tahun_id):
     db=kelas.dbConnect()
     sql=f"select ApproveKaprodi, ApproveDeputi from perwalian_log where KodeDosen='{kode_dosen}' and TahunID={tahun_id}"
@@ -203,7 +209,9 @@ def replymsg(driver, data):
     return msgreply
 
 def mainPages(kode_dosen, prodi_id, nama_dosen, nama_kaprodi, nama_deputi, nama_prodi, tipe_kelas, catatan, group_name, jmlPesertaPerwalian):
-    namaFile = "perwalian.pdf"
+    checkDir()
+
+    namaFile = f"surat_perwalian/SURAT-PERWALIAN-{kode_dosen}-{kelas.getTahunID()}-{prodi_id}-{tipe_kelas}-{kelas.getEmailDosen(kode_dosen)}.pdf"
 
     #check dir qrcode
     checkDirQrcode()
@@ -283,6 +291,17 @@ def mainPages(kode_dosen, prodi_id, nama_dosen, nama_kaprodi, nama_deputi, nama_
     createAbsensiPage(contain, styles, namaDosen, prodi, tipe_kelas, listMahasiswa, namaDeputi, namaKaprodi, qrDeputi, qrKaprodi, qrDosen)
     
     doc.build(contain)
+
+    bkd.mail(
+        kelas.getEmailDosen(kode_dosen),
+        f'alooooo {config.bot_name} kirim file Absensi Perwalian NICHHHHHHH',
+        f'Tolong dicek kembali yaaa datanya, dan jangan lupa buruann minta approvalnya ke KAPRODI dan DEPUTI yaa....',
+        bkd.getFilePath(
+            kelas.getEmailDosen(kode_dosen),
+            'surat_perwalian',
+            kelas.getTahunID()
+        )
+    )
     
 def createBeritaAcaraPage(contain, styles, tahunAkademik, hariSekarang, tglSekarang, namaDosen, prodi, kelas, jumlahMhs, jumlahHadir, jumlahTdkHadir, listMasukan, namaDeputi, namaKaprodi, qrDeputi, qrKaprodi, qrDosen):
     text = '<font size="14"><b>BERITA ACARA PERWALIAN</b></font>'
