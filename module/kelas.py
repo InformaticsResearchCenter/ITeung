@@ -1,4 +1,4 @@
-from lib import wa, numbers
+from lib import wa, numbers, sql_to_dictionary
 from datetime import datetime
 from time import sleep
 
@@ -55,6 +55,15 @@ def switcherJurusan(kode):
         '.54.': 'D4 Logistik Bisnis',
     }
     return switcher.get(kode, "Not Found!")
+
+def getNamaProdiFromProdiID(prodi_id):
+    db=dbConnectSiap()
+    sql=f'SELECT * FROM simak_mst_prodi where ProdiID={prodi_id}'
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+        data=cur.fetchone()
+        return sql_to_dictionary.fetchOneMode(data, cur)
 
 def kodeKelas(kode):
     switcher = {
