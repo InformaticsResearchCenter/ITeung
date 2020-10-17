@@ -58,6 +58,8 @@ def replymsg(driver, data):
                     if resultpasscode == studentid+datenow+hari:
                         if int(nilai) > 100:
                             msgreply='buset nilainya kaga salah itu bos?? gede benerr......'
+                            if int(nilai) < 0:
+                                msgreply='wedewww kejam amat ngasih nilainya xixixixi'
                         else:
                             kodedosen=kelas.getKodeDosen(num)
                             if isSudahInputBimbingan(studentid, pertemuan, kodedosen):
@@ -104,7 +106,8 @@ def replymsg(driver, data):
                                         namadosen=namadosen
                                     )
                                 if pembimbing2 == False:
-                                    msgreply+='\n\n*PENILAIAN DOSEN PEMBIMBING*\npembimbing belum input nilai'
+                                    # msgreply+='\n\n*PENILAIAN DOSEN PEMBIMBING*\npembimbing belum input nilai'
+                                    msgreply+=''
                                 else:
                                     msgreply+='\n\n*PENILAIAN DOSEN PEMBIMBING*'
                                     for i in pembimbing2:
@@ -206,7 +209,7 @@ def updateNilaiBimbingan(studentid, pertemuan, nilai, topik, logmsg):
 
 def getDataBimbingan(studentid):
     db=kelas.dbConnectSiap()
-    sql="select MhswID, Tipe, Pertemuan_, Topik, Nilai, Penilai, Tanggal, Log from simak_croot_bimbingan where MhswID={studentid} ORDER BY Penilai".format(studentid=studentid)
+    sql=f"select MhswID, Tipe, Pertemuan_, Topik, Nilai, Penilai, Tanggal, Log from simak_croot_bimbingan where MhswID={studentid} and TahunID={kelas.getTahunID()} ORDER BY Penilai"
     with db:
         cur=db.cursor()
         cur.execute(sql)
