@@ -1,4 +1,5 @@
 from module import kelas
+from module import kambing
 
 from lib import message
 
@@ -29,7 +30,7 @@ def replymsg(driver, data):
             judul,
             tipe_bimbingan
         )
-        return f'okeee sudah {config.bot_name} update menjadi\n\nNPM: {npm}\nNama: {nama}\nPembimbing 1: {kelas.getNamaDosen(pembimbing_1)}\nPembimbing 2: {"-" if pembimbing_2 == "-" else kelas.getNamaDosen(pembimbing_2)}\nJudul: {judul}'
+        msgreply=f'okeee sudah {config.bot_name} update menjadi'
     else:
         insertNewBimbinganData(
             npm,
@@ -38,7 +39,9 @@ def replymsg(driver, data):
             judul,
             tipe_bimbingan
         )
-        return f'okeee sudah {config.bot_name} masukin yaaa datanya\n\nNPM: {npm}\nNama: {nama}\nPembimbing 1: {kelas.getNamaDosen(pembimbing_1)}\nPembimbing 2: {"-" if pembimbing_2 == "-" else kelas.getNamaDosen(pembimbing_2)}\nJudul: {judul}'
+        msgreply=f'okeee sudah {config.bot_name} masukin yaaa datanya'
+    msgreply+=f'\n\nNPM: {npm}\nNama: {nama}\nPembimbing 1: {kelas.getNamaDosen(pembimbing_1)}\nPembimbing 2: {"-" if pembimbing_2 == "-" else kelas.getNamaDosen(pembimbing_2)}\nJudul: {judul}\nTipe Bimbingan: {kambing.switcherTipeBimbingan(tipe_bimbingan)}'
+    return msgreply
 
 def insertNewBimbinganData(npm, pembimbing1, pembimbing2, judul, tipe_bimbingan):
     db=kelas.dbConnect()
