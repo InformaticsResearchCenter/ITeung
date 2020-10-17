@@ -33,7 +33,6 @@ def kelasSelesai(driver, data):
                 msgreply = kelas.siapabsensiwithsql(grp=grp, num=numbers.normalize(num), materi=materi, tipe=tipe)
                 if msgreply != '':
                     if msgreply != []:
-                        # msgreply=kelas.siapabsensiwithweb(driver=driver, num=num,namagroup=grp)
                         try:
                             msgreply = kelas.beritaAcara(driver=driver, num=num, groupname=grp, data=msgreply, msg=msg)
                         except:
