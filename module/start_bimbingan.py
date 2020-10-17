@@ -19,7 +19,7 @@ def replymsg(driver, data):
     wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
     wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
     wa.typeAndSendMessage(driver, wmsg)
-    prodiid=getDataForKaprodi(data[0])
+    nipy, prodiid=getDataForKaprodi(data[0])
     datestring=data[3].split(' ')[-1]
     day=int(datestring.split('-')[0])
     month=int(datestring.split('-')[1])
