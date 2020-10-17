@@ -18,7 +18,7 @@ def replymsg(driver, data):
     msg=message.normalize(msg)
     successsplit=''
     try:
-        tipe_bimbingan=msg.split('bimbingan ')[1].split(' sudah dikerjakan')[0]
+        tipe_bimbingan=msg.split(' bimbingan ')[1].split(' sudah dikerjakan')[0]
         studentid=kelas.getNpmandNameMahasiswa(data[0])[0]
         # topik=msg.split('topik ')[1].split(' nilai')[0].replace(' ', '%20')
         # pertemuan=msg.split('pertemuan ')[1].split(' nilai')[0]
