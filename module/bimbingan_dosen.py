@@ -1,5 +1,5 @@
 from lib import wa, reply, message, numbers
-from module import kelas, bimbingan_mahasiswa
+from module import kelas, bimbingan_mahasiswa, cek_bimbingan_dosen
 from datetime import datetime, timedelta
 from Crypto.Cipher import AES
 import os, config
@@ -17,107 +17,85 @@ def replymsg(driver, data):
     num=data[0]
     msg=data[3]
     msg=message.normalize(msg)
-    datefromdatabasehomebase=getStartDate(num)
-    if datefromdatabasehomebase is None:
-        msgreply='wahhh kayaknya jadwal start bimbingannya belum diset sama kaprodi kamu deehhhh, coba minta di setting dulu jadwalnya....'
-    else:
-        startdate = datetime.date(datefromdatabasehomebase)
-        pertemuan, datemulai, dateakhir=countPertemuan(startdate)
-        if pertemuan==False:
-            msgreply='yahhh pertemuannya udah kelewat batasss, yang sabar yaaaaaa..... :('
+    tipe_bimbingan=cek_bimbingan_dosen.cekTipeBimbingan(msg)
+    if tipe_bimbingan:
+        datefromdatabasehomebase=getStartDate(num, tipe_bimbingan)
+        if datefromdatabasehomebase is None:
+            msgreply='wahhh kayaknya jadwal start bimbingannya belum diset sama kaprodi kamu deehhhh, coba minta di setting dulu jadwalnya....'
         else:
-            successsplit=''
-            try:
-                studentid = msg.split('bimbingan ')[1].split(' ')[1]
-                tipe=msg.split('bimbingan ')[1].split(' ')[0]
-                target_selesai=msg.split('sudah dikerjakan ')[1].split(' pekerjaan selanjutnya')[0]
-                terget_selanjutnya=msg.split('pekerjaan selanjutnya ')[1].split(' nilai')[0]
-                topik=target_selesai+';'+terget_selanjutnya
-                nilai=msg.split('nilai ')[1].split(' passcode')[0]
-                passcode=msg.split('passcode ')[1]
-            except:
-                successsplit='error'
-            if successsplit == 'error':
-                msgreply='wahhhh salah nih keywordnya coba diperbaikin deh....'
+            startdate = datetime.date(datefromdatabasehomebase)
+            pertemuan, datemulai, dateakhir=countPertemuan(startdate)
+            if pertemuan==False:
+                msgreply='yahhh pertemuannya udah kelewat batasss, yang sabar yaaaaaa..... :('
             else:
-                obj = AES.new(config.key, AES.MODE_CBC, config.iv)
-                dec = bytes.fromhex(passcode)
-                resultpasscode=obj.decrypt(dec).decode('utf-8')
-                datenow = datetime.date(datetime.now()).strftime('%d%m%Y')
-                hari = datetime.now().strftime('%A')
-                hari = bimbingan_mahasiswa.hariSwitcher(hari)
-                studentphonenumber=kelas.getStudentPhoneNumberFromNPM(studentid)
-                studentphonenumber=normalizePhoneNumberToWhatsappVersion(studentphonenumber)
-                logmsg=''
-                for i in getLogMessageStudent(datemulai, dateakhir, kelas.getKodeDosen(num), studentphonenumber):
-                    if i[0] != '':
-                        logmsg+=i[0]+';'
-                if logmsg=='':
-                    msgreply='mohon maaf tidak ada diskusi diantara Dosen dan Mahasiswa maka tidak bisa di input... atau dosen dan mahasiswa kurang aktif diskusi'
+                successsplit=''
+                try:
+                    studentid = msg.split(' bimbingan ')[1].split(' ')[1]
+                    tipe=msg.split(' bimbingan ')[1].split(' ')[0]
+                    target_selesai=msg.split(' sudah dikerjakan ')[1].split(' pekerjaan selanjutnya ')[0]
+                    terget_selanjutnya=msg.split(' pekerjaan selanjutnya ')[1].split(' nilai ')[0]
+                    topik=target_selesai+';'+terget_selanjutnya
+                    nilai=msg.split(' nilai ')[1].split(' passcode ')[0]
+                    passcode=msg.split(' passcode ')[1]
+                except:
+                    successsplit='error'
+                if successsplit == 'error':
+                    msgreply='wahhhh salah nih keywordnya coba diperbaikin deh....'
                 else:
-                    if resultpasscode == studentid+datenow+hari:
-                        if int(nilai) > 100:
-                            msgreply='buset nilainya kaga salah itu bos?? gede benerr......'
-                            if int(nilai) < 0:
-                                msgreply='wedewww kejam amat ngasih nilainya xixixixi'
-                        else:
-                            kodedosen=kelas.getKodeDosen(num)
-                            if isSudahInputBimbingan(studentid, pertemuan, kodedosen):
-                                updateNilaiBimbingan(studentid=studentid, nilai=nilai, topik=topik, pertemuan=pertemuan, logmsg=logmsg)
-                                msgreply='oke sudah iteung update yaaa nilainya.....'
+                    obj = AES.new(config.key, AES.MODE_CBC, config.iv)
+                    dec = bytes.fromhex(passcode)
+                    resultpasscode=obj.decrypt(dec).decode('utf-8')
+                    datenow = datetime.date(datetime.now()).strftime('%d%m%Y')
+                    hari = datetime.now().strftime('%A')
+                    hari = bimbingan_mahasiswa.hariSwitcher(hari)
+                    studentphonenumber=kelas.getStudentPhoneNumberFromNPM(studentid)
+                    studentphonenumber=normalizePhoneNumberToWhatsappVersion(studentphonenumber)
+                    logmsg=''
+                    for i in getLogMessageStudent(datemulai, dateakhir, kelas.getKodeDosen(num), studentphonenumber):
+                        if i[0] != '':
+                            logmsg+=i[0]+';'
+                    if logmsg=='':
+                        msgreply='mohon maaf tidak ada diskusi diantara Dosen dan Mahasiswa maka tidak bisa di input... atau dosen dan mahasiswa kurang aktif diskusi'
+                    else:
+                        if resultpasscode == studentid+datenow+hari:
+                            if int(nilai) > 100:
+                                msgreply='buset nilainya kaga salah itu bos?? gede benerr......'
+                                if int(nilai) < 0:
+                                    msgreply='wedewww kejam amat ngasih nilainya xixixixi'
                             else:
-                                insertBimbingan(studentid=studentid, lecturerid=kodedosen, tipe=tipe, topik=topik, nilai=nilai, pertemuan=pertemuan, logmsg=logmsg)
-                                msgreply='oke sudah di input yaaa....'
-                            nama=kelas.getStudentNameOnly(studentid)
-                            databimbingan=getDataBimbingan(studentid)
-                            if databimbingan == None:
-                                msgreply='maaf data bimbingan tidak dapat ditemukan'
-                            else:
-                                pembimbing1 = databimbingan[0][-3]
-                                pembimbing2 = None
-                                for i in databimbingan:
-                                    if i[-3] != pembimbing1:
-                                        pembimbing2 = databimbingan.index(i)
-                                        break
-                                if pembimbing2 is None:
-                                    pembimbing2 = False
-                                    pembimbing1 = databimbingan[0:]
+                                kodedosen=kelas.getKodeDosen(num)
+                                if isSudahInputBimbingan(studentid, pertemuan, kodedosen):
+                                    updateNilaiBimbingan(studentid=studentid, nilai=nilai, topik=topik, pertemuan=pertemuan, logmsg=logmsg)
+                                    msgreply='oke sudah iteung update yaaa nilainya.....'
                                 else:
-                                    pembimbing1 = databimbingan[0:pembimbing2]
-                                    pembimbing2 = databimbingan[pembimbing2:]
-                                msgreply+='\n\n*PENILAIAN DOSEN PEMBIMBING*'
-                                for i in pembimbing1:
-                                    topik=i[3].split(';')
-                                    target_selesai=topik[0]
-                                    target_selanjutnya=topik[1]
-                                    datalog=i[7]
-                                    datalog=datalog.split(';')
-                                    namadosen=kelas.getNamaDosen(i[5])
-                                    msgreply+='\n\nNama: {nama}\nNPM: {studentid}\nTipe: {tipe}\nPertemuan: {pertemuanke}\nSudah Dikerjakan: {targetselesai}\nPekerjaan Selanjutnya: {targetselanjutnya}\nNilai: {nilai}\nPenilai: {penilai} / {namadosen}\nJumlah Percakapan: {log}'.format(
-                                        nama=nama,
-                                        studentid=i[0],
-                                        tipe=i[1],
-                                        pertemuanke=i[2],
-                                        targetselesai=target_selesai,
-                                        targetselanjutnya=target_selanjutnya,
-                                        nilai=i[4],
-                                        penilai=i[5],
-                                        log=str(len(datalog)),
-                                        namadosen=namadosen
-                                    )
-                                if pembimbing2 == False:
-                                    # msgreply+='\n\n*PENILAIAN DOSEN PEMBIMBING*\npembimbing belum input nilai'
-                                    msgreply+=''
+                                    insertBimbingan(studentid=studentid, lecturerid=kodedosen, tipe=tipe, topik=topik, nilai=nilai, pertemuan=pertemuan, logmsg=logmsg)
+                                    msgreply='oke sudah di input yaaa....'
+                                nama=kelas.getStudentNameOnly(studentid)
+                                databimbingan=getDataBimbingan(studentid)
+                                if databimbingan == None:
+                                    msgreply='maaf data bimbingan tidak dapat ditemukan'
                                 else:
+                                    pembimbing1 = databimbingan[0][-3]
+                                    pembimbing2 = None
+                                    for i in databimbingan:
+                                        if i[-3] != pembimbing1:
+                                            pembimbing2 = databimbingan.index(i)
+                                            break
+                                    if pembimbing2 is None:
+                                        pembimbing2 = False
+                                        pembimbing1 = databimbingan[0:]
+                                    else:
+                                        pembimbing1 = databimbingan[0:pembimbing2]
+                                        pembimbing2 = databimbingan[pembimbing2:]
                                     msgreply+='\n\n*PENILAIAN DOSEN PEMBIMBING*'
-                                    for i in pembimbing2:
-                                        topik = i[3].split(';')
-                                        target_selesai = topik[0]
-                                        target_selanjutnya = topik[1]
-                                        datalog = i[7]
-                                        datalog = datalog.split(';')
-                                        namadosen = kelas.getNamaDosen(i[5])
-                                        msgreply += '\n\nNama: {nama}\nNPM: {studentid}\nTipe: {tipe}\nPertemuan: {pertemuanke}\nSudah Dikerjakan: {targetselesai}\nPekerjaan Selanjutnya: {targetselanjutnya}\nNilai: {nilai}\nPenilai: {penilai} / {namadosen}\nJumlah Percakapan: {log}'.format(
+                                    for i in pembimbing1:
+                                        topik=i[3].split(';')
+                                        target_selesai=topik[0]
+                                        target_selanjutnya=topik[1]
+                                        datalog=i[7]
+                                        datalog=datalog.split(';')
+                                        namadosen=kelas.getNamaDosen(i[5])
+                                        msgreply+='\n\nNama: {nama}\nNPM: {studentid}\nTipe: {tipe}\nPertemuan: {pertemuanke}\nSudah Dikerjakan: {targetselesai}\nPekerjaan Selanjutnya: {targetselanjutnya}\nNilai: {nilai}\nPenilai: {penilai} / {namadosen}\nJumlah Percakapan: {log}'.format(
                                             nama=nama,
                                             studentid=i[0],
                                             tipe=i[1],
@@ -129,9 +107,35 @@ def replymsg(driver, data):
                                             log=str(len(datalog)),
                                             namadosen=namadosen
                                         )
-                    else:
-                        msgreply='passcodenya salah bosqueeeeee'
-    return msgreply
+                                    if pembimbing2 == False:
+                                        # msgreply+='\n\n*PENILAIAN DOSEN PEMBIMBING*\npembimbing belum input nilai'
+                                        msgreply+=''
+                                    else:
+                                        msgreply+='\n\n*PENILAIAN DOSEN PEMBIMBING*'
+                                        for i in pembimbing2:
+                                            topik = i[3].split(';')
+                                            target_selesai = topik[0]
+                                            target_selanjutnya = topik[1]
+                                            datalog = i[7]
+                                            datalog = datalog.split(';')
+                                            namadosen = kelas.getNamaDosen(i[5])
+                                            msgreply += '\n\nNama: {nama}\nNPM: {studentid}\nTipe: {tipe}\nPertemuan: {pertemuanke}\nSudah Dikerjakan: {targetselesai}\nPekerjaan Selanjutnya: {targetselanjutnya}\nNilai: {nilai}\nPenilai: {penilai} / {namadosen}\nJumlah Percakapan: {log}'.format(
+                                                nama=nama,
+                                                studentid=i[0],
+                                                tipe=i[1],
+                                                pertemuanke=i[2],
+                                                targetselesai=target_selesai,
+                                                targetselanjutnya=target_selanjutnya,
+                                                nilai=i[4],
+                                                penilai=i[5],
+                                                log=str(len(datalog)),
+                                                namadosen=namadosen
+                                            )
+                        else:
+                            msgreply='passcodenya salah bosqueeeeee'
+        return msgreply
+    else:
+        return 'adidawwww mana nihhh tipe bimbingannyaa......'
 
 def countPertemuan(startdate):
     nowdate=datetime.date(datetime.now())
@@ -149,10 +153,10 @@ def countPertemuan(startdate):
         startdate+=timedelta(countday)
     return pertemuan, mulaidate, akhirdate
 
-def getStartDate(num):
+def getStartDate(num, tipe_bimbingan):
     num=numbers.normalize(num)
     db=kelas.dbConnectSiap()
-    sql="select `Start` from simak_mst_prodi WHERE ProdiID=(select Homebase from simak_mst_dosen WHERE Handphone='{phonenumber}')".format(phonenumber=num)
+    sql=f"select `Start_{tipe_bimbingan}` from simak_mst_prodi WHERE ProdiID=(select Homebase from simak_mst_dosen WHERE Handphone='{num}')"
     with db:
         cur=db.cursor()
         cur.execute(sql)

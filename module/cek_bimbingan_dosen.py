@@ -1,4 +1,4 @@
-from module import kelas, bimbingan_dosen, pertemuan_bimbingan
+from module import kelas, bimbingan_dosen, pertemuan_bimbingan, bimbingan_mahasiswa
 from lib import reply, wa, message
 from datetime import datetime
 
@@ -19,35 +19,42 @@ def replymsg(driver, data):
     msg=message.normalize(msg)
     npm=[]
     kodedosen=kelas.getKodeDosen(num)
-    for i in getMahasiswaBimbingan(kelas.getTahunID()):
-        if i[1]==kodedosen or i[2]==kodedosen:
-            npm.append(i[0])
-    try:
-        datefromdatabasehomebase=bimbingan_dosen.getStartDate(num)
-        startdate = datetime.date(datefromdatabasehomebase)
-        if 'pertemuan' in msg:
-            pertemuan=msg.split(' pertemuan ')[1]
-        else:
-            pertemuan, datemulai, dateakhir=bimbingan_dosen.countPertemuan(startdate)
+    tipe_bimbingan=cekTipeBimbingan(msg)
+    if tipe_bimbingan:
+        for i in getMahasiswaBimbingan(kelas.getTahunID(), tipe_bimbingan):
+            if i[1]==kodedosen or i[2]==kodedosen:
+                npm.append(i[0])
         try:
-            pertemuan=int(pertemuan)
-            msgreply='Nama Dosen: {lecturername}\nProdi: {prodi}\nPertemuan: {pertemuan}'.format(lecturername=kelas.getNamaDosen(kodedosen), prodi=pertemuan_bimbingan.getHomebase(num), pertemuan=str(pertemuan))+'\n\nNPM | Nama | Status Bimbingan\n\n'
-            for i in npm:
-                cek=cek_bimbingan(i, kodedosen, pertemuan)
-                namamahasiswa=kelas.getStudentNameOnly(i)
-                if cek == None:
-                    msgreply+='*'+i+'*'+' | '+namamahasiswa+' | '+'*_BELUM BIMBINGAN_*'+'\n'
-                else:
-                    msgreply+='*'+i+'*'+' | '+namamahasiswa+' | '+'*_SUDAH BIMBINGAN_*'+'\n'
+            datefromdatabasehomebase=bimbingan_dosen.getStartDate(num, tipe_bimbingan)
+            startdate = datetime.date(datefromdatabasehomebase)
+            if 'pertemuan' in msg:
+                pertemuan=msg.split(' pertemuan ')[1]
+            else:
+                pertemuan, datemulai, dateakhir=bimbingan_dosen.countPertemuan(startdate)
+            try:
+                pertemuan=int(pertemuan)
+                msgreply=f'Nama Dosen: {kelas.getNamaDosen(kodedosen)}\n' \
+                         f'Prodi: {pertemuan_bimbingan.getHomebase(num)}\n' \
+                         f'Pertemuan: {pertemuan}\n\n' \
+                         f'NPM | Nama | Status Bimbingan\n\n'
+                for i in npm:
+                    cek=cek_bimbingan(i, kodedosen, pertemuan, tipe_bimbingan)
+                    namamahasiswa=kelas.getStudentNameOnly(i)
+                    if cek == None:
+                        msgreply+=f'*{i}* | {namamahasiswa} | *_BELUM BIMBINGAN_*\n'
+                    else:
+                        msgreply+=f'*{i}* | {namamahasiswa} | *_SUDAH BIMBINGAN_*\n'
+            except Exception as e:
+                msgreply=f'wahhh salah di pertemuan nih bosqqqqqqqqqqqq coba pertemuannya make angka yak jangan make hurup....'
         except:
-            msgreply='wahhh salah di pertemuan nih bosqqqqqqqqqqqq coba pertemuannya make angka yak jangan make hurup....'
-    except:
-        msgreply='ihhhhh belum diset nih tanggal awal bimbingannya coba deh Bapak/Ibu dosen komunikasi ya sama KAPRODI untuk set tanggal mulai bimbingannnya, tutorial bisa dibaca di panduan iteung yaaa yang bagian *kaprodi* hatur tengkyuuu....'
+            msgreply='ihhhhh belum diset nih tanggal awal bimbingannya coba deh Bapak/Ibu dosen komunikasi ya sama KAPRODI untuk set tanggal mulai bimbingannnya, tutorial bisa dibaca di panduan iteung yaaa yang bagian *kaprodi* hatur tengkyuuu....'
+    else:
+        msgreply='eh eh eh mana nihhh tipe bimbingannya harus dimasukin ke keyword yaaaa tipe bimbingannya cek di panduan mahasiswa bimbingan yaaa...'
     return msgreply
 
-def cek_bimbingan(npm, kodedosen, pertemuan):
+def cek_bimbingan(npm, kodedosen, pertemuan, tipe_bimbingan):
     db=kelas.dbConnectSiap()
-    sql='select * from simak_croot_bimbingan where MhswID={npm} and DosenID="{dosenid}" and Pertemuan_={pertemuanke}'.format(dosenid=kodedosen, npm=npm, pertemuanke=pertemuan)
+    sql=f'select * from simak_croot_bimbingan where MhswID={npm} and DosenID="{kodedosen}" and Pertemuan_={pertemuan} and Tipe="{tipe_bimbingan}"'
     with db:
         cur=db.cursor()
         cur.execute(sql)
@@ -57,11 +64,19 @@ def cek_bimbingan(npm, kodedosen, pertemuan):
         else:
             return None
 
-def getMahasiswaBimbingan(tahunid):
+def getMahasiswaBimbingan(tahunid, tipe_bimbingan):
     db=kelas.dbConnect()
-    sql="select * from bimbingan_data where tahun_id={tahunid}".format(tahunid=tahunid)
+    sql=f"select * from bimbingan_data where tahun_id={tahunid} and tipe_bimbingan='{tipe_bimbingan}'"
     with db:
         cur=db.cursor()
         cur.execute(sql)
         rows=cur.fetchall()
         return rows
+
+def cekTipeBimbingan(message):
+    for i in message.split(' '):
+        if bimbingan_mahasiswa.tipeSwitcher(i):
+            return i
+        else:
+            continue
+    return False

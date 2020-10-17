@@ -1,7 +1,7 @@
 from lib import numbers
-from module import kelas
+from module import kelas, cek_bimbingan_dosen
 from datetime import datetime
-from lib import wa, reply
+from lib import wa, reply, message
 import os, config
 
 def auth(data):
@@ -16,17 +16,21 @@ def auth(data):
     return ret
 
 def replymsg(driver, data):
-    wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
-    wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
-    wa.typeAndSendMessage(driver, wmsg)
-    nipy, prodiid=getDataForKaprodi(data[0])
-    datestring=data[3].split(' ')[-1]
-    day=int(datestring.split('-')[0])
-    month=int(datestring.split('-')[1])
-    year=int(datestring.split('-')[2])
-    date=datetime.date(datetime(year, month, day))
-    updateDateBimbingan(prodiid, date)
-    msgreply='sudah di update cuyyyyy'
+    # wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
+    # wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
+    # wa.typeAndSendMessage(driver, wmsg)
+    tipe_bimbingan=cek_bimbingan_dosen.cekTipeBimbingan(data[3])
+    if tipe_bimbingan:
+        nipy, prodiid=getDataForKaprodi(data[0])
+        datestring=data[3].split(' ')[-1]
+        day=int(datestring.split('-')[0])
+        month=int(datestring.split('-')[1])
+        year=int(datestring.split('-')[2])
+        date=datetime.date(datetime(year, month, day))
+        updateDateBimbingan(prodiid, date, tipe_bimbingan)
+        msgreply='sudah di update cuyyyyy'
+    else:
+        msgreply=f'mana niwhhhh tipe bimbingannya {config.bot_name} ga nemuin nih dimana tipe bimbingannya'
     return msgreply
 
 def getDataForKaprodi(num):
@@ -58,9 +62,9 @@ def isKaprodi(data):
         ret = False
     return ret
 
-def updateDateBimbingan(prodiid, dateupdate):
+def updateDateBimbingan(prodiid, dateupdate, tipe_bimbingan):
     db=kelas.dbConnectSiap()
-    sql="UPDATE simak_mst_prodi SET `Start` = '{dateupdate}' WHERE `ProdiID` = '{prodiid}'".format(dateupdate=dateupdate, prodiid=prodiid)
+    sql=f"UPDATE simak_mst_prodi SET `Start_{tipe_bimbingan}` = '{dateupdate}' WHERE `ProdiID` = '{prodiid}'"
     with db:
         cur=db.cursor()
         cur.execute(sql)
