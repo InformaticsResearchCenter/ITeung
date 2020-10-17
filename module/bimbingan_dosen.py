@@ -143,6 +143,8 @@ def countPertemuan(startdate):
             akhirdate=startdate+timedelta(countday)
             break
         else:
+            mulaidate=''
+            akhirdate=''
             pertemuan=False
         startdate+=timedelta(countday)
     return pertemuan, mulaidate, akhirdate
