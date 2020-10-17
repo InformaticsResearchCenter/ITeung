@@ -141,8 +141,6 @@ def countPertemuan(startdate):
             pertemuan=i+1
             mulaidate=startdate
             akhirdate=startdate+timedelta(countday)
-            print(mulaidate)
-            print(akhirdate)
             break
         else:
             pertemuan=False
