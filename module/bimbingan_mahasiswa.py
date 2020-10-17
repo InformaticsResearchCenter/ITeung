@@ -30,7 +30,7 @@ def replymsg(driver, data):
     if successsplit == 'error':
         msgreply='wahh salah keyword bosqqq'
     else:
-        if tipeSwitcher(tipe_bimbingan) == True:
+        if tipeSwitcher(tipe_bimbingan):
             datenow = datetime.date(datetime.now()).strftime('%d%m%Y')
             hari = datetime.now().strftime('%A')
             hari = hariSwitcher(hari)
