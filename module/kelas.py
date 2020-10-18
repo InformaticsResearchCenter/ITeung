@@ -94,7 +94,8 @@ def toKelas(kode):
         '08': 'H',
         '09': 'I',
         '10': 'J',
-        '20': 'RPL'
+        '20': 'RPL',
+        'RPL': 'RPL'
     }
     return switcher.get(kode, "Not Found!")
 
