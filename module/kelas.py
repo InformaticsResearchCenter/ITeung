@@ -124,7 +124,7 @@ def getKelasMahasiswabyStudentID(npm):
 
 def getPenasehatAkademik(npm):
     db=dbConnectSiap()
-    sql=f'select PenasehatAkademik from simak_mst_mahasiswa where MhswID={npm} and StatusMhswID = "A"'
+    sql=f'select PenasehatAkademik from simak_mst_mahasiswa where MhswID={npm}'
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -186,7 +186,7 @@ def getnumonly(groupname, tipe):
 def getNpmandNameMahasiswa(num):
     num = numbers.normalize(num)
     db = dbConnectSiap()
-    sql = "select MhswID, Nama from simak_mst_mahasiswa where Handphone = '{0}' and StatusMhswID = 'A'".format(num)
+    sql = "select MhswID, Nama from simak_mst_mahasiswa where Handphone = '{0}'".format(num)
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -197,7 +197,7 @@ def getNpmandNameMahasiswa(num):
 
 def getStudentNameOnly(npm):
     db = dbConnectSiap()
-    sql = "select Nama from simak_mst_mahasiswa where MhswID = '{0}' and StatusMhswID = 'A'".format(npm)
+    sql = "select Nama from simak_mst_mahasiswa where MhswID = '{0}'".format(npm)
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -207,7 +207,7 @@ def getStudentNameOnly(npm):
 
 def getStudentIDOnly(npm):
     db = dbConnectSiap()
-    sql = "select MhswID from simak_mst_mahasiswa where MhswID = '{0}' and StatusMhswID = 'A'".format(npm)
+    sql = "select MhswID from simak_mst_mahasiswa where MhswID = '{0}'".format(npm)
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -217,7 +217,7 @@ def getStudentIDOnly(npm):
 def isParent(num):
     db=dbConnectSiap()
     num=numbers.normalize(num)
-    sql="select * from simak_mst_mahasiswa where HandphoneOrtu='{parentnumberphone}' and StatusMhswID = 'A'".format(parentnumberphone=num)
+    sql="select * from simak_mst_mahasiswa where HandphoneOrtu='{parentnumberphone}'".format(parentnumberphone=num)
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -230,7 +230,7 @@ def isParent(num):
 
 def getParentNamefromStudentID(npm):
     db = dbConnectSiap()
-    sql = f"select NamaAyah, NamaIbu from simak_mst_mahasiswa where MhswID={npm} and StatusMhswID = 'A'"
+    sql = f"select NamaAyah, NamaIbu from simak_mst_mahasiswa where MhswID={npm}"
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -239,7 +239,7 @@ def getParentNamefromStudentID(npm):
 
 def getParentEmailfromStudentID(npm):
     db = dbConnectSiap()
-    sql = f"select EmailOrtu from simak_mst_mahasiswa where MhswID={npm} and StatusMhswID = 'A'"
+    sql = f"select EmailOrtu from simak_mst_mahasiswa where MhswID={npm}"
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -248,7 +248,7 @@ def getParentEmailfromStudentID(npm):
 
 def getParentTelpNumberandHandphoneNumber(npm):
     db=dbConnectSiap()
-    sql=f'select TeleponOrtu, HandphoneOrtu from simak_mst_mahasiswa where MhswID={npm} and StatusMhswID = "A"'
+    sql=f'select TeleponOrtu, HandphoneOrtu from simak_mst_mahasiswa where MhswID={npm}'
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -257,7 +257,7 @@ def getParentTelpNumberandHandphoneNumber(npm):
 
 def getStudentEmail(npm):
     db=dbConnectSiap()
-    sql=f'select Email from simak_mst_mahasiswa where MhswID={npm} and StatusMhswID = "A"'
+    sql=f'select Email from simak_mst_mahasiswa where MhswID={npm}'
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -266,7 +266,7 @@ def getStudentEmail(npm):
 
 def getHandphoneMahasiswa(npm):
     db = dbConnectSiap()
-    sql = "select Handphone from simak_mst_mahasiswa where MhswID = '{0}'  and StatusMhswID = 'A'".format(npm)
+    sql = "select Handphone from simak_mst_mahasiswa where MhswID = '{0}' ".format(npm)
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -333,7 +333,7 @@ def getKehadiranMahasiswa(jadwalid, studentid):
             return ''
 def getDataMahasiswa(studentid):
     db=dbConnectSiap()
-    sql="select MhswID, Nama, Handphone, Email from simak_mst_mahasiswa where MhswID='{studentid}' and StatusMhswID = 'A'".format(studentid=studentid)
+    sql="select MhswID, Nama, Handphone, Email from simak_mst_mahasiswa where MhswID='{studentid}'".format(studentid=studentid)
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -342,7 +342,7 @@ def getDataMahasiswa(studentid):
 
 def getAllDataMahasiswa(studentid):
     db = dbConnectSiap()
-    sql = "select * from simak_mst_mahasiswa where MhswID={studentid} and StatusMhswID = 'A'".format(studentid=studentid)
+    sql = "select * from simak_mst_mahasiswa where MhswID={studentid}".format(studentid=studentid)
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -383,7 +383,7 @@ def getAwaitingMessageKelasStart(module):
 
 def getProdiIDwithStudentID(npm):
     db=dbConnectSiap()
-    sql=f"select ProdiID from simak_mst_mahasiswa where MhswID={npm} and StatusMhswID = 'A'"
+    sql=f"select ProdiID from simak_mst_mahasiswa where MhswID={npm}"
     with db:
         cur=db.cursor()
         cur.execute(sql)
@@ -395,7 +395,7 @@ def getProdiIDwithStudentID(npm):
 
 def getProdiNameWithStudentID(npm):
     db=dbConnectSiap()
-    sql=f'select Nama from simak_mst_prodi where ProdiID=(select ProdiID from simak_mst_mahasiswa where Login={npm} and StatusMhswID = "A")'
+    sql=f'select Nama from simak_mst_prodi where ProdiID=(select ProdiID from simak_mst_mahasiswa where Login={npm})'
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -407,7 +407,7 @@ def getProdiNameWithStudentID(npm):
 
 def getTahunAngkatanWithStudentID(npm):
     db=dbConnectSiap()
-    sql=f'select TahunID from simak_mst_mahasiswa where MhswID={npm} and StatusMhswID = "A"'
+    sql=f'select TahunID from simak_mst_mahasiswa where MhswID={npm}'
     with db:
         cur=db.cursor()
         cur.execute(sql)
@@ -731,7 +731,7 @@ def updateAbsenSiapMahasiswa(presensiid, studentid, attend, valueattend):
 def getStudentIdFromParentPhoneNumber(num):
     num=numbers.normalize(num)
     db=dbConnectSiap()
-    sql="select MhswID from simak_mst_mahasiswa where HandphoneOrtu='{parentnumberphone}' and StatusMhswID = 'A'".format(parentnumberphone=num)
+    sql="select MhswID from simak_mst_mahasiswa where HandphoneOrtu='{parentnumberphone}'".format(parentnumberphone=num)
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -900,7 +900,7 @@ def siapabsensiwithsql(grp, num, materi, tipe):
 
 def getStudentPhoneNumberFromNPM(npm):
     db=dbConnectSiap()
-    sql="select Handphone from simak_mst_mahasiswa where Login='{studentid}' and StatusMhswID = 'A'".format(studentid=npm)
+    sql="select Handphone from simak_mst_mahasiswa where Login='{studentid}'".format(studentid=npm)
     with db:
         cur=db.cursor()
         cur.execute(sql)
