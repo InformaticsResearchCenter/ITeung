@@ -14,8 +14,7 @@ def replymsg(driver, data):
     wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
     wa.typeAndSendMessage(driver, wmsg)
     num = numbers.normalize(data[0])
-    kodeDosen = kelas.getKodeDosen(num)
-    
+    kodeDosen = kelas.getKodeDosen(num)    
     msgreply = ""
     try:
         nipyKaBaak = getKaBaak()
@@ -23,14 +22,15 @@ def replymsg(driver, data):
         
         if(kodeDosen == kodeKaBaak):
             datas = dataSumbitSKMK()
-            msgreply = "*Data yang minta SKMK:*\n\n"
             if datas:
-                for i, data in enumerate(datas):
-                    msgreply += f"{int(i)+1}. {data[0]}\n"
+                for npm in datas:
+                    approveSKMK(npm[0], kodeDosen)
+                    
+                msgreply = "Sudah di approve semua yg ada di list.."
             else:
-                msgreply += "Tidak ada yg minta.."
+                msgreply = "Gak ada yg di approve.., karena gak ada datanya.."
         else:
-            msgreply = "Haha.. lucu ya, ternyata anda bukan siapa-siapa..."
+            msgreply = "Haha.. lucu ya, ternyata anda bukan siapa-siapa untuknya ya..."
     except Exception as e: 
         msgreply = f"Error {str(e)}"
     
@@ -60,6 +60,13 @@ def getKodeDosen(nik):
         else:
             return None
         
+def approveSKMK(npm, kodeDosen):
+    db = kelas.dbConnect()
+    sql = f"UPDATE skmk_data SET approve = '{kodeDosen}' WHERE npm = '{npm}' and approve IS NULL"
+    with db:
+        cur=db.cursor()
+        cur.execute(sql)
+
 def dataSumbitSKMK():
     db = kelas.dbConnect()
     sql="select npm from skmk_data where approve is null"
