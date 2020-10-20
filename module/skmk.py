@@ -136,7 +136,7 @@ def makePage(npm, prodi, noSurat):
     contain.append(Paragraph(ptext, styles["Justify"]))
     contain.append(Spacer(1, .8*cm))
     
-    ptext = '<font size="12">Demikian surat keterangan ini dibuat untuk dipergunakan seperlunya</font>'
+    ptext = '<font size="12">Demikian surat keterangan ini dibuat untuk dipergunakan seperlunya.</font>'
     contain.append(Paragraph(ptext, styles["Justify"]))
     contain.append(Spacer(1, 1*cm))
     
