@@ -369,8 +369,8 @@ def sendEmail(email, fileName, path, mhs):
 
         sender_email = config.email_iteung
         receiver_email = email
-        print(email)
-        receiver_email = 'divakrishnam@yahoo.com'
+        # print(email)
+        # receiver_email = 'divakrishnam@yahoo.com'
         password = config.pass_iteung
 
         message = MIMEMultipart()
