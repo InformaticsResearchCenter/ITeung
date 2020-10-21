@@ -29,11 +29,13 @@ def kelasSelesai(driver, data):
                 wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
                 wa.typeAndSendMessage(driver, wmsg)
                 materi = msg.lower()
-                materi = materi.split(' materi ')[1]
+                try:
+                    materi = materi.split(' materi ')[1]
+                except:
+                    return f'yahhh materinya ngga ada nih tambahin dong materinyaaa.....,\ncontoh: iteung kelas daring selesai materi chapter 1'
                 msgreply = kelas.siapabsensiwithsql(grp=grp, num=numbers.normalize(num), materi=materi, tipe=tipe)
                 if msgreply != '':
                     if msgreply != []:
-                        # msgreply=kelas.siapabsensiwithweb(driver=driver, num=num,namagroup=grp)
                         try:
                             msgreply = kelas.beritaAcara(driver=driver, num=num, groupname=grp, data=msgreply, msg=msg)
                         except:

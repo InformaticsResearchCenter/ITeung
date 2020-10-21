@@ -94,8 +94,7 @@ def toKelas(kode):
         '08': 'H',
         '09': 'I',
         '10': 'J',
-        '20': 'RPL',
-        'RPL': 'RPL'
+        '20': 'RPL'
     }
     return switcher.get(kode, "Not Found!")
 
@@ -600,10 +599,13 @@ def RuangID(lecturercode, jadwalid):
         cur=db.cursor()
         cur.execute(sql)
         rows=cur.fetchone()
-        if rows[0].lower()[0] == 'l':
-            return "(Praktek dan Teori)"
-        else:
-            return "(Teori)"
+        try:
+            if rows[0].lower()[0] == 'l':
+                return "(Praktek dan Teori)"
+            else:
+                return "(Teori)"
+        except:
+            return '(-)'
 
 def prodiID(lecturercode, jadwalid):
     db = dbConnectSiap()
