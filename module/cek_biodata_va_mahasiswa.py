@@ -2,7 +2,7 @@ from module import va_parent, kelas
 from lib import numbers
 from datetime import datetime
 
-import app
+import app, config
 
 def auth(data):
     if kelas.getNpmandNameMahasiswa(data[0]):
@@ -239,7 +239,6 @@ def paymentSpp(npm):
             tunggakan = float(0)
             potongan = int(biaya_pokok_spp) - int(payment_spp['trx_amount'])
             minimum_payment = (int(biaya_pokok_spp) - int(potongan)) / 2
-        msgreply=''
         if datetime.now() < payment_spp['expired_date']:
             msgreply = f'*DATA VIRTUAL ACCOUNT BNI SPP (Semester Ganjil 2020/2021)*\n\n' \
                         f'*Kode Transaksi: {payment_spp["trx_id"]}*\n' \
@@ -253,8 +252,10 @@ def paymentSpp(npm):
                         f'Jumlah Tagihan: {app.floatToRupiah(float(payment_spp["trx_amount"]))}\n' \
                         f'Biaya Minimal Pembayaran: {app.floatToRupiah(float(minimum_payment))}\n' \
                         f'Batas KRS: 12 Oktober 2020 - 16 Oktober 2020\n\n'
+        else:
+            msgreply = f'*DATA SPP TIDAK ADA*\n\n'
     except Exception as error:
-        msgreply = f'ERROR: {error}\n\n'
+        msgreply = f'Nomor Hp kamu Benerin dulu dongggg yang bener baru {config.bot_name} kasih liat datanya....\n\n'
     return msgreply
 
 def keyword_to_jenisBiaya(keyword_split, npm):
