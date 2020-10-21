@@ -880,7 +880,6 @@ def siapabsensiwithsql(grp, num, materi, tipe):
                 krsid = getDataKrs(studentid=studentid, mkkode=mkkode)
                 insertAbsenSiapMahasiswa(jadwalid=jadwalid, krsid=krsid, presensiid=presensiid, studentid=studentid,
                                          attend='H', valueattend=1)
-                #ifx issues #29
                 attendancestudent=getJumlahPertemuanMahasiswa(jadwalid=jadwalid, studentid=studentid, absentvalue='H')
                 if attendancestudent is not None:
                     updatePresensiKRS(presensi=attendancestudent, jadwalid=jadwalid, studentid=studentid)
