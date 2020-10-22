@@ -229,7 +229,12 @@ def paymentSpp(npm):
         if biaya_pokok_spp:
             biaya_pokok_spp=int(biaya_pokok_spp)
         else:
-            biaya_pokok_spp=2500000
+            if prodi_singkatan[:2] == 'd4':
+                biaya_pokok_spp = 2500000
+            elif prodi_singkatan[:2] == 'd3':
+                biaya_pokok_spp = 2000000
+            else:
+                biaya_pokok_spp = int(biaya_pokok_spp)
         if int(payment_spp['trx_amount']) > int(biaya_pokok_spp):
             tunggakan = float(int(payment_spp['trx_amount']) - int(biaya_pokok_spp))
             amount_tunggakan = int(payment_spp["trx_amount"]) - int(biaya_pokok_spp)
