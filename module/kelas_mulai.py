@@ -48,7 +48,7 @@ def kelasMulai(data):
                         for i in kelas.pesertaAbsensi(jadwalid=jadwalid):
                             npm=i[-1]
                             nama=kelas.getStudentNameOnly(npm)
-                            listStudent=listStudent+str(abc)+'. '+npm+' '+nama+'\n'
+                            listStudent+=f'{abc}. {npm} {nama} {kelas.getStudentPhoneNumberFromNPM(npm)}\n'
                             abc+=1
                         coursename = kelas.getDataMatkul(grp.split('-')[0])[1]
                         messages = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
