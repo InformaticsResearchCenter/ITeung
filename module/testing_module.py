@@ -7,7 +7,7 @@ def auth(data):
 
 def replymsg(diver, data):
     msg=message.normalize(data[3])
-    kode_beruntung=msg.split(' kode ')[1]
+    kode_beruntung=msg.split(' kode beruntung ')[1]
     if cekData(kode_beruntung):
         msgreply='ada hadiah'
     else:
