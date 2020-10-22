@@ -33,7 +33,7 @@ def replymsg(driver, data):
                 customername=vadata['customer_name']
                 msgreply+=f"Nama: *{customername}*\nNomor virtual account: *{virtualaccount}*\nTotal yang harus dibayar: *{jumlahygharusdibayar}*\nTotal yang sudah dibayar: *{jumlahygsudahdibayar}*\n\nJumlah terakhir pembayaran: *{jumlahterakhirbayar}*\nWaktu terakhir pembayaran: {waktuterakhirbayar}\n\n"
             else:
-                msgreply+='Data Tidak ditemukan\n\n'
+                msgreply+=f'Nama: *{kelas.getStudentNameOnly(i[0])}*\n*Data Tidak ditemukan*\n\n'
     return msgreply
 
 def dbConnectVA():
