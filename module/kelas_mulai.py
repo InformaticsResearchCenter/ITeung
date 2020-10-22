@@ -17,7 +17,7 @@ def replymsg(driver, data):
 
 def isJadwalID(kode_dosen, jadwal_id):
     db=kelas.dbConnectSiap()
-    sql=f'select * from simak_trn_jadwal where DosenID="{kode_dosen}" and JadwalID = {jadwal_id}'
+    sql=f'select * from simak_trn_jadwal where DosenID="{kode_dosen}" and JadwalID = "{jadwal_id}"'
     with db:
         cur=db.cursor()
         cur.execute(sql)
