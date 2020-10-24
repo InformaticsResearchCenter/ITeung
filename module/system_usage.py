@@ -3,9 +3,9 @@ from lib import reply
 from module import kelas
 
 def auth(data):
-    groupid=reply.getNumberGroup(data[0]).split('-')
+    groupid=reply.getNumberGroup(data[0])
     if groupid:
-        if '1' in groupid:
+        if '1' in groupid.split('-'):
             ret = True
         else:
             ret = False
