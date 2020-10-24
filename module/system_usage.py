@@ -4,7 +4,7 @@ from module import kelas
 
 def auth(data):
     groupid=reply.getNumberGroup(data[0]).split('-')
-    if '1' in groupid:
+    if groupid and '1' in groupid:
         ret = True
     else:
         ret = False
