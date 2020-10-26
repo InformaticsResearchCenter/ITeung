@@ -266,7 +266,7 @@ def getStudentEmail(npm):
 
 def getHandphoneMahasiswa(npm):
     db = dbConnectSiap()
-    sql = "select Handphone from simak_mst_mahasiswa where MhswID = '{0}'".format(npm)
+    sql = "select Handphone from simak_mst_mahasiswa where MhswID = '{0}' ".format(npm)
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -880,7 +880,6 @@ def siapabsensiwithsql(grp, num, materi, tipe):
                 krsid = getDataKrs(studentid=studentid, mkkode=mkkode)
                 insertAbsenSiapMahasiswa(jadwalid=jadwalid, krsid=krsid, presensiid=presensiid, studentid=studentid,
                                          attend='H', valueattend=1)
-                #ifx issues #29
                 attendancestudent=getJumlahPertemuanMahasiswa(jadwalid=jadwalid, studentid=studentid, absentvalue='H')
                 if attendancestudent is not None:
                     updatePresensiKRS(presensi=attendancestudent, jadwalid=jadwalid, studentid=studentid)

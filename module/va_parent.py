@@ -21,15 +21,19 @@ def replymsg(driver, data):
     npmmahasiswa=kelas.getStudentIdFromParentPhoneNumber(num)
     msgreply=''
     for i in npmmahasiswa:
-        for j in cek_pembayaran_va_mahasiswa.getTrxIDList(i[0]):
-            vadata=cek_pembayaran_va_mahasiswa.getDataPembayaran(j[0])
-            virtualaccount = vadata['virtual_account']
-            jumlahygharusdibayar = app.floatToRupiah(float(vadata['trx_amount']))
-            jumlahterakhirbayar = app.floatToRupiah(float(vadata['payment_amount']))
-            jumlahygsudahdibayar = app.floatToRupiah(float(vadata['cumulative_payment_amount']))
-            waktuterakhirbayar = vadata['datetime_payment'].strftime('%d-%m-%Y %H:%M:%S')
-            customername=vadata['customer_name']
-            msgreply+=f"Nama: *{customername}*\nNomor virtual account: *{virtualaccount}*\nTotal yang harus dibayar: *{jumlahygharusdibayar}*\nTotal yang sudah dibayar: *{jumlahygsudahdibayar}*\n\nJumlah terakhir pembayaran: *{jumlahterakhirbayar}*\nWaktu terakhir pembayaran: {waktuterakhirbayar}\n\n"
+        trx_id_mahasiswa=cek_pembayaran_va_mahasiswa.getTrxIDList(i[0])
+        if trx_id_mahasiswa:
+            for j in trx_id_mahasiswa:
+                vadata=cek_pembayaran_va_mahasiswa.getDataPembayaran(j[0])
+                virtualaccount = vadata['virtual_account']
+                jumlahygharusdibayar = app.floatToRupiah(float(vadata['trx_amount']))
+                jumlahterakhirbayar = app.floatToRupiah(float(vadata['payment_amount']))
+                jumlahygsudahdibayar = app.floatToRupiah(float(vadata['cumulative_payment_amount']))
+                waktuterakhirbayar = vadata['datetime_payment'].strftime('%d-%m-%Y %H:%M:%S')
+                customername=vadata['customer_name']
+                msgreply+=f"Nama: *{customername}*\nNomor virtual account: *{virtualaccount}*\nTotal yang harus dibayar: *{jumlahygharusdibayar}*\nTotal yang sudah dibayar: *{jumlahygsudahdibayar}*\n\nJumlah terakhir pembayaran: *{jumlahterakhirbayar}*\nWaktu terakhir pembayaran: {waktuterakhirbayar}\n\n"
+        else:
+            msgreply+=f'Nama: *{kelas.getStudentNameOnly(i[0])}*\n*Data Tidak ditemukan*\n\n'
     return msgreply
 
 def dbConnectVA():
