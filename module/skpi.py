@@ -162,7 +162,7 @@ def mainPages(npm = None, prodi = None, email=None):
         # print(dfNomor.loc[dfNomor["NPM"] == int(npm)])
         nomorA = dfNomor.loc[dfNomor["NPM"] == int(npm)].values.tolist()[0][0]
         
-        tanggalBerlaku = "23 Oktober 2020"
+        tanggalBerlaku = "23 November 2020"
         now = datetime.datetime.now()
         tanggalSurat = f"{now.day} {convertMonth(str(now.month))} {now.year}"
         
@@ -501,7 +501,7 @@ def verifyDigitalSign(resultpasscode):
     namaDosen, gelar = getDosenById(kodeDosen)
     a, b, c = convertProdi(prodi)
     
-    msgreply = f'SKL {namaMhs} dari prodi {b} telah ditandatangani oleh {namaDosen.title()}, {gelar} sebagai {convertRole(role)} penerbitan tanda tangan pada {tanggal} jam {waktu}'
+    msgreply = f'Surat Keterangan Lulus {namaMhs} dari prodi {b} Politeknik Pos Indonesia telah ditandatangani oleh {namaDosen.title()}, {gelar} sebagai {convertRole(role)} penerbitan tanda tangan pada {tanggal} jam {waktu}'
     return msgreply
 
 def convertRole(role):
