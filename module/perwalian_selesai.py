@@ -205,7 +205,7 @@ def replymsg(driver, data):
         data[1],
         jmlPesertaPerwalian,
     )
-    msgreply=f'okeeeee sudah yaaa, file PDF sudah {config.bot_name} kirim ke {dosen_data["Email"]}'
+    msgreply=f'okeeeee sudah yaaa, file PDF sudah {config.bot_name} kirim ke {dosen_data["Email"]}, cepet cepet minta approval ke deputi dan kaprodi yaaa...'
     return msgreply
 
 def mainPages(kode_dosen, prodi_id, nama_dosen, nama_kaprodi, nama_deputi, nama_prodi, tipe_kelas, catatan, group_name, jmlPesertaPerwalian):
