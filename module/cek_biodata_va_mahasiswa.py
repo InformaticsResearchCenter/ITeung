@@ -260,7 +260,7 @@ def paymentSpp(npm):
         else:
             msgreply = f'*DATA SPP TIDAK ADA*\n\n'
     except Exception as error:
-        msgreply = f'Nomor Hp kamu Benerin dulu dongggg yang bener baru {config.bot_name} kasih liat datanya....\n\n'
+        msgreply = f'Nomor Hp kamu Benerin dulu dongggg yang bener baru {config.bot_name} kasih liat datanya....\nATAU\nData kamu belum diupload..\n\n'
     return msgreply
 
 def keyword_to_jenisBiaya(keyword_split, npm):
