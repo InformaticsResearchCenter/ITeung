@@ -105,11 +105,13 @@ pdfmetrics.registerFont(TTFont('Arial', './skp/ARIAL.TTF'))
 styles=getSampleStyleSheet()
 styles.add(ParagraphStyle(name='Center', alignment=TA_CENTER, fontSize=8, leading=10))
 
+styles.add(ParagraphStyle(name='Header', alignment=TA_CENTER, textColor=colorHeader))
+
 styleWrap = styles["Normal"]
 styleWrap.alignment = TA_JUSTIFY
 # styleWrap.fontName = 'Arial'
 styleWrap.fontSize = 8
-styleWrap.leading = 10
+styleWrap.leading = 9.5
 
 def checkApproveMhs(npm):
     db=kelas.dbConnect()
@@ -391,8 +393,9 @@ def getWadirIData():
     return ["Dodi Permadi, ST., MT.","107.77.117"]
 
 def pageSetup(canvas, doc):
+    width, height = A4
     canvas.saveState()
-    # canvas.drawImage('./skp/background.png', 0, -height/2.82, width*1.415, height*1.415, preserveAspectRatio=True, anchor='c')
+    canvas.drawImage('./skp/background.png', 0, -height/2.82, width*1.415, height*1.415, preserveAspectRatio=True, anchor='c')
 
     canvas.restoreState()
 
@@ -548,7 +551,7 @@ def columnTwoFirst(dataMhs, prodi, pathTTD):
         
     dataColumn1 = [
         [personalInformation(nama, ttl, npm, thnMasuk, thnLulus, noIjazah, gelar)],
-        [''],
+        # [''],
         [institutionInformation1(param21, param22, param23, param24)],
     ]
     
@@ -579,7 +582,7 @@ def columnTwoFirst(dataMhs, prodi, pathTTD):
         [tableColumn1, '', tableColumn2],
     ]
     
-    table = Table(data, [12.3*cm, 1*cm, 12.3*cm], None)
+    table = Table(data, [12.3*cm, 1.2*cm, 12.3*cm], None)
     table.setStyle(TableStyle([
         ('FONT',(0,0),(-1,-1),'Arial', 8),
         # ('INNERGRID', (0,0), (-1,-1), 1, colors.black),
@@ -674,7 +677,7 @@ def columnTwoSecond(param3b, prodi, pathTTD):
     
     dataColumn2 = [
         [additionalInformation(param3b1, param3b2, param3b3, param3b4, param3b5, param3b6, param3b7)],
-        [''],
+        # [''],
         [ttdSurat(dataTTDWadir1)]
     ]
     
@@ -691,7 +694,7 @@ def columnTwoSecond(param3b, prodi, pathTTD):
         [tableColumn1, '', tableColumn2],
     ]
     
-    table = Table(data, [12.3*cm, 1*cm, 12.3*cm], None)
+    table = Table(data, [12.3*cm, 1.2*cm, 12.3*cm], None)
     table.setStyle(TableStyle([
         ('FONT',(0,0),(-1,-1),'Arial', 8),
         # ('INNERGRID', (0,0), (-1,-1), 1, colors.black),
@@ -783,19 +786,18 @@ def sendEmail(email, fileName, path, mhs):
     except Exception as e: 
         print(str(e))
 
+def makeHeader(contain):
+    contain.append(Image("./skp/logo.png", 1.6 * cm, 1.5 * cm))
+    contain.append(Spacer(1, .1*cm))
+    contain.append(Paragraph(f'<font size="13">POLITEKNIK POS INDONESIA</font>', styles["Center"]))
+    contain.append(Spacer(1, .4*cm))
+    contain.append(Paragraph(f'<font size="9"><b>Diploma Supplement</b></font>', styles["Center"]))
+    contain.append(Spacer(1, 0.05*cm))
+    contain.append(Paragraph(f'<font size="9">Surat Keterangan Pendamping Ijazah</font>', styles["Header"]))
+    contain.append(Spacer(1, .1*cm))
+    
+
 def makePage(npm, prodi, email, dataMhs, param3b):
-    
-    # dataMhs = ["Rizqi Nusabbih Hidayatullah Gaja","Jakarta, 21 Mei 1995","1184104","2015","2019","ST-01/003/PPI19","S.Tr. Kom"]
-    
-    # param3b = [
-    #     '',
-    #     'Ukm Basket Poltekpos',
-    #     'Otomatisasi Penjadwalan Mata Kuliah Menggunakan Algoritma Genetika dan Algoritma Random Linear Congruential',
-    #     'Bahasa Inggris',
-    #     '2 Bulan Sebagai Staff IT di Lapan Bandung',
-    #     '1. Pelatihan SAP 01(2017); 2. Pelatihan Membuat Aplikasi Untuk Perangkat Android Seluler(2018); 3. Pembentukan Karakter Poltekpos (2015)',
-    #     '1. Seminar Membuat Aplikasi Web Dengan ASP.Net MVC (Microsoft Student Patner Sparks); 2. 18.14.Blx-PPI.D3Ti.01.052, Pelatihan Membuat Aplikasi Untuk Android Seluler (Belogix); 3. Pengujian Pusat Membuat Aplikasi Untuk Android Seluler (Belogix)'
-    # ]
     
     filepath = f"./skp/skp-{prodi}/"
     filename = f"{npm}.pdf"
@@ -803,21 +805,24 @@ def makePage(npm, prodi, email, dataMhs, param3b):
     checkDir(filepath)
     
     fullfilename = filepath+filename
-        
+  
     doc = SimpleDocTemplate(fullfilename, 
                         pagesize=landscape(A4),
                         rightMargin=0*cm,
                         leftMargin=0*cm,
-                        topMargin=3*cm,
+                        topMargin=0*cm,
                         bottomMargin=0*cm)
 
     contain=[]
-
+    
+    contain.append(Spacer(1, 1.4*cm))
+    makeHeader(contain)
+    
     contain.append(noSurat())
-    contain.append(Spacer(1, .2*cm))
+    contain.append(Spacer(1, .1*cm))
 
     contain.append(keteranganSurat())
-    contain.append(Spacer(1, .3*cm))
+    contain.append(Spacer(1, .1*cm))
 
     nipyDirektur = getDirektur()
     linkDir = makeLinkVerifiy(getKodeDosen(nipyDirektur), npm, "dir")
@@ -830,8 +835,9 @@ def makePage(npm, prodi, email, dataMhs, param3b):
     linkWadir1 = makeLinkVerifiy(getKodeDosen(nipyWadir1), npm, "wadir1")
     pathTTDWadir1 = makeQrcodeLinkVerifySign(linkWadir1, npm, prodi)
 
+    contain.append(Spacer(1, 1.5*cm))
     contain.append(columnTwoSecond(param3b, prodi, pathTTDWadir1))
 
     doc.build(contain, onFirstPage=pageSetup, onLaterPages=pageSetup)
     
-    sendEmail(email, filename, filepath, "Kadek Diva Krishna Murti")
+    sendEmail(email, filename, filepath, npm)

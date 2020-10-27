@@ -205,7 +205,7 @@ def replymsg(driver, data):
         data[1],
         jmlPesertaPerwalian,
     )
-    msgreply=f'okeeeee sudah yaaa, file PDF sudah {config.bot_name} kirim ke {dosen_data["Email"]}'
+    msgreply=f'okeeeee sudah yaaa, file PDF sudah {config.bot_name} kirim ke {dosen_data["Email"]}, cepet cepet minta approval ke deputi dan kaprodi yaaa...'
     return msgreply
 
 def mainPages(kode_dosen, prodi_id, nama_dosen, nama_kaprodi, nama_deputi, nama_prodi, tipe_kelas, catatan, group_name, jmlPesertaPerwalian):
@@ -240,29 +240,11 @@ def mainPages(kode_dosen, prodi_id, nama_dosen, nama_kaprodi, nama_deputi, nama_
 
     prodi = nama_prodi
 
-    statusappove=cekStatusApprovePerwalian(kode_dosen, kelas.getTahunID())
-
-    qrDeputi = 'bkdqrcode/whiteimage.png'
-    if statusappove[1] == 'true':
-        qrDeputi = f'surat_perwalian_qrcode/deputiqrcode-{kelas.getTahunID()}-{kode_dosen}.png'
-
-    qrKaprodi = 'bkdqrcode/whiteimage.png'
-    if statusappove[0] == 'true':
-        qrKaprodi = f'surat_perwalian_qrcode/kaprodiqrcode-{kelas.getTahunID()}-{kode_dosen}.png'
-
-    qrDosen = f'surat_perwalian_qrcode/dosenqrcode-{kelas.getTahunID()}-{kode_dosen}.png'
-
     listMahasiswa = hadirAbsensiData(group_name, 'daring')
-    
-    tahunAkademik = f'{int(kelas.getTahunID()[:-1])} - {int(kelas.getTahunID()[:-1])+1}'
-    hariSekarang = daysEnToInd(datetime.now().strftime('%A'))
-    tglSekarang = bkd.sahTanggal()
 
     jumlahMhs = jmlPesertaPerwalian
     jumlahHadir = len(listMahasiswa)
     jumlahTdkHadir = jumlahMhs - jumlahHadir
-
-    listMasukan = masukan
 
     cekPerwalianLog(
         kode_dosen,
@@ -274,6 +256,25 @@ def mainPages(kode_dosen, prodi_id, nama_dosen, nama_kaprodi, nama_deputi, nama_
         jumlahTdkHadir,
         catatan
     )
+
+    statusappove=cekStatusApprovePerwalian(kode_dosen, kelas.getTahunID())
+
+    qrDeputi = 'bkdqrcode/whiteimage.png'
+
+    if statusappove[1] == 'true':
+        qrDeputi = f'surat_perwalian_qrcode/deputiqrcode-{kelas.getTahunID()}-{kode_dosen}.png'
+
+    qrKaprodi = 'bkdqrcode/whiteimage.png'
+    if statusappove[0] == 'true':
+        qrKaprodi = f'surat_perwalian_qrcode/kaprodiqrcode-{kelas.getTahunID()}-{kode_dosen}.png'
+
+    qrDosen = f'surat_perwalian_qrcode/dosenqrcode-{kelas.getTahunID()}-{kode_dosen}.png'
+    
+    tahunAkademik = f'{int(kelas.getTahunID()[:-1])} - {int(kelas.getTahunID()[:-1])+1}'
+    hariSekarang = daysEnToInd(datetime.now().strftime('%A'))
+    tglSekarang = bkd.sahTanggal()
+
+    listMasukan = masukan
     
     doc = SimpleDocTemplate(namaFile,
                             pagesize=A4,
