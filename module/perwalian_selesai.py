@@ -61,21 +61,25 @@ def catatanToList(catatan):
         nomor_urut+=1
     return data
 
-def hadirAbsensiData(group_name, tipe):
+def hadirAbsensiData(group_name, tipe, kode_dosen):
     data=kelas.getnumonly(group_name, tipe)
     data_fix=[]
     nomor_urut=1
+    tahun_angkatan=f"{group_name.split('-')[3]}1"
+    kelas_number=f'{kelas.kodeKelas(data[1].split("-")[2])}'
+    data_peserta_perwalian = [i["MhswID"] for i in perwalian_mulai.getPesertaPerwalian(kode_dosen, tahun_angkatan, kelas_number)]
     for i in data:
         data_i=[]
         data_i.append(f'{nomor_urut}.')
         try:
             npm, nama=kelas.getNpmandNameMahasiswa(i[0])
-            data_i.append(f'{nama}')
-            data_i.append(f'{npm}')
-            data_i.append(f'{kelas.getHandphoneMahasiswa(npm)}')
-            data_i.append(f'HADIR')
-            data_fix.append(data_i)
-            nomor_urut+=1
+            if npm in data_peserta_perwalian:
+                data_i.append(f'{nama}')
+                data_i.append(f'{npm}')
+                data_i.append(f'{kelas.getHandphoneMahasiswa(npm)}')
+                data_i.append(f'HADIR')
+                data_fix.append(data_i)
+                nomor_urut+=1
         except:
             pass
     return data_fix
@@ -240,7 +244,7 @@ def mainPages(kode_dosen, prodi_id, nama_dosen, nama_kaprodi, nama_deputi, nama_
 
     prodi = nama_prodi
 
-    listMahasiswa = hadirAbsensiData(group_name, 'daring')
+    listMahasiswa = hadirAbsensiData(group_name, 'daring', kode_dosen, tahun_angkatan, kelas_number)
 
     jumlahMhs = jmlPesertaPerwalian
     jumlahHadir = len(listMahasiswa)
