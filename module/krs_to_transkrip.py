@@ -32,8 +32,11 @@ def data_student_krs(mhsw_id, tahunid):
         return sql_to_dictionary.fetchAllMode(cur.fetchall(), cur)
 
 def split_and_get_npm(message):
-    message_list=message.split(' sampai ')
-    return get_npm_from_list(message_list[0], message_list[1])
+    try:
+        message_list=message.split(' sampai ')
+        return get_npm_from_list(message_list[0], message_list[1])
+    except:
+        return False
 
 def get_npm_from_list(*argv):
     npm_begin=argv[0].split(' ')[-1]
@@ -123,20 +126,23 @@ def krs_to_transkrip(data):
     tahun_id = find_tahun_id_from_message(message.normalize(data[3]))
     if tahun_id:
         tahun_id = tahun_id[0]
-        npm_begin, npm_end = split_and_get_npm(message.normalize(data[3]))
-        data_mhsw_id_distinct = get_npm_distinct(
-            npm_range_begin=npm_begin,
-            npm_range_end=npm_end,
-            tahunid=tahun_id
-        )
+        data_npm_begin_and_npm_end=split_and_get_npm(message.normalize(data[3]))
+        if data_npm_begin_and_npm_end:
+            npm_begin, npm_end = data_npm_begin_and_npm_end
+            data_mhsw_id_distinct = get_npm_distinct(
+                npm_range_begin=npm_begin,
+                npm_range_end=npm_end,
+                tahunid=tahun_id
+            )
 
-        data_check = [data_check_krs_to_transkrip(data_mahasiswa_krs) for mshw in data_mhsw_id_distinct for
-                      data_mahasiswa_krs in data_student_krs(mshw["MhswID"], tahun_id)]
+            data_check = [data_check_krs_to_transkrip(data_mahasiswa_krs) for mshw in data_mhsw_id_distinct for
+                          data_mahasiswa_krs in data_student_krs(mshw["MhswID"], tahun_id)]
 
-        msg_data_insert = f'Data perpindahan dari KRS to TRANSKRIP:{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}'
-        for data_check_loop in data_check:
-            if data_check_loop['status']:
-                msg_data_insert += f'{data_check_loop["mhswid"]} | {data_check_loop["mkkode"]}{config.whatsapp_api_lineBreak}'
+            msg_data_insert = f'Data perpindahan dari KRS to TRANSKRIP:{config.whatsapp_api_lineBreak}{config.whatsapp_api_lineBreak}'
+            for data_check_loop in data_check:
+                if data_check_loop['status']:
+                    msg_data_insert += f'{data_check_loop["mhswid"]} | {data_check_loop["mkkode"]}{config.whatsapp_api_lineBreak}'
 
-        return wa.setOutbox(numbers.normalize(data[0]), msg_data_insert)
+            return wa.setOutbox(numbers.normalize(data[0]), msg_data_insert)
+        return wa.setOutbox(numbers.normalize(data[0]), 'kata sampai tidak ada')
     return wa.setOutbox(numbers.normalize(data[0]), 'tidak ada tahun id')
