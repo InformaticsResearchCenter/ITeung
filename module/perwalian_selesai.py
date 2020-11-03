@@ -223,7 +223,7 @@ def cekNpminStringMessage(msg):
 
 
 def replymsg(driver, data):
-    npm_km = cekNpminStringMessage(data[3])
+    npm_km = cekNpminStringMessage(data[3].split(' km ')[1])
     if npm_km:
         dosen_data = getDosenDataDictionaryDump(kelas.getKodeDosen(data[0]))
         home_base_prodi = dosen_data['Homebase']
@@ -252,8 +252,7 @@ def replymsg(driver, data):
     return 'aduh ga ada npm kmnya nih coba baca lagi ya panduannya di *iteung panduan dosen perwalian*'
 
 
-def mainPages(kode_dosen, prodi_id, nama_dosen, km_npm, nama_prodi, tipe_kelas, catatan, group_name,
-              jmlPesertaPerwalian):
+def mainPages(kode_dosen, prodi_id, nama_dosen, km_npm, nama_prodi, tipe_kelas, catatan, group_name, jmlPesertaPerwalian):
     checkDir()
 
     namaFile = f"surat_perwalian/SURAT-PERWALIAN-{kode_dosen}-{kelas.getTahunID()}-{prodi_id}-{tipe_kelas}-{kelas.getEmailDosen(kode_dosen)}.pdf"
@@ -285,7 +284,6 @@ def mainPages(kode_dosen, prodi_id, nama_dosen, km_npm, nama_prodi, tipe_kelas, 
 
     # namaDeputi = nama_deputi
     # namaKaprodi = nama_kaprodi
-    namaDosen = nama_dosen
 
     prodi = nama_prodi
 
@@ -365,7 +363,7 @@ def createBeritaAcaraPage(contain, styles, tahunAkademik, hariSekarang, tglSekar
     contain.append(Paragraph(text, styles["Justify"]))
     contain.append(Spacer(1, .5 * cm))
 
-    data = [['Nama Dosen Wali', ':', ],
+    data = [['Nama Dosen Wali', ':', kelas.getNamaDosen(kode_dosen)],
             ['Jurusan / Kelas', ':', f'{prodi} / {tipe_kelas}'],
             ['Jumlah  Mahasiswa', ':', jumlahMhs],
             ['Jumlah yang hadir', ':', jumlahHadir],
