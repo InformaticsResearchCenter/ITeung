@@ -61,7 +61,7 @@ def catatanToList(catatan):
     for i in catatan.split(', '):
         data_i = []
         data_i.append(f'{nomor_urut}.')
-        data_i.append(f"{Paragraph(i)}")
+        data_i.append(i)
         data.append(data_i)
         nomor_urut += 1
     return data
@@ -342,16 +342,16 @@ def mainPages(kode_dosen, prodi_id, nama_dosen, km_npm, nama_prodi, tipe_kelas, 
 
     doc.build(contain)
 
-    bkd.mail(
-        kelas.getEmailDosen(kode_dosen),
-        f'alooooo {config.bot_name} kirim file Absensi Perwalian NICHHHHHHH',
-        f'Tolong dicek kembali yaaa datanya, dan jangan lupa buruann minta approvalnya ke KAPRODI dan DEPUTI yaa....',
-        bkd.getFilePath(
-            kelas.getEmailDosen(kode_dosen),
-            'surat_perwalian',
-            kelas.getTahunID()
-        )
-    )
+    # bkd.mail(
+    #     kelas.getEmailDosen(kode_dosen),
+    #     f'alooooo {config.bot_name} kirim file Absensi Perwalian NICHHHHHHH',
+    #     f'Tolong dicek kembali yaaa datanya, dan jangan lupa buruann minta approvalnya ke KAPRODI dan DEPUTI yaa....',
+    #     bkd.getFilePath(
+    #         kelas.getEmailDosen(kode_dosen),
+    #         'surat_perwalian',
+    #         kelas.getTahunID()
+    #     )
+    # )
 
 
 def createBeritaAcaraPage(contain, styles, tahunAkademik, hariSekarang, tglSekarang, kode_dosen, prodi, tipe_kelas, jumlahMhs,
@@ -381,13 +381,31 @@ def createBeritaAcaraPage(contain, styles, tahunAkademik, hariSekarang, tglSekar
     contain.append(Paragraph(text, styles["Justify"]))
     contain.append(Spacer(1, .1 * cm))
 
-    table = Table(listMasukan, [.8 * cm, 15.2 * cm], len(listMasukan) * [.6 * cm])
-    table.setStyle(TableStyle([
+    style = TableStyle([
         ('FONT', (0, 0), (-1, -1), 'Times-Roman', 12),
-        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-    ]))
-    contain.append(table)
-    contain.append(Spacer(1, .7 * cm))
+        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+    ])
+
+    s = getSampleStyleSheet()
+    s = s['BodyText']
+    s.wordWrap = 'CJK'
+    data1 = [[Paragraph(cell, s) for cell in row] for row in listMasukan]
+    tab = Table(data1, hAlign='LEFT', colWidths=[20, 450])
+
+    tab.setStyle(style)
+
+    contain.append(tab)
+    contain.append(Spacer(1, .6 * cm))
+
+    # table = Table(listMasukan, [.6 * cm, 15.2 * cm], len(listMasukan) * [1 * cm])
+    # table.setStyle(TableStyle([
+    #     ('FONT', (0, 0), (-1, -1), 'Times-Roman', 12),
+    #     ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+    #     ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+    # ]))
+    # contain.append(table)
+    # contain.append(Spacer(1, .7 * cm))
 
     data = [
         [Paragraph('<font size="12"><b>Ketua Kelas,</b></font>', styles["Center"]),
@@ -396,7 +414,7 @@ def createBeritaAcaraPage(contain, styles, tahunAkademik, hariSekarang, tglSekar
         [Image(qrKm, 4 * cm, 4 * cm), Image(qrWhiteImage, 4 * cm, 4 * cm), Image(qrDosen, 4 * cm, 4 * cm)],
         [Paragraph(f'<font size="12"><u>{namaKm}</u></font>', styles["Center"]),
          Paragraph(f'<font size="12"></font>', styles["Center"]),
-         Paragraph(f'<font size="12"><u>{kelas.getNamaDosenTanpaGelar(kode_dosen)}</u></font>', styles["Center"])],
+         Paragraph(f'<font size="12"><u>{capitalizeName(kelas.getNamaDosenTanpaGelar(kode_dosen))}</u></font>', styles["Center"])],
     ]
 
     table = Table(data, [6.8 * cm, 6.8 * cm, 6.8 * cm], [.6 * cm, 4.5 * cm, 1 * cm])
@@ -442,6 +460,7 @@ def createAbsensiPage(contain, styles, kode_dosen, prodi, tipe_kelas, listMahasi
         ('FONT', (0, 0), (-1, -1), 'Times-Roman', 12),
         ('ALIGN', (0, 1), (-1, -1), 'LEFT'),
         ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('ALIGN', (-1, 0),(-1, -1), 'CENTER'),
         ('INNERGRID', (0, 0), (-1, -1), 1, colors.black),
         ('BOX', (0, 0), (-1, -1), 1, colors.black),
     ]))
@@ -456,7 +475,7 @@ def createAbsensiPage(contain, styles, kode_dosen, prodi, tipe_kelas, listMahasi
         [Image(qrWhiteImage, 4 * cm, 4 * cm), Image(qrWhiteImage, 4 * cm, 4 * cm), Image(qrDosen, 4 * cm, 4 * cm)],
         [Paragraph(f'<font size="12"></font>', styles["Center"]),
          Paragraph(f'<font size="12"></font>', styles["Center"]),
-         Paragraph(f'<font size="12"><u>{kelas.getNamaDosenTanpaGelar(kode_dosen)}</u></font>', styles["Center"])],
+         Paragraph(f'<font size="12"><u>{capitalizeName(kelas.getNamaDosenTanpaGelar(kode_dosen))}</u></font>', styles["Center"])],
     ]
 
     table = Table(data, [6.8 * cm, 6.8 * cm, 6.8 * cm], [.6 * cm, .6 * cm, 4.5 * cm, 1 * cm])
