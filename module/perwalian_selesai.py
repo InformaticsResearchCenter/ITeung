@@ -339,7 +339,7 @@ def mainPages(kode_dosen, prodi_id, nama_dosen, km_npm, nama_prodi, tipe_kelas, 
     styles.add(ParagraphStyle(name='Center', alignment=TA_CENTER, fontName='Times'))
 
     createBeritaAcaraPage(contain, styles, tahunAkademik, hariSekarang, tglSekarang, namaDosen, prodi, tipe_kelas,
-                          jumlahMhs, jumlahHadir, jumlahTdkHadir, listMasukan, qrKm, qrWhiteImage, qrDosen)
+                          jumlahMhs, jumlahHadir, jumlahTdkHadir, listMasukan, qrKm, qrWhiteImage, qrDosen, kelas.getStudentNameOnly(km_npm))
     createAbsensiPage(contain, styles, namaDosen, prodi, tipe_kelas, listMahasiswa, qrWhiteImage, qrDosen)
 
     doc.build(contain)
@@ -357,7 +357,7 @@ def mainPages(kode_dosen, prodi_id, nama_dosen, km_npm, nama_prodi, tipe_kelas, 
 
 
 def createBeritaAcaraPage(contain, styles, tahunAkademik, hariSekarang, tglSekarang, namaDosen, prodi, kelas, jumlahMhs,
-                          jumlahHadir, jumlahTdkHadir, listMasukan, qrKm, qrWhiteImage, qrDosen):
+                          jumlahHadir, jumlahTdkHadir, listMasukan, qrKm, qrWhiteImage, qrDosen, namaKm):
     contain.append(Image('logo_berita_acara_perwalian.PNG', 17.5 * cm, 4 * cm))
     contain.append(Spacer(1, .5 * cm))
 
@@ -396,7 +396,7 @@ def createBeritaAcaraPage(contain, styles, tahunAkademik, hariSekarang, tglSekar
          Paragraph('<font size="12"><b></b></font>', styles["Center"]),
          Paragraph('<font size="12"><b>Dosen Wali,</b></font>', styles["Center"])],
         [Image(qrKm, 4 * cm, 4 * cm), Image(qrWhiteImage, 4 * cm, 4 * cm), Image(qrDosen, 4 * cm, 4 * cm)],
-        [Paragraph(f'<font size="12"><u>Tri Angga Dio simamora</u></font>', styles["Center"]),
+        [Paragraph(f'<font size="12"><u>{namaKm}</u></font>', styles["Center"]),
          Paragraph(f'<font size="12"></font>', styles["Center"]),
          Paragraph(f'<font size="12"><u>{namaDosen}</u></font>', styles["Center"])],
     ]
@@ -442,7 +442,7 @@ def createAbsensiPage(contain, styles, namaDosen, prodi, kelas, listMahasiswa, q
     table = Table(data, [1 * cm, 2 * cm, 10 * cm, 3 * cm], len(data) * [1.5 * cm])
     table.setStyle(TableStyle([
         ('FONT', (0, 0), (-1, -1), 'Times-Roman', 12),
-        ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
+        ('ALIGN', (0, 1), (-1, -1), 'LEFT'),
         ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
         ('INNERGRID', (0, 0), (-1, -1), 1, colors.black),
         ('BOX', (0, 0), (-1, -1), 1, colors.black),
