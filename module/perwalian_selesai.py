@@ -244,7 +244,7 @@ def mainPages(kode_dosen, prodi_id, nama_dosen, nama_kaprodi, nama_deputi, nama_
 
     prodi = nama_prodi
 
-    listMahasiswa = hadirAbsensiData(group_name, 'daring', kode_dosen, tahun_angkatan, kelas_number)
+    listMahasiswa = hadirAbsensiData(group_name, 'daring', kode_dosen)
 
     jumlahMhs = jmlPesertaPerwalian
     jumlahHadir = len(listMahasiswa)
