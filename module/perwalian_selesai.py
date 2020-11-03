@@ -338,9 +338,9 @@ def mainPages(kode_dosen, prodi_id, nama_dosen, km_npm, nama_prodi, tipe_kelas, 
     styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY, fontName='Times', fontSize=12))
     styles.add(ParagraphStyle(name='Center', alignment=TA_CENTER, fontName='Times'))
 
-    createBeritaAcaraPage(contain, styles, tahunAkademik, hariSekarang, tglSekarang, namaDosen, prodi, tipe_kelas,
+    createBeritaAcaraPage(contain, styles, tahunAkademik, hariSekarang, tglSekarang, kode_dosen, prodi, tipe_kelas,
                           jumlahMhs, jumlahHadir, jumlahTdkHadir, listMasukan, qrKm, qrWhiteImage, qrDosen, kelas.getStudentNameOnly(km_npm))
-    createAbsensiPage(contain, styles, namaDosen, prodi, tipe_kelas, listMahasiswa, qrWhiteImage, qrDosen)
+    createAbsensiPage(contain, styles, kode_dosen, prodi, tipe_kelas, listMahasiswa, qrWhiteImage, qrDosen)
 
     doc.build(contain)
 
@@ -356,7 +356,7 @@ def mainPages(kode_dosen, prodi_id, nama_dosen, km_npm, nama_prodi, tipe_kelas, 
     )
 
 
-def createBeritaAcaraPage(contain, styles, tahunAkademik, hariSekarang, tglSekarang, namaDosen, prodi, kelas, jumlahMhs,
+def createBeritaAcaraPage(contain, styles, tahunAkademik, hariSekarang, tglSekarang, kode_dosen, prodi, tipe_kelas, jumlahMhs,
                           jumlahHadir, jumlahTdkHadir, listMasukan, qrKm, qrWhiteImage, qrDosen, namaKm):
     contain.append(Image('logo_berita_acara_perwalian.PNG', 17.5 * cm, 4 * cm))
     contain.append(Spacer(1, .5 * cm))
@@ -365,8 +365,8 @@ def createBeritaAcaraPage(contain, styles, tahunAkademik, hariSekarang, tglSekar
     contain.append(Paragraph(text, styles["Justify"]))
     contain.append(Spacer(1, .5 * cm))
 
-    data = [['Nama Dosen Wali', ':', namaDosen],
-            ['Jurusan / Kelas', ':', f'{prodi} / {kelas}'],
+    data = [['Nama Dosen Wali', ':', ],
+            ['Jurusan / Kelas', ':', f'{prodi} / {tipe_kelas}'],
             ['Jumlah  Mahasiswa', ':', jumlahMhs],
             ['Jumlah yang hadir', ':', jumlahHadir],
             ['Jumlah yang tidak hadir', ':', jumlahTdkHadir],
@@ -398,7 +398,7 @@ def createBeritaAcaraPage(contain, styles, tahunAkademik, hariSekarang, tglSekar
         [Image(qrKm, 4 * cm, 4 * cm), Image(qrWhiteImage, 4 * cm, 4 * cm), Image(qrDosen, 4 * cm, 4 * cm)],
         [Paragraph(f'<font size="12"><u>{namaKm}</u></font>', styles["Center"]),
          Paragraph(f'<font size="12"></font>', styles["Center"]),
-         Paragraph(f'<font size="12"><u>{namaDosen}</u></font>', styles["Center"])],
+         Paragraph(f'<font size="12"><u>{kelas.getNamaDosenTanpaGelar(kode_dosen)}</u></font>', styles["Center"])],
     ]
 
     table = Table(data, [6.8 * cm, 6.8 * cm, 6.8 * cm], [.6 * cm, 4.5 * cm, 1 * cm])
@@ -411,7 +411,7 @@ def createBeritaAcaraPage(contain, styles, tahunAkademik, hariSekarang, tglSekar
     contain.append(PageBreak())
 
 
-def createAbsensiPage(contain, styles, namaDosen, prodi, kelas, listMahasiswa, qrWhiteImage, qrDosen):
+def createAbsensiPage(contain, styles, kode_dosen, prodi, tipe_kelas, listMahasiswa, qrWhiteImage, qrDosen):
     contain.append(Image('logo_absensi_perwalian.PNG', 17.5 * cm, 4 * cm))
     contain.append(Spacer(1, .5 * cm))
 
@@ -419,9 +419,9 @@ def createAbsensiPage(contain, styles, namaDosen, prodi, kelas, listMahasiswa, q
     contain.append(Paragraph(text, styles["Justify"]))
     contain.append(Spacer(1, .5 * cm))
 
-    data = [['NAMA DOSEN', ':', namaDosen],
+    data = [['NAMA DOSEN', ':', kelas.getNamaDosen(kode_dosen)],
             ['PROGRAM STUDI', ':', prodi],
-            ['KELAS', ':', kelas],
+            ['KELAS', ':', tipe_kelas],
             ]
     table = Table(data, [5 * cm, .5 * cm, 10.5 * cm], len(data) * [.6 * cm])
     table.setStyle(TableStyle([
@@ -458,7 +458,7 @@ def createAbsensiPage(contain, styles, namaDosen, prodi, kelas, listMahasiswa, q
         [Image(qrWhiteImage, 4 * cm, 4 * cm), Image(qrWhiteImage, 4 * cm, 4 * cm), Image(qrDosen, 4 * cm, 4 * cm)],
         [Paragraph(f'<font size="12"></font>', styles["Center"]),
          Paragraph(f'<font size="12"></font>', styles["Center"]),
-         Paragraph(f'<font size="12"><u>{namaDosen}</u></font>', styles["Center"])],
+         Paragraph(f'<font size="12"><u>{kelas.getNamaDosenTanpaGelar(kode_dosen)}</u></font>', styles["Center"])],
     ]
 
     table = Table(data, [6.8 * cm, 6.8 * cm, 6.8 * cm], [.6 * cm, .6 * cm, 4.5 * cm, 1 * cm])

@@ -6,6 +6,7 @@ import config
 import pymysql
 import requests
 
+from module import perwalian_selesai
 
 # def replymsg(driver, data):
 #     log.logSaveIteungStart(data)
@@ -465,7 +466,7 @@ def getNamaDosen(kodedosen):
         cur.execute(sql)
         rows = cur.fetchone()
         if rows is not None:
-            namadosen = rows[0]
+            namadosen = perwalian_selesai.capitalizeName(rows[0])
             gelar = rows[1]
             if gelar[0] == 'D' or gelar[0] == "I" or gelar[0] == 'i':
                 return gelar + namadosen
