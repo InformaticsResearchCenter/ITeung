@@ -61,7 +61,7 @@ def catatanToList(catatan):
     for i in catatan.split(', '):
         data_i = []
         data_i.append(f'{nomor_urut}.')
-        data_i.append(i)
+        data_i.append(f"{Paragraph(i)}")
         data.append(data_i)
         nomor_urut += 1
     return data
