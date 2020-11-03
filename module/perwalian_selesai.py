@@ -227,7 +227,7 @@ def replymsg(driver, data):
     if npm_km:
         dosen_data = getDosenDataDictionaryDump(kelas.getKodeDosen(data[0]))
         home_base_prodi = dosen_data['Homebase']
-        nama_dosen = kelas.getNamaDosen(dosen_data['Login'])
+        nama_dosen = capitalizeName(kelas.getNamaDosenTanpaGelar(dosen_data['Login']))
         # nama_kaprodi = kelas.getNamaDosen(bkd.getDosenIDfromNIPY(bkd.getNipyKaProdi(home_base_prodi)))
         # nama_deputi = kelas.getNamaDosen(bkd.getDosenIDfromNIPY(bkd.getNipyDeputi(9)))
         nama_prodi = kelas.getNamaProdiFromProdiID(home_base_prodi)['Nama']

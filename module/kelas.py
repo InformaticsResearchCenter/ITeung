@@ -472,6 +472,16 @@ def getNamaDosen(kodedosen):
             else:
                 return namadosen + ' ' + gelar
 
+def getNamaDosenTanpaGelar(kodedosen):
+    db = dbConnectSiap()
+    sql = "select Nama from simak_mst_dosen where Login = '{0}'".format(kodedosen)
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        rows = cur.fetchone()
+        if rows is not None:
+            return rows[0]
+        return None
 
 def getHadirAlias(time):
     db = dbConnect()
