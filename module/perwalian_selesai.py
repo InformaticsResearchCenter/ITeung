@@ -342,16 +342,16 @@ def mainPages(kode_dosen, prodi_id, nama_dosen, km_npm, nama_prodi, tipe_kelas, 
 
     doc.build(contain)
 
-    # bkd.mail(
-    #     kelas.getEmailDosen(kode_dosen),
-    #     f'alooooo {config.bot_name} kirim file Absensi Perwalian NICHHHHHHH',
-    #     f'Tolong dicek kembali yaaa datanya, dan jangan lupa buruann minta approvalnya ke KAPRODI dan DEPUTI yaa....',
-    #     bkd.getFilePath(
-    #         kelas.getEmailDosen(kode_dosen),
-    #         'surat_perwalian',
-    #         kelas.getTahunID()
-    #     )
-    # )
+    bkd.mail(
+        kelas.getEmailDosen(kode_dosen),
+        f'alooooo {config.bot_name} kirim file Absensi Perwalian NICHHHHHHH',
+        f'Tolong dicek kembali yaaa datanya, dan jangan lupa buruann minta approvalnya ke KAPRODI dan DEPUTI yaa....',
+        bkd.getFilePath(
+            kelas.getEmailDosen(kode_dosen),
+            'surat_perwalian',
+            kelas.getTahunID()
+        )
+    )
 
 
 def createBeritaAcaraPage(contain, styles, tahunAkademik, hariSekarang, tglSekarang, kode_dosen, prodi, tipe_kelas, jumlahMhs,
