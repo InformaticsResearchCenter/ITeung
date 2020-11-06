@@ -10,6 +10,7 @@ class Chatbot(object):
         self.msgcheck=''
         self.alscheck=''
         self.numcheck=''
+        wa.needChatClick(driver)
         while True:
             self.cekAndSendMessage(driver)
 

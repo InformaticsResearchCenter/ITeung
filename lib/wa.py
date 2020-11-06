@@ -12,7 +12,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from time import sleep
 from module import kelas
-import os, clipboard
+import os, clipboard, config
 
 
 def setProfile(profile_folder):
@@ -215,6 +215,18 @@ def getSenderAlias(driver, default_alias_number_index):
     except:
         senderAlias = ''
     return senderAlias
+
+def needChatClick(driver, status=config.NEED_CHAT_CLICK):
+    try:
+        if status:
+            driver.driver.find_elements_by_class_name('_2kHpK')[0].click()
+    except:
+        driver.get('https://web.whatsapp.com/send?phone=6285155494985&text=open+new+message')
+        sleep(10)
+        waitLogin(driver)
+        sleep(5)
+        sendMessage(driver)
+
 
 def getGroupName(driver):
     try:
