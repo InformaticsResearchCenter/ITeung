@@ -56,7 +56,7 @@ def tahun_id_check(tahunid):
 
 def insert_transkrip(data_krs_mahasiswa_dictionary):
     db=kelas.dbConnectSiap()
-    sql=f"INSERT INTO `wanda`.`simak_trn_transkrip`" \
+    sql=f"INSERT INTO `simpati`.`simak_trn_transkrip`" \
         f"(`KRSPRCID`, " \
         f"`KRSID`, " \
         f"`KHSID`, " \

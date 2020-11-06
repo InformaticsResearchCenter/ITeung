@@ -33,6 +33,8 @@ def getPesertaPerwalian(kode_dosen, tahun_angkatan, kelas_number):
         f'krs.kelas="{kelas_number}" ' \
         f'and ' \
         f'mst.PenasehatAkademik="{kode_dosen}" ' \
+        f'and ' \
+        f'mst.StatusMhswID = "A" ' \
         f'group by ' \
         f'mst.MhswID;'
     with db:
