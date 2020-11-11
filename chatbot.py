@@ -62,9 +62,10 @@ class Chatbot(object):
                     msgreply = message.newlineNormalize(msgreply)
                     redis_set_get.set(config.BOT_MANAGEMENT_NAME, msgreply, None)
                     msgreply = redis_set_get.get(config.BOT_MANAGEMENT_NAME)
-                    wa.copyToClipboard(msgreply)
+                    # wa.copyToClipboard(msgreply)
                     wa.clickChatBox(driver)
-                    wa.pasteMessage(driver)
+                    # wa.pasteMessage(driver)
+                    wa.typeMessage(driver, msgreply)
                     wa.sendMessage(driver)
                     del msgreply
                 except:
