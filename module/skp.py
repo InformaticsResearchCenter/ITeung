@@ -52,9 +52,10 @@ def replymsg(driver, data):
                 
                 tahunID = kelas.getTahunID()
                 namaMhs, prodiMhs, singkatan, prodiID, email = getMahasiswaByNpm(npm)
+                id_surat = checkApproveMhs(npm)
                 
-                if checkApproveMhs(npm):
-                    data = f"{npm};{singkatan};{email}"
+                if id_surat:
+                    data = f"{npm};{singkatan};{email};{id_surat}"
                     subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],data], cwd=config.cwd)
                     # wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
                     # wmsg = wmsg.replace('#EMAIL#', email)
@@ -82,10 +83,11 @@ def run(data):
     npm = data[0]
     singkatan = data[1].lower()
     email = data[2]
+    idSurat = data[3]
     
     year = datetime.datetime.now().year
     
-    df = pd.read_excel(f"./skpi/list-skpi/{singkatan}-{year}.xlsx")
+    df = pd.read_excel(f"./skp/list-skpi/{singkatan}-{year}.xlsx")
     listColumn = ["Nama Lengkap","Tempat, Tanggal Lahir", "NPM", "Tahun Masuk", "Tahun Lulus", "No. Ijazah", "Gelar"]
     dfIdentitas = df.loc[:, listColumn]
     identitas = dfIdentitas.loc[dfIdentitas["NPM"] == int(npm)].replace(np.NaN, "-").values.tolist()[0]
@@ -94,7 +96,7 @@ def run(data):
     dfCapaian = df.loc[:, listColumn]
     capaian = dfCapaian.loc[dfCapaian["NPM"] == int(npm)].replace(np.NaN, "-").values.tolist()[0]
     
-    makePage(npm, singkatan, email, identitas, capaian)
+    makePage(npm, singkatan, email, identitas, capaian, idSurat)
 
 colorTitle = colors.Color(red=(0/255),green=(112/255),blue=(192/255))
 colorHeader = colors.Color(red=(247/255),green=(150/255),blue=(70/255))
@@ -115,13 +117,13 @@ styleWrap.leading = 9.5
 
 def checkApproveMhs(npm):
     db=kelas.dbConnect()
-    sql=f"select npm, nama from skp_data where (ajukan is not null and ajukan <> '-') and (wadir1 is not null and wadir1 <> '-') and (direktur is not null and direktur <> '-') and npm = '{npm}'"
+    sql=f"select id from skp_data where (ajukan is not null and ajukan <> '-') and (wadir1 is not null and wadir1 <> '-') and (direktur is not null and direktur <> '-') and npm = '{npm}'"
     with db:
         cur=db.cursor()
         cur.execute(sql)
         row=cur.fetchone()
         if row:
-            return True
+            return row[0]
     return False
 
 def checkAjukanMhs(npm):
@@ -399,8 +401,9 @@ def pageSetup(canvas, doc):
 
     canvas.restoreState()
 
-def noSurat():
-    return Paragraph(f'<font size="10" color="{colorTitle}">Nomor : 073-1184104/ST-01/003/PPI19</font>', styles["Center"])
+
+def noSurat(npm, noIjazah, idSurat):
+    return Paragraph(f'<font size="10" color="{colorTitle}">Nomor : {idSurat.zfill(3)}-{npm}/{noIjazah}</font>', styles["Center"])
 
 def keteranganSurat():
     ptext = """
@@ -532,7 +535,8 @@ def ttdSurat(data):
         # ('INNERGRID', (0,0), (-1,-1), 2, colors.grey),
         # ('BOX', (0,0), (-1,-1), 2, colors.grey),         
         ('VALIGN',(0,0),(-1,-1),'MIDDLE'), 
-        ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+        ('ALIGN', (1,0), (-1,-1), 'CENTER'),
+        ('ALIGN', (0,0), (0,-1), 'RIGHT'),
     ]))
     return table
 
@@ -545,7 +549,8 @@ def columnTwoFirst(dataMhs, prodi, pathTTD):
     
     dataTTDDirektur = [
         ['', Paragraph(f'<font size="10">Bandung, {tglTTD}</font><br /><font size="10">Direktur Politeknik Pos Indonesia,</font>', styles["Center"])],
-        ['', Image(pathTTD, 3.2 * cm, 3.2 * cm)],
+        [Image(pathTTD, 3.2 * cm, 3.2 * cm),
+         Image("./skp/direktur.png", 5.2 * cm, 3.2 * cm)],
         ['', Paragraph(f'<font size="10"><b>{dirNama}</b></font><br /><font size="10"><b>NIK: {dirNik}</b></font>', styles["Center"])],
     ]
         
@@ -656,7 +661,8 @@ def columnTwoSecond(param3b, prodi, pathTTD):
     
     dataTTDWadir1 = [
         ['', Paragraph(f'<font size="10">Bandung, {tglTTD}</font><br /><font size="10">Wadir 1 Bidang Akademik,</font>', styles["Center"])],
-        ['', Image(pathTTD, 3.2 * cm, 3.2 * cm)],
+        [Image(pathTTD, 3.2 * cm, 3.2 * cm),
+         Image("./skp/wadir1.png", 5.2 * cm, 2.3 * cm)],
         ['', Paragraph(f'<font size="10"><b>{wadirNama}</b></font><br /><font size="10"><b>NIK: {wadirNik}</b></font>', styles["Center"])],
     ]
         
@@ -797,7 +803,7 @@ def makeHeader(contain):
     contain.append(Spacer(1, .1*cm))
     
 
-def makePage(npm, prodi, email, dataMhs, param3b):
+def makePage(npm, prodi, email, dataMhs, param3b, idSurat):
     
     filepath = f"./skp/skp-{prodi}/"
     filename = f"{npm}.pdf"
@@ -818,7 +824,7 @@ def makePage(npm, prodi, email, dataMhs, param3b):
     contain.append(Spacer(1, 1.4*cm))
     makeHeader(contain)
     
-    contain.append(noSurat())
+    contain.append(noSurat(npm, dataMhs[5], idSurat))
     contain.append(Spacer(1, .1*cm))
 
     contain.append(keteranganSurat())
