@@ -1,5 +1,11 @@
-from lib import wa, reply, message, log
+from lib import wa
+from lib import reply
+from lib import message
+from lib import log
+from lib import redis_set_get
+
 from importlib import import_module
+
 import config
 
 
@@ -10,17 +16,15 @@ class Chatbot(object):
         self.msgcheck=''
         self.alscheck=''
         self.numcheck=''
-        wa.needChatClick(driver)
         while True:
             self.cekAndSendMessage(driver)
 
     def cekAndSendMessage(self, driver):
         if config.useemulator:
             wa.restartMemu(wa.detectphoneNotConnected(driver))
-        wa.sendOutbox(driver)
+        # wa.sendOutbox(driver) is optional for bot management
         messageindex = config.message_wa_index
         alsandnumindex = config.default_alias_number_index
-        # for loop in range(wa.messageunread(driver)):
         try:
             wa.openMessage(driver)
             data = wa.getData(driver, message_wa_index=messageindex, default_alias_number_index=alsandnumindex)
@@ -34,7 +38,6 @@ class Chatbot(object):
             messageindex-=10
             alsandnumindex-=1
             msg=message.normalize(msg)
-            print(msg)
             msgs = list(msg.split(" "))
             if msg.find(config.bot_name) >= 0:
                 if len(msgs) == 1:
@@ -57,14 +60,15 @@ class Chatbot(object):
                 msgreply = msgreply.replace("#BOTNAME#", config.bot_name)
                 try:
                     msgreply = message.newlineNormalize(msgreply)
-                    # wa.typeAndSendMessage(driver, msgreply)
+                    redis_set_get.set(config.BOT_MANAGEMENT_NAME, msgreply, None)
+                    msgreply = redis_set_get.get(config.BOT_MANAGEMENT_NAME)
                     wa.copyToClipboard(msgreply)
                     wa.clickChatBox(driver)
                     wa.pasteMessage(driver)
                     wa.sendMessage(driver)
                     del msgreply
                 except:
-                    print("field reply not found!!")
+                    pass
 
         try:
             if self.msgcheck != msg or (self.numcheck != num and self.alscheck != als):
