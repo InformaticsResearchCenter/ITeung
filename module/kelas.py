@@ -468,10 +468,12 @@ def getNamaDosen(kodedosen):
         if rows is not None:
             namadosen = perwalian_selesai.capitalizeName(rows[0])
             gelar = rows[1]
-            if gelar[0] == 'D' or gelar[0] == "I" or gelar[0] == 'i':
-                return gelar + namadosen
-            else:
-                return namadosen + ' ' + gelar
+            if gelar:
+                if gelar[0] == 'D' or gelar[0] == "I" or gelar[0] == 'i':
+                    return gelar + namadosen
+                else:
+                    return namadosen + ' ' + gelar
+            return namadosen
 
 def getNamaDosenTanpaGelar(kodedosen):
     db = dbConnectSiap()
