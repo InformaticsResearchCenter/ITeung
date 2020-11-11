@@ -17,3 +17,5 @@ reportlab
 PyDrive
 authlib
 redis
+qrcode
+fpdf
