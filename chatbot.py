@@ -60,14 +60,15 @@ class Chatbot(object):
                 msgreply = msgreply.replace("#BOTNAME#", config.bot_name)
                 try:
                     msgreply = message.newlineNormalize(msgreply)
-                    redis_set_get.set(config.BOT_MANAGEMENT_NAME, msgreply, None)
-                    msgreply = redis_set_get.get(config.BOT_MANAGEMENT_NAME)
+                    wa.jsWriteAndSendFunction(driver, msgreply)
+                    # redis_set_get.set(config.BOT_MANAGEMENT_NAME, msgreply, None)
+                    # msgreply = redis_set_get.get(config.BOT_MANAGEMENT_NAME)
                     # wa.copyToClipboard(msgreply)
-                    wa.clickChatBox(driver)
+                    # wa.clickChatBox(driver)
                     # wa.pasteMessage(driver)
                     # wa.typeMessage(driver, msgreply)
-                    wa.chatReplaceWithJSDOM(driver, msgreply)
-                    wa.sendMessage(driver)
+                    # wa.chatReplaceWithJSDOM(driver, msgreply)
+                    # wa.sendMessage(driver)
                     # wa.typeAndSendMessage(driver, msgreply)
                     del msgreply
                 except:

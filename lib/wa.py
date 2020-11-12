@@ -256,3 +256,13 @@ def getMessage(driver, message_wa_index):
     except:
         message=''
     return message
+
+def jsWriteAndSendFunction(driver, msg):
+    js_function = '''
+        var input = document.querySelector('#main [contenteditable~=true]');
+        input.innerHTML = "%s";
+        input.dispatchEvent(new Event('input', {bubbles: true}));
+        var button = document.querySelector('button>span[data-icon="send"]').parentElement;
+        button.click();
+        ''' % msg
+    driver.execute_script(js_function)
