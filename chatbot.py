@@ -66,8 +66,9 @@ class Chatbot(object):
                     wa.clickChatBox(driver)
                     # wa.pasteMessage(driver)
                     # wa.typeMessage(driver, msgreply)
-                    # wa.sendMessage(driver)
-                    wa.typeAndSendMessage(driver, msgreply)
+                    wa.chatReplaceWithJSDOM(driver, msgreply)
+                    wa.sendMessage(driver)
+                    # wa.typeAndSendMessage(driver, msgreply)
                     del msgreply
                 except:
                     pass

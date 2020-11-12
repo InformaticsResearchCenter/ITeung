@@ -112,6 +112,10 @@ def openMessage(driver):
 def copyToClipboard(message):
     #commit
     clipboard.copy(message)
+    
+def chatReplaceWithJSDOM(driver, msg):
+    class_name="_3FRCZ"
+    driver.execute_script(f'document.getElementsByClassName("{class_name}")[1].innerHTML="{msg}"')
 
 def pasteMessage(driver):
     ActionChains(driver).key_down(Keys.CONTROL).send_keys("V").key_up(Keys.CONTROL).perform()
