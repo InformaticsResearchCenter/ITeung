@@ -26,8 +26,8 @@ def auth(data):
     return ret
 
 def replymsg(driver, data):
-    # wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
-    # wa.typeAndSendMessage(driver, wmsg)
+    wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
+    wa.typeAndSendMessage(driver, wmsg)
     num=data[0]
     msg=data[3]
     msg=message.normalize(msg)
