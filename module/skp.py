@@ -49,18 +49,18 @@ def replymsg(driver, data):
         try:
             if kelas.getNpmandNameMahasiswa(num):
                 npm, nama = kelas.getNpmandNameMahasiswa(num)
-                
+
                 tahunID = kelas.getTahunID()
                 namaMhs, prodiMhs, singkatan, prodiID, email = getMahasiswaByNpm(npm)
                 id_surat = checkApproveMhs(npm)
-                
+
                 if id_surat:
                     data = f"{npm};{singkatan};{email};{id_surat}"
                     subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],data], cwd=config.cwd)
-                    # wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
-                    # wmsg = wmsg.replace('#EMAIL#', email)
-                    # wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
-                    # wa.typeAndSendMessage(driver, wmsg)
+                    wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
+                    wmsg = wmsg.replace('#EMAIL#', email)
+                    wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
+                    wa.typeAndSendMessage(driver, wmsg)
                 else:
                     if checkAjukanMhs(npm):
                         ajukanSKPI(npm)
@@ -755,7 +755,7 @@ def sendEmail(email, fileName, path, mhs):
         sender_email = config.email_iteung
         receiver_email = email
         # print(email)
-        receiver_email = 'divakrishnam@yahoo.com'
+        # receiver_email = 'divakrishnam@yahoo.com'
         password = config.pass_iteung
 
         message = MIMEMultipart()
