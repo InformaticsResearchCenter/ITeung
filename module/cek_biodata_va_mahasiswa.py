@@ -220,11 +220,21 @@ def paymentSpp(npm):
     prodi_singkatan = app.getProdiSingkatanFromProdiID(kelas.getProdiIDwithStudentID(npm)).lower()
     tingkat = f"tk{int(datetime.now().strftime('%Y')) - int(kelas.getTahunAngkatanWithStudentID(npm)) + 1}"
     angkatan = kelas.getTahunAngkatanWithStudentID(npm)
+    payment_spp = getSPP(npm)
+    if angkatan == '2020':
+        return f'*DATA VIRTUAL ACCOUNT BNI SPP (Semester Ganjil 2020/2021)*\n\n' \
+                   f'*Kode Transaksi: {payment_spp["trx_id"]}*\n' \
+                   f'*Virtual Account: {payment_spp["virtual_account"]}*\n' \
+                   f'Status Virtual Account: Aktif\n' \
+                   f'Customer Name: {payment_spp["customer_name"]}\n' \
+                   f'Customer Email: {payment_spp["customer_email"]}\n' \
+                   f'Customer Phone Number: {payment_spp["customer_phone"]}\n' \
+                   f'Jumlah Tagihan: {app.floatToRupiah(float(payment_spp["trx_amount"]))}\n' \
+                   f'Mohon *lunasi tagihan sesuai nominal* diatas agar dapat *melaksanakan UTS* sesuai *syarat dan ketentuan* bidang keuangan'
     key = f'{prodi_singkatan}{tingkat}{angkatan}'
     ws = app.openfile().active
     biaya_pokok_spp = app.getDataDefault(key, ws)
     app.openfile().close()
-    payment_spp=getSPP(npm)
     try:
         if biaya_pokok_spp:
             biaya_pokok_spp=int(biaya_pokok_spp)
@@ -245,29 +255,18 @@ def paymentSpp(npm):
             potongan = int(biaya_pokok_spp) - int(payment_spp['trx_amount'])
             minimum_payment = (int(biaya_pokok_spp) - int(potongan)) * (75/100)
         if datetime.now() < payment_spp['expired_date']:
-            if angkatan == '2020':
-                msgreply = f'*DATA VIRTUAL ACCOUNT BNI SPP (Semester Ganjil 2020/2021)*\n\n' \
-                            f'*Kode Transaksi: {payment_spp["trx_id"]}*\n' \
-                            f'*Virtual Account: {payment_spp["virtual_account"]}*\n' \
-                            f'Status Virtual Account: Aktif\n' \
-                            f'Customer Name: {payment_spp["customer_name"]}\n' \
-                            f'Customer Email: {payment_spp["customer_email"]}\n' \
-                            f'Customer Phone Number: {payment_spp["customer_phone"]}\n' \
-                            f'Jumlah Tagihan: {app.floatToRupiah(float(payment_spp["trx_amount"]))}\n' \
-                            f'Mohon *lunasi tagihan sesuai nominal* diatas agar dapat *melaksanakan UTS* sesuai *syarat dan ketentuan* bidang keuangan'
-            else:
-                msgreply = f'*DATA VIRTUAL ACCOUNT BNI SPP (Semester Ganjil 2020/2021)*\n\n' \
-                           f'*Kode Transaksi: {payment_spp["trx_id"]}*\n' \
-                           f'*Virtual Account: {payment_spp["virtual_account"]}*\n' \
-                           f'Status Virtual Account: Aktif\n' \
-                           f'Customer Name: {payment_spp["customer_name"]}\n' \
-                           f'Customer Email: {payment_spp["customer_email"]}\n' \
-                           f'Customer Phone Number: {payment_spp["customer_phone"]}\n' \
-                           f'Biaya Paket SPP Per Semester: {app.floatToRupiah(float(biaya_pokok_spp))}\n' \
-                           f'Biaya Tunggakan SPP: {app.floatToRupiah(tunggakan)}\n' \
-                           f'Jumlah Tagihan: {app.floatToRupiah(float(payment_spp["trx_amount"]))}\n' \
-                           f'Biaya Minimal Pembayaran: {app.floatToRupiah(float(minimum_payment))}\n' \
-                           f'Batas KRS: 12 Oktober 2020 - 16 Oktober 2020\n\n'
+            msgreply = f'*DATA VIRTUAL ACCOUNT BNI SPP (Semester Ganjil 2020/2021)*\n\n' \
+                       f'*Kode Transaksi: {payment_spp["trx_id"]}*\n' \
+                       f'*Virtual Account: {payment_spp["virtual_account"]}*\n' \
+                       f'Status Virtual Account: Aktif\n' \
+                       f'Customer Name: {payment_spp["customer_name"]}\n' \
+                       f'Customer Email: {payment_spp["customer_email"]}\n' \
+                       f'Customer Phone Number: {payment_spp["customer_phone"]}\n' \
+                       f'Biaya Paket SPP Per Semester: {app.floatToRupiah(float(biaya_pokok_spp))}\n' \
+                       f'Biaya Tunggakan SPP: {app.floatToRupiah(tunggakan)}\n' \
+                       f'Jumlah Tagihan: {app.floatToRupiah(float(payment_spp["trx_amount"]))}\n' \
+                       f'Biaya Minimal Pembayaran: {app.floatToRupiah(float(minimum_payment))}\n' \
+                       f'Batas KRS: 12 Oktober 2020 - 16 Oktober 2020\n\n'
         else:
             msgreply = f'*DATA SPP TIDAK ADA*\n\n'
     except Exception as error:

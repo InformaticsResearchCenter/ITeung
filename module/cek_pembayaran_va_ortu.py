@@ -35,18 +35,21 @@ def replymsg(driver, data):
                 prodi_singkatan = app.getProdiSingkatanFromProdiID(kelas.getProdiIDwithStudentID(npm)).lower()
                 tingkat = f"tk{int(datetime.now().strftime('%Y')) - int(kelas.getTahunAngkatanWithStudentID(npm)) + 1}"
                 angkatan = kelas.getTahunAngkatanWithStudentID(npm)
-                key = f'{prodi_singkatan}{tingkat}{angkatan}'
-                default_amount_payment = app.getDataDefault(key, ws)
-                if int(trx_amount) > int(default_amount_payment):
-                    amount_tunggakan = int(trx_amount) - int(default_amount_payment)
-                    transfer_spp = int(cumulative_payment_amount) - int(amount_tunggakan)
-                    percentage = float(int(transfer_spp) / int(default_amount_payment)) * 100
+                if angkatan == '2020':
+                    pass
                 else:
-                    potongan = int(default_amount_payment) - int(trx_amount)
-                    cumulative_payment_amount += potongan
-                    transfer_spp = int(cumulative_payment_amount)
-                    percentage = float(int(transfer_spp) / int(default_amount_payment)) * 100
-                app.openfile().close()
+                    key = f'{prodi_singkatan}{tingkat}{angkatan}'
+                    default_amount_payment = app.getDataDefault(key, ws)
+                    if int(trx_amount) > int(default_amount_payment):
+                        amount_tunggakan = int(trx_amount) - int(default_amount_payment)
+                        transfer_spp = int(cumulative_payment_amount) - int(amount_tunggakan)
+                        percentage = float(int(transfer_spp) / int(default_amount_payment)) * 100
+                    else:
+                        potongan = int(default_amount_payment) - int(trx_amount)
+                        cumulative_payment_amount += potongan
+                        transfer_spp = int(cumulative_payment_amount)
+                        percentage = float(int(transfer_spp) / int(default_amount_payment)) * 100
+                    app.openfile().close()
             if angkatan == '2020':
                 msgreply += f'Jenis Pembayaran: *{judul_transaksi}*\n' \
                             f'Kode Transaksi: *{kode_transaksi}*\n' \
