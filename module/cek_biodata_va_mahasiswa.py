@@ -238,12 +238,12 @@ def paymentSpp(npm):
         if int(payment_spp['trx_amount']) > int(biaya_pokok_spp):
             tunggakan = float(int(payment_spp['trx_amount']) - int(biaya_pokok_spp))
             amount_tunggakan = int(payment_spp["trx_amount"]) - int(biaya_pokok_spp)
-            fifty_percent_default_payment = int(biaya_pokok_spp) / (75/100)
+            fifty_percent_default_payment = int(biaya_pokok_spp) * (75/100)
             minimum_payment = int(amount_tunggakan) + int(fifty_percent_default_payment)
         else:
             tunggakan = float(0)
             potongan = int(biaya_pokok_spp) - int(payment_spp['trx_amount'])
-            minimum_payment = (int(biaya_pokok_spp) - int(potongan)) / (75/100)
+            minimum_payment = (int(biaya_pokok_spp) - int(potongan)) * (75/100)
         if datetime.now() < payment_spp['expired_date']:
             msgreply = f'*DATA VIRTUAL ACCOUNT BNI SPP (Semester Ganjil 2020/2021)*\n\n' \
                         f'*Kode Transaksi: {payment_spp["trx_id"]}*\n' \
