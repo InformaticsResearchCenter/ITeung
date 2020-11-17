@@ -230,7 +230,7 @@ def paymentSpp(npm):
                    f'Customer Email: {payment_spp["customer_email"]}\n' \
                    f'Customer Phone Number: {payment_spp["customer_phone"]}\n' \
                    f'Jumlah Tagihan: {app.floatToRupiah(float(payment_spp["trx_amount"]))}\n' \
-                   f'Mohon *lunasi tagihan sesuai nominal* diatas agar dapat *melaksanakan UTS* sesuai *syarat dan ketentuan* bidang keuangan'
+                   f'Mohon *lunasi tagihan sesuai nominal* diatas agar dapat *melaksanakan UTS* sesuai *syarat dan ketentuan* bidang keuangan\n\n'
     key = f'{prodi_singkatan}{tingkat}{angkatan}'
     ws = app.openfile().active
     biaya_pokok_spp = app.getDataDefault(key, ws)
