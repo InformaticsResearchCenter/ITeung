@@ -53,7 +53,7 @@ def replymsg(driver, data):
                   f'Jumlah Transfer: *{app.floatToRupiah(float(payment_amount))}*\n' \
                   f'Total Transfer: *{app.floatToRupiah(float(cumulative_payment_amount))}*\n' \
                   f'Tanggal dan Jam Transfer: *{datetime_payment}*\n' \
-                  f'Persentase Pembayaran SPP: {round(percentage, 2)}%\n\n'
+                  f'Persentase Pembayaran SPP: {round(percentage)}%\n\n'
     return msgreply
 
 def getDataPembayaran(trx_id):
