@@ -71,6 +71,8 @@ def replymsg(driver, data):
         prodi_singkatan = app.getProdiSingkatanFromProdiID(kelas.getProdiIDwithStudentID(npm)).lower()
         tingkat = f"tk{int(datetime.now().strftime('%Y')) - int(kelas.getTahunAngkatanWithStudentID(npm)) + 1}"
         angkatan = kelas.getTahunAngkatanWithStudentID(npm)
+        if str(angkatan) == '2020':
+            return f'Mohon maaf untuk angkatan {angkatan}, sementara waktu verifikasi keuangan *BELUM* dapat dilakukan silahkan *VERIFIKASI KEMBALI SETELAH* tanggal *4 Desember 2020*.'
         key = f'{prodi_singkatan}{tingkat}{angkatan}'
         default_amount_payment = app.getDataDefault(key, ws)
         if default_amount_payment:

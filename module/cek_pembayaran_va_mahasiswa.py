@@ -1,6 +1,5 @@
 from module import kelas
 from module import va_parent
-from module import verifikasi_va
 
 from datetime import datetime
 
@@ -45,15 +44,26 @@ def replymsg(driver, data):
                 transfer_spp = int(cumulative_payment_amount)
                 percentage = float(int(transfer_spp) / int(default_amount_payment)) * 100
             app.openfile().close()
-        msgreply+=f'Jenis Pembayaran: *{judul_transaksi}*\n' \
-                  f'Kode Transaksi: *{kode_transaksi}*\n' \
-                  f'Virtual Account: *{virtual_account}*\n' \
-                  f'Nama Pelanggan: *{customer_name}*\n' \
-                  f'Jumlah Yang Harus Dibayar: *{app.floatToRupiah(float(trx_amount))}*\n' \
-                  f'Jumlah Transfer: *{app.floatToRupiah(float(payment_amount))}*\n' \
-                  f'Total Transfer: *{app.floatToRupiah(float(cumulative_payment_amount))}*\n' \
-                  f'Tanggal dan Jam Transfer: *{datetime_payment}*\n' \
-                  f'Persentase Pembayaran SPP: {round(percentage)}%\n\n'
+        if angkatan == '2020':
+            msgreply+=f'Jenis Pembayaran: *{judul_transaksi}*\n' \
+                      f'Kode Transaksi: *{kode_transaksi}*\n' \
+                      f'Virtual Account: *{virtual_account}*\n' \
+                      f'Nama Pelanggan: *{customer_name}*\n' \
+                      f'Jumlah Yang Harus Dibayar: *{app.floatToRupiah(float(trx_amount))}*\n' \
+                      f'Jumlah Transfer: *{app.floatToRupiah(float(payment_amount))}*\n' \
+                      f'Total Transfer: *{app.floatToRupiah(float(cumulative_payment_amount))}*\n' \
+                      f'Tanggal dan Jam Transfer: *{datetime_payment}*\n' \
+
+        else:
+            msgreply += f'Jenis Pembayaran: *{judul_transaksi}*\n' \
+                        f'Kode Transaksi: *{kode_transaksi}*\n' \
+                        f'Virtual Account: *{virtual_account}*\n' \
+                        f'Nama Pelanggan: *{customer_name}*\n' \
+                        f'Jumlah Yang Harus Dibayar: *{app.floatToRupiah(float(trx_amount))}*\n' \
+                        f'Jumlah Transfer: *{app.floatToRupiah(float(payment_amount))}*\n' \
+                        f'Total Transfer: *{app.floatToRupiah(float(cumulative_payment_amount))}*\n' \
+                        f'Tanggal dan Jam Transfer: *{datetime_payment}*\n' \
+                        f'Persentase Pembayaran SPP: {round(percentage)}%\n\n'
     return msgreply
 
 def getDataPembayaran(trx_id):
