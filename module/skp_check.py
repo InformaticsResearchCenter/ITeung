@@ -11,8 +11,8 @@ def auth(data):
     return ret
 
 def replymsg(driver, data):
-    # wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
-    # wa.typeAndSendMessage(driver, wmsg)
+    wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
+    wa.typeAndSendMessage(driver, wmsg)
     num = numbers.normalize(data[0])
     kodeDosen = kelas.getKodeDosen(num)
     
