@@ -119,11 +119,13 @@ def run(data):
     krs_to_transkrip(data)
 
 def replymsg(driver, data):
+    data='|'.join(data)
     subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0], data], cwd=config.cwd)
     return f'okee tungguin bentar yaa, nanti {config.bot_name} sampein hasilnya'
 
 def krs_to_transkrip(data):
     try:
+        data=data.split('|')
         tahun_id = find_tahun_id_from_message(message.normalize(data[3]))
         if tahun_id:
             tahun_id = tahun_id[0]
