@@ -73,7 +73,7 @@ def restartMemu(ret):
 def waitLogin(driver):
     wait = WebDriverWait(driver, 600)
     retryNowClick(driver)
-    wait.until(EC.presence_of_element_located((By.CLASS_NAME, "_3BDr5")))
+    wait.until(EC.presence_of_element_located((By.CLASS_NAME, "_2O84H")))
 
 def typeAndSendMessage(driver, message):
     messages = message.split("\n")
