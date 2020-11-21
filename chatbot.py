@@ -13,6 +13,7 @@ class Chatbot(object):
     def __init__(self):
         driver = wa.setProfile(config.profile_folder)
         wa.loginWA(driver)
+        wa.needChatClick(driver)
         self.msgcheck=''
         self.alscheck=''
         self.numcheck=''
@@ -64,6 +65,7 @@ class Chatbot(object):
                     wa.copyToClipboard(msgreply)
                     wa.clickChatBox(driver)
                     wa.pasteMessage(driver)
+                    wa.sendMessage(driver)
                     del msgreply
                 except:
                     pass

@@ -193,7 +193,7 @@ def getSenderAlias(driver, default_alias_number_index):
 def needChatClick(driver, status=config.NEED_CHAT_CLICK):
     try:
         if status:
-            driver.driver.find_elements_by_class_name('_2kHpK')[0].click()
+            driver.driver.find_elements_by_class_name('_1C6Zl')[0].click()
     except:
         driver.get('https://web.whatsapp.com/send?phone=6285155494985&text=open+new+message')
         sleep(10)
