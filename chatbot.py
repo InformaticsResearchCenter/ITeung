@@ -60,8 +60,10 @@ class Chatbot(object):
                 msgreply = msgreply.replace("#BOTNAME#", config.bot_name)
                 try:
                     msgreply = message.newlineNormalize(msgreply)
-                    # wa.jsWriteAndSendFunction(driver, msgreply)
-                    wa.typeAndSendMessage(driver, msgreply)
+                    # wa.typeAndSendMessage(driver, msgreply)
+                    wa.copyToClipboard(msgreply)
+                    wa.clickChatBox(driver)
+                    wa.pasteMessage(driver)
                     del msgreply
                 except:
                     pass

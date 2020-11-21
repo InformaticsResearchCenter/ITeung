@@ -16,16 +16,10 @@ import os, clipboard, config
 
 
 def setProfile(profile_folder):
-    #chrome
     options = webdriver.ChromeOptions()
-    #firefox
-    #options = webdriver.FirefoxOptions()
     set_dir = '--user-data-dir='+profile_folder
     options.add_argument(set_dir)
-    #chrome
     driver = webdriver.Chrome(chrome_options=options)
-    #firefox
-    #driver = webdriver.Firefox(firefox_options=options)
     return driver
 
 def loginWA(driver):
@@ -42,7 +36,7 @@ def detectphoneNotConnected(driver):
 
 def arrowToGoDown(driver):
     try:
-        driver.find_element_by_xpath('/html/body/div[1]/div/div/div[4]/div/div[3]/div/span[2]/div').click()
+        driver.find_element_by_class_name('_3_BId').click()
     except:
         pass
 
@@ -50,7 +44,7 @@ def readMore(driver):
     try:
         driver.find_element_by_class_name('_2kMJX').click()
     except:
-        print('no read more')
+        pass
 
 def retryNowClick(driver):
     retry = True
@@ -108,7 +102,7 @@ def copyToClipboard(message):
     clipboard.copy(message)
 
 def pasteMessage(driver):
-    ActionChains(driver).key_down(Keys.CONTROL).send_keys("V").key_up(Keys.CONTROL).perform()
+    ActionChains(driver).key_down(Keys.CONTROL).send_keys("v").key_up(Keys.CONTROL).perform()
 
 def getData(driver, message_wa_index, default_alias_number_index):
     data = []
