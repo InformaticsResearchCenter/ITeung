@@ -162,7 +162,7 @@ def mainPages(npm = None, prodi = None, email=None):
         # print(dfNomor.loc[dfNomor["NPM"] == int(npm)])
         nomorA = dfNomor.loc[dfNomor["NPM"] == int(npm)].values.tolist()[0][0]
         
-        tanggalBerlaku = "23 November 2020"
+        tanggalBerlaku = "23 Desember 2020"
         now = datetime.datetime.now()
         tanggalSurat = f"{now.day} {convertMonth(str(now.month))} {now.year}"
         
