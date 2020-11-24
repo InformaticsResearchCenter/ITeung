@@ -16,16 +16,10 @@ import os, clipboard, config
 
 
 def setProfile(profile_folder):
-    #chrome
     options = webdriver.ChromeOptions()
-    #firefox
-    #options = webdriver.FirefoxOptions()
     set_dir = '--user-data-dir='+profile_folder
     options.add_argument(set_dir)
-    #chrome
     driver = webdriver.Chrome(chrome_options=options)
-    #firefox
-    #driver = webdriver.Firefox(firefox_options=options)
     return driver
 
 def loginWA(driver):
@@ -42,24 +36,23 @@ def detectphoneNotConnected(driver):
 
 def arrowToGoDown(driver):
     try:
-        driver.find_element_by_class_name('RbeWt').click()
+        driver.find_element_by_class_name('_3_BId').click()
     except:
-        print('arrow go down not work')
+        pass
 
 def readMore(driver):
     try:
-        driver.find_element_by_class_name('_2spA0').click()
+        driver.find_element_by_class_name('_2kMJX').click()
     except:
-        print('no read more')
+        pass
 
-#fix 32
 def retryNowClick(driver):
     retry = True
     wait = WebDriverWait(driver, 600)
-    wait.until(EC.invisibility_of_element_located((By.CLASS_NAME, 'Pg7Si')))
+    wait.until(EC.invisibility_of_element_located((By.CLASS_NAME, '_2XERB')))
     while retry:
         try:
-            driver.find_element_by_class_name('PNlAR').click
+            driver.find_elements_by_class_name('_2xUEC')[1].click
         except:
             retry=False
 
@@ -72,11 +65,9 @@ def restartMemu(ret):
     return ret
 
 def waitLogin(driver):
-    target = '"_1QUKR"'
-    x_arg = '//div[contains(@class, ' + target + ')]'
     wait = WebDriverWait(driver, 600)
     retryNowClick(driver)
-    wait.until(EC.presence_of_element_located((By.CLASS_NAME, "_1QUKR")))
+    wait.until(EC.presence_of_element_located((By.CLASS_NAME, "_2O84H")))
 
 def typeAndSendMessage(driver, message):
     messages = message.split("\n")
@@ -100,42 +91,21 @@ def clickChatBox(driver):
 def openMessage(driver):
     arrowToGoDown(driver)
     try:
-        newnotifelement = driver.find_elements_by_class_name("_31gEB")[0]
-        # action=ActionChains(driver)
-        # action.move_to_element_with_offset(to_element=newnotifelement, xoffset=-20, yoffset=0).double_click().perform()
+        newnotifelement = driver.find_elements_by_class_name("VOr2j")[0]
         newnotifelement.click()
         newnotifelement.click()
         newnotifelement.click()
     except:
-        print('no notification')
+        pass
 
 def copyToClipboard(message):
-    #commit
     clipboard.copy(message)
-    
-def chatReplaceWithJSDOM(driver, msg):
-    class_name="_3FRCZ"
-    driver.execute_script(f'document.getElementsByClassName("{class_name}")[1].innerHTML="{msg}"')
 
 def pasteMessage(driver):
-    ActionChains(driver).key_down(Keys.CONTROL).send_keys("V").key_up(Keys.CONTROL).perform()
-
-def messageunread(driver):
-    try:
-        return int(driver.find_elements_by_class_name("_31gEB")[0].text)
-    except:
-        return 1
-
-def messageReply(driver, default_alias_number_index):
-    classvalue=driver.find_elements_by_xpath('/html/body/div[1]/div/div/div[4]/div/div[3]/div/div/div[3]/div')[-1].get_attribute('class')
-    if '_1T1d2' in classvalue:
-        default_alias_number_index-=1
-    else:
-        default_alias_number_index-=0
+    ActionChains(driver).key_down(Keys.CONTROL).send_keys("v").key_up(Keys.CONTROL).perform()
 
 def getData(driver, message_wa_index, default_alias_number_index):
     data = []
-    # default_alias_number_index=messageReply(driver, default_alias_number_index)
     data.append(getSenderNumber(driver, default_alias_number_index))
     data.append(getGroupName(driver))
     data.append(getSenderAlias(driver, default_alias_number_index))
@@ -169,7 +139,7 @@ def sendOutbox(driver):
             waitLogin(driver)
             try:
                 sleep(2)
-                driver.find_element_by_class_name('_9a59P')
+                driver.find_element_by_class_name('_2fuxX')
                 print(f'phone number invalid {nomortujuan}')
                 deleteOutbox(id=data[0])
                 driver.get("https://web.whatsapp.com/")
@@ -215,7 +185,7 @@ def deleteOutbox(id):
     
 def getSenderAlias(driver, default_alias_number_index):
     try:
-        senderAlias = driver.find_elements_by_class_name("NRCvf")[default_alias_number_index].text
+        senderAlias = driver.find_elements_by_class_name("_2KXjI")[default_alias_number_index].text
     except:
         senderAlias = ''
     return senderAlias
@@ -223,7 +193,7 @@ def getSenderAlias(driver, default_alias_number_index):
 def needChatClick(driver, status=config.NEED_CHAT_CLICK):
     try:
         if status:
-            driver.driver.find_elements_by_class_name('_2kHpK')[0].click()
+            driver.driver.find_elements_by_class_name('_1C6Zl')[0].click()
     except:
         driver.get('https://web.whatsapp.com/send?phone=6285155494985&text=open+new+message')
         sleep(10)
@@ -241,7 +211,7 @@ def getGroupName(driver):
 
 def getSenderNumber(driver, default_alias_number_index):
     try:
-        senderNumber = driver.find_elements_by_class_name("_3UUTc")[default_alias_number_index].text
+        senderNumber = driver.find_elements_by_class_name("_1o4HO")[default_alias_number_index].text
     except:
         try:
             senderNumber = driver.find_element_by_xpath("/html/body/div[1]/div/div/div[4]/div/header/div[2]/div[1]/div/span").text
@@ -259,10 +229,12 @@ def getMessage(driver, message_wa_index):
 
 def jsWriteAndSendFunction(driver, msg):
     js_function = '''
-        var input = document.querySelector('#main [contenteditable~=true]');
-        input.innerHTML = "%s";
-        input.dispatchEvent(new Event('input', {bubbles: true}));
-        var button = document.querySelector('button>span[data-icon="send"]').parentElement;
-        button.click();
+        setTimeout(function() {
+            var input = document.querySelector('#main [contenteditable~=true]');
+            input.innerHTML = "%s";
+            input.dispatchEvent(new Event('input', {bubbles: true}));
+            var button = document.querySelector('button>span[data-icon="send"]').parentElement;
+            button.click();
+        }, 0);
         ''' % msg
     driver.execute_script(js_function)

@@ -13,6 +13,7 @@ class Chatbot(object):
     def __init__(self):
         driver = wa.setProfile(config.profile_folder)
         wa.loginWA(driver)
+        wa.needChatClick(driver)
         self.msgcheck=''
         self.alscheck=''
         self.numcheck=''
@@ -60,16 +61,11 @@ class Chatbot(object):
                 msgreply = msgreply.replace("#BOTNAME#", config.bot_name)
                 try:
                     msgreply = message.newlineNormalize(msgreply)
-                    wa.jsWriteAndSendFunction(driver, msgreply)
-                    # redis_set_get.set(config.BOT_MANAGEMENT_NAME, msgreply, None)
-                    # msgreply = redis_set_get.get(config.BOT_MANAGEMENT_NAME)
-                    # wa.copyToClipboard(msgreply)
-                    # wa.clickChatBox(driver)
-                    # wa.pasteMessage(driver)
-                    # wa.typeMessage(driver, msgreply)
-                    # wa.chatReplaceWithJSDOM(driver, msgreply)
-                    # wa.sendMessage(driver)
                     # wa.typeAndSendMessage(driver, msgreply)
+                    wa.copyToClipboard(msgreply)
+                    wa.clickChatBox(driver)
+                    wa.pasteMessage(driver)
+                    wa.sendMessage(driver)
                     del msgreply
                 except:
                     pass
