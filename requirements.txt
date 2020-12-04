@@ -16,3 +16,5 @@ redis
 qrcode
 fpdf
 httplib2
+openpyxl
+testresources==2.0.1
