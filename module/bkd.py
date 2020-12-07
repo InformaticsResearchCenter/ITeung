@@ -831,7 +831,7 @@ def makePDFandSend(num):
                     else:
                         ranger = 2
                     
-                    for i in range(2):
+                    for i in range(ranger):
                         if i == 0:
                             pertemuan = countPertemuan(presensidosens1)
                             pdfpertemuan = ['1', '2', '3', '4', '5', '6', '7']
