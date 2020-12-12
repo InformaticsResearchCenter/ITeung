@@ -1,11 +1,7 @@
-#cmake
-#dlib
-#opencv-python
 gspread
 selenium
 oauth2client
 numpy
-#face_recognition
 random2
 googletrans
 pymysql==0.9.3
@@ -17,3 +13,8 @@ reportlab
 PyDrive
 authlib
 redis
+qrcode
+fpdf
+httplib2
+openpyxl
+testresources==2.0.1

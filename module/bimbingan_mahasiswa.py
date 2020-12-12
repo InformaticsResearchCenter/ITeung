@@ -1,8 +1,19 @@
-from lib import wa, reply, message
+from lib import wa
+from lib import reply
+from lib import message
+
 from module import kelas
-from Crypto.Cipher import AES
+
 from datetime import datetime
-import os, config
+
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad
+
+from base64 import b64encode
+
+import os
+import config
+import json
 
 def auth(data):
     if kelas.getNpmandNameMahasiswa(data[0]) == None:
@@ -16,39 +27,32 @@ def replymsg(driver, data):
     wa.typeAndSendMessage(driver, wmsg)
     msg=data[3]
     msg=message.normalize(msg)
-    successsplit=''
     try:
         tipe_bimbingan=msg.split(' bimbingan ')[1].split(' sudah dikerjakan')[0]
         studentid=kelas.getNpmandNameMahasiswa(data[0])[0]
-        # topik=msg.split('topik ')[1].split(' nilai')[0].replace(' ', '%20')
-        # pertemuan=msg.split('pertemuan ')[1].split(' nilai')[0]
         target_selesai = msg.split('sudah dikerjakan ')[1].split(' pekerjaan selanjutnya')[0].replace(' ', '%20')
         terget_selanjutnya = msg.split('pekerjaan selanjutnya ')[1].split(' nilai')[0].replace(' ', '%20')
         nilai=msg.split('nilai ')[1]
     except:
-        successsplit='error'
-    if successsplit == 'error':
-        msgreply='wahh salah keyword bosqqq'
-    else:
-        if tipeSwitcher(tipe_bimbingan):
-            datenow = datetime.date(datetime.now()).strftime('%d%m%Y')
-            hari = datetime.now().strftime('%A')
-            hari = hariSwitcher(hari)
-            obj = AES.new(config.key, AES.MODE_CBC, config.iv)
-            cp = obj.encrypt(studentid+datenow+hari)
-            passcode=cp.hex()
-            msgreply='Mohon untuk klik link berikut untuk konfirmasi bimbingan:\n\nhttps://api.whatsapp.com/send?phone={nomoriteung}&text=iteung%20input%20bimbingan%20{tipebimbingan}%20{npm}%0Asudah%20dikerjakan%20{targetselesai}%0Apekerjaan%20selanjutnya%20{targetselanjutnya}%0Anilai%20{nilai}%0Apasscode%20{passcode}'.format(
-                nomoriteung=config.nomor_iteung,
-                tipebimbingan=tipe_bimbingan,
-                npm=studentid,
-                nilai=nilai,
-                passcode=passcode,
-                targetselesai=target_selesai,
-                targetselanjutnya=terget_selanjutnya
-            )
-        else:
-            msgreply='tuh salah nih tipe bimbingannya coba di cek lagi yaa qaqa ehee.....'
-    return msgreply
+        return 'duh salah keyword nih bosqqqq'
+    if tipeSwitcher(tipe_bimbingan):
+        datenow = datetime.date(datetime.now()).strftime('%d%m%Y')
+        hari = datetime.now().strftime('%A')
+        hari = hariSwitcher(hari)
+        data=bytes(f'{studentid}{datenow}{hari}', 'utf-8')
+        passcode = encryptData(data)
+        return f'Mohon untuk klik link berikut untuk konfirmasi bimbingan:\n\nhttps://api.whatsapp.com/send?phone={config.nomor_iteung}&text=iteung%20input%20bimbingan%20{tipe_bimbingan}%20{studentid}%0Asudah%20dikerjakan%20{target_selesai}%0Apekerjaan%20selanjutnya%20{terget_selanjutnya}%0Anilai%20{nilai}%0Apasscode%20{passcode["ciphertext"].replace("+", "plussign")}%0Aivcode%20{passcode["iv"].replace("+", "plussign")}'
+    return 'duh salah nih tipe bimbingannya coba di cek lagi yaa qaqa ehee.....'
+
+def encryptData(data):
+    key = config.key_bimbingan
+    cipher = AES.new(key, AES.MODE_CBC)
+    ct_bytes = cipher.encrypt(pad(data, AES.block_size))
+    iv = b64encode(cipher.iv).decode('utf-8')
+    ct = b64encode(ct_bytes).decode('utf-8')
+    result = json.dumps({'iv': iv, 'ciphertext': ct})
+    result_json = json.loads(result)
+    return result_json
 
 def hariSwitcher(hari):
     switcher = {

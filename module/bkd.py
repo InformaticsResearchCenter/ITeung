@@ -825,7 +825,13 @@ def makePDFandSend(num):
                     studentid, studentname = getandsetStudentIDandStudentNAME(jadwalid[0])
                     presensidosens1 = getPresensiDosen(jadwalid[0], 0, 8)
                     presensidosens2 = getPresensiDosen(jadwalid[0], 7, 15)
-                    for i in range(2):
+                    
+                    if presensidosens2 == ():
+                        ranger = 1
+                    else:
+                        ranger = 2
+                    
+                    for i in range(ranger):
                         if i == 0:
                             pertemuan = countPertemuan(presensidosens1)
                             pdfpertemuan = ['1', '2', '3', '4', '5', '6', '7']
