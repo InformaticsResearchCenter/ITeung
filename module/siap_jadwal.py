@@ -197,6 +197,7 @@ def getJadwalData(dosenID, tahun, program):
         WHEN j.ProdiID ='.44.' THEN 'D4 Manajemen Perusahaan'
         WHEN j.ProdiID ='.53.' THEN 'D3 Logistik Bisnis'
         WHEN j.ProdiID ='.54.' THEN 'D4 Logistik Bisnis'
+        WHEN j.ProdiID ='.93.' THEN 'D4 Logistik Niaga'
         END AS namaprodi
         from simak_trn_jadwal j, simak_mst_dosen d, simak_mst_matakuliah m,  simak_mst_tahun t, simak_mst_prodi pr
         where j.MKID=m.MKID and j.DosenID=d.Login and j.DosenID='"""+dosenID+"""' and j.TahunID='"""+tahun+"""' and t.ProgramID='"""+program+"""' and m.ProdiID = pr.ProdiID group by j.JadwalID;

@@ -51,6 +51,7 @@ def getJadwalData(nohp, jenis):
             WHEN j.ProdiID ='.44.' THEN 'D4 Manajemen Perusahaan'
             WHEN j.ProdiID ='.53.' THEN 'D3 Logistik Bisnis'
             WHEN j.ProdiID ='.54.' THEN 'D4 Logistik Bisnis'
+            WHEN j.ProdiID ='.93.' THEN 'D4 Logistik Niaga'
             END AS namaprodi, CASE
             WHEN j.NamaKelas =1 THEN 'A'
             WHEN j.NamaKelas =2 THEN 'B'
@@ -82,6 +83,7 @@ def getJadwalData(nohp, jenis):
         WHEN j.ProdiID ='.44.' THEN 'D4 Manajemen Perusahaan'
         WHEN j.ProdiID ='.53.' THEN 'D3 Logistik Bisnis'
         WHEN j.ProdiID ='.54.' THEN 'D4 Logistik Bisnis'
+        WHEN j.ProdiID ='.93.' THEN 'D4 Logistik Niaga'
         END AS namaprodi, CASE
         WHEN j.NamaKelas =1 THEN 'A'
         WHEN j.NamaKelas =2 THEN 'B'
