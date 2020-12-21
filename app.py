@@ -50,7 +50,7 @@ def insertnewKHS(npm, tahunid, prodiid, tipesemester, biaya, percentage):
 
 def updateBiayaKHS(npm, tahunid, biaya, percentage):
     db=kelas.dbConnectSiap()
-    sql=f"UPDATE simak_trn_khs SET Biaya={biaya} WHERE MhswID={npm} and TahunID={tahunid} and StatusBayar={percentage}"
+    sql=f"UPDATE simak_trn_khs SET Biaya={biaya}, StatusBayar={percentage} WHERE MhswID={npm} and TahunID={tahunid}"
     with db:
         cur=db.cursor()
         cur.execute(sql)
