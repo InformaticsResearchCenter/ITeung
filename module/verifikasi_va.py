@@ -102,9 +102,10 @@ def replymsg(driver, data):
             transfer_spp = int(cumulative_payment_amount)
             percentage = int(float(int(transfer_spp) / int(default_amount_payment)) * 100)
         if percentage >= 75 and percentage <= 100:
-            percentage = 75
             if percentage == 100:
                 percentage = 100
+            else:
+                percentage = 75
         else:
             percentage = 0
         app.openfile().close()
