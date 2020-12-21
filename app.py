@@ -41,16 +41,16 @@ def dbConnectPMB():
     db=pymysql.connect(config.db_host_pmb, config.db_username_pmb, config.db_password_pmb, config.db_name_pmb)
     return db
 
-def insertnewKHS(npm, tahunid, prodiid, tipesemester, biaya):
+def insertnewKHS(npm, tahunid, prodiid, tipesemester, biaya, percentage):
     db=kelas.dbConnectSiap()
-    sql=f"INSERT INTO simak_trn_khs (KHSID,TahunID,ProdiID,KodeID,ProgramID,MhswID,StatusMhswID,sesi,MaxSKS,Cetak,Biaya) VALUES (DEFAULT,'{tahunid}','{prodiid} ','YPBPI','REG','{npm}','A','{tipesemester}','24','Y', {biaya});"
+    sql=f"INSERT INTO simak_trn_khs (KHSID,TahunID,ProdiID,KodeID,ProgramID,MhswID,StatusMhswID,sesi,MaxSKS,Cetak,Biaya,StatusBayar) VALUES (DEFAULT,'{tahunid}','{prodiid} ','YPBPI','REG','{npm}','A','{tipesemester}','24','Y', {biaya}, {percentage});"
     with db:
         cur=db.cursor()
         cur.execute(sql)
 
-def updateBiayaKHS(npm, tahunid, biaya):
+def updateBiayaKHS(npm, tahunid, biaya, percentage):
     db=kelas.dbConnectSiap()
-    sql=f"UPDATE simak_trn_khs SET Biaya={biaya} WHERE MhswID={npm} and TahunID={tahunid}"
+    sql=f"UPDATE simak_trn_khs SET Biaya={biaya} WHERE MhswID={npm} and TahunID={tahunid} and StatusBayar={percentage}"
     with db:
         cur=db.cursor()
         cur.execute(sql)

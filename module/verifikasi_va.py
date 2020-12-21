@@ -93,19 +93,29 @@ def replymsg(driver, data):
             amount_tunggakan = int(trx_amount) - int(default_amount_payment)
             fifty_percent_default_payment = int(default_amount_payment) / 2
             minimum_payment = int(amount_tunggakan) + int(fifty_percent_default_payment)
+            transfer_spp = int(cumulative_payment_amount) - int(amount_tunggakan)
+            percentage = int(float(int(transfer_spp) / int(default_amount_payment)) * 100)
         else:
             potongan = int(default_amount_payment) - int(trx_amount)
             minimum_payment = int(default_amount_payment) / 2
             cumulative_payment_amount += potongan
+            transfer_spp = int(cumulative_payment_amount)
+            percentage = int(float(int(transfer_spp) / int(default_amount_payment)) * 100)
+        if percentage >= 75 and percentage <= 100:
+            percentage = 75
+            if percentage == 100:
+                percentage = 100
+        else:
+            percentage = 0
         app.openfile().close()
         if float(cumulative_payment_amount) >= float(minimum_payment):
             if app.cekSudahAdaKHS(npm, tahunid, 'A'):
-                app.updateBiayaKHS(npm, tahunid, trx_amount - cumulative_payment_amount)
+                app.updateBiayaKHS(npm, tahunid, trx_amount - cumulative_payment_amount, percentage)
                 message += f'\n\nterima kasih yaaa sudah bayar semester, semangat kuliahnya kakaaaa......'
             else:
                 message += f'\n\nKamu *sudah bisa* isi KRS yaaa coba cek di *SIAP* yaaa...., #BOTNAME# ucapkan terima kasihhhh dan jangan salah saat isi KRS yaaa....'
                 message = message.replace('#BOTNAME#', config.bot_name)
-                app.insertnewKHS(npm, tahunid, prodiid, app.cekSesiSemester(tipesemester, npm), trx_amount - cumulative_payment_amount)
+                app.insertnewKHS(npm, tahunid, prodiid, app.cekSesiSemester(tipesemester, npm), trx_amount - cumulative_payment_amount, percentage)
         else:
             message += f'\n\nYahhhh kamu *belum bisa* isi KRS nihhhh coba *buat surat* lalu *ajukan ke pihak BAUK* agar kamu bisa isi KRS..... Suratnya udah {config.bot_name} kirim ke *{kelas.getStudentEmail(npm)}*'
             surat_va.makePdfAndSendToEmail(npm)
