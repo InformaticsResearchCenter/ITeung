@@ -73,7 +73,7 @@ def replymsg(driver, data):
         angkatan = kelas.getTahunAngkatanWithStudentID(npm)
         message = f'Hai haiiiii kamu sudah transfer pembayaran semester yaaaa dengan\n\n*NPM: {npm}*\n*Nama: {customer_name}*\n*Virtual Account: {virtual_account}*\n*Tanggal: {datetime_payment}*\n*Jumlah Transfer: {app.floatToRupiah(payment_amount)}*\n*Total Sudah Bayar: {app.floatToRupiah(cumulative_payment_amount)}*\n*Total Harus Bayar: {app.floatToRupiah(trx_amount)}*\n*Sisa Yang Harus Dibayar: {app.floatToRupiah(float(int(trx_amount)-int(cumulative_payment_amount)))}*'
         if str(angkatan) == '2020':
-            app.updateBiayaKHS(npm, tahunid, trx_amount - cumulative_payment_amount)
+            app.updateBiayaKHS(npm, tahunid, trx_amount - cumulative_payment_amount, percentage=75)
             message += f'\n\nterima kasih yaaa sudah bayar semester, semangat kuliahnya kakaaaa......'
             return message
             # return f'Mohon maaf untuk angkatan {angkatan}, sementara waktu verifikasi keuangan *BELUM* dapat dilakukan silahkan *VERIFIKASI KEMBALI SETELAH* tanggal *4 Desember 2020*.'
