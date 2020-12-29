@@ -149,7 +149,7 @@ def replymsg(driver, data):
 def countPertemuan(startdate):
     nowdate=datetime.date(datetime.now())
     countday = 7
-    for i in range(10):
+    for i in range(12):
         if nowdate >= startdate and nowdate < startdate+timedelta(countday):
             pertemuan=i+1
             mulaidate=startdate
