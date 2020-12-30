@@ -12,6 +12,7 @@ from datetime import datetime
 from lib import wa, numbers
 from time import sleep
 
+driver = None
 
 def auth(data):
     if kelas.getKodeDosen(data[0]) == '':
@@ -35,9 +36,9 @@ def replymsg(driver, data):
         if len(data) == 4:
             try:
                 if 'uas' in msg:
-                    data = 'uas'+";"+nomor+";"+driver
+                    filename = downloadFile(driver)
+                    data = 'uas'+";"+nomor+";"+filename
                     subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],data], cwd=config.cwd)
-                    # filename = downloadFile(driver)
                     # sleep(2)
                     # moveFiles(filename)
                     # msgreply = inputNilaiByExcel(
@@ -45,7 +46,8 @@ def replymsg(driver, data):
                     # removeFile(filename)
                     msgreply = ''
                 elif 'uts' in msg:
-                    data = 'uts'+";"+nomor+";"+driver
+                    filename = downloadFile(driver)
+                    data = 'uts'+";"+nomor+";"+filename
                     subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],data], cwd=config.cwd)
                     # filename = downloadFile(driver)
                     # sleep(2)
@@ -112,16 +114,14 @@ def replymsg(driver, data):
 
 def run(data):
     data = data.split(';')
-    jenis, nomor, driver = data[0], data[1], data[2]
+    jenis, nomor, filename = data[0], data[1], data[2]
     try:
         if jenis == 'uts':
-            filename = downloadFile(driver)
             sleep(2)
             moveFiles(filename)
             inputNilaiByExcel(filename, 'uts', kelas.getTahunID(), nomor)
             removeFile(filename)
         elif jenis == 'uas':
-            filename = downloadFile(driver)
             sleep(2)
             moveFiles(filename)
             inputNilaiByExcel(filename, 'uas', kelas.getTahunID(), nomor)
