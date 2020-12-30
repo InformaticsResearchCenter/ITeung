@@ -133,7 +133,9 @@ def downloadFile(driver):
     # filecheck = driver.find_elements_by_class_name('_23z4j')[-1]
     # filename = driver.find_elements_by_class_name('_1VzZY')[-1].text
     filename = driver.execute_script("var length = document.getElementsByClassName('_2xUEC _2XHG4 _2K5wo').length; return document.getElementsByClassName('_2xUEC _2XHG4 _2K5wo')[length-1].children[0].textContent")
-    driver.find_elements_by_class_name('WtawS')[-1].click()
+    print(filename)
+    driver.execute_script("var length = document.getElementsByClassName('_2xUEC _2XHG4 _2K5wo').length; document.getElementsByClassName('WtawS')[length-1].click()")
+    # driver.find_elements_by_class_name('WtawS')[-1].click()
     return filename
 
 
