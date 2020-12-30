@@ -73,7 +73,7 @@ def replymsg(driver, data):
         angkatan = kelas.getTahunAngkatanWithStudentID(npm)
         message = f'Hai haiiiii kamu sudah transfer pembayaran semester yaaaa dengan\n\n*NPM: {npm}*\n*Nama: {customer_name}*\n*Virtual Account: {virtual_account}*\n*Tanggal: {datetime_payment}*\n*Jumlah Transfer: {app.floatToRupiah(payment_amount)}*\n*Total Sudah Bayar: {app.floatToRupiah(cumulative_payment_amount)}*\n*Total Harus Bayar: {app.floatToRupiah(trx_amount)}*\n*Sisa Yang Harus Dibayar: {app.floatToRupiah(float(int(trx_amount)-int(cumulative_payment_amount)))}*'
         if str(angkatan) == '2020':
-            app.updateBiayaKHS(npm, tahunid, trx_amount - cumulative_payment_amount)
+            app.updateBiayaKHS(npm, tahunid, trx_amount - cumulative_payment_amount, percentage=75)
             message += f'\n\nterima kasih yaaa sudah bayar semester, semangat kuliahnya kakaaaa......'
             return message
             # return f'Mohon maaf untuk angkatan {angkatan}, sementara waktu verifikasi keuangan *BELUM* dapat dilakukan silahkan *VERIFIKASI KEMBALI SETELAH* tanggal *4 Desember 2020*.'
@@ -93,19 +93,30 @@ def replymsg(driver, data):
             amount_tunggakan = int(trx_amount) - int(default_amount_payment)
             fifty_percent_default_payment = int(default_amount_payment) / 2
             minimum_payment = int(amount_tunggakan) + int(fifty_percent_default_payment)
+            transfer_spp = int(cumulative_payment_amount) - int(amount_tunggakan)
+            percentage = int(float(int(transfer_spp) / int(default_amount_payment)) * 100)
         else:
             potongan = int(default_amount_payment) - int(trx_amount)
             minimum_payment = int(default_amount_payment) / 2
             cumulative_payment_amount += potongan
+            transfer_spp = int(cumulative_payment_amount)
+            percentage = int(float(int(transfer_spp) / int(default_amount_payment)) * 100)
+        if percentage >= 75 and percentage <= 100:
+            if percentage == 100:
+                percentage = 100
+            else:
+                percentage = 75
+        else:
+            percentage = 0
         app.openfile().close()
         if float(cumulative_payment_amount) >= float(minimum_payment):
             if app.cekSudahAdaKHS(npm, tahunid, 'A'):
-                app.updateBiayaKHS(npm, tahunid, trx_amount - cumulative_payment_amount)
+                app.updateBiayaKHS(npm, tahunid, trx_amount - cumulative_payment_amount, percentage)
                 message += f'\n\nterima kasih yaaa sudah bayar semester, semangat kuliahnya kakaaaa......'
             else:
                 message += f'\n\nKamu *sudah bisa* isi KRS yaaa coba cek di *SIAP* yaaa...., #BOTNAME# ucapkan terima kasihhhh dan jangan salah saat isi KRS yaaa....'
                 message = message.replace('#BOTNAME#', config.bot_name)
-                app.insertnewKHS(npm, tahunid, prodiid, app.cekSesiSemester(tipesemester, npm), trx_amount - cumulative_payment_amount)
+                app.insertnewKHS(npm, tahunid, prodiid, app.cekSesiSemester(tipesemester, npm), trx_amount - cumulative_payment_amount, percentage)
         else:
             message += f'\n\nYahhhh kamu *belum bisa* isi KRS nihhhh coba *buat surat* lalu *ajukan ke pihak BAUK* agar kamu bisa isi KRS..... Suratnya udah {config.bot_name} kirim ke *{kelas.getStudentEmail(npm)}*'
             surat_va.makePdfAndSendToEmail(npm)

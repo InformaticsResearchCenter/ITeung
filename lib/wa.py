@@ -216,7 +216,7 @@ def getSenderNumber(driver, default_alias_number_index):
         try:
             senderNumber = driver.find_element_by_xpath("/html/body/div[1]/div/div/div[4]/div/header/div[2]/div[1]/div/span").text
         except:
-            senderNumber = driver.find_element_by_xpath("/html/body/div[1]/div/div/div[4]/div/header/div[2]/div/div/span").text
+            senderNumber = driver.find_element_by_xpath("/html/body/div[1]/div/div/div[2]/div[3]/span/div/span/div/div/div[1]/div[4]/div[3]/div/div/span/span").text
     return senderNumber
 
 def getMessage(driver, message_wa_index):
