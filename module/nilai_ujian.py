@@ -5,6 +5,7 @@ import openpyxl
 import string
 import os
 import shutil
+import subprocess
 from module import kelas, cek_nilai
 from lib import reply, wa
 from datetime import datetime
@@ -34,19 +35,26 @@ def replymsg(driver, data):
         if len(data) == 4:
             try:
                 if 'uas' in msg:
-                    filename = downloadFile(driver)
-                    sleep(2)
-                    moveFiles(filename)
-                    msgreply = inputNilaiByExcel(
-                        filename, 'uas', kelas.getTahunID(), nomor)
-                    removeFile(filename)
+                    data = 'uas'+";"+nomor+";"+driver
+                    subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],data], cwd=config.cwd)
+                    # filename = downloadFile(driver)
+                    # sleep(2)
+                    # moveFiles(filename)
+                    # msgreply = inputNilaiByExcel(
+                    #     filename, 'uas', kelas.getTahunID(), nomor)
+                    # removeFile(filename)
+                    msgreply = ''
                 elif 'uts' in msg:
-                    filename = downloadFile(driver)
-                    sleep(2)
-                    moveFiles(filename)
-                    msgreply = inputNilaiByExcel(
-                        filename, 'uts', kelas.getTahunID(), nomor)
-                    removeFile(filename)
+                    data = 'uts'+";"+nomor+";"+driver
+                    subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],data], cwd=config.cwd)
+                    # filename = downloadFile(driver)
+                    # sleep(2)
+                    # moveFiles(filename)
+                    # filename = "./Jadwal-UTS-Ganjil_2020_2021-PRAKTIKUM_APLIKASI_KOMPUTER-B-18212.xlsx"
+                    # msgreply = inputNilaiByExcel(
+                        # filename, 'uts', kelas.getTahunID(), nomor)
+                    # removeFile(filename)
+                    msgreply = ''
                 else:
                     msgreply = 'Salah keyword bosque..'
             except FileNotFoundError:
@@ -102,6 +110,24 @@ def replymsg(driver, data):
         msgreply = 'Mohon maaf server Akademik SIAP sedang dalam kondisi DOWN, mohon untuk menginformasikan ke ADMIN dan tunggu hingga beberapa menit kemudian, lalu ulangi kembali, terima kasih....'
     return msgreply
 
+def run(data):
+    data = data.split(';')
+    jenis, nomor, driver = data[0], data[1], data[2]
+    try:
+        if jenis == 'uts':
+            filename = downloadFile(driver)
+            sleep(2)
+            moveFiles(filename)
+            inputNilaiByExcel(filename, 'uts', kelas.getTahunID(), nomor)
+            removeFile(filename)
+        elif jenis == 'uas':
+            filename = downloadFile(driver)
+            sleep(2)
+            moveFiles(filename)
+            inputNilaiByExcel(filename, 'uas', kelas.getTahunID(), nomor)
+            removeFile(filename)
+    except Exception as e: 
+        print(str(e))
 
 def downloadFile(driver):
     filecheck = driver.find_elements_by_class_name('r9_f4')[-1]
@@ -217,6 +243,7 @@ def inputNilaiUTS(data):
             return 'Berhasil input bosque'
         else:
             return 'Blm berhasil bosque, mungkin npm ato matkul salah ato nilai yg diinput sama kyk sebelumnya'
+    # print("wkwk")
 
 
 def inputNilaiUAS(data):
