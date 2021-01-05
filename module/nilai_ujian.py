@@ -5,12 +5,14 @@ import openpyxl
 import string
 import os
 import shutil
+import subprocess
 from module import kelas, cek_nilai
 from lib import reply, wa
 from datetime import datetime
 from lib import wa, numbers
 from time import sleep
 
+driver = None
 
 def auth(data):
     if kelas.getKodeDosen(data[0]) == '':
@@ -35,18 +37,26 @@ def replymsg(driver, data):
             try:
                 if 'uas' in msg:
                     filename = downloadFile(driver)
-                    sleep(2)
-                    moveFiles(filename)
-                    msgreply = inputNilaiByExcel(
-                        filename, 'uas', kelas.getTahunID(), nomor)
-                    removeFile(filename)
+                    data = 'uas'+";"+nomor+";"+filename
+                    subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],data], cwd=config.cwd)
+                    # sleep(2)
+                    # moveFiles(filename)
+                    # msgreply = inputNilaiByExcel(
+                    #     filename, 'uas', kelas.getTahunID(), nomor)
+                    # removeFile(filename)
+                    msgreply = ''
                 elif 'uts' in msg:
                     filename = downloadFile(driver)
-                    sleep(2)
-                    moveFiles(filename)
-                    msgreply = inputNilaiByExcel(
-                        filename, 'uts', kelas.getTahunID(), nomor)
-                    removeFile(filename)
+                    data = 'uts'+";"+nomor+";"+filename
+                    subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],data], cwd=config.cwd)
+                    # filename = downloadFile(driver)
+                    # sleep(2)
+                    # moveFiles(filename)
+                    # filename = "./Jadwal-UTS-Ganjil_2020_2021-PRAKTIKUM_APLIKASI_KOMPUTER-B-18212.xlsx"
+                    # msgreply = inputNilaiByExcel(
+                        # filename, 'uts', kelas.getTahunID(), nomor)
+                    # removeFile(filename)
+                    msgreply = ''
                 else:
                     msgreply = 'Salah keyword bosque..'
             except FileNotFoundError:
@@ -102,11 +112,30 @@ def replymsg(driver, data):
         msgreply = 'Mohon maaf server Akademik SIAP sedang dalam kondisi DOWN, mohon untuk menginformasikan ke ADMIN dan tunggu hingga beberapa menit kemudian, lalu ulangi kembali, terima kasih....'
     return msgreply
 
+def run(data):
+    data = data.split(';')
+    jenis, nomor, filename = data[0], data[1], data[2]
+    try:
+        if jenis == 'uts':
+            sleep(2)
+            moveFiles(filename)
+            inputNilaiByExcel(filename, 'uts', kelas.getTahunID(), nomor)
+            removeFile(filename)
+        elif jenis == 'uas':
+            sleep(2)
+            moveFiles(filename)
+            inputNilaiByExcel(filename, 'uas', kelas.getTahunID(), nomor)
+            removeFile(filename)
+    except Exception as e: 
+        print(str(e))
 
 def downloadFile(driver):
-    filecheck = driver.find_elements_by_class_name('_23z4j')[-1]
-    filename = driver.find_elements_by_class_name('_1VzZY')[-1].text
-    driver.find_elements_by_class_name('WtawS')[-1].click()
+    # filecheck = driver.find_elements_by_class_name('_23z4j')[-1]
+    # filename = driver.find_elements_by_class_name('_1VzZY')[-1].text
+    filename = driver.execute_script("var length = document.getElementsByClassName('_2xUEC _2XHG4 _2K5wo').length; return document.getElementsByClassName('_2xUEC _2XHG4 _2K5wo')[length-1].children[0].textContent")
+    print(filename)
+    driver.execute_script("var length = document.getElementsByClassName('_2xUEC _2XHG4 _2K5wo').length; document.getElementsByClassName('WtawS')[length-1].click()")
+    # driver.find_elements_by_class_name('WtawS')[-1].click()
     return filename
 
 
@@ -217,6 +246,7 @@ def inputNilaiUTS(data):
             return 'Berhasil input bosque'
         else:
             return 'Blm berhasil bosque, mungkin npm ato matkul salah ato nilai yg diinput sama kyk sebelumnya'
+    # print("wkwk")
 
 
 def inputNilaiUAS(data):
