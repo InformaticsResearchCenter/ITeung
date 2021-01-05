@@ -120,9 +120,9 @@ def getNIDNDosen(dosenid):
             return None
 
 
-def getDataBimbinganwithMhswIDandDosenID(npm, dosenid):
+def getDataBimbinganwithMhswIDandDosenID(npm, dosenid, tipe_bimbingan):
     db=kelas.dbConnectSiap()
-    sql=f"select * from simak_croot_bimbingan where MhswID={npm} and DosenID='{dosenid}' order by Pertemuan_ desc"
+    sql=f"select * from simak_croot_bimbingan where MhswID={npm} and DosenID='{dosenid}' and Tipe = '{tipe_bimbingan}' order by Pertemuan_ desc"
     with db:
         cur=db.cursor()
         cur.execute(sql)
@@ -146,8 +146,9 @@ def getDataByPertemuanandNPM(npm, pertemuanke, kode_dosen):
             return False, ''
 
 
-def makeListDataBimbinganByDosens(npm, kode_dosen):
-    dataBimbingan=getDataBimbinganwithMhswIDandDosenID(npm, kode_dosen)
+def makeListDataBimbinganByDosens(npm, kode_dosen, tipe_bimbingan):
+    print(tipe_bimbingan)
+    dataBimbingan=getDataBimbinganwithMhswIDandDosenID(npm, kode_dosen, tipe_bimbingan)
     if dataBimbingan[0][5] < 8:
         setStart=8
     else:
@@ -279,7 +280,7 @@ def replymsg(driver, data):
                                 makePdf(
                                     npm_mahasiswa=studentid,
                                     nama_mahasiswa=studentname,
-                                    tipe_bimbingan=switcherTipeBimbingan(getTipeBimbingan(studentid)),
+                                    tipe_bimbingan=tipe_bimbingan,
                                     nama_pembimbing=NAMA_DOSEN,
                                     kode_dosen_pembimbing=KODE_DOSEN,
                                     nidn_pembimbing=NIDN_DOSEN,
@@ -291,7 +292,7 @@ def replymsg(driver, data):
                             bkd.mail(kelas.getDataMahasiswa(studentid)[3],
                                      f'eyyowwwwwww {config.bot_name} nihhhh mau nganter file yang kamu mintaaa',
                                      f'ini ya file KAMBING (Kartu Bimbingan) yang Akang/Teteh minta silahkan di cek... ehee....',
-                                     bkd.getFilePath(kelas.getDataMahasiswa(studentid)[3], 'kambing'))
+                                     bkd.getFilePath(kelas.getDataMahasiswa(studentid)[3], 'kambing', switcherTipeBimbingan(tipe_bimbingan)))
                             msgreply = f"sudah selesai dan sudah dikirim ke email kamu yang {kelas.getDataMahasiswa(studentid)[3]} yaa...."
                     else:
                         msgreply = f'mohon maaf belum bisa cetak kartu bimbingan dikarenakan pertemuan masih ada yang kurang'
@@ -323,7 +324,7 @@ def replymsg(driver, data):
                             makePdf(
                                 npm_mahasiswa=studentid,
                                 nama_mahasiswa=studentname,
-                                tipe_bimbingan=switcherTipeBimbingan(getTipeBimbingan(studentid)),
+                                tipe_bimbingan=tipe_bimbingan,
                                 nama_pembimbing=NAMA_DOSEN,
                                 kode_dosen_pembimbing=KODE_DOSEN,
                                 nidn_pembimbing=NIDN_DOSEN,
@@ -332,10 +333,12 @@ def replymsg(driver, data):
                                 judul=JUDUL_BIMBINGAN,
                                 total_nilai=totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN, KODE_DOSEN)[1]
                             )
+                            getFilePath(kelas.getDataMahasiswa(studentid)[3], 'kambing',
+                                            switcherTipeBimbingan(tipe_bimbingan))
                             bkd.mail(kelas.getDataMahasiswa(studentid)[3],
                                      f'eyyowwwwwww {config.bot_name} nihhhh mau nganter file yang kamu mintaaa',
                                      f'ini ya file KAMBING (Kartu Bimbingan) yang Akang/Teteh minta silahkan di cek... ehee....',
-                                     bkd.getFilePath(kelas.getDataMahasiswa(studentid)[3], 'kambing'))
+                                     getFilePath(kelas.getDataMahasiswa(studentid)[3], 'kambing', switcherTipeBimbingan(tipe_bimbingan)))
                             msgreply = f"sudah selesai dan sudah dikirim ke email kamu yang {kelas.getDataMahasiswa(studentid)[3]} yaa...."
                     else:
                         msgreply = f'mohon maaf belum bisa cetak kartu bimbingan dikarenakan pertemuan masih ada yang kurang:'
@@ -347,9 +350,6 @@ def replymsg(driver, data):
         msgreply = 'Mana nihhhh tipe bimbingannya coba dicek lagi yaa....'
 
     return msgreply
-
-# def check_how_many_pembimbing(tipe_bimbingan):
-
 
 def cekApprovalKambingAtBeginning(npm, tipe_bimbingan):
     db=kelas.dbConnect()
@@ -369,16 +369,16 @@ def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing
     makeQrcodeVerifySign(
         link=makeLinkVerify(kode_dosen=kode_dosen_pembimbing,
                             npm_mahasiswa=npm_mahasiswa,
-                            tipe_bimbingan=tipe_bimbingan,
+                            tipe_bimbingan=switcherTipeBimbingan(tipe_bimbingan),
                             total_nilai=total_nilai),
         kode_dosen=kode_dosen_pembimbing,
         npm_mahasiswa=npm_mahasiswa,
-        tipe_bimbingan=tipe_bimbingan
+        tipe_bimbingan=switcherTipeBimbingan(tipe_bimbingan)
     )
     bulan = date.today().strftime("%m")
     d2 = date.today().strftime(f"%d {bkd.bulanSwitcher(bulan)} %Y")
     STUDENT_EMAIL=getStudentEmail(npm_mahasiswa)
-    doc = SimpleDocTemplate(f'./kambing/{npm_mahasiswa}-{kode_dosen_pembimbing}-{STUDENT_EMAIL}.pdf', pagesize=A4, rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=18)
+    doc = SimpleDocTemplate(f'./kambing/{npm_mahasiswa}-{kode_dosen_pembimbing}-{STUDENT_EMAIL}-{switcherTipeBimbingan(tipe_bimbingan)}.pdf', pagesize=A4, rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=18)
     doc.pagesize = portrait(A4)
     elements = []
 
@@ -395,7 +395,7 @@ def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing
     elements.append(Paragraph(ptext, styles["Center"]))
     elements.append(Spacer(1, 12))
 
-    ptext = f'<font name="Times" size="14">{tipe_bimbingan}</font>'
+    ptext = f'<font name="Times" size="14">{switcherTipeBimbingan(tipe_bimbingan)}</font>'
     elements.append(Paragraph(ptext, styles["Center"]))
     elements.append(Spacer(1, 12))
 
@@ -435,7 +435,7 @@ def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing
     elements.append(Spacer(1, 0.6 * inch))
 
     data = [['Pertemuan', 'Tanggal', 'Sudah Dikerjakan', 'Pekerjaan Selanjutnya', 'Nilai']]
-    inner_data_list=makeListDataBimbinganByDosens(npm_mahasiswa, kode_dosen_pembimbing)
+    inner_data_list=makeListDataBimbinganByDosens(npm_mahasiswa, kode_dosen_pembimbing, tipe_bimbingan)
     for i in inner_data_list:
         data.append(i)
     nilai_data_list=['', '', '', 'Rata-Rata: ', '%.2f' % round(float(total_nilai), 2)]
@@ -478,7 +478,7 @@ def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing
     data = approve_kambing.getDataPembimbing(npm_mahasiswa, kode_dosen_pembimbing)
     pembimbingke = approve_kambing.pembimbingPositionAs(data, kode_dosen_pembimbing)
     if approve_kambing.cekApprovalTrueorFalse(npm_mahasiswa, pembimbingke):
-        qrcode = f"./kambingqrcode/{npm_mahasiswa}-{kode_dosen_pembimbing}-{tipe_bimbingan}.PNG"
+        qrcode = f"./kambingqrcode/{npm_mahasiswa}-{kode_dosen_pembimbing}-{switcherTipeBimbingan(tipe_bimbingan)}.PNG"
     else:
         qrcode = f"./kambingqrcode/whiteimage.png"
     im = Image(qrcode, 1.5 * inch, 1.5 * inch)
@@ -569,3 +569,14 @@ def getDataBimbinganForReply(npm, kode_dosen):
             return None
         else:
             return rows
+
+def getFilePath(filter_1, folder, filter_2):
+    resultpath = []
+    devpath = os.getcwd()
+    path = './{folder}'.format(folder=folder)
+    for root, dirs, files in os.walk(path):
+        for i in files:
+            if filter_1 in i and filter_2 in i:
+                rootpath = os.path.join(root, i)
+                resultpath.append(os.path.join(devpath, rootpath))
+    return resultpath
