@@ -26,8 +26,8 @@ def auth(data):
     return ret
 
 def replymsg(driver, data):
-    wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
-    wa.typeAndSendMessage(driver, wmsg)
+    # wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
+    # wa.typeAndSendMessage(driver, wmsg)
     num=data[0]
     msg=data[3]
     msg=message.normalize(msg)
@@ -73,7 +73,7 @@ def replymsg(driver, data):
                             return 'wedewww kejam amat ngasih nilainya xixixixi'
                         else:
                             kodedosen=kelas.getKodeDosen(num)
-                            if isSudahInputBimbingan(studentid, pertemuan, kodedosen):
+                            if isSudahInputBimbingan(studentid, pertemuan, kodedosen, tipe_bimbingan):
                                 updateNilaiBimbingan(studentid=studentid, nilai=nilai, topik=topik, pertemuan=pertemuan, logmsg=logmsg)
                                 msgreply='oke sudah iteung update yaaa nilainya.....'
                             else:
@@ -194,9 +194,9 @@ def insertBimbingan(studentid, lecturerid, tipe, pertemuan, nilai, topik, logmsg
         cur=db.cursor()
         cur.execute(sql)
 
-def isSudahInputBimbingan(studentid, pertemuan, kodedosen):
+def isSudahInputBimbingan(studentid, pertemuan, kodedosen, tipe_bimbingan):
     db=kelas.dbConnectSiap()
-    sql="select * from simak_croot_bimbingan where `MhswID`={studentid} and `Pertemuan_`={pertemuan} and `Tanggal`=CURRENT_DATE and Penilai='{kodedosen}'".format(studentid=studentid, pertemuan=pertemuan, kodedosen=kodedosen)
+    sql=f"select * from simak_croot_bimbingan where `MhswID`={studentid} and `Pertemuan_`={pertemuan} and Penilai='{kodedosen}' and Tipe='{tipe_bimbingan}' and TahunID='{kelas.getTahunID()}'"
     with db:
         cur=db.cursor()
         cur.execute(sql)
