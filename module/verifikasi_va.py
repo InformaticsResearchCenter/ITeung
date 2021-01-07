@@ -110,13 +110,13 @@ def replymsg(driver, data):
             percentage = 0
         app.openfile().close()
         if float(cumulative_payment_amount) >= float(minimum_payment):
-            if app.cekSudahAdaKHS(npm, tahunid, 'A'):
-                app.updateBiayaKHS(npm, tahunid, trx_amount - cumulative_payment_amount, percentage)
+            if app.cekSudahAdaKHS(npm, kelas.getTahunID(), 'A'):
+                app.updateBiayaKHS(npm, kelas.getTahunID(), trx_amount - cumulative_payment_amount, percentage)
                 message += f'\n\nterima kasih yaaa sudah bayar semester, semangat kuliahnya kakaaaa......'
             else:
                 message += f'\n\nKamu *sudah bisa* isi KRS yaaa coba cek di *SIAP* yaaa...., #BOTNAME# ucapkan terima kasihhhh dan jangan salah saat isi KRS yaaa....'
                 message = message.replace('#BOTNAME#', config.bot_name)
-                app.insertnewKHS(npm, tahunid, prodiid, app.cekSesiSemester(tipesemester, npm), trx_amount - cumulative_payment_amount, percentage)
+                app.insertnewKHS(npm, kelas.getTahunID(), prodiid, app.cekSesiSemester(tipesemester, npm), trx_amount - cumulative_payment_amount, percentage)
         else:
             message += f'\n\nYahhhh kamu *belum bisa* isi KRS nihhhh coba *buat surat* lalu *ajukan ke pihak BAUK* agar kamu bisa isi KRS..... Suratnya udah {config.bot_name} kirim ke *{kelas.getStudentEmail(npm)}*'
             surat_va.makePdfAndSendToEmail(npm)
