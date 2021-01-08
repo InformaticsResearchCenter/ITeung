@@ -69,7 +69,7 @@ def replymsg(driver, data):
         datetime_payment_iso8601 = datava['datetime_payment_iso8601']
         ws = app.openfile().active
         prodi_singkatan = app.getProdiSingkatanFromProdiID(kelas.getProdiIDwithStudentID(npm)).lower()
-        tingkat = f"tk{int(datetime.now().strftime('%Y')) - int(kelas.getTahunAngkatanWithStudentID(npm)) + 1}"
+        tingkat = f"tk{int(kelas.getTahunID()[:-1]) - int(kelas.getTahunAngkatanWithStudentID(npm)) + 1}"
         angkatan = kelas.getTahunAngkatanWithStudentID(npm)
         message = f'Hai haiiiii kamu sudah transfer pembayaran semester yaaaa dengan\n\n*NPM: {npm}*\n*Nama: {customer_name}*\n*Virtual Account: {virtual_account}*\n*Tanggal: {datetime_payment}*\n*Jumlah Transfer: {app.floatToRupiah(payment_amount)}*\n*Total Sudah Bayar: {app.floatToRupiah(cumulative_payment_amount)}*\n*Total Harus Bayar: {app.floatToRupiah(trx_amount)}*\n*Sisa Yang Harus Dibayar: {app.floatToRupiah(float(int(trx_amount)-int(cumulative_payment_amount)))}*'
         if str(angkatan) == '2020':
