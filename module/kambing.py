@@ -4,12 +4,14 @@ from reportlab.lib.pagesizes import A4, inch, portrait
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from datetime import date
-from module import kelas, bkd, approve_kambing, berita_acara_pitak
+from module import kelas, bkd, approve_kambing, berita_acara_pitak, cek_bimbingan_dosen
 from lib import numbers
 from datetime import datetime
 from Crypto.Cipher import AES
 
 import qrcode, config, os
+
+import ssl
 
 def getTipeBimbingan(npm):
     db = kelas.dbConnectSiap()
@@ -81,25 +83,25 @@ def getAllNilaiBimbingan(npm, dosenid):
 def totalNilai(npm, MINIMUM_PERTEMUAN, dosenid):
     data=approve_kambing.getDataPembimbing(npm, dosenid)
     pembimbingke=approve_kambing.pembimbingPositionAs(data, dosenid)
-    # if pembimbingke == 'pembimbing2':
-    #     MINIMUM_PERTEMUAN=5
+    if pembimbingke == 'pembimbing2':
+        MINIMUM_PERTEMUAN=5
     ALL_DATA_BIMBINGAN = getAllDataBimbinganByDosenID(npm, dosenid)
     if ALL_DATA_BIMBINGAN:
         ALL_NILAI_BIMBINGAN = getAllNilaiBimbingan(npm, dosenid)
         LAST_PERTEMUAN_BIMBINGAN = ALL_DATA_BIMBINGAN[0][5]
-        # if len(ALL_DATA_BIMBINGAN) < MINIMUM_PERTEMUAN:
-        #     status, totalnilai = False, 0
-        # else:
-        if LAST_PERTEMUAN_BIMBINGAN < MINIMUM_PERTEMUAN:
-            totalnilai = 0
-            for nilai in ALL_NILAI_BIMBINGAN:
-                totalnilai += nilai[0]
-            status, totalnilai = True, totalnilai / (MINIMUM_PERTEMUAN)
+        if len(ALL_DATA_BIMBINGAN) < MINIMUM_PERTEMUAN:
+            status, totalnilai = False, 0
         else:
-            totalnilai = 0
-            for nilai in ALL_NILAI_BIMBINGAN:
-                totalnilai += nilai[0]
-            status, totalnilai = True, totalnilai / (LAST_PERTEMUAN_BIMBINGAN)
+            if LAST_PERTEMUAN_BIMBINGAN < MINIMUM_PERTEMUAN:
+                totalnilai = 0
+                for nilai in ALL_NILAI_BIMBINGAN:
+                    totalnilai += nilai[0]
+                status, totalnilai = True, totalnilai / (MINIMUM_PERTEMUAN)
+            else:
+                totalnilai = 0
+                for nilai in ALL_NILAI_BIMBINGAN:
+                    totalnilai += nilai[0]
+                status, totalnilai = True, totalnilai / (LAST_PERTEMUAN_BIMBINGAN)
     else:
         status, totalnilai=True, 0
     return status, totalnilai
@@ -118,14 +120,13 @@ def getNIDNDosen(dosenid):
             return None
 
 
-def getDataBimbinganwithMhswIDandDosenID(npm, dosenid):
+def getDataBimbinganwithMhswIDandDosenID(npm, dosenid, tipe_bimbingan):
     db=kelas.dbConnectSiap()
-    sql=f"select * from simak_croot_bimbingan where MhswID={npm} and DosenID='{dosenid}' order by Pertemuan_ desc"
+    sql=f"select * from simak_croot_bimbingan where MhswID={npm} and DosenID='{dosenid}' and Tipe = '{tipe_bimbingan}' order by Pertemuan_ desc"
     with db:
         cur=db.cursor()
         cur.execute(sql)
         rows=cur.fetchall()
-        print(rows)
         if rows is not None:
             return rows
         else:
@@ -145,8 +146,9 @@ def getDataByPertemuanandNPM(npm, pertemuanke, kode_dosen):
             return False, ''
 
 
-def makeListDataBimbinganByDosens(npm, kode_dosen):
-    dataBimbingan=getDataBimbinganwithMhswIDandDosenID(npm, kode_dosen)
+def makeListDataBimbinganByDosens(npm, kode_dosen, tipe_bimbingan):
+    print(tipe_bimbingan)
+    dataBimbingan=getDataBimbinganwithMhswIDandDosenID(npm, kode_dosen, tipe_bimbingan)
     if dataBimbingan[0][5] < 8:
         setStart=8
     else:
@@ -240,68 +242,118 @@ def auth(data):
 
 
 def replymsg(driver, data):
+    ssl._create_default_https_context = ssl._create_unverified_context
     num = numbers.normalize(data[0])
     studentid,studentname=kelas.getNpmandNameMahasiswa(num)
-    statusapprovalkambing = cekApprovalKambingAtBeginning(studentid)
-    if statusapprovalkambing is not None:
-        if 'false' in statusapprovalkambing or '' in statusapprovalkambing:
-            msgreply='wiwiwiwiwi KAMBING kamu belum di approve nih sama Bapak/Ibu dosen yang ini nih:'
-            if 'false' == statusapprovalkambing[0] or '' == statusapprovalkambing[0]:
-                kodedosen1=getKodeDosenBimbingan(studentid)[0]
-                namadosen=kelas.getNamaDosen(kodedosen1)
-                msgreply+=f'\n{kodedosen1} | {namadosen} | PEMBIMBING 1'
-            if 'false' == statusapprovalkambing[1] or '' == statusapprovalkambing[1]:
-                kodedosen1 = getKodeDosenBimbingan(studentid)[1]
-                namadosen = kelas.getNamaDosen(kodedosen1)
-                msgreply += f'\n{kodedosen1} | {namadosen} | PEMBIMBING 2'
-        else:
-            KODE_DOSEN_BIMBINGAN = getKodeDosenBimbingan(studentid)
-            # status_nilai1, nilai_total1=totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN, KODE_DOSEN_BIMBINGAN[0])
-            # status_nilai2, nilai_total2=totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN, KODE_DOSEN_BIMBINGAN[1])
-            status_nilai1=True
-            status_nilai2=True
-            if status_nilai1 and status_nilai2:
-                JUDUL_BIMBINGAN=getJudulBimbingan(studentid, kelas.getTahunID())
-                KODE_DOSEN_BIMBINGAN=getKodeDosenBimbingan(studentid)
-                if KODE_DOSEN_BIMBINGAN is None:
-                    msgreply=f'data dengan npm {studentid} tidak ditemukan'
+    tipe_bimbingan = cek_bimbingan_dosen.cekTipeBimbingan(data[3])
+    statusapprovalkambing = cekApprovalKambingAtBeginning(studentid, tipe_bimbingan)
+    if tipe_bimbingan:
+        if statusapprovalkambing is not None:
+            if tipe_bimbingan == 'ta':
+                if 'false' in statusapprovalkambing or '' in statusapprovalkambing:
+                    msgreply = 'wiwiwiwiwi KAMBING kamu belum di approve nih sama Bapak/Ibu dosen yang ini nih:'
+                    if 'false' == statusapprovalkambing[0] or '' == statusapprovalkambing[0]:
+                        kodedosen1 = getKodeDosenBimbingan(studentid)[0]
+                        namadosen = kelas.getNamaDosen(kodedosen1)
+                        msgreply += f'\n{kodedosen1} | {namadosen} | PEMBIMBING 1'
+                    if 'false' == statusapprovalkambing[1] or '' == statusapprovalkambing[1]:
+                        kodedosen1 = getKodeDosenBimbingan(studentid)[1]
+                        namadosen = kelas.getNamaDosen(kodedosen1)
+                        msgreply += f'\n{kodedosen1} | {namadosen} | PEMBIMBING 2'
                 else:
-                    for KODE_DOSEN in KODE_DOSEN_BIMBINGAN:
-                        NAMA_DOSEN = kelas.getNamaDosen(KODE_DOSEN)
-                        NIDN_DOSEN = getNIDNDosen(KODE_DOSEN)
-                        TAHUN_AJARAN = kelas.getTahunAjaran(kelas.getProdiIDwithStudentID(studentid)).split(' ')[-1]
-                        photo = berita_acara_pitak.cekPhotoRoute(studentid)
-                        makePdf(
-                            npm_mahasiswa=studentid,
-                            nama_mahasiswa=studentname,
-                            tipe_bimbingan=switcherTipeBimbingan(getTipeBimbingan(studentid)),
-                            nama_pembimbing=NAMA_DOSEN,
-                            kode_dosen_pembimbing=KODE_DOSEN,
-                            nidn_pembimbing=NIDN_DOSEN,
-                            tahun_ajaran=TAHUN_AJARAN,
-                            photo=photo,
-                            judul=JUDUL_BIMBINGAN,
-                            total_nilai=totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN, KODE_DOSEN)[1]
-                        )
-                    bkd.mail(kelas.getDataMahasiswa(studentid)[3],
-                             f'eyyowwwwwww {config.bot_name} nihhhh mau nganter file yang kamu mintaaa',
-                             f'ini ya file KAMBING (Kartu Bimbingan) yang Akang/Teteh minta silahkan di cek... ehee....',
-                             bkd.getFilePath(kelas.getDataMahasiswa(studentid)[3], 'kambing'))
-                    msgreply=f"sudah selesai dan sudah dikirim ke email kamu yang {kelas.getDataMahasiswa(studentid)[3]} yaa...."
+                    KODE_DOSEN_BIMBINGAN = getKodeDosenBimbingan(studentid)
+                    status_nilai1, nilai_total1 = totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN,
+                                                             KODE_DOSEN_BIMBINGAN[0])
+                    status_nilai2, nilai_total2 = totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN,
+                                                             KODE_DOSEN_BIMBINGAN[1])
+                    if status_nilai1 and status_nilai2:
+                        JUDUL_BIMBINGAN = getJudulBimbingan(studentid, kelas.getTahunID())
+                        KODE_DOSEN_BIMBINGAN = getKodeDosenBimbingan(studentid)
+                        if KODE_DOSEN_BIMBINGAN is None:
+                            msgreply = f'data dengan npm {studentid} tidak ditemukan'
+                        else:
+                            for KODE_DOSEN in KODE_DOSEN_BIMBINGAN:
+                                NAMA_DOSEN = kelas.getNamaDosen(KODE_DOSEN)
+                                NIDN_DOSEN = getNIDNDosen(KODE_DOSEN)
+                                TAHUN_AJARAN = kelas.getTahunAjaran(kelas.getProdiIDwithStudentID(studentid)).split(' ')[-1]
+                                photo = berita_acara_pitak.cekPhotoRoute(studentid)
+                                makePdf(
+                                    npm_mahasiswa=studentid,
+                                    nama_mahasiswa=studentname,
+                                    tipe_bimbingan=tipe_bimbingan,
+                                    nama_pembimbing=NAMA_DOSEN,
+                                    kode_dosen_pembimbing=KODE_DOSEN,
+                                    nidn_pembimbing=NIDN_DOSEN,
+                                    tahun_ajaran=TAHUN_AJARAN,
+                                    photo=photo,
+                                    judul=JUDUL_BIMBINGAN,
+                                    total_nilai=totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN, KODE_DOSEN)[1]
+                                )
+                            bkd.mail(kelas.getDataMahasiswa(studentid)[3],
+                                     f'eyyowwwwwww {config.bot_name} nihhhh mau nganter file yang kamu mintaaa',
+                                     f'ini ya file KAMBING (Kartu Bimbingan) yang Akang/Teteh minta silahkan di cek... ehee....',
+                                     bkd.getFilePath(kelas.getDataMahasiswa(studentid)[3], 'kambing', switcherTipeBimbingan(tipe_bimbingan)))
+                            msgreply = f"sudah selesai dan sudah dikirim ke email kamu yang {kelas.getDataMahasiswa(studentid)[3]} yaa...."
+                    else:
+                        msgreply = f'mohon maaf belum bisa cetak kartu bimbingan dikarenakan pertemuan masih ada yang kurang'
+                        if status_nilai1 == False:
+                            msgreply += f'\n{KODE_DOSEN_BIMBINGAN[0]} | {kelas.getNamaDosen(KODE_DOSEN_BIMBINGAN[0])}'
+                        if status_nilai2 == False:
+                            msgreply += f'\n{KODE_DOSEN_BIMBINGAN[1]} | {kelas.getNamaDosen(KODE_DOSEN_BIMBINGAN[1])}'
             else:
-                msgreply = f'mohon maaf belum bisa cetak kartu bimbingan dikarenakan pertemuan masih ada yang kurang'
-                if status_nilai1 == False:
-                    msgreply+=f'\n{KODE_DOSEN_BIMBINGAN[0]} | {kelas.getNamaDosen(KODE_DOSEN_BIMBINGAN[0])}'
-                if status_nilai2 == False:
-                    msgreply+=f'\n{KODE_DOSEN_BIMBINGAN[1]} | {kelas.getNamaDosen(KODE_DOSEN_BIMBINGAN[1])}'
+                if statusapprovalkambing[0] == 'false' or statusapprovalkambing[0] == '':
+                    msgreply = 'wiwiwiwiwi KAMBING kamu belum di approve nih sama Bapak/Ibu dosen yang ini nih:'
+                    kodedosen1 = getKodeDosenBimbingan(studentid)[0]
+                    namadosen = kelas.getNamaDosen(kodedosen1)
+                    msgreply += f'\n{kodedosen1} | {namadosen} | PEMBIMBING 1'
+                else:
+                    KODE_DOSEN_BIMBINGAN = getKodeDosenBimbingan(studentid)
+                    status_nilai1, nilai_total1 = totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN,
+                                                             KODE_DOSEN_BIMBINGAN[0])
+                    if status_nilai1:
+                        JUDUL_BIMBINGAN = getJudulBimbingan(studentid, kelas.getTahunID())
+                        KODE_DOSEN_BIMBINGAN = getKodeDosenBimbingan(studentid)
+                        if KODE_DOSEN_BIMBINGAN is None:
+                            msgreply = f'data dengan npm {studentid} tidak ditemukan'
+                        else:
+                            KODE_DOSEN = KODE_DOSEN_BIMBINGAN[0]
+                            NAMA_DOSEN = kelas.getNamaDosen(KODE_DOSEN)
+                            NIDN_DOSEN = getNIDNDosen(KODE_DOSEN)
+                            TAHUN_AJARAN = kelas.getTahunAjaran(kelas.getProdiIDwithStudentID(studentid)).split(' ')[-1]
+                            photo = berita_acara_pitak.cekPhotoRoute(studentid)
+                            makePdf(
+                                npm_mahasiswa=studentid,
+                                nama_mahasiswa=studentname,
+                                tipe_bimbingan=tipe_bimbingan,
+                                nama_pembimbing=NAMA_DOSEN,
+                                kode_dosen_pembimbing=KODE_DOSEN,
+                                nidn_pembimbing=NIDN_DOSEN,
+                                tahun_ajaran=TAHUN_AJARAN,
+                                photo=photo,
+                                judul=JUDUL_BIMBINGAN,
+                                total_nilai=totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN, KODE_DOSEN)[1]
+                            )
+                            getFilePath(kelas.getDataMahasiswa(studentid)[3], 'kambing',
+                                            switcherTipeBimbingan(tipe_bimbingan))
+                            bkd.mail(kelas.getDataMahasiswa(studentid)[3],
+                                     f'eyyowwwwwww {config.bot_name} nihhhh mau nganter file yang kamu mintaaa',
+                                     f'ini ya file KAMBING (Kartu Bimbingan) yang Akang/Teteh minta silahkan di cek... ehee....',
+                                     getFilePath(kelas.getDataMahasiswa(studentid)[3], 'kambing', switcherTipeBimbingan(tipe_bimbingan)))
+                            msgreply = f"sudah selesai dan sudah dikirim ke email kamu yang {kelas.getDataMahasiswa(studentid)[3]} yaa...."
+                    else:
+                        msgreply = f'mohon maaf belum bisa cetak kartu bimbingan dikarenakan pertemuan masih ada yang kurang:'
+                        if status_nilai1 == False:
+                            msgreply += f'\n{KODE_DOSEN_BIMBINGAN[0]} | {kelas.getNamaDosen(KODE_DOSEN_BIMBINGAN[0])}'
+        else:
+            msgreply = f'mohon maaf data dengan npm {studentid} tidak bisa ditemukan'
     else:
-        msgreply=f'mohon maaf data dengan npm {studentid} tidak bisa ditemukan'
+        msgreply = 'Mana nihhhh tipe bimbingannya coba dicek lagi yaa....'
+
     return msgreply
 
-
-def cekApprovalKambingAtBeginning(npm):
+def cekApprovalKambingAtBeginning(npm, tipe_bimbingan):
     db=kelas.dbConnect()
-    sql=f'select approval_pembimbing1, approval_pembimbing2 from bimbingan_data where npm={npm}'
+    sql=f'select approval_pembimbing1, approval_pembimbing2 from bimbingan_data where npm={npm} and tipe_bimbingan="{tipe_bimbingan}"'
     with db:
         cur=db.cursor()
         cur.execute(sql)
@@ -317,20 +369,20 @@ def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing
     makeQrcodeVerifySign(
         link=makeLinkVerify(kode_dosen=kode_dosen_pembimbing,
                             npm_mahasiswa=npm_mahasiswa,
-                            tipe_bimbingan=tipe_bimbingan,
+                            tipe_bimbingan=switcherTipeBimbingan(tipe_bimbingan),
                             total_nilai=total_nilai),
         kode_dosen=kode_dosen_pembimbing,
         npm_mahasiswa=npm_mahasiswa,
-        tipe_bimbingan=tipe_bimbingan
+        tipe_bimbingan=switcherTipeBimbingan(tipe_bimbingan)
     )
     bulan = date.today().strftime("%m")
     d2 = date.today().strftime(f"%d {bkd.bulanSwitcher(bulan)} %Y")
     STUDENT_EMAIL=getStudentEmail(npm_mahasiswa)
-    doc = SimpleDocTemplate(f'./kambing/{npm_mahasiswa}-{kode_dosen_pembimbing}-{STUDENT_EMAIL}.pdf', pagesize=A4, rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=18)
+    doc = SimpleDocTemplate(f'./kambing/{npm_mahasiswa}-{kode_dosen_pembimbing}-{STUDENT_EMAIL}-{switcherTipeBimbingan(tipe_bimbingan)}.pdf', pagesize=A4, rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=18)
     doc.pagesize = portrait(A4)
     elements = []
 
-    logo = Image("logoKAMBING.png", 3.5 * inch, 1 * inch)
+    logo = Image("logoKAMBING.PNG", 3.5 * inch, 1 * inch)
     logo.hAlign = "LEFT"
     elements.append(logo)
 
@@ -343,7 +395,7 @@ def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing
     elements.append(Paragraph(ptext, styles["Center"]))
     elements.append(Spacer(1, 12))
 
-    ptext = f'<font name="Times" size="14">{tipe_bimbingan}</font>'
+    ptext = f'<font name="Times" size="14">{switcherTipeBimbingan(tipe_bimbingan)}</font>'
     elements.append(Paragraph(ptext, styles["Center"]))
     elements.append(Spacer(1, 12))
 
@@ -383,7 +435,7 @@ def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing
     elements.append(Spacer(1, 0.6 * inch))
 
     data = [['Pertemuan', 'Tanggal', 'Sudah Dikerjakan', 'Pekerjaan Selanjutnya', 'Nilai']]
-    inner_data_list=makeListDataBimbinganByDosens(npm_mahasiswa, kode_dosen_pembimbing)
+    inner_data_list=makeListDataBimbinganByDosens(npm_mahasiswa, kode_dosen_pembimbing, tipe_bimbingan)
     for i in inner_data_list:
         data.append(i)
     nilai_data_list=['', '', '', 'Rata-Rata: ', '%.2f' % round(float(total_nilai), 2)]
@@ -426,7 +478,7 @@ def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing
     data = approve_kambing.getDataPembimbing(npm_mahasiswa, kode_dosen_pembimbing)
     pembimbingke = approve_kambing.pembimbingPositionAs(data, kode_dosen_pembimbing)
     if approve_kambing.cekApprovalTrueorFalse(npm_mahasiswa, pembimbingke):
-        qrcode = f"./kambingqrcode/{npm_mahasiswa}-{kode_dosen_pembimbing}-{tipe_bimbingan}.png"
+        qrcode = f"./kambingqrcode/{npm_mahasiswa}-{kode_dosen_pembimbing}-{switcherTipeBimbingan(tipe_bimbingan)}.PNG"
     else:
         qrcode = f"./kambingqrcode/whiteimage.png"
     im = Image(qrcode, 1.5 * inch, 1.5 * inch)
@@ -448,7 +500,6 @@ def makeLinkVerify(kode_dosen, npm_mahasiswa, tipe_bimbingan, total_nilai):
     datenow = datetime.date(datetime.now()).strftime('%d-%m-%Y')
     timenow = datetime.now().time().strftime('%H:%M:%S')
     module_name="kambing"
-    print(total_nilai)
     data = f'{module_name};{datenow};{timenow};{kode_dosen};{npm_mahasiswa};{tipe_bimbingan};%.2f;' % round(total_nilai, 2)
     makeit64 = f'{data}{bkd.randomString(64 - len(data))}'
     obj = AES.new(config.key.encode("utf8"), AES.MODE_CBC, config.iv.encode('utf8'))
@@ -497,14 +548,14 @@ def checkDir():
     try:
         os.mkdir('kambing/')
     except:
-        print('sudah ada..')
+        pass
 
 
 def checkDirQrcode():
     try:
         os.mkdir('kambingqrcode/')
     except:
-        print('sudah ada..')
+        pass
 
 
 def getDataBimbinganForReply(npm, kode_dosen):
@@ -518,3 +569,14 @@ def getDataBimbinganForReply(npm, kode_dosen):
             return None
         else:
             return rows
+
+def getFilePath(filter_1, folder, filter_2):
+    resultpath = []
+    devpath = os.getcwd()
+    path = './{folder}'.format(folder=folder)
+    for root, dirs, files in os.walk(path):
+        for i in files:
+            if filter_1 in i and filter_2 in i:
+                rootpath = os.path.join(root, i)
+                resultpath.append(os.path.join(devpath, rootpath))
+    return resultpath

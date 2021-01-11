@@ -69,7 +69,7 @@ def replymsg(driver, data):
         datetime_payment_iso8601 = datava['datetime_payment_iso8601']
         ws = app.openfile().active
         prodi_singkatan = app.getProdiSingkatanFromProdiID(kelas.getProdiIDwithStudentID(npm)).lower()
-        tingkat = f"tk{int(datetime.now().strftime('%Y')) - int(kelas.getTahunAngkatanWithStudentID(npm)) + 1}"
+        tingkat = f"tk{int(kelas.getTahunID()[:-1]) - int(kelas.getTahunAngkatanWithStudentID(npm)) + 1}"
         angkatan = kelas.getTahunAngkatanWithStudentID(npm)
         message = f'Hai haiiiii kamu sudah transfer pembayaran semester yaaaa dengan\n\n*NPM: {npm}*\n*Nama: {customer_name}*\n*Virtual Account: {virtual_account}*\n*Tanggal: {datetime_payment}*\n*Jumlah Transfer: {app.floatToRupiah(payment_amount)}*\n*Total Sudah Bayar: {app.floatToRupiah(cumulative_payment_amount)}*\n*Total Harus Bayar: {app.floatToRupiah(trx_amount)}*\n*Sisa Yang Harus Dibayar: {app.floatToRupiah(float(int(trx_amount)-int(cumulative_payment_amount)))}*'
         if str(angkatan) == '2020':
@@ -110,13 +110,13 @@ def replymsg(driver, data):
             percentage = 0
         app.openfile().close()
         if float(cumulative_payment_amount) >= float(minimum_payment):
-            if app.cekSudahAdaKHS(npm, tahunid, 'A'):
-                app.updateBiayaKHS(npm, tahunid, trx_amount - cumulative_payment_amount, percentage)
+            if app.cekSudahAdaKHS(npm, kelas.getTahunID(), 'A'):
+                app.updateBiayaKHS(npm, kelas.getTahunID(), trx_amount - cumulative_payment_amount, percentage)
                 message += f'\n\nterima kasih yaaa sudah bayar semester, semangat kuliahnya kakaaaa......'
             else:
                 message += f'\n\nKamu *sudah bisa* isi KRS yaaa coba cek di *SIAP* yaaa...., #BOTNAME# ucapkan terima kasihhhh dan jangan salah saat isi KRS yaaa....'
                 message = message.replace('#BOTNAME#', config.bot_name)
-                app.insertnewKHS(npm, tahunid, prodiid, app.cekSesiSemester(tipesemester, npm), trx_amount - cumulative_payment_amount, percentage)
+                app.insertnewKHS(npm, kelas.getTahunID(), prodiid, app.cekSesiSemester(tipesemester, npm), trx_amount - cumulative_payment_amount, percentage)
         else:
             message += f'\n\nYahhhh kamu *belum bisa* isi KRS nihhhh coba *buat surat* lalu *ajukan ke pihak BAUK* agar kamu bisa isi KRS..... Suratnya udah {config.bot_name} kirim ke *{kelas.getStudentEmail(npm)}*'
             surat_va.makePdfAndSendToEmail(npm)
