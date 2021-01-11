@@ -218,7 +218,7 @@ def paymentToefl(npm):
 
 def paymentSpp(npm):
     prodi_singkatan = app.getProdiSingkatanFromProdiID(kelas.getProdiIDwithStudentID(npm)).lower()
-    tingkat = f"tk{int(datetime.now().strftime('%Y')) - int(kelas.getTahunAngkatanWithStudentID(npm)) + 1}"
+    tingkat = f"tk{int(kelas.getTahunID()[:-1]) - int(kelas.getTahunAngkatanWithStudentID(npm)) + 1}"
     angkatan = kelas.getTahunAngkatanWithStudentID(npm)
     payment_spp = getSPP(npm)
     if angkatan == '2020':
