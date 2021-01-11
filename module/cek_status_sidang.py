@@ -14,7 +14,8 @@ def replymsg(driver, data):
     wa.typeAndSendMessage(driver, wmsg)
     msg = data[3].lower()
     num = numbers.normalize(data[0])
-    tahun_id = '20192'
+    # tahun_id = '20192'
+    tahun_id = kelas.getTahunID()
     if kelas.getNpmandNameMahasiswa(num):
         npm, nama=kelas.getNpmandNameMahasiswa(num)
         try:

@@ -37,25 +37,15 @@ def replymsg(driver, data):
             try:
                 if 'uas' in msg:
                     filename = downloadFile(driver)
+                    # filename = "./Jadwal-UTS-Ganjil_2020_2021-SISTEM_INFORMASI_GEOGRAFIS-A-18145.xlsx"
                     data = 'uas'+";"+nomor+";"+filename
                     subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],data], cwd=config.cwd)
-                    # sleep(2)
-                    # moveFiles(filename)
-                    # msgreply = inputNilaiByExcel(
-                    #     filename, 'uas', kelas.getTahunID(), nomor)
-                    # removeFile(filename)
                     msgreply = ''
                 elif 'uts' in msg:
                     filename = downloadFile(driver)
+                    # filename = "./Jadwal-UTS-Ganjil_2020_2021-SISTEM_INFORMASI_GEOGRAFIS-A-18145.xlsx"
                     data = 'uts'+";"+nomor+";"+filename
                     subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],data], cwd=config.cwd)
-                    # filename = downloadFile(driver)
-                    # sleep(2)
-                    # moveFiles(filename)
-                    # filename = "./Jadwal-UTS-Ganjil_2020_2021-PRAKTIKUM_APLIKASI_KOMPUTER-B-18212.xlsx"
-                    # msgreply = inputNilaiByExcel(
-                        # filename, 'uts', kelas.getTahunID(), nomor)
-                    # removeFile(filename)
                     msgreply = ''
                 else:
                     msgreply = 'Salah keyword bosque..'
@@ -65,8 +55,8 @@ def replymsg(driver, data):
                 msgreply = 'Ada masalah di kodingannya... '+str(e)
         else:
             try:
-                jenis = data[3].lower() if data[3].lower(
-                ) == 'uts' or data[3].lower() == 'uas' else False
+                nilai = 0
+                jenis = data[3].lower() if data[3].lower() == 'uts' or data[3].lower() == 'uas' else False
                 if jenis.lower() == 'uts':
                     nilai = data[data.index('uts')+1] if all(char.isdigit() for char in data[data.index('uts')+1]) and (
                         int(data[data.index('uts')+1]) <= 100 and int(data[data.index('uts')+1]) >= 0) else False
@@ -74,11 +64,9 @@ def replymsg(driver, data):
                     nilai = data[data.index('uas')+1] if all(char.isdigit() for char in data[data.index('uas')+1]) and (
                         int(data[data.index('uas')+1]) <= 100 and int(data[data.index('uas')+1]) >= 0) else False
 
-                npm = data[data.index('npm')+1] if all(char.isdigit()
-                                                       for char in data[data.index('npm')+1]) else False
+                npm = data[data.index('npm')+1] if all(char.isdigit() for char in data[data.index('npm')+1]) else False
                 if 'matkul' in data and 'jadwal' not in data:
-                    matkul = data[data.index('matkul')+1] if any(char.isdigit()
-                                                                 for char in data[data.index('matkul')+1]) else False
+                    matkul = data[data.index('matkul')+1] if any(char.isdigit() for char in data[data.index('matkul')+1]) else False
                     if jenis and nilai and npm and matkul:
                         data = {
                             'tahun': kelas.getTahunID(),
@@ -91,8 +79,7 @@ def replymsg(driver, data):
                     else:
                         msgreply = 'Salah keyword bosque...'
                 elif 'jadwal' in data and 'matkul' not in data:
-                    jadwal = data[data.index('jadwal')+1] if any(char.isdigit()
-                                                                 for char in data[data.index('jadwal')+1]) else False
+                    jadwal = data[data.index('jadwal')+1] if any(char.isdigit() for char in data[data.index('jadwal')+1]) else False
                     if jenis and nilai and npm and jadwal:
                         data = {
                             'tahun': kelas.getTahunID(),
@@ -119,12 +106,12 @@ def run(data):
         if jenis == 'uts':
             sleep(2)
             moveFiles(filename)
-            inputNilaiByExcel(filename, 'uts', kelas.getTahunID(), nomor)
+            print(inputNilaiByExcel(filename, 'uts', kelas.getTahunID(), nomor))
             removeFile(filename)
         elif jenis == 'uas':
             sleep(2)
             moveFiles(filename)
-            inputNilaiByExcel(filename, 'uas', kelas.getTahunID(), nomor)
+            print(inputNilaiByExcel(filename, 'uas', kelas.getTahunID(), nomor))
             removeFile(filename)
     except Exception as e: 
         print(str(e))
@@ -132,10 +119,11 @@ def run(data):
 def downloadFile(driver):
     # filecheck = driver.find_elements_by_class_name('_23z4j')[-1]
     # filename = driver.find_elements_by_class_name('_1VzZY')[-1].text
+    # driver.find_elements_by_class_name('WtawS')[-1].click()
     filename = driver.execute_script("var length = document.getElementsByClassName('_2xUEC _2XHG4 _2K5wo').length; return document.getElementsByClassName('_2xUEC _2XHG4 _2K5wo')[length-1].children[0].textContent")
     print(filename)
+    sleep(2)
     driver.execute_script("var length = document.getElementsByClassName('_2xUEC _2XHG4 _2K5wo').length; document.getElementsByClassName('WtawS')[length-1].click()")
-    # driver.find_elements_by_class_name('WtawS')[-1].click()
     return filename
 
 
@@ -160,15 +148,13 @@ def removeFile(filename):
 
 
 def dbConnectSiap():
-    db = pymysql.connect(config.db_host_siap,
-                         config.db_username_siap,
-                         config.db_password_siap,
-                         config.db_name_siap)
+    db = pymysql.connect(config.db_host_siap, config.db_username_siap, config.db_password_siap, config.db_name_siap)
     return db
 
 
 def checkDosen(nomor, tahun, matkul=0, jadwal=0):
     db = dbConnectSiap()
+    query = ""
     if matkul != 0:
         query = """
             select distinct(Nama) from simak_trn_jadwal where DosenID = (select Login from simak_mst_dosen where Handphone = '"""+nomor+"""') and TahunID = '"""+tahun+"""' and MKKode = '"""+matkul+"""'
@@ -180,11 +166,10 @@ def checkDosen(nomor, tahun, matkul=0, jadwal=0):
     with db:
         cur = db.cursor()
         cur.execute(query)
-        rows = cur.fetchall()
+        # rows = cur.fetchall()
         if cur.rowcount > 0:
             return True
-        else:
-            return False
+    return False
 
 
 def getMahasiswa(kode_matkul, tahun, kelas):
@@ -207,10 +192,8 @@ def getMahasiswa(kode_matkul, tahun, kelas):
         if rows is not None:
             for row in rows:
                 mahasiswa.extend(row)
-
             return mahasiswa
-        else:
-            return False
+    return False
 
 
 def convertKelas(kelas):
@@ -221,12 +204,12 @@ def convertKelas(kelas):
     for k, v in dict_kelas.items():
         if v == kelas:
             return str(k).zfill(2)
-            break
     return '00'
 
 
 def inputNilaiUTS(data):
     db = dbConnectSiap()
+    query = ""
     if data['kode_matkul'] != 0:
         query = """
             update simak_trn_krs set uts='"""+str(data['nilai'])+"""' where MhswID='"""+str(data['npm'])+"""' 
@@ -237,20 +220,19 @@ def inputNilaiUTS(data):
             update simak_trn_krs set uts='"""+str(data['nilai'])+"""' where MhswID='"""+str(data['npm'])+"""' 
             and JadwalID='"""+str(data['jadwal'])+"""' and TahunID='"""+str(data['tahun'])+"""';
         """
-
+    # print(query)
     with db:
         cur = db.cursor()
         cur.execute(query)
         db.commit()
         if cur.rowcount > 0:
             return 'Berhasil input bosque'
-        else:
-            return 'Blm berhasil bosque, mungkin npm ato matkul salah ato nilai yg diinput sama kyk sebelumnya'
-    # print("wkwk")
+    return 'Blm berhasil bosque, mungkin npm ato matkul salah ato nilai yg diinput sama kyk sebelumnya'
 
 
 def inputNilaiUAS(data):
     db = dbConnectSiap()
+    query = ""
     if data['kode_matkul'] != 0:
         query = """
             update simak_trn_krs set uas='"""+str(data['nilai'])+"""' where MhswID='"""+str(data['npm'])+"""' 
@@ -267,8 +249,7 @@ def inputNilaiUAS(data):
         db.commit()
         if cur.rowcount > 0:
             return 'Berhasil input bosque'
-        else:
-            return 'Blm berhasil bosque, mungkin npm ato matkul salah ato nilai yg diinput sama kyk sebelumnya'
+    return 'Blm berhasil bosque, mungkin npm ato matkul salah ato nilai yg diinput sama kyk sebelumnya'
 
 
 def getTanggalUTS(tahun):
@@ -283,8 +264,7 @@ def getTanggalUTS(tahun):
         row = cur.fetchone()
         if row is not None:
             return row
-        else:
-            return False
+    return False
 
 
 def getTanggalUAS(tahun):
@@ -315,8 +295,7 @@ def getTanggalNilai(tahun, prodi):
         row = cur.fetchone()
         if row is not None:
             return row[0]
-        else:
-            return datetime.strptime("0000-00-00", '%Y-%m-%d').date()
+    return datetime.strptime("0000-00-00", '%Y-%m-%d').date()
 
 
 def getProdi(matkul):
@@ -331,8 +310,7 @@ def getProdi(matkul):
         row = cur.fetchone()
         if row is not None:
             return row[0].replace(".", "")
-        else:
-            return False
+    return False
 
 
 def inputByExcel(file, jenis, tahun, func, nomor):
@@ -344,7 +322,7 @@ def inputByExcel(file, jenis, tahun, func, nomor):
     prodi = getProdi(kode_matkul)
     tgl = getTanggalNilai(tahun, prodi)
     today = datetime.today().date()
-    
+    msg = ""
     print(tgl, today)
     if tgl >= today:
         if checkDosen(nomor, tahun, matkul=kode_matkul):
@@ -366,8 +344,6 @@ def inputByExcel(file, jenis, tahun, func, nomor):
                         'npm':  npm,
                         'nilai': str(v[0].value) if v[0].value is not None else '0',
                     }
-                    
-                    # print(jenis, func, npm, str(v[0].value) if v[0].value is not None else '0')
                     if jenis.lower() == 'uts':
                         func(data)
                     elif jenis.lower() == 'uas':
@@ -394,27 +370,14 @@ def inputByExcel(file, jenis, tahun, func, nomor):
 
 
 def inputNilaiByExcel(file, jenis, tahun, nomor):
-
-    today = datetime.today().date()
     book = openpyxl.load_workbook(file,data_only=True)
     sheet = book.active
     cek_ujian = sheet["E9"].value
-    # print(cek_ujian)
+    msg = ""
     if jenis.lower() == 'uts' and 'uts' in str(cek_ujian).lower():
-        # uts = getTanggalUTS(tahun)
-
-        # if uts[0] <= today and uts[1] >= today and uts:
-        #     msg = inputByExcel(file, jenis, tahun, inputNilaiUTS, nomor)
-        # else:
-        #     msg = 'Gak bisa lagi bosque'
         msg = inputByExcel(file, jenis, tahun, inputNilaiUTS, nomor)
 
     elif jenis.lower() == 'uas' and 'uas' in str(cek_ujian).lower():
-        # uas = getTanggalUAS(tahun)
-        # if uas[0] <= today and uas[1] >= today and uas:
-        #     msg = inputByExcel(file, jenis, tahun, inputNilaiUAS, nomor)
-        # else:
-        #     msg = 'Gak bisa lagi bosque'
         msg = inputByExcel(file, jenis, tahun, inputNilaiUAS, nomor)
     else:
         msg = 'Ujian apa nih bosque, salah file mereun.. ato udh diubah format filenya ya..., hayoo lo...'
@@ -431,17 +394,13 @@ def inputNilaiByMesssage(data, jenis, nomor):
         today = datetime.today().date()
 
         if jenis.lower() == 'uts':
-            uts = getTanggalUTS(data['tahun'])
             if tgl >= today:
-                # if uts[0] <= today and uts[1] >= today and uts:
                 msg = inputNilaiUTS(data)
             else:
                 msg = 'Gak bisa lagi bosque'
 
         elif jenis.lower() == 'uas':
-            uas = getTanggalUAS(data['tahun'])
             if tgl >= today:
-                # if uas[0] <= today and uas[1] >= today and uas:
                 msg = inputNilaiUAS(data)
             else:
                 msg = 'Gak bisa lagi bosque'
