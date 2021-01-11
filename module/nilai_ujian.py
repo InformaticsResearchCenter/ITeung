@@ -40,17 +40,12 @@ def replymsg(driver, data):
                     # filename = "./Jadwal-UTS-Ganjil_2020_2021-SISTEM_INFORMASI_GEOGRAFIS-A-18145.xlsx"
                     data = 'uas'+";"+nomor+";"+filename
                     subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],data], cwd=config.cwd)
-                    sleep(2)
-                    moveFiles(filename)
                     msgreply = ''
                 elif 'uts' in msg:
                     filename = downloadFile(driver)
                     # filename = "./Jadwal-UTS-Ganjil_2020_2021-SISTEM_INFORMASI_GEOGRAFIS-A-18145.xlsx"
                     data = 'uts'+";"+nomor+";"+filename
                     subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],data], cwd=config.cwd)
-                    filename = downloadFile(driver)
-                    sleep(2)
-                    moveFiles(filename)
                     msgreply = ''
                 else:
                     msgreply = 'Salah keyword bosque..'
@@ -124,10 +119,11 @@ def run(data):
 def downloadFile(driver):
     # filecheck = driver.find_elements_by_class_name('_23z4j')[-1]
     # filename = driver.find_elements_by_class_name('_1VzZY')[-1].text
+    # driver.find_elements_by_class_name('WtawS')[-1].click()
     filename = driver.execute_script("var length = document.getElementsByClassName('_2xUEC _2XHG4 _2K5wo').length; return document.getElementsByClassName('_2xUEC _2XHG4 _2K5wo')[length-1].children[0].textContent")
     print(filename)
+    sleep(2)
     driver.execute_script("var length = document.getElementsByClassName('_2xUEC _2XHG4 _2K5wo').length; document.getElementsByClassName('WtawS')[length-1].click()")
-    # driver.find_elements_by_class_name('WtawS')[-1].click()
     return filename
 
 
