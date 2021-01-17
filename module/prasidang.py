@@ -51,7 +51,7 @@ def replymsg(driver, data):
 def sendEmail(email, file, mhs):
     try:
         subject = f"Template Daftar Penilaian Sidang TA {mhs}"
-        body = f"Jadi ini template daftar penilaian sidang TA {mhs}. Mohon dicek kembali, apabila ada kesalahan pada template ini.\nForm penilaian yg sudah diinputkan, dikirimkan segera hari ini juga ke email koordinator TA woroisti@poltekpos.ac.id atau wistirahayu@gmail.com"
+        body = f"Jadi ini template daftar penilaian sidang TA {mhs}. Mohon dicek kembali, apabila ada kesalahan pada template ini.\nForm penilaian yg sudah diinputkan, dikirimkan segera hari ini juga ke email koordinator TA cahyoprianto@poltekpos.ac.id"
 
         sender_email = config.email_iteung
         receiver_email = email
