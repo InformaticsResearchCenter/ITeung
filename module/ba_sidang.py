@@ -33,7 +33,8 @@ def auth(data):
     return ret
 
 
-def replymsg(driver, data):    
+def replymsg(driver, data):   
+    msgreply = "" 
     if kelas.cekSiap():    
         num = numbers.normalize(data[0])
         # tahunID = '20192'

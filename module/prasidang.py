@@ -115,11 +115,12 @@ def run(data):
     namaMhs = dataMhs[0]
     prodi = dataMhs[1]
     # tahun = '20192'
-    tahun_id = kelas.getTahunID()
+    tahun = kelas.getTahunID()
     judul = getJudul(npm, tahun)
     
     namaFile = f"bap-sidang-{npm}.xlsx"
-    shutil.copy("sidang\\TEMPLATE DAFTAR PENILAIAN SIDANG TUGAS AKHIR.xlsx", f"sidang\\{namaFile}")
+    # shutil.copy("sidang\\TEMPLATE DAFTAR PENILAIAN SIDANG TUGAS AKHIR.xlsx", f"sidang\\{namaFile}")
+    shutil.copy("sidang\\TEMPLATE DAFTAR PENILAIAN SIDANG INTERNSHIP I.xlsx", f"sidang\\{namaFile}")
     
     wb = load_workbook(filename=f"sidang\\{namaFile}")
     
@@ -147,7 +148,7 @@ def run(data):
             sheet["D13"] = tahun[:4]+"/"+str(int(tahun[:4])+1)
             sheet["D14"] = jadwal
             sheet["D15"] = judul
-            sheet["I81"] = f'( {namaPenUt} )'
+            # sheet["I81"] = f'( {namaPenUt} )'
             
         elif wb.sheetnames[s] == 'Risalah Penguji Pendamping':
             wb.active = s
@@ -158,7 +159,7 @@ def run(data):
             sheet["D13"] = tahun[:4]+"/"+str(int(tahun[:4])+1)
             sheet["D14"] = jadwal
             sheet["D15"] = judul
-            sheet["I81"] = f'( {namaPenPen} )'
+            # sheet["I81"] = f'( {namaPenPen} )'
             
         elif wb.sheetnames[s] == 'Penilaian Penguji Utama':
             wb.active = s
@@ -166,7 +167,7 @@ def run(data):
             sheet["C9"] = namaMhs
             sheet["C10"] = str(npm)
             sheet["C11"] = judul
-            sheet["D32"] = f'( {namaPenUt} )'
+            # sheet["D32"] = f'( {namaPenUt} )'
             
         elif wb.sheetnames[s] == 'Penilaian Penguji Pendamping':
             wb.active = s
@@ -174,7 +175,7 @@ def run(data):
             sheet["C9"] = namaMhs
             sheet["C10"] = str(npm)
             sheet["C11"] = judul
-            sheet["D32"] = f'( {namaPenPen} )'
+            # sheet["D32"] = f'( {namaPenPen} )'
             
         else:
             pass
@@ -196,7 +197,7 @@ def getDataDosen(dosenid):
 
 def getDataMahasiswa(npm):
     db = kelas.dbConnectSiap()
-    sql = f"select smm.Nama, smp.Nama from simak_mst_mahasiswa smm, simak_mst_prodi smp where MhswID = '{npm}'"
+    sql = f"select smm.Nama, smp.Nama from simak_mst_mahasiswa as smm inner join simak_mst_prodi as smp on smm.ProdiID = smp.ProdiID where MhswID = '{npm}'"
     with db:
         cur = db.cursor()
         cur.execute(sql)
