@@ -34,8 +34,9 @@ def kelasMulai(data):
         num=data[0]
         if isJadwalID(kelas.getKodeDosen(num), grp.split('-')[0]):
             try:
+                rencana_kehadiran = kelas.rencana_kehadiran(grp.split('-')[0])
                 kehadiran = kelas.getKehadiran(grp.split('-')[0])
-                if (kehadiran != config.kehadiran and kehadiran < config.kehadiran) or (kelas.isSudahKelas(jadwalid=grp.split('-')[0], lecturercode=kelas.getKodeDosen(num=num))):
+                if (kehadiran != rencana_kehadiran and kehadiran < rencana_kehadiran) or (kelas.isSudahKelas(jadwalid=grp.split('-')[0], lecturercode=kelas.getKodeDosen(num=num))):
                     if kelas.isMatkul(grp.split('-')[0]):
                         jadwalid = grp.split('-')[0]
                         jadwalserial = kelas.getJadwalSerial(jadwalid=jadwalid)
