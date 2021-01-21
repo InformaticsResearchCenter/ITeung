@@ -41,7 +41,7 @@ def replymsg(driver, data):
             data = f"{kelas.getEmailDosen(kodedosen)};{[npm for npm in msg.split(' ') if npm.isdigit() and len(npm) == 7][0]}"
             subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],data], cwd=config.cwd)
         except Exception as e: 
-            wa.typeAndSendMessage(driver, 'Mimpam zuzuzu.. anda salah keyword...'+str(e))
+            wa.typeAndSendMessage(driver, 'Gak ada npmnya ato mungkin mahasiswa dgn npm sekian tidak ada.....')
         
     else:
         wa.typeAndSendMessage(
@@ -120,7 +120,7 @@ def run(data):
     
     namaFile = f"bap-sidang-{npm}.xlsx"
     # shutil.copy("sidang\\TEMPLATE DAFTAR PENILAIAN SIDANG TUGAS AKHIR.xlsx", f"sidang\\{namaFile}")
-    shutil.copy("sidang\\TEMPLATE DAFTAR PENILAIAN SIDANG INTERNSHIP I.xlsx", f"sidang\\{namaFile}")
+    shutil.copy("sidang/TEMPLATE DAFTAR PENILAIAN SIDANG INTERNSHIP I.xlsx", f"sidang/{namaFile}")
     
     wb = load_workbook(filename=f"sidang\\{namaFile}")
     
