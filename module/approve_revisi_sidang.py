@@ -62,7 +62,7 @@ def makeBeritaAcara(npm, tahunID, kategori):
 
 def getKategoriSidang(npm, tahunID):
     db = kelas.dbConnectSiap()
-    sql = f"SELECT distinct(Tipe) FROM simpati.simak_croot_bimbingan WHERE MhswID = '{npm}' AND TahunID = '{tahunID}'"
+    sql = f"SELECT distinct(Tipe) FROM simpati.simak_croot_bimbingan WHERE MhswID = '{npm}' AND TahunID = '{tahunID}' order by TahunID DESC"
     with db:
         cur = db.cursor()
         cur.execute(sql)

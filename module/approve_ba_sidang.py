@@ -11,8 +11,8 @@ def auth(data):
     return ret
 
 def replymsg(driver, data):
-    wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
-    wa.typeAndSendMessage(driver, wmsg)
+    # wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
+    # wa.typeAndSendMessage(driver, wmsg)
     num = numbers.normalize(data[0])
     kodeDosen = kelas.getKodeDosen(num)
     # print(kodeDosen)
@@ -31,7 +31,7 @@ def replymsg(driver, data):
                 kaprodiID = getDosenIDfromNIPY(nip)
                 
                 kategori = getKategoriSidang(npm, tahunID)
-                kategori = "ta"
+                # kategori = "ta"
                 
                 if pem[0] == kodeDosen:
                     role = "pembimbing_utama"
@@ -58,18 +58,19 @@ def replymsg(driver, data):
                         role = "koordinator"
                         approveBASidang(kodeDosen, role, tahunID, kategori, npm)
                         peran += 'Koordinator '
-                    else:
-                        pass
 
                 if kaprodiID == kodeDosen:
                     if checkKaprodi(npm, tahunID, kategori):
                         role = "kaprodi"
                         approveBASidang(kodeDosen, role, tahunID, kategori, npm)
-                        peran = 'Kepala Prodi '
+                        peran += 'Kepala Prodi '
                     else:
                         pass
-                
-                msgreply = f"Dah diapprove ya {npm} oleh {peran}"
+
+                if 'Koordinator' in peran or 'Kepala Prodi' in peran or 'Penguji Pendamping' in peran or 'Penguji Utama' in peran or 'Pembimbing Pendamping' in peran or 'Pembimbing Utama' in peran:
+                    msgreply = f"Dah diapprove ya {npm} oleh {peran}"
+                else:
+                    msgreply = f"Harus approve dulu dari penguji -> pembimbing -> koordinator -> kepala prodi"
             else:
                 msgreply = f"Blm acc revisi {npm} dari kedua penguji nih......"
         else:
@@ -142,7 +143,7 @@ def getDosenIDfromNIPY(nipy):
 
 def getKategoriSidang(npm, tahunID):
     db = kelas.dbConnectSiap()
-    sql = f"SELECT distinct(Tipe) FROM simpati.simak_croot_bimbingan WHERE MhswID = '{npm}' AND TahunID = '{tahunID}'"
+    sql = f"SELECT distinct(Tipe) FROM simpati.simak_croot_bimbingan WHERE MhswID = '{npm}' AND TahunID = '{tahunID}' order by TahunID DESC"
     with db:
         cur = db.cursor()
         cur.execute(sql)
