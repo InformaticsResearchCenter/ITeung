@@ -66,6 +66,16 @@ def getNamaProdiFromProdiID(prodi_id):
         data=cur.fetchone()
         return sql_to_dictionary.fetchOneMode(data, cur)
 
+def rencana_kehadiran(jadwal_id):
+    db = dbConnectSiap()
+    sql = f"select RencanaKehadiran from simak_trn_jadwal where JadwalID={jadwal_id}"
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        data = cur.fetchone()
+        if data:
+            return int(data[0])
+
 def kodeKelas(kode):
     switcher = {
         'A': '01',
