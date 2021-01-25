@@ -51,7 +51,7 @@ def replymsg(driver, data):
                 wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
                 wa .typeAndSendMessage(driver, wmsg)
                 
-                tipe = 'ta'
+                tipe = 'i1'
                 
                 df = pd.read_excel(f'jadwal_sidang_ta_14.xlsx')
                 listPem = ['koor', 'tipe', 'tahun']
@@ -75,10 +75,6 @@ def replymsg(driver, data):
                     npm, nama=kelas.getNpmandNameMahasiswa(num)
                     
                     email = getEmail(npm)
-                    wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
-                    wmsg = wmsg.replace('#EMAIL#', email)
-                    wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
-                    wa .typeAndSendMessage(driver, wmsg)
                     
                     kategori = getKategoriSidang(npm, tahunID)
                     if checkRevisiStatus(npm, tahunID):
@@ -86,6 +82,12 @@ def replymsg(driver, data):
                             
                             data = f"{'mahasiswa'};{npm};{tahunID};{email};{kategori}"
                             subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],data], cwd=config.cwd)
+
+                            wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
+                            wmsg = wmsg.replace('#EMAIL#', email)
+                            wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
+                            wa .typeAndSendMessage(driver, wmsg)
+                            
                             msgreply = ""
                         else:
                             msgreply = "Approve dulu dari semuanya pembimbing, penguji, koordinator, kaprodi..."
