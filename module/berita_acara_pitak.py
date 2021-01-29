@@ -244,8 +244,8 @@ def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing
     data = [['', Paragraph(f'<font name="Times">Bandung, {tanggal}</font>', styles["Center"]), ''],
         [Paragraph('<font name="Times"><b>Koordinator</b></font>', styles["Center"]), '',Paragraph('<font name="Times"><b>Pembimbing</b></font>', styles["Center"])],
         [image_koordinator, '', image_pembimbing],
-        [Paragraph(f'<font name="Times"><b>{kelas.getNamaDosen("TI041L")}</b></font>', styles["Justify"]), '',Paragraph(f'<font name="Times"><b>{kelas.getNamaDosen(kode_dosen_pembimbing)}</b></font>', styles["Justify"])],
-        [Paragraph(f'<font name="Times"><b>NIDN. {kelas.getAllDataDosens("TI041L")[2]}</b></font>', styles["Justify"]), '',Paragraph(f'<font name="Times"><b>NIDN. {nidn_pembimbing}</b></font>', styles["Justify"])],
+        [Paragraph(f'<font name="Times"><b>{kelas.getNamaDosen(kode_dosen_koordinator)}</b></font>', styles["Justify"]), '',Paragraph(f'<font name="Times"><b>{kelas.getNamaDosen(kode_dosen_pembimbing)}</b></font>', styles["Justify"])],
+        [Paragraph(f'<font name="Times"><b>NIDN. {kelas.getAllDataDosens(kode_dosen_koordinator)[2]}</b></font>', styles["Justify"]), '',Paragraph(f'<font name="Times"><b>NIDN. {nidn_pembimbing}</b></font>', styles["Justify"])],
         ]
 
     table = Table(data, [7*cm, 4.3*cm, 7*cm], [1*cm, .5*cm, 3.5*cm, .5*cm, .5*cm])
