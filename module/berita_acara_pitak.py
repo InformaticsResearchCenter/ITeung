@@ -5,12 +5,12 @@ from reportlab.lib.units import cm
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image, PageBreak
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from datetime import date
-from module import kelas, bkd, approve_kambing, kambing
+from module import kelas, bkd, approve_kambing, kambing, cek_bimbingan_dosen
 from lib import numbers
 from datetime import datetime
 from Crypto.Cipher import AES
 
-import qrcode, config, os
+import qrcode, config, os, ssl
 
 def auth(data):
     if kelas.getKodeDosen(data[0]) == '':
@@ -20,24 +20,26 @@ def auth(data):
     return ret
 
 def replymsg(driver, data):
-    num = numbers.normalize(data[0])  
-    main(num)
+    ssl._create_default_https_context = ssl._create_unverified_context
+    num = numbers.normalize(data[0])
+    tipe_bimbingan = cek_bimbingan_dosen.cekTipeBimbingan(data[3])
+    main(num, tipe_bimbingan)
     bkd.mail(kelas.getEmailDosen(kelas.getKodeDosen(num)),
              f'yooo watsapppp mennnnn {config.bot_name} kirim file BERITA ACARA PITAK nihhhh',
              f'cek cek dulu ya filenya.....',
-             bkd.getFilePath(kelas.getEmailDosen(kelas.getKodeDosen(num)), 'beritaacarapitak')
+             bkd.getFilePath(kelas.getEmailDosen(kelas.getKodeDosen(num)), 'beritaacarapitak', kelas.getTahunID())
              )
     msgreply=f"Sampun yo.. coba cek emailnyaa yaaa yang {kelas.getEmailDosen(kelas.getKodeDosen(num))}"
     return msgreply
 
-def main(num):    
+def main(num, tipe_bimbingan):
     kode_dosen = kelas.getKodeDosen(num)
-    list_mahasiswa = getListMahasiswa(kode_dosen)
-    mainMakePdf(list_mahasiswa, kode_dosen)
+    list_mahasiswa = getListMahasiswa(kode_dosen, tipe_bimbingan)
+    mainMakePdf(list_mahasiswa, kode_dosen, tipe_bimbingan)
 
-def getListMahasiswa(kode_dosen):
+def getListMahasiswa(kode_dosen, tipe_bimbingan):
     db = kelas.dbConnect()
-    sql = f"SELECT npm FROM bimbingan_data WHERE (pembimbing1='{kode_dosen}'or pembimbing2='{kode_dosen}') AND tahun_id='{kelas.getTahunID()}'"
+    sql = f"SELECT npm FROM bimbingan_data WHERE (pembimbing1='{kode_dosen}'or pembimbing2='{kode_dosen}') AND tahun_id='{kelas.getTahunID()}' AND tipe_bimbingan='{tipe_bimbingan}'"
     listMahasiswa = []
     with db:
         cur = db.cursor()
@@ -64,13 +66,13 @@ def getDataMahasiswa(npm):
         if row is not None:
             return row
 
-def mainMakePdf(list_mahasiswa, kode_dosen):
+def mainMakePdf(list_mahasiswa, kode_dosen, tipe_bimbingan):
     
-    doc = SimpleDocTemplate(f'./beritaacarapitak/BERITA ACARA PITAK-TA-{kode_dosen}-{kelas.getEmailDosen(kode_dosen)}.pdf', pagesize=A4, rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=18)
+    doc = SimpleDocTemplate(f'./beritaacarapitak/BERITA ACARA PITAK-{tipe_bimbingan.upper()}-{kelas.getTahunID()}-{kode_dosen}-{kelas.getEmailDosen(kode_dosen)}.pdf', pagesize=A4, rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=18)
     doc.pagesize = portrait(A4)
     elements = []
 
-    logo = Image("logoKAMBING.png", 3.5 * inch, 1 * inch)
+    logo = Image("logoKAMBING.PNG", 3.5 * inch, 1 * inch)
     logo.hAlign = "LEFT"
     
     styles = getSampleStyleSheet()
@@ -80,7 +82,7 @@ def mainMakePdf(list_mahasiswa, kode_dosen):
 
     for npm in list_mahasiswa:
         studentid, studentname = getDataMahasiswa(npm)
-        status_nilai, nilai_total = totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN, kode_dosen)
+        status_nilai, nilai_total = totalNilai(studentid, config.MINIMUM_PERTEMUAN_BIMBINGAN, kode_dosen, tipe_bimbingan)
         status_nilai=True
         if status_nilai:
             JUDUL_BIMBINGAN = f"{getJudulFromNpm(npm)}"
@@ -226,7 +228,7 @@ def makePdf(npm_mahasiswa, nama_mahasiswa, tipe_bimbingan, kode_dosen_pembimbing
 
     data = approve_kambing.getDataPembimbing(npm_mahasiswa, kode_dosen_pembimbing)
     pembimbingke = approve_kambing.pembimbingPositionAs(data, kode_dosen_pembimbing)
-    qrcode_pembimbing = f"./beritaacarapitakqrcode/{npm_mahasiswa}-{kode_dosen_pembimbing}-{tipe_bimbingan}.png"
+    qrcode_pembimbing = f"./beritaacarapitakqrcode/{npm_mahasiswa}-{kode_dosen_pembimbing}-{tipe_bimbingan}.PNG"
     if approve_kambing.cekApprovalTrueorFalse(npm_mahasiswa, pembimbingke.replace('pembimbing', 'koordinator')):
         qrcode_koordinator = f"./beritaacarapitakqrcode/{npm_mahasiswa}-{kode_dosen_koordinator}-{tipe_bimbingan}.PNG"
     else:
@@ -333,13 +335,10 @@ def getTipeBimbingan(npm):
         else:
             return None
 
-def totalNilai(npm, MINIMUM_PERTEMUAN, dosenid):
-    ALL_DATA_BIMBINGAN = getAllDataBimbingan(npm)
-    ALL_NILAI_BIMBINGAN = getAllNilaiBimbingan(npm, dosenid)
+def totalNilai(npm, MINIMUM_PERTEMUAN, dosenid, tipe_bimbingan):
+    ALL_DATA_BIMBINGAN = getAllDataBimbingan(npm, tipe_bimbingan)
+    ALL_NILAI_BIMBINGAN = getAllNilaiBimbingan(npm, dosenid, tipe_bimbingan)
     LAST_PERTEMUAN_BIMBINGAN = ALL_DATA_BIMBINGAN[0][5]
-    # if len(ALL_DATA_BIMBINGAN) < 16:
-    #     status, totalnilai=False, 0
-    # else:
     if LAST_PERTEMUAN_BIMBINGAN < MINIMUM_PERTEMUAN:
         totalnilai = 0
         for nilai in ALL_NILAI_BIMBINGAN:
@@ -352,9 +351,9 @@ def totalNilai(npm, MINIMUM_PERTEMUAN, dosenid):
         status, totalnilai = True, totalnilai / (LAST_PERTEMUAN_BIMBINGAN)
     return status, totalnilai
 
-def getAllDataBimbingan(npm):
+def getAllDataBimbingan(npm, tipe_bimbingan):
     db = kelas.dbConnectSiap()
-    sql = f"select * from simak_croot_bimbingan where MhswID={npm} ORDER BY Pertemuan_ DESC"
+    sql = f"select * from simak_croot_bimbingan where MhswID={npm} AND Tipe='{tipe_bimbingan}' ORDER BY Pertemuan_ DESC"
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -364,9 +363,9 @@ def getAllDataBimbingan(npm):
         else:
             return None
         
-def getAllNilaiBimbingan(npm, dosenid):
+def getAllNilaiBimbingan(npm, dosenid, tipe_bimbingan):
     db = kelas.dbConnectSiap()
-    sql = f"select Nilai from simak_croot_bimbingan where MhswID={npm} and DosenID='{dosenid}' and TahunID={kelas.getTahunID()} ORDER BY Pertemuan_ ASC"
+    sql = f"select Nilai from simak_croot_bimbingan where MhswID={npm} and DosenID='{dosenid}' and TahunID={kelas.getTahunID()} and Tipe='{tipe_bimbingan}' ORDER BY Pertemuan_ ASC"
     with db:
         cur = db.cursor()
         cur.execute(sql)
