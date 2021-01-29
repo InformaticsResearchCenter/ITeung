@@ -188,7 +188,8 @@ def getnumonly(groupname, tipe):
     date_now = datetime.datetime.now().strftime('%Y-%m-%d')
     jam_mulai_filter = f"{date_now} {jam_mulai}"
     jam_selesai_filter = f"{date_now} {jam_selesai}"
-    sql = f"select distinct(number) from log where timestamps >= '{jam_mulai_filter}' and timestamps <= '{jam_selesai_filter}' and groupname = '{groupname}' and tipe='{tipe}'"
+    sql = "select distinct number from log where DATE_FORMAT(timestamps, '%Y-%m-%d') = CURDATE() and groupname = '{0}' and tipe='{1}'".format(groupname, tipe)
+    # sql = f"select distinct(number) from log where timestamps >= '{jam_mulai_filter}' and timestamps <= '{jam_selesai_filter}' and groupname = '{groupname}' and tipe='{tipe}'"
     with db:
         cur = db.cursor()
         cur.execute(sql)
