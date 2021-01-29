@@ -104,7 +104,7 @@ def mainMakePdf(list_mahasiswa, kode_dosen, tipe_bimbingan):
                 elements=elements,
                 logo=logo,
                 styles=styles,
-                kode_dosen_koordinator='TI041L'
+                kode_dosen_koordinator='NN056L'
             )
             elements.append(PageBreak())
             
