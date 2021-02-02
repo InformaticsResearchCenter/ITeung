@@ -1,10 +1,9 @@
 from lib import wa, numbers, sql_to_dictionary
-from datetime import datetime
+import datetime
 from time import sleep
 
 import config
 import pymysql
-import requests
 
 from module import perwalian_selesai
 
@@ -131,7 +130,7 @@ def getKelasMahasiswabyStudentID(npm):
         rows=cur.fetchall()
         middle_data=len(rows)//2
     alfabetkelas=toKelas(str(rows[middle_data][0]))
-    return f'{int(datetime.now().strftime("%Y"))-int(getTahunAngkatanWithStudentID(npm))+1}{alfabetkelas}'
+    return f'{int(datetime.datetime.now().strftime("%Y"))-int(getTahunAngkatanWithStudentID(npm))+1}{alfabetkelas}'
 
 def getPenasehatAkademik(npm):
     db=dbConnectSiap()
@@ -183,7 +182,14 @@ def getEmailDosen(dosenid):
 
 def getnumonly(groupname, tipe):
     db = dbConnect()
+    jam_mulai = jam_mulai_jam_selesai(groupname.split("-")[0])['JamMulai']
+    jam_selesai = jam_mulai_jam_selesai(groupname.split("-")[0])['JamSelesai']
+
+    date_now = datetime.datetime.now().strftime('%Y-%m-%d')
+    jam_mulai_filter = f"{date_now} {jam_mulai}"
+    jam_selesai_filter = f"{date_now} {jam_selesai}"
     sql = "select distinct number from log where DATE_FORMAT(timestamps, '%Y-%m-%d') = CURDATE() and groupname = '{0}' and tipe='{1}'".format(groupname, tipe)
+    # sql = f"select distinct(number) from log where timestamps >= '{jam_mulai_filter}' and timestamps <= '{jam_selesai_filter}' and groupname = '{groupname}' and tipe='{tipe}'"
     with db:
         cur = db.cursor()
         cur.execute(sql)
@@ -285,6 +291,16 @@ def getHandphoneMahasiswa(npm):
         if rows is not None:
             return rows[0]
 
+def is_time_to_attendant(jadwal_id):
+    jam_mulai = jam_mulai_jam_selesai(jadwal_id)['JamMulai']
+    jam_selesai = jam_mulai_jam_selesai(jadwal_id)['JamSelesai']
+    time_now = datetime.datetime.now().time()
+
+    times_now = datetime.timedelta(hours=time_now.hour, minutes=time_now.minute, seconds=time_now.second)
+
+    if times_now >= jam_mulai and times_now <= jam_selesai:
+        return True
+    return False
 
 def isMatkul(jadwalid):
     db = dbConnectSiap()
@@ -647,7 +663,7 @@ def beritaAcara(driver, num, groupname, data, msg):
     lecturercode=getKodeDosen(num)
     materi=msg.lower()
     materi=materi.split(' materi ')
-    tanggal=datetime.now().strftime("%d-%m-%Y")
+    tanggal=datetime.datetime.now().strftime("%d-%m-%Y")
     kodekelas=kodeKelas(groupname.split('-')[1])
     jadwalid=groupname.split('-')[0]
     praktekteori=RuangID(lecturercode=lecturercode, jadwalid=jadwalid)
@@ -735,6 +751,17 @@ def getKehadiran(jadwalid):
         else:
             ret=''
     return ret
+
+def jam_mulai_jam_selesai(jadwal_id):
+    db = dbConnectSiap()
+    sql = f"select Nama, JamMulai, JamSelesai from simpati.simak_trn_jadwal where JadwalID={jadwal_id}"
+    with db:
+        cur = db.cursor()
+        cur.execute(sql)
+        data = cur.fetchone()
+        if data:
+            return sql_to_dictionary.fetchOneMode(data, cur)
+        return None
 
 def updateKehadiran(jadwalid, pertemuan):
     db=dbConnectSiap()
@@ -852,7 +879,7 @@ def getJumlahPertemuanMahasiswa(jadwalid, studentid, absentvalue):
 
 def updatePresensiKRS(presensi, jadwalid, studentid):
     db=dbConnectSiap()
-    timenow = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    timenow = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     sql="UPDATE simak_trn_krs SET _Presensi={presensi}, TanggalEdit='{timeedit}' WHERE JadwalID={jadwalid} and MhswID={studentid}".format(presensi=presensi, timeedit=timenow, jadwalid=jadwalid, studentid=studentid)
     with db:
         cur=db.cursor()
@@ -890,8 +917,8 @@ def siapabsensiwithsql(grp, num, materi, tipe):
             lastpertemuan = getLastpertemuan(kodedosen=lecturercode, jadwalid=jadwalid)
             if lastpertemuan == '':
                 lastpertemuan=0
-            yearmonthdaynow = datetime.now().strftime("%Y-%m-%d")
-            yearmonthdaytimenow = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            yearmonthdaynow = datetime.datetime.now().strftime("%Y-%m-%d")
+            yearmonthdaytimenow = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             starttime = getDataMatkul(jadwalid=jadwalid)[3]
             endtime = getDataMatkul(jadwalid=jadwalid)[4]
             updateKehadiran(jadwalid=jadwalid, pertemuan=int(lastpertemuan)+1)
@@ -935,7 +962,7 @@ def getStudentPhoneNumberFromNPM(npm):
 
 def siapabsensiwithweb(driver, num, namagroup):
     try:
-        tanggalsekarang = datetime.now().strftime("%d/%m/%Y")
+        tanggalsekarang = datetime.datetime.now().strftime("%d/%m/%Y")
         namagroupsplit = namagroup.split("-")
         kodematkul = namagroupsplit[0]
         kodekelas = namagroupsplit[1]

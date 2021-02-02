@@ -2,7 +2,7 @@ from module import kelas, approve_kambing, berita_acara_pitak
 from lib import numbers, message
 
 def auth(data):
-    if kelas.getKodeDosen(numbers.normalize(data[0])) == 'TI041L':
+    if kelas.getKodeDosen(numbers.normalize(data[0])) == 'NN056L':
         ret=True
     else:
         ret=False

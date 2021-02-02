@@ -37,6 +37,7 @@ def kelasMulai(data):
                 rencana_kehadiran = kelas.rencana_kehadiran(grp.split('-')[0])
                 kehadiran = kelas.getKehadiran(grp.split('-')[0])
                 if (kehadiran != rencana_kehadiran and kehadiran < rencana_kehadiran) or (kelas.isSudahKelas(jadwalid=grp.split('-')[0], lecturercode=kelas.getKodeDosen(num=num))):
+                    # if kelas.is_time_to_attendant(grp.split('-')[0]):
                     if kelas.isMatkul(grp.split('-')[0]):
                         jadwalid = grp.split('-')[0]
                         jadwalserial = kelas.getJadwalSerial(jadwalid=jadwalid)
@@ -64,6 +65,9 @@ def kelasMulai(data):
                         listMK=kelas.getListMK(kelas.getKodeDosen(data[0]))
                         guide = 'Yahh... Nama grupnya belum JADWALID-KELAS-NAMA. yuk ubah #BOTNAME# kasih contoh 17312-A-KECERDASAN BUAT klo lupa kode mata kuliah #BOTNAME# kasih ya ini daftarnya : \n'
                         msgreply = guide+listMK
+                    # else:
+                    #     data = kelas.jam_mulai_jam_selesai(grp.split('-')[0])
+                    #     return f'iwiwiwiwiwiwwwwwwww jam sekarang diluar batas waktu kelas nihhh mohon untuk memulai kelas pada jamnya yaaa... \n\nMatakuliah: {data["Nama"]}\nJam Mulai: {data["JamMulai"]}\nJam Selesai: {data["JamSelesai"]}'
                 elif kehadiran == '':
                     msgreply = 'yahhhhh kehadirannya ngga #BOTNAME# temuin coba di cek lagi jadwal idnya yaaa....'
                 else:
