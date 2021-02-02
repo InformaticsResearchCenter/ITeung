@@ -57,8 +57,8 @@ def replymsg(driver, data):
                 if df.empty:
                     msgreply = "Harus koornya cuy ato Anda salah tipe sidang..."
                 else:
-                    if checkStatusSidangKoor(dosenID, tahun_id, tipe):
-                        data = f"{'dosen'};{dosenID};{tahun_id};{email};{tipe}"
+                    if checkStatusSidangKoor(dosenID, tahunID, tipe):
+                        data = f"{'dosen'};{dosenID};{tahunID};{email};{tipe}"
                         subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],data], cwd=config.cwd)
 
                         wmsg = reply.getWaitingMessage(os.path.basename(__file__).split('.')[0])
@@ -80,11 +80,11 @@ def replymsg(driver, data):
                     wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
                     wa.typeAndSendMessage(driver, wmsg)
                     
-                    kategori = getKategoriSidang(npm, tahun_id)
-                    if checkRevisiStatus(npm, tahun_id):
-                        if checkStatusSidang(npm, tahun_id, kategori):
+                    kategori = getKategoriSidang(npm, tahunID)
+                    if checkRevisiStatus(npm, tahunID):
+                        if checkStatusSidang(npm, tahunID, kategori):
                             email = getEmail(npm)
-                            data = f"{'mahasiswa'};{npm};{tahun_id};{email};{kategori}"
+                            data = f"{'mahasiswa'};{npm};{tahunID};{email};{kategori}"
                             subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],data], cwd=config.cwd)
                             msgreply = ""
                         else:
@@ -120,7 +120,7 @@ def run(data):
         npms = df.loc[(df["koor"] == dosenID) & (df["tahun"] == int(tahunID)), ['npm']].values.tolist()
         
         checkDir(f'./revisisidang/pengesahan/')
-        namaFile = f"revisisidang\\pengesahan\\pengesahan-sidang-{tahunID}-{dosenID}.pdf"
+        namaFile = f"revisisidang/pengesahan/pengesahan-sidang-{tahunID}-{dosenID}.pdf"
         doc = SimpleDocTemplate(namaFile,
                     pagesize=A4,
                     rightMargin=3*cm,
@@ -157,7 +157,7 @@ def run(data):
         kategori = data[4]
         
         checkDir(f'./revisisidang/pengesahan/')
-        namaFile = f"revisisidang\\pengesahan\\pengesahan-sidang-{tahunID}-{npm}.pdf"
+        namaFile = f"revisisidang/pengesahan/pengesahan-sidang-{tahunID}-{npm}.pdf"
         doc = SimpleDocTemplate(namaFile,
                             pagesize=A4,
                             rightMargin=3*cm,
