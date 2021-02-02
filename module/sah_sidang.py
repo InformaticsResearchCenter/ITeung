@@ -56,13 +56,13 @@ def replymsg(driver, data):
                 listPem = ['koor', 'tipe', 'tahun']
                 df = df.loc[:, listPem]
                 df = df.drop_duplicates()
-                df = df.loc[(df["koor"] == dosenID) & (df["tipe"] == tipe) & (df["tahun"] == int(tahunID))]
+                df = df.loc[(df["koor"] == dosenID) & (df["tipe"] == tipe) & (df["tahun"] == int(tahun_id))]
                 
                 if df.empty:
                     msgreply = "Harus koornya cuy ato Anda salah tipe sidang..."
                 else:
-                    if checkStatusSidangKoor(dosenID, tahunID, tipe):
-                        data = f"{'dosen'};{dosenID};{tahunID};{email};{tipe}"
+                    if checkStatusSidangKoor(dosenID, tahun_id, tipe):
+                        data = f"{'dosen'};{dosenID};{tahun_id};{email};{tipe}"
                         subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],data], cwd=config.cwd)
                         msgreply = ""
                     else:
@@ -78,11 +78,11 @@ def replymsg(driver, data):
                     wmsg = wmsg.replace('#BOTNAME#', config.bot_name)
                     wa.typeAndSendMessage(driver, wmsg)
                     
-                    kategori = getKategoriSidang(npm, tahunID)
-                    if checkRevisiStatus(npm, tahunID):
-                        if checkStatusSidang(npm, tahunID, kategori):
+                    kategori = getKategoriSidang(npm, tahun_id)
+                    if checkRevisiStatus(npm, tahun_id):
+                        if checkStatusSidang(npm, tahun_id, kategori):
                             email = getEmail(npm)
-                            data = f"{'mahasiswa'};{npm};{tahunID};{email};{kategori}"
+                            data = f"{'mahasiswa'};{npm};{tahun_id};{email};{kategori}"
                             subprocess.Popen(["python", "run.py", os.path.basename(__file__).split('.')[0],data], cwd=config.cwd)
                             msgreply = ""
                         else:
