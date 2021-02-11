@@ -254,7 +254,7 @@ def paymentSpp(npm):
             potongan = int(biaya_pokok_spp) - int(payment_spp['trx_amount'])
             minimum_payment = (int(biaya_pokok_spp) - int(potongan)) * (75/100)
         if datetime.now() < payment_spp['expired_date']:
-            msgreply = f'*DATA VIRTUAL ACCOUNT BNI SPP (Semester Ganjil 2020/2021)*\n\n' \
+            msgreply = f'*DATA VIRTUAL ACCOUNT BNI SPP (Semester Genap 2020/2021)*\n\n' \
                        f'*Kode Transaksi: {payment_spp["trx_id"]}*\n' \
                        f'*Virtual Account: {payment_spp["virtual_account"]}*\n' \
                        f'Status Virtual Account: Aktif\n' \
