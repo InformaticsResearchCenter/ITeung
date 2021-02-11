@@ -52,7 +52,7 @@ def replymsg(driver, data):
                 listPem = ['koor', 'tipe', 'tahun']
                 df = df.loc[:, listPem]
                 df = df.drop_duplicates()
-                df = df.loc[(df["koor"] == dosenID) & (df["tipe"] == tipe) & (df["tahun"] == int(tahunID))]
+                df = df.loc[(df["koor"] == dosenID) & (df["tipe"] == tipe) & (df["tahun"] == int(tahun_id))]
                 
                 if df.empty:
                     msgreply = "Harus koornya cuy ato Anda salah tipe sidang..."
@@ -120,7 +120,7 @@ def run(data):
         npms = df.loc[(df["koor"] == dosenID) & (df["tahun"] == int(tahunID)), ['npm']].values.tolist()
         
         checkDir(f'./revisisidang/pengesahan/')
-        namaFile = f"revisisidang\\pengesahan\\pengesahan-sidang-{tahunID}-{dosenID}.pdf"
+        namaFile = f"revisisidang/pengesahan/pengesahan-sidang-{tahunID}-{dosenID}.pdf"
         doc = SimpleDocTemplate(namaFile,
                     pagesize=A4,
                     rightMargin=3*cm,
@@ -157,7 +157,7 @@ def run(data):
         kategori = data[4]
         
         checkDir(f'./revisisidang/pengesahan/')
-        namaFile = f"revisisidang\\pengesahan\\pengesahan-sidang-{tahunID}-{npm}.pdf"
+        namaFile = f"revisisidang/pengesahan/pengesahan-sidang-{tahunID}-{npm}.pdf"
         doc = SimpleDocTemplate(namaFile,
                             pagesize=A4,
                             rightMargin=3*cm,
