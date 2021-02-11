@@ -186,7 +186,7 @@ def paymentSpp(npm):
                 percentage = float(int(transfer_spp) / int(default_amount_payment)) * 100
             app.openfile().close()
         if datetime.now() < payment_spp['expired_date']:
-            msgreply = f'*DATA VIRTUAL ACCOUNT BNI SPP (Semester Ganjil 2020/2021)*\n\n' \
+            msgreply = f'*DATA VIRTUAL ACCOUNT BNI SPP (Semester Genap 2020/2021)*\n\n' \
                         f'*Kode Transaksi: {payment_spp["trx_id"]}*\n' \
                         f'*Virtual Account: {payment_spp["virtual_account"]}*\n' \
                         f'Status Virtual Account: Aktif\n' \
@@ -195,10 +195,7 @@ def paymentSpp(npm):
                         f'Customer Phone Number: {payment_spp["customer_phone"]}\n' \
                         f'Biaya Paket SPP Per Semester: {app.floatToRupiah(float(biaya_pokok_spp))}\n' \
                         f'Biaya Tunggakan SPP: {app.floatToRupiah(tunggakan)}\n' \
-                        f'Jumlah Tagihan: {app.floatToRupiah(float(payment_spp["trx_amount"]))}\n' \
-                        f'Biaya Minimal Pembayaran: {app.floatToRupiah(float(minimum_payment))}\n' \
-                        f'Batas KRS: 12 Oktober 2020 - 16 Oktober 2020\n' \
-                        f'Persentase Pembayaran SPP: {round(percentage)}%\n\n'
+                        f'Jumlah Tagihan: {app.floatToRupiah(float(payment_spp["trx_amount"]))}\n'
     except Exception as error:
         msgreply = f'ERROR: {error}\n\n'
     return msgreply
